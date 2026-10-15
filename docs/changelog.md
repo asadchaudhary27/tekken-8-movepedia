@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - Movepedia UI Precision & Visual Asset Engine - 2026-10-15
+
+### Added
+- **AI-Generated Hero Artwork:** Generated high-resolution 16:9 cinematic hero banner depicting Jin Kazama (with fiery demonic gauntlets and embers) clashing against Kazuya Mishima (with electric blue lightning) matching the user reference screenshot.
+- **Stage Visuals & Renders:** Generated AAA photorealistic arena image for "The Arena" and 10 high-resolution vector artwork cards for all Tekken 8 battle stages with hazard badges (Wall Bound, Floor Blast, Balcony Break).
+- **Official Vector Logos & Notation Icons:** Added official vector Tekken 8 logo SVG, full directional arrow SVG icons (9 directions), arcade button glyphs (1, 2, 3, 4, 1+2, 3+4, etc.), console controller buttons (PlayStation □, △, ✕, ○; Xbox X, Y, A, B), and gameplay mechanics (Heat, Rage Art, Power Crush, Tornado, Homing).
+- **Roster & Carousel Perfection:** Complete 43-fighter roster with official high-resolution avatars and martial art style subtitles (e.g. Jin Kazama: Mishima-Style Karate).
+- **Design-Matched Interactive Layout:** Implemented slim left navigation rail, interactive fighter carousel with `<` and `>` controls, quick fighter selector, and featured moves & combos panel.
+
 ## [0.1.0] - Phase 1 Foundation - 2026-10-15
 
 ### Added

@@ -55,8 +55,14 @@ tekken 8/
 - **Database Schema:** 11 SQLAlchemy models defined in `backend/app/models/` implementing relationships, uniqueness constraints, indexation, provenance separation, and non-zero handling for unknown frame values.
 - **Notation Engine:** 4-mode parser supporting 9 directional states (including Neutral `•`), attack buttons (1, 2, 3, 4, 1+2, etc.), simultaneous vs sequential sequences, holds (`F`, `D`), repeated inputs (`f,f`), and preservation of unsupported tokens.
 - **Coverage & Completeness Reporting:** System capable of computing field-population metrics, identifying missing vs unknown vs inapplicable fields, detecting conflicting values, and exporting JSON/CSV summaries.
-- **Movepedia Frontend:** Complete frontend interface matching the user's uploaded "Tekken 8 Movepedia" visual design, including character roster selector with category filters, interactive notation visualizer, data source status badges, and sample frame data tables.
-- **Automated Tests:** Comprehensive unit and integration test suite targeting backend startup, health check, notation conversions, coverage reporting, and database integrity.
+- **Movepedia Frontend & Complete Visual Assets:** Complete frontend interface matching the user's uploaded "Tekken 8 Movepedia" visual design, including:
+  - High-octane Hero faceoff artwork featuring Jin Kazama (flaming gauntlet & embers) vs Kazuya Mishima (electric blue lightning).
+  - Official vector Tekken 8 logo and brand typography.
+  - Choose Your Fighter carousel with all 43 fighters, animated `<` and `>` controls, and martial arts style subtitles.
+  - Right sidebar with quick fighter pickers and design-accurate featured move rows.
+  - Battle Stages showcase with photorealistic Arena render and 10 high-resolution stage vector cards with hazard tags.
+  - Full suite of vector SVG glyphs for all 9 directions, 4 attack limbs, simultaneous buttons (1+2, 3+4, etc.), PlayStation/Xbox controller buttons, and Tekken 8 gameplay mechanics (Heat, Rage Art, Power Crush, Tornado, Homing).
+- **Automated Tests:** Comprehensive unit and integration test suite targeting backend startup, health check, notation conversions, coverage reporting, and database integrity (14/14 passing).
 
 ---
 
