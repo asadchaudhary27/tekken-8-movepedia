@@ -8,137 +8,262 @@
   <link rel="stylesheet" href="/assets/css/style.css">
   <link rel="icon" type="image/png" href="/assets/avatars/jin-brand-256-C1-oe_x3.webp">
 </head>
-<body>
+<body class="has-left-rail">
+
+  <!-- Left Slim Navigation Rail -->
+  <aside class="left-rail">
+    <div class="rail-top">
+      <a href="/" class="rail-logo-badge" title="Tekken 8 Movepedia">
+        <svg viewBox="0 0 40 40" width="28" height="28">
+          <polygon points="20,2 37,11 37,29 20,38 3,29 3,11" fill="none" stroke="#ff1e38" stroke-width="2.5"/>
+          <polygon points="20,7 32,14 32,26 20,33 8,26 8,14" fill="#ff1e38" opacity="0.3"/>
+          <text x="20" y="25" font-family="'Impact', sans-serif" font-weight="900" font-size="16" fill="#ffffff" text-anchor="middle">8</text>
+        </svg>
+      </a>
+      <a href="#fighters" class="rail-item active" title="Fighters">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+        </svg>
+      </a>
+      <a href="#notation" class="rail-item" title="Notation Engine">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </a>
+      <a href="#stages" class="rail-item" title="Stages">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+          <polyline points="2 17 12 22 22 17"/>
+          <polyline points="2 12 12 17 22 12"/>
+        </svg>
+      </a>
+    </div>
+    <div class="rail-bottom">
+      <a href="/docs" target="_blank" class="rail-item" title="API Documentation">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      </a>
+    </div>
+  </aside>
 
   <!-- Top Navigation Bar -->
   <header class="navbar">
     <a href="/" class="brand-container">
-      <span class="brand-logo-t8">TEKKEN<span>8</span></span>
+      <img src="/assets/img/tekken8-logo.svg" alt="Tekken 8" class="brand-logo-img">
       <span class="brand-logo-sub">MOVEPEDIA</span>
     </a>
     <ul class="nav-links">
       <li><a href="#fighters" class="nav-link active">Fighters</a></li>
-      <li><a href="#notation" class="nav-link">Notation Engine</a></li>
-      <li><a href="#moves" class="nav-link">Moves & Frame Data</a></li>
-      <li><a href="#coverage" class="nav-link">Coverage & QA</a></li>
-      <li><a href="#sources" class="nav-link">Sources Audit</a></li>
+      <li><a href="#moves" class="nav-link">Moves &amp; Combos</a></li>
+      <li><a href="#moves" class="nav-link">Frame Data</a></li>
+      <li><a href="#stages" class="nav-link">Stages</a></li>
+      <li><a href="#coverage" class="nav-link">Community</a></li>
+      <li><a href="#moves" class="nav-link">Search</a></li>
     </ul>
     <div class="nav-actions">
-      <a href="/docs" target="_blank" class="btn-auth" style="text-decoration:none;">OpenAPI Swagger</a>
+      <button class="btn-auth" onclick="document.getElementById('searchQuickInput').focus();">Login / Sign Up</button>
+      <a href="/docs" target="_blank" class="btn-swagger" title="OpenAPI Swagger Spec">API Docs</a>
     </div>
   </header>
 
   <!-- Main Container -->
   <main class="main-wrapper">
     
-    <!-- Top Dashboard Grid: Hero Banner + Featured Combos Sidebar -->
-    <div class="dashboard-grid">
+    <!-- Top Movepedia Dashboard Grid (Matches User Design Screenshot) -->
+    <div class="movepedia-dashboard-grid">
       
-      <!-- Hero Banner -->
-      <section class="hero-banner">
-        <div class="hero-backdrop"></div>
-        <div class="hero-content">
-          <span class="hero-tag">Computer Science Final Year Project — Phase 1</span>
-          <h1 class="hero-title">Master Your Fate</h1>
-          <p class="hero-subtitle">All Characters, Combos, Frame Data, &amp; 4-Mode Notation Visualization for Tekken 8.</p>
-          <div class="hero-btn-group">
-            <a href="#fighters" class="btn-primary" style="text-decoration:none;">Browse Fighters</a>
-            <a href="#notation" class="btn-secondary" style="text-decoration:none;">Notation Engine</a>
+      <!-- Left Column: Hero Banner + Choose Your Fighter Carousel -->
+      <div class="left-hero-column">
+        
+        <!-- Hero Section with Jin vs Kazuya Faceoff Artwork -->
+        <section class="hero-banner">
+          <div class="hero-backdrop"></div>
+          <div class="hero-content">
+            <h1 class="hero-title">MASTER YOUR FATE</h1>
+            <p class="hero-subtitle">All Characters, Combos, Frame Data &amp; Advanced Strategies for Tekken 8</p>
+            <div class="hero-btn-group">
+              <a href="#fighters" class="btn-hero-primary">Browse Fighters</a>
+              <a href="#notation" class="btn-hero-secondary">Combos &amp; Guides</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Choose Your Fighter Carousel Section -->
+        <section id="fighters" class="section-choose-fighter">
+          <div class="choose-header-row">
+            <h2 class="choose-title">CHOOSE YOUR FIGHTER</h2>
+            <div class="filter-pills" id="carouselFilterPills">
+              <button class="filter-btn active" data-filter="ALL">ALL</button>
+              <button class="filter-btn" data-filter="ALLIES">ALLIES</button>
+              <button class="filter-btn" data-filter="MISHIMA">MISHIMA</button>
+              <button class="filter-btn" data-filter="REBELS">REBELS</button>
+              <button class="filter-btn" data-filter="NEWCOMERS">NEWCOMERS</button>
+            </div>
+          </div>
+
+          <!-- Carousel with Navigation Buttons -->
+          <div class="carousel-container">
+            <button class="carousel-nav-btn prev" id="carouselPrevBtn" title="Previous Fighters">&lt;</button>
+            <div class="carousel-track" id="carouselTrack">
+              <!-- Rendered dynamically via app.js -->
+              <div style="color:var(--text-muted); padding:2rem;">Loading character roster...</div>
+            </div>
+            <button class="carousel-nav-btn next" id="carouselNextBtn" title="Next Fighters">&gt;</button>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Right Column: Search + Fighters Your Fighter + Featured Moves & Combos -->
+      <aside class="right-sidebar-panel">
+        
+        <!-- Search Input Bar -->
+        <div class="sidebar-search-box">
+          <input type="text" id="searchQuickInput" class="sidebar-search-input" placeholder="Search moves, characters, inputs...">
+          <button class="sidebar-search-btn" id="searchQuickBtn">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Quick Fighter Selector Box -->
+        <div class="sidebar-box">
+          <div class="sidebar-box-header">
+            <span class="sidebar-box-title">FIGHTERS YOUR FIGHTER</span>
+          </div>
+          <div class="filter-pills-mini" id="sidebarFilterPills">
+            <button class="filter-btn-mini active" data-filter="ALL">ALL</button>
+            <button class="filter-btn-mini" data-filter="ALLIES">ALLIES</button>
+            <button class="filter-btn-mini" data-filter="MISHIMA">MISHIMA</button>
+            <button class="filter-btn-mini" data-filter="REBELS">REBELS</button>
+            <button class="filter-btn-mini" data-filter="NEWCOMERS">NEWCOMERS</button>
+          </div>
+          <div class="sidebar-quick-fighters" id="sidebarQuickFighters">
+            <!-- Rendered dynamically via app.js -->
           </div>
         </div>
-      </section>
 
-      <!-- Sidebar: Featured Combos & Verified Frame Moves -->
-      <aside class="sidebar-panel">
-        <div class="panel-header">
-          <span class="panel-title">Featured Moves &amp; Combos</span>
-          <span class="panel-tag">Verified Patch 3.00.02</span>
+        <!-- Featured Moves & Combos Box (Exact match to design screenshot) -->
+        <div class="sidebar-box">
+          <div class="sidebar-box-header">
+            <span class="sidebar-box-title">FEATURED MOVES &amp; COMBOS</span>
+          </div>
+          <div class="sidebar-box-subtitle">LATEST COMBOS &amp; FRAME DATA</div>
+
+          <div class="featured-moves-list" id="featuredMovesList">
+            <!-- Row 1: Jin EWGF -->
+            <div class="featured-move-row" onclick="filterByMoveText('Electric Wind Hook Fist')">
+              <img class="feat-char-avatar" src="/assets/avatars/jin-brand-256-C1-oe_x3.webp" alt="Jin">
+              <div class="feat-notation-wrap">
+                <span class="feat-glyph arrow">←</span>
+                <span class="feat-glyph arrow">➔</span>
+                <span class="feat-glyph arrow">➔</span>
+                <span class="feat-plus">+</span>
+                <span class="feat-btn-symbol">T</span>
+              </div>
+              <div class="feat-damage">120</div>
+              <div class="feat-badge-group">
+                <span class="feat-badge badge-launcher">LAUNCHER</span>
+                <span class="feat-badge badge-crush">CONCER</span>
+              </div>
+            </div>
+
+            <!-- Row 2: Kazuya Demon -->
+            <div class="featured-move-row" onclick="filterByMoveText('Demon')">
+              <img class="feat-char-avatar" src="/assets/avatars/kazuya-brand-256-BInk9tTm.webp" alt="Kazuya">
+              <div class="feat-notation-wrap">
+                <span class="feat-glyph arrow">➔</span>
+                <span class="feat-glyph arrow">➔</span>
+                <span class="feat-glyph arrow">➔</span>
+                <span class="feat-plus">+</span>
+                <span class="feat-glyph arrow">↓</span>
+              </div>
+              <div class="feat-damage">20</div>
+              <div class="feat-badge-group">
+                <span class="feat-badge badge-block">-3 ON BLOCK</span>
+                <span class="feat-badge badge-crush">CRUSH</span>
+              </div>
+            </div>
+
+            <!-- Row 3: Jun Kazama -->
+            <div class="featured-move-row" onclick="filterByMoveText('Jun')">
+              <img class="feat-char-avatar" src="/assets/avatars/jun-brand-256-eieDvySl.webp" alt="Jun">
+              <div class="feat-notation-wrap">
+                <span class="feat-glyph arrow">←</span>
+                <span class="feat-glyph arrow">➔</span>
+                <span class="feat-plus">+</span>
+                <span class="feat-plus">+</span>
+                <span class="feat-glyph arrow">↓</span>
+              </div>
+              <div class="feat-damage">15</div>
+              <div class="feat-badge-group">
+                <span class="feat-badge badge-block">-3 ON BLOCK</span>
+                <span class="feat-badge badge-crush">CRUSH</span>
+              </div>
+            </div>
+
+            <!-- Row 4: King Giant Swing -->
+            <div class="featured-move-row" onclick="filterByMoveText('Giant Swing')">
+              <img class="feat-char-avatar" src="/assets/avatars/king-brand-256-Dq_98Qq3.webp" alt="King">
+              <div class="feat-notation-wrap">
+                <span class="feat-glyph arrow">↘</span>
+                <span class="feat-plus">+</span>
+                <span class="feat-btn-circle yellow">2</span>
+                <span class="feat-btn-circle pink">1</span>
+              </div>
+              <div class="feat-damage">30</div>
+              <div class="feat-badge-group">
+                <span class="feat-badge badge-block">-3 ON BLOCK</span>
+                <span class="feat-badge badge-crush">CRUSH</span>
+              </div>
+            </div>
+
+            <!-- Row 5: Reina -->
+            <div class="featured-move-row" onclick="filterByMoveText('Sentai')">
+              <img class="feat-char-avatar" src="/assets/avatars/reina-brand-256-DDc7iMts.webp" alt="Reina">
+              <div class="feat-notation-wrap">
+                <span class="feat-glyph arrow">➔</span>
+                <span class="feat-plus">+</span>
+                <span class="feat-glyph arrow">➔</span>
+                <span class="feat-btn-circle pink">1</span>
+              </div>
+              <div class="feat-damage">15</div>
+              <div class="feat-badge-group">
+                <span class="feat-badge badge-block">-3 ON BLOCK</span>
+                <span class="feat-badge badge-crush">CRUSH</span>
+              </div>
+            </div>
+
+          </div>
         </div>
 
-        <div class="mini-combo-list">
-          <!-- Featured Move 1: Jin EWGF -->
-          <div class="mini-combo-card">
-            <div class="mini-combo-header">
-              <div class="mini-combo-char">
-                <img class="mini-avatar" src="/assets/avatars/jin-brand-256-C1-oe_x3.webp" alt="Jin">
-                <span>Jin Kazama</span>
-              </div>
-              <div class="mini-badges">
-                <span class="badge badge-launcher">Launcher</span>
-                <span class="badge badge-heat">+5 Block</span>
-              </div>
-            </div>
-            <div class="mini-notation">f, n, d, df+2 (Electric Wind Hook Fist)</div>
-          </div>
-
-          <!-- Featured Move 2: Kazuya EWGF -->
-          <div class="mini-combo-card">
-            <div class="mini-combo-header">
-              <div class="mini-combo-char">
-                <img class="mini-avatar" src="/assets/avatars/kazuya-brand-256-BInk9tTm.webp" alt="Kazuya">
-                <span>Kazuya Mishima</span>
-              </div>
-              <div class="mini-badges">
-                <span class="badge badge-launcher">Launcher</span>
-                <span class="badge badge-heat">+5 Block</span>
-              </div>
-            </div>
-            <div class="mini-notation">f, n, df+2 (Electric Wind God Fist)</div>
-          </div>
-
-          <!-- Featured Move 3: Feng Wei -->
-          <div class="mini-combo-card">
-            <div class="mini-combo-header">
-              <div class="mini-combo-char">
-                <img class="mini-avatar" src="/assets/avatars/feng-brand-256-Cfyw5tOe.webp" alt="Feng">
-                <span>Feng Wei</span>
-              </div>
-              <div class="mini-badges">
-                <span class="badge badge-damage">25 Dmg</span>
-                <span class="badge badge-crush">Power Crush</span>
-              </div>
-            </div>
-            <div class="mini-notation">b+1+2 (Iron Fortress)</div>
-          </div>
-
-          <!-- Featured Combo: Kuma Heat Ender -->
-          <div class="mini-combo-card">
-            <div class="mini-combo-header">
-              <div class="mini-combo-char">
-                <img class="mini-avatar" src="/assets/avatars/kuma-brand-256-Dl0_dNEV.webp" alt="Kuma">
-                <span>Kuma (Combo #2556)</span>
-              </div>
-              <div class="mini-badges">
-                <span class="badge badge-damage">99 Dmg</span>
-                <span class="badge badge-heat">12 Hits</span>
-              </div>
-            </div>
-            <div class="mini-notation">Hunting, 1, 2*(max) ► u, 1+2, D ► Bear Roll ► 3</div>
-          </div>
-        </div>
       </aside>
 
     </div>
 
-    <!-- Section: Choose Your Fighter (All 43 Characters) -->
-    <section id="fighters" class="section-roster">
+    <!-- Section: Tekken 8 Stages Showcase (New Asset Presentation) -->
+    <section id="stages" class="section-stages">
       <div class="section-header-row">
         <div>
-          <h2 class="section-title">Choose Your Fighter</h2>
-          <p style="color:var(--text-muted); font-size:0.85rem;">Click any fighter to view full move list and frame data</p>
+          <h2 class="section-title">TEKKEN 8 BATTLE STAGES</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Official battlegrounds featuring floor blasts, wall crushes, and balcony breaks</p>
         </div>
-        <div class="filter-pills">
-          <button class="filter-btn active" data-filter="ALL">All</button>
-          <button class="filter-btn" data-filter="ALLIES">Allies</button>
-          <button class="filter-btn" data-filter="MISHIMA">Mishima</button>
-          <button class="filter-btn" data-filter="REBELS">Rebels</button>
-          <button class="filter-btn" data-filter="NEWCOMERS">Newcomers</button>
+        <div class="stage-tag-filter">
+          <span class="badge badge-launcher" style="padding:0.4rem 0.8rem; font-size:0.75rem;">10 Official Arenas</span>
         </div>
       </div>
 
-      <div id="rosterGrid" class="roster-grid">
-        <!-- Rendered dynamically via app.js -->
-        <div style="color:var(--text-muted); padding:2rem;">Loading character roster...</div>
+      <div class="stages-grid" id="stagesGrid">
+        <!-- Rendered dynamically with generated photorealistic & vector artwork -->
       </div>
     </section>
 
@@ -146,7 +271,7 @@
     <section id="notation" class="section-notation">
       <div class="section-header-row">
         <div>
-          <h2 class="section-title">Notation Engine Prototype</h2>
+          <h2 class="section-title">NOTATION ENGINE PROTOTYPE</h2>
           <p style="color:var(--text-muted); font-size:0.85rem;">Translates raw Tekken notation into 4 standardized display projections in real-time</p>
         </div>
         <div class="controller-toggle-group">
@@ -157,7 +282,19 @@
       </div>
 
       <div class="notation-input-bar">
-        <input type="text" id="notationInput" class="notation-input" value="df+2" placeholder="Try df+2, f,n,d,df+2, 1+2, f,f+1+2, or any notation...">
+        <input type="text" id="notationInput" class="notation-input" value="df+2" placeholder="Try df+2, f,n,d,df+2, 1+2, f,f+1+2, b+1+2, or any notation...">
+        <div class="notation-icon-bar" id="notationIconBar">
+          <img src="/assets/icons/df.svg" alt="df" class="notation-bar-icon" onclick="insertNotationToken('df')">
+          <img src="/assets/icons/f.svg" alt="f" class="notation-bar-icon" onclick="insertNotationToken('f')">
+          <img src="/assets/icons/d.svg" alt="d" class="notation-bar-icon" onclick="insertNotationToken('d')">
+          <img src="/assets/icons/b.svg" alt="b" class="notation-bar-icon" onclick="insertNotationToken('b')">
+          <img src="/assets/icons/1.svg" alt="1" class="notation-bar-icon" onclick="insertNotationToken('1')">
+          <img src="/assets/icons/2.svg" alt="2" class="notation-bar-icon" onclick="insertNotationToken('2')">
+          <img src="/assets/icons/3.svg" alt="3" class="notation-bar-icon" onclick="insertNotationToken('3')">
+          <img src="/assets/icons/4.svg" alt="4" class="notation-bar-icon" onclick="insertNotationToken('4')">
+          <img src="/assets/icons/1+2.svg" alt="1+2" class="notation-bar-icon" onclick="insertNotationToken('1+2')">
+          <img src="/assets/icons/heat.svg" alt="heat" class="notation-bar-icon" onclick="insertNotationToken('heat')">
+        </div>
       </div>
 
       <div id="unsupportedAlert" style="display:none; background:rgba(255,190,11,0.15); border:1px solid var(--accent-gold); color:var(--accent-gold); padding:0.6rem 1rem; border-radius:4px; font-size:0.8rem; margin-bottom:1rem;"></div>
@@ -167,28 +304,28 @@
         <div class="notation-mode-card">
           <span class="mode-badge">Mode 1 • Directional Arrows</span>
           <div id="modeArrow" class="mode-value">↘ + 2</div>
-          <p style="font-size:0.7rem; color:var(--text-dim);">9 canonical directions (↑, ↖, ↗, ←, •, →, ↙, ↓, ↘)</p>
+          <p style="font-size:0.75rem; color:var(--text-dim);">9 canonical directions (↑, ↖, ↗, ←, •, →, ↙, ↓, ↘)</p>
         </div>
 
         <!-- Mode 2: English -->
         <div class="notation-mode-card">
           <span class="mode-badge">Mode 2 • English Names</span>
           <div id="modeEnglish" class="mode-value">Down Forward + Right Punch</div>
-          <p style="font-size:0.7rem; color:var(--text-dim);">Full English terminology for directions &amp; attack limbs</p>
+          <p style="font-size:0.75rem; color:var(--text-dim);">Full English terminology for directions &amp; attack limbs</p>
         </div>
 
         <!-- Mode 3: Numpad -->
         <div class="notation-mode-card">
           <span class="mode-badge">Mode 3 • Numpad Notation</span>
           <div id="modeNumpad" class="mode-value">3 + 2</div>
-          <p style="font-size:0.7rem; color:var(--text-dim);">Direction (1-9) and attack buttons separated</p>
+          <p style="font-size:0.75rem; color:var(--text-dim);">Direction (1-9) and attack buttons separated</p>
         </div>
 
         <!-- Mode 4: Controller -->
         <div class="notation-mode-card">
           <span class="mode-badge">Mode 4 • Physical Controller</span>
           <div id="modeController" class="mode-value">↘ + △</div>
-          <p style="font-size:0.7rem; color:var(--text-dim);">Configurable console &amp; arcade button labels</p>
+          <p style="font-size:0.75rem; color:var(--text-dim);">Configurable console &amp; arcade button labels</p>
         </div>
       </div>
     </section>
@@ -197,8 +334,11 @@
     <section id="moves" class="section-moves">
       <div class="section-header-row">
         <div>
-          <h2 id="currentFighterTitle" class="section-title">Character Moves &amp; Frame Data</h2>
+          <h2 id="currentFighterTitle" class="section-title">CHARACTER MOVES &amp; FRAME DATA</h2>
           <p style="color:var(--text-muted); font-size:0.85rem;">Official numerical values (Negative = Disadvantage, Positive = Advantage, Null = Inapplicable/Unknown)</p>
+        </div>
+        <div class="table-search-wrap">
+          <input type="text" id="movesTableFilter" class="table-search-input" placeholder="Filter by move name, input, or property...">
         </div>
       </div>
 
@@ -221,7 +361,7 @@
           </tbody>
         </table>
         <div id="movesEmptyState" style="display:none; text-align:center; padding:3rem; color:var(--text-dim);">
-          No moves recorded yet for this fighter in the initial seed dataset.
+          No moves recorded yet for this fighter in the initial seed dataset. Select Jin, Kazuya, Feng, Reina, or King for verified moves.
         </div>
       </div>
     </section>
@@ -230,7 +370,7 @@
     <section id="coverage" class="section-moves">
       <div class="section-header-row">
         <div>
-          <h2 class="section-title">Data Completeness &amp; Quality QA</h2>
+          <h2 class="section-title">DATA COMPLETENESS &amp; QUALITY QA</h2>
           <p style="color:var(--text-muted); font-size:0.85rem;">Mathematical field completeness metrics separating missing, unknown, and inapplicable attributes</p>
         </div>
         <div style="display:flex; gap:0.5rem;">
@@ -263,7 +403,7 @@
         <div class="source-card">
           <span style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase;">Unverified Moves</span>
           <div id="covUnverified" style="font-size:1.5rem; font-weight:800; color:#fff;">0</div>
-          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Pending Phase 2 Import</span>
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Strict Provenance</span>
         </div>
       </div>
     </section>
@@ -272,7 +412,7 @@
     <section id="sources" class="section-moves">
       <div class="section-header-row">
         <div>
-          <h2 class="section-title">Audited Data Sources &amp; Legal Status</h2>
+          <h2 class="section-title">AUDITED DATA SOURCES &amp; LEGAL STATUS</h2>
           <p style="color:var(--text-muted); font-size:0.85rem;">Compliance audit of 11 external sources detailing licensing, permissions, and rate limits</p>
         </div>
       </div>
@@ -286,15 +426,16 @@
 
   <!-- Footer -->
   <footer class="footer">
-    <p>Tekken 8 Movepedia &amp; Training Assistant — Academic Final Year Project (FYP).</p>
-    <p style="margin-top:0.4rem;">
-      Frame data measurements and community guides curated with credit to 
-      <a href="https://wavu.wiki/" target="_blank">wavu.wiki</a>, 
-      <a href="https://tekkendocs.com/" target="_blank">tekkendocs.com</a>, and 
-      <a href="https://rbnorway.org/" target="_blank">rbnorway.org</a>.
+    <div style="display:flex; justify-content:center; align-items:center; gap:1rem; margin-bottom:1rem;">
+      <img src="/assets/img/tekken8-logo.svg" alt="Tekken 8" style="height:28px; opacity:0.8;">
+      <span style="color:var(--accent-cyan); font-weight:800; letter-spacing:0.1em;">MOVEPEDIA</span>
+    </div>
+    <p>Tekken 8 Frame Data, Move Reference, Notation Visualization and Training Assistant Website</p>
+    <p style="margin-top:0.4rem; color:var(--text-dim);">
+      Computer Science Final Year Project (FYP) — Architectural Foundation &amp; Phase 1 Implementation.
     </p>
-    <p style="margin-top:0.4rem; font-size:0.75rem;">
-      TEKKEN™8 &amp; © Bandai Namco Entertainment Inc. All character designs, logos, and artwork are trademarks of their respective owners.
+    <p style="margin-top:0.4rem; font-size:0.75rem; color:var(--text-dim);">
+      Data sources curated with credit to <a href="https://wavu.wiki/" target="_blank" style="color:var(--text-muted);">wavu.wiki</a> (CC0 1.0) and community researchers. TEKKEN™8 is a registered trademark of Bandai Namco Entertainment Inc.
     </p>
   </footer>
 

@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="640" height="360">
+  <defs>
+    <linearGradient id="bg_celebration-on-the-seine" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0b1530"/>
+      <stop offset="50%" stop-color="#201a45"/>
+      <stop offset="100%" stop-color="#070c1e"/>
+    </linearGradient>
+    <linearGradient id="glow_celebration-on-the-seine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e040fb" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#18ffff" stop-opacity="0.2"/>
+    </linearGradient>
+    <pattern id="grid_celebration-on-the-seine" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#e040fb" stroke-width="0.5" opacity="0.12"/>
+    </pattern>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="640" height="360" fill="url(#bg_celebration-on-the-seine)"/>
+  <rect width="640" height="360" fill="url(#grid_celebration-on-the-seine)"/>
+
+  <!-- Atmospheric Glow Orbs -->
+  <circle cx="120" cy="100" r="140" fill="#e040fb" opacity="0.18" filter="blur(40px)"/>
+  <circle cx="520" cy="220" r="160" fill="#18ffff" opacity="0.15" filter="blur(50px)"/>
+
+  <!-- Architectural & Environmental Silhouettes -->
+  <g opacity="0.45">
+    <polygon points="0,260 80,220 160,240 280,180 380,220 480,170 560,210 640,190 640,360 0,360" fill="#04060a"/>
+    <polygon points="0,300 120,270 240,290 360,260 480,280 640,250 640,360 0,360" fill="#0a0e17"/>
+  </g>
+
+  <!-- Stage Tech Grid Floor -->
+  <line x1="0" y1="310" x2="640" y2="310" stroke="#e040fb" stroke-width="2" opacity="0.6"/>
+  <line x1="0" y1="315" x2="640" y2="315" stroke="#18ffff" stroke-width="1" opacity="0.3"/>
+
+  <!-- Metallic Overlay Framing -->
+  <rect x="14" y="14" width="612" height="332" rx="12" fill="none" stroke="#e040fb" stroke-width="1.5" stroke-opacity="0.4"/>
+  <rect x="20" y="20" width="600" height="320" rx="8" fill="none" stroke="#ffffff" stroke-width="0.5" stroke-opacity="0.15"/>
+
+  <!-- Top Badges: Hazard Tags -->
+  <g transform="translate(32, 34)">
+    <rect x="0" y="0" width="84" height="24" rx="4" fill="#000000" opacity="0.7" stroke="#e040fb" stroke-width="1"/>
+    <text x="42" y="16" font-family="'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="10" fill="#e040fb" text-anchor="middle" letter-spacing="1">STAGE</text>
+  </g>
+
+  <g transform="translate(124, 34)">
+    <rect x="0" y="0" width="110" height="24" rx="4" fill="#000000" opacity="0.7" stroke="#18ffff" stroke-width="1"/>
+    <text x="55" y="16" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="10" fill="#ffffff" text-anchor="middle">BALCONY BREAK</text>
+  </g>
+
+  <!-- Stage Title & Location -->
+  <g transform="translate(36, 265)">
+    <text x="0" y="0" font-family="'Impact', 'Segoe UI Black', sans-serif" font-size="34" font-weight="900" fill="#ffffff" letter-spacing="1" font-style="italic">
+      CELEBRATION ON THE SEINE
+    </text>
+    <text x="0" y="24" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" fill="#e040fb" letter-spacing="1.5">
+      RIVER SEINE CRUISE, FRANCE
+    </text>
+  </g>
+
+  <!-- Tekken 8 Branding Watermark -->
+  <text x="600" y="325" font-family="'Impact', sans-serif" font-size="18" font-weight="900" fill="#ffffff" opacity="0.3" text-anchor="end" font-style="italic">
+    TEKKEN 8
+  </text>
+</svg>

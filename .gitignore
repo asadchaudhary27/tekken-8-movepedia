@@ -55,3 +55,10 @@ Thumbs.db
 **/static.doubleclick.net/
 **/us-assets.i.posthog.com/
 **/static.cloudflareinsights.com/
+
+# Raw scraped web mirrors & generated runtime reports
+tekken8combo.kagewebsite.com/
+tekkendocs.com/
+data/raw/
+data/reports/
+
