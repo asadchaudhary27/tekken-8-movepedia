@@ -9,6 +9,16 @@
  * - Data Quality Coverage & Sources Audit
  */
 
+// Session Token Management for User Preferences
+function getOrCreateSessionToken() {
+  let token = localStorage.getItem('tekken8_session_token');
+  if (!token) {
+    token = 't8_sess_' + Math.random().toString(36).substring(2, 10) + '_' + Date.now();
+    localStorage.setItem('tekken8_session_token', token);
+  }
+  return token;
+}
+
 // Global State
 const state = {
   characters: [],
@@ -19,9 +29,22 @@ const state = {
   moves: [],
   sources: [],
   coverage: null,
+  sessionToken: getOrCreateSessionToken(),
+  matchup: {
+    player: null,
+    opponent: null,
+    stage: null,
+    conditions: {
+      wall_position: 'OPEN',
+      heat_state: 'AVAILABLE',
+      starting_distance: 'MID',
+      player_side: 'P1'
+    }
+  },
   stages: [
     {
-      id: "arena",
+      id: 1,
+      slug: "the-arena",
       name: "The Arena",
       location: "Mishima Zaibatsu Stadium",
       image: "/assets/img/stages/arena.jpg",
@@ -166,10 +189,11 @@ async function fetchAPI(endpoint) {
 document.addEventListener('DOMContentLoaded', async () => {
   setupEventListeners();
   await loadCharacters();
-  renderStages();
+  await loadStages();
   await loadCoverageData();
   await loadSourcesData();
   updateNotationDisplay();
+  await initMatchupAnalyzer();
 });
 
 // Event Listeners Setup
@@ -463,24 +487,39 @@ function filterMovesTable(query) {
 }
 
 // 4. Render Stages Showcase
+async function loadStages() {
+  const data = await fetchAPI('/stages');
+  if (data && Array.isArray(data) && data.length > 0) {
+    state.stages = data;
+  }
+  renderStages();
+}
+
 function renderStages() {
   const container = document.getElementById('stagesGrid');
   if (!container) return;
 
-  container.innerHTML = state.stages.map(s => `
-    <div class="stage-card" title="${s.gimmick}">
-      <div class="stage-img-wrap">
-        <img class="stage-img" src="${s.image}" alt="${s.name}" onerror="this.src='/assets/img/stages/arena.svg'">
-      </div>
-      <div class="stage-meta">
-        <div class="stage-name">${s.name}</div>
-        <div class="stage-location">${s.location}</div>
-        <div class="stage-hazards">
-          ${s.hazards.map(h => `<span class="hazard-pill">${h}</span>`).join('')}
+  container.innerHTML = state.stages.map(s => {
+    const hazardsList = s.hazards || [];
+    const imgSrc = s.image_url || s.image || '/assets/img/stages/arena.jpg';
+    const locationStr = s.location || 'Official Arena';
+    const gimmickStr = s.notes || s.special_mechanics || s.gimmick || (s.has_walls ? 'Walled tournament battleground' : 'Infinite arena');
+
+    return `
+      <div class="stage-card" title="${gimmickStr}">
+        <div class="stage-img-wrap">
+          <img class="stage-img" src="${imgSrc}" alt="${s.name}" onerror="this.src='/assets/img/stages/arena.svg'">
+        </div>
+        <div class="stage-meta">
+          <div class="stage-name">${s.name}</div>
+          <div class="stage-location">${locationStr}</div>
+          <div class="stage-hazards">
+            ${hazardsList.map(h => `<span class="hazard-pill">${h}</span>`).join('')}
+          </div>
         </div>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 // 5. Notation Engine Real-Time Translation
@@ -643,3 +682,570 @@ function debounce(func, wait) {
     timeout = setTimeout(later, wait);
   };
 }
+
+// ==========================================================================
+// 7. Matchup Analyzer & Selection System
+// ==========================================================================
+
+async function initMatchupAnalyzer() {
+  populateMatchupDropdowns();
+  setupMatchupControls();
+  await restoreUserPreferences();
+  await runMatchupAnalysis();
+}
+
+function populateMatchupDropdowns() {
+  const pSelect = document.getElementById('playerSelect');
+  const oSelect = document.getElementById('opponentSelect');
+  const sSelect = document.getElementById('stageSelect');
+
+  if (!pSelect || !oSelect || !sSelect) return;
+
+  // Populate Characters with local portraits and archetypes
+  const charOptions = state.characters.map(c => {
+    const avatar = c.avatar_url || '/assets/avatars/jin-brand-256-C1-oe_x3.webp';
+    const archetype = c.archetype || 'Tekken Fighter';
+    return `<option value="${c.id}" data-slug="${c.slug}" data-avatar="${avatar}" data-archetype="${archetype}">${c.name}</option>`;
+  }).join('');
+
+  pSelect.innerHTML = charOptions;
+  oSelect.innerHTML = charOptions;
+
+  // Set default: Player = Jin, Opponent = Kazuya
+  const jin = state.characters.find(c => c.slug === 'jin');
+  const kazuya = state.characters.find(c => c.slug === 'kazuya');
+
+  if (jin) pSelect.value = jin.id;
+  if (kazuya) oSelect.value = kazuya.id;
+  else if (state.characters.length > 1) oSelect.value = state.characters[1].id;
+
+  // Populate Stages with real database verified records
+  sSelect.innerHTML = state.stages.map(st => {
+    const shape = st.boundary_shape || (st.has_walls ? 'Walled' : 'Infinite');
+    const img = st.image_url || st.image || '/assets/img/stages/arena.jpg';
+    return `<option value="${st.id}" data-slug="${st.slug}" data-image="${img}">${st.name} (${shape})</option>`;
+  }).join('');
+
+  if (state.stages.length > 0) {
+    sSelect.value = state.stages[0].id;
+  }
+
+  updatePlayerPreview();
+  updateOpponentPreview();
+  updateStagePreview();
+}
+
+function setupMatchupControls() {
+  const pSelect = document.getElementById('playerSelect');
+  const oSelect = document.getElementById('opponentSelect');
+  const sSelect = document.getElementById('stageSelect');
+  const pSearch = document.getElementById('playerSearchInput');
+  const oSearch = document.getElementById('opponentSearchInput');
+  const btnSwap = document.getElementById('btnSwapFighters');
+  const btnRandP = document.getElementById('btnRandomPlayer');
+  const btnRandO = document.getElementById('btnRandomOpponent');
+  const btnRun = document.getElementById('btnRunAnalysis');
+
+  // Change events
+  if (pSelect) {
+    pSelect.addEventListener('change', () => {
+      updatePlayerPreview();
+      runMatchupAnalysis();
+    });
+  }
+
+  if (oSelect) {
+    oSelect.addEventListener('change', () => {
+      updateOpponentPreview();
+      runMatchupAnalysis();
+    });
+  }
+
+  if (sSelect) {
+    sSelect.addEventListener('change', () => {
+      updateStagePreview();
+      runMatchupAnalysis();
+    });
+  }
+
+  // Filter player select options
+  if (pSearch && pSelect) {
+    pSearch.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      filterSelectOptions(pSelect, q);
+    });
+  }
+
+  // Filter opponent select options
+  if (oSearch && oSelect) {
+    oSearch.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      filterSelectOptions(oSelect, q);
+    });
+  }
+
+  // Random Buttons
+  if (btnRandP) {
+    btnRandP.addEventListener('click', () => {
+      pickRandomFighter('player');
+    });
+  }
+
+  if (btnRandO) {
+    btnRandO.addEventListener('click', () => {
+      pickRandomFighter('opponent');
+    });
+  }
+
+  // 1-Click Swap Button
+  if (btnSwap) {
+    btnSwap.addEventListener('click', () => {
+      swapFighters();
+    });
+  }
+
+  // Run Button
+  if (btnRun) {
+    btnRun.addEventListener('click', () => {
+      runMatchupAnalysis();
+    });
+  }
+
+  // Tactical Conditions Pill Toggles
+  const conditionGroups = [
+    { id: 'wallPositionGroup', key: 'wall_position' },
+    { id: 'heatStateGroup', key: 'heat_state' },
+    { id: 'distanceGroup', key: 'starting_distance' },
+    { id: 'playerSideGroup', key: 'player_side' }
+  ];
+
+  conditionGroups.forEach(grp => {
+    const el = document.getElementById(grp.id);
+    if (!el) return;
+    el.querySelectorAll('.cond-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        el.querySelectorAll('.cond-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        state.matchup.conditions[grp.key] = pill.dataset.val;
+        runMatchupAnalysis();
+      });
+    });
+  });
+}
+
+function filterSelectOptions(selectEl, query) {
+  let firstMatch = null;
+  Array.from(selectEl.options).forEach(opt => {
+    const text = opt.textContent.toLowerCase();
+    const match = !query || text.includes(query);
+    opt.style.display = match ? '' : 'none';
+    if (match && !firstMatch) firstMatch = opt;
+  });
+  if (firstMatch && query) {
+    selectEl.value = firstMatch.value;
+    selectEl.dispatchEvent(new Event('change'));
+  }
+}
+
+function updatePlayerPreview() {
+  const pSelect = document.getElementById('playerSelect');
+  const avatarImg = document.getElementById('playerAvatarPreview');
+  const badge = document.getElementById('playerArchetypeBadge');
+  if (!pSelect) return;
+
+  const selectedOpt = pSelect.selectedOptions[0];
+  if (selectedOpt) {
+    const avatar = selectedOpt.dataset.avatar || '/assets/avatars/jin-brand-256-C1-oe_x3.webp';
+    if (avatarImg) {
+      avatarImg.src = avatar;
+      avatarImg.onerror = () => { avatarImg.src = '/assets/avatars/jin-brand-256-C1-oe_x3.webp'; };
+    }
+    if (badge) badge.textContent = selectedOpt.dataset.archetype || 'Fighter';
+  }
+}
+
+function updateOpponentPreview() {
+  const oSelect = document.getElementById('opponentSelect');
+  const avatarImg = document.getElementById('opponentAvatarPreview');
+  const badge = document.getElementById('opponentArchetypeBadge');
+  if (!oSelect) return;
+
+  const selectedOpt = oSelect.selectedOptions[0];
+  if (selectedOpt) {
+    const avatar = selectedOpt.dataset.avatar || '/assets/avatars/kazuya-brand-256-BInk9tTm.webp';
+    if (avatarImg) {
+      avatarImg.src = avatar;
+      avatarImg.onerror = () => { avatarImg.src = '/assets/avatars/kazuya-brand-256-BInk9tTm.webp'; };
+    }
+    if (badge) badge.textContent = selectedOpt.dataset.archetype || 'Fighter';
+  }
+}
+
+function updateStagePreview() {
+  const sSelect = document.getElementById('stageSelect');
+  const thumb = document.getElementById('selectedStageThumb');
+  const hazardsBox = document.getElementById('stageHazardsMini');
+  if (!sSelect) return;
+
+  const stageId = parseInt(sSelect.value);
+  const stage = state.stages.find(s => s.id === stageId);
+  if (stage) {
+    if (thumb) {
+      thumb.src = stage.image_url || stage.image || '/assets/img/stages/arena.jpg';
+      thumb.onerror = () => { thumb.src = '/assets/img/stages/arena.svg'; };
+    }
+    if (hazardsBox) {
+      const hazards = stage.hazards || [];
+      if (hazards.length === 0) {
+        hazardsBox.innerHTML = '<span class="mini-hazard-pill safe">Standard Walled</span>';
+      } else {
+        hazardsBox.innerHTML = hazards.slice(0, 3).map(h => {
+          const isSafe = h.includes('Infinite') || h.includes('Standard');
+          return `<span class="mini-hazard-pill ${isSafe ? 'safe' : ''}">${h}</span>`;
+        }).join('');
+      }
+    }
+  }
+}
+
+function pickRandomFighter(target) {
+  if (!state.characters || state.characters.length === 0) return;
+  const pSelect = document.getElementById('playerSelect');
+  const oSelect = document.getElementById('opponentSelect');
+
+  const randomChar = state.characters[Math.floor(Math.random() * state.characters.length)];
+  if (target === 'player' && pSelect) {
+    pSelect.value = randomChar.id;
+    updatePlayerPreview();
+  } else if (target === 'opponent' && oSelect) {
+    oSelect.value = randomChar.id;
+    updateOpponentPreview();
+  }
+  runMatchupAnalysis();
+}
+
+function swapFighters() {
+  const pSelect = document.getElementById('playerSelect');
+  const oSelect = document.getElementById('opponentSelect');
+  if (!pSelect || !oSelect) return;
+
+  const tempVal = pSelect.value;
+  pSelect.value = oSelect.value;
+  oSelect.value = tempVal;
+
+  updatePlayerPreview();
+  updateOpponentPreview();
+  runMatchupAnalysis();
+}
+
+async function restoreUserPreferences() {
+  const pSelect = document.getElementById('playerSelect');
+  const oSelect = document.getElementById('opponentSelect');
+  const sSelect = document.getElementById('stageSelect');
+
+  // Try fetching saved preferences from backend
+  try {
+    const prefData = await fetchAPI(`/matchup/preferences?session_token=${state.sessionToken}`);
+    if (prefData && prefData.player_character_id && prefData.opponent_character_id) {
+      if (pSelect) pSelect.value = prefData.player_character_id;
+      if (oSelect) oSelect.value = prefData.opponent_character_id;
+      if (sSelect && prefData.stage_id) sSelect.value = prefData.stage_id;
+      
+      if (prefData.conditions) {
+        state.matchup.conditions = { ...state.matchup.conditions, ...prefData.conditions };
+        applyConditionsToUI(state.matchup.conditions);
+      }
+      updatePlayerPreview();
+      updateOpponentPreview();
+      updateStagePreview();
+      return;
+    }
+  } catch (e) {
+    // Fall back to localStorage
+  }
+
+  const localPref = localStorage.getItem('tekken8_matchup_pref');
+  if (localPref) {
+    try {
+      const p = JSON.parse(localPref);
+      if (pSelect && p.player_id) pSelect.value = p.player_id;
+      if (oSelect && p.opponent_id) oSelect.value = p.opponent_id;
+      if (sSelect && p.stage_id) sSelect.value = p.stage_id;
+      if (p.conditions) {
+        state.matchup.conditions = { ...state.matchup.conditions, ...p.conditions };
+        applyConditionsToUI(state.matchup.conditions);
+      }
+      updatePlayerPreview();
+      updateOpponentPreview();
+      updateStagePreview();
+    } catch (e) {}
+  }
+}
+
+function applyConditionsToUI(conds) {
+  const map = {
+    'wall_position': 'wallPositionGroup',
+    'heat_state': 'heatStateGroup',
+    'starting_distance': 'distanceGroup',
+    'player_side': 'playerSideGroup'
+  };
+
+  Object.entries(map).forEach(([key, grpId]) => {
+    const val = conds[key];
+    const grp = document.getElementById(grpId);
+    if (grp && val) {
+      grp.querySelectorAll('.cond-pill').forEach(p => {
+        p.classList.toggle('active', p.dataset.val === val);
+      });
+    }
+  });
+}
+
+function saveUserPreferencesLocally(playerId, opponentId, stageId, conditions) {
+  const payload = {
+    player_id: playerId,
+    opponent_id: opponentId,
+    stage_id: stageId,
+    conditions: conditions
+  };
+  localStorage.setItem('tekken8_matchup_pref', JSON.stringify(payload));
+}
+
+async function runMatchupAnalysis() {
+  const pSelect = document.getElementById('playerSelect');
+  const oSelect = document.getElementById('opponentSelect');
+  const sSelect = document.getElementById('stageSelect');
+
+  if (!pSelect || !oSelect || !sSelect) return;
+
+  const playerId = parseInt(pSelect.value);
+  const opponentId = parseInt(oSelect.value);
+  const stageId = parseInt(sSelect.value);
+
+  if (isNaN(playerId) || isNaN(opponentId) || isNaN(stageId)) return;
+
+  saveUserPreferencesLocally(playerId, opponentId, stageId, state.matchup.conditions);
+
+  const loadingEl = document.getElementById('matchupLoading');
+  const errorEl = document.getElementById('matchupError');
+  const dashEl = document.getElementById('matchupDashboardContent');
+
+  if (loadingEl) loadingEl.style.display = 'flex';
+  if (errorEl) errorEl.style.display = 'none';
+  if (dashEl) dashEl.style.display = 'none';
+
+  try {
+    const response = await fetch('/api/v1/matchup/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        player_character_id: playerId,
+        opponent_character_id: opponentId,
+        stage_id: stageId,
+        conditions: state.matchup.conditions,
+        session_token: state.sessionToken
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server returned HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    renderMatchupDashboard(data);
+  } catch (err) {
+    console.error('Matchup analysis error:', err);
+    if (loadingEl) loadingEl.style.display = 'none';
+    if (errorEl) {
+      errorEl.style.display = 'block';
+      const msg = document.getElementById('matchupErrorMessage');
+      if (msg) msg.textContent = `Error loading matchup analysis: ${err.message}`;
+    }
+  }
+}
+
+function renderMatchupDashboard(data) {
+  const loadingEl = document.getElementById('matchupLoading');
+  const errorEl = document.getElementById('matchupError');
+  const dashEl = document.getElementById('matchupDashboardContent');
+
+  if (loadingEl) loadingEl.style.display = 'none';
+  if (errorEl) errorEl.style.display = 'none';
+  if (dashEl) dashEl.style.display = 'block';
+
+  // 1. Face-off Hero Banner
+  const p1 = data.player_character;
+  const p2 = data.opponent_character;
+  const st = data.stage;
+
+  document.getElementById('dashP1Img').src = p1.avatar_url || '/assets/avatars/jin-brand-256-C1-oe_x3.webp';
+  document.getElementById('dashP1Name').textContent = p1.name;
+  document.getElementById('dashP1Archetype').textContent = p1.archetype || 'Fighter';
+
+  document.getElementById('dashP2Img').src = p2.avatar_url || '/assets/avatars/kazuya-brand-256-BInk9tTm.webp';
+  document.getElementById('dashP2Name').textContent = p2.name;
+  document.getElementById('dashP2Archetype').textContent = p2.archetype || 'Fighter';
+
+  document.getElementById('dashStageName').textContent = st.name;
+  document.getElementById('dashStageLocation').textContent = st.location || 'Tekken 8 Arena';
+
+  const hazardsBox = document.getElementById('dashStageHazards');
+  if (hazardsBox) {
+    hazardsBox.innerHTML = (st.hazards || []).map(h => `<span class="hazard-pill">${h}</span>`).join('');
+  }
+
+  // 2. Lab Notes Banner
+  const notesBadge = document.getElementById('notesBadge');
+  const notesMeta = document.getElementById('notesCompletenessMeta');
+  const notesText = document.getElementById('matchupNotesText');
+
+  if (data.has_specific_lab_notes) {
+    notesBadge.className = 'notes-badge verified';
+    notesBadge.textContent = 'VERIFIED LAB NOTES';
+    notesMeta.textContent = 'Pair-Specific Lab Cross-Referenced';
+  } else {
+    notesBadge.className = 'notes-badge fallback';
+    notesBadge.textContent = 'GENERAL FRAME DATA ANALYSIS';
+    notesMeta.textContent = 'Mathematical Frame Derivation';
+  }
+  notesText.textContent = data.matchup_notes;
+
+  // 3. Punish Matrix
+  const punishPill = document.getElementById('punishCountPill');
+  const punishTbody = document.getElementById('punishMatrixBody');
+  const punishEmpty = document.getElementById('punishEmptyState');
+
+  punishPill.textContent = `${data.punish_matrix.length} Verified Punishes`;
+
+  if (!data.punish_matrix || data.punish_matrix.length === 0) {
+    punishTbody.innerHTML = '';
+    punishEmpty.style.display = 'block';
+  } else {
+    punishEmpty.style.display = 'none';
+    punishTbody.innerHTML = data.punish_matrix.map(p => {
+      let tierClass = 'jab';
+      if (p.punish_tier.includes('Launch')) tierClass = 'launch';
+      else if (p.punish_tier.includes('Intermediate') || p.punish_tier.includes('i14')) tierClass = 'intermediate';
+
+      return `
+        <tr>
+          <td>
+            <div style="font-weight:700; color:#fff;">${p.opponent_move_name}</div>
+            <div style="font-family:monospace; font-size:0.75rem; color:var(--text-muted);">${p.opponent_move_input}</div>
+          </td>
+          <td>
+            <span class="frame-disadvantage-badge">${p.opponent_block_advantage}</span>
+          </td>
+          <td>
+            <div style="font-weight:700; color:#fff;">${p.recommended_punish_name}</div>
+            <span class="km-input-badge">${p.recommended_punish_input}</span>
+          </td>
+          <td>
+            <span class="punish-startup-badge">i${p.punish_startup}</span>
+          </td>
+          <td>
+            <span style="font-weight:800; color:var(--accent-gold);">${p.damage !== null ? p.damage : '—'}</span>
+          </td>
+          <td>
+            <span class="punish-tier-badge ${tierClass}">${p.punish_type}</span>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // 4. Player Key Tools
+  const keyList = document.getElementById('playerKeyMovesList');
+  if (keyList) {
+    if (!data.player_key_moves || data.player_key_moves.length === 0) {
+      keyList.innerHTML = '<div style="color:var(--text-muted); font-size:0.8rem; padding:1rem;">No key tools recorded.</div>';
+    } else {
+      keyList.innerHTML = data.player_key_moves.map(km => {
+        const blk = km.block_advantage !== null ? (km.block_advantage > 0 ? `+${km.block_advantage}` : `${km.block_advantage}`) : 'N/A';
+        const blkCls = km.block_advantage !== null ? (km.block_advantage >= 0 ? 'frame-plus' : 'frame-minus') : 'frame-null';
+        const stp = km.startup_frames !== null ? `i${km.startup_frames}` : 'N/A';
+        const dmg = km.damage !== null ? km.damage : '—';
+
+        return `
+          <div class="key-move-row" onclick="testNotationString('${km.input}')" title="Click to test in Notation Engine">
+            <div class="km-info-col">
+              <span class="km-name">${km.move_name}</span>
+              <span class="km-input-badge">${km.input}</span>
+              <span class="km-role-tag">${km.role}</span>
+            </div>
+            <div class="km-stats-col">
+              <span>${stp}</span>
+              <span class="${blkCls}">${blk}</span>
+              <span style="color:var(--accent-gold); font-weight:700;">${dmg} DMG</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  // 5. Stage Hazard Synergy
+  const synergy = data.stage_synergy;
+  const dangerBadge = document.getElementById('wallDangerBadge');
+  const boundaryDesc = document.getElementById('stageBoundaryDescription');
+  const mechanicsRow = document.getElementById('synergyMechanicsRow');
+  const tacticalAdvice = document.getElementById('stageTacticalAdvice');
+
+  if (dangerBadge) {
+    dangerBadge.textContent = synergy.wall_danger_level;
+    dangerBadge.className = 'danger-level-badge ' + (synergy.wall_danger_level.toLowerCase().includes('extreme') ? 'extreme' : (synergy.wall_danger_level.toLowerCase().includes('safe') ? 'safe' : 'moderate'));
+  }
+
+  if (boundaryDesc) {
+    boundaryDesc.textContent = st.notes || `Boundary shape: ${st.boundary_shape || 'Enclosed'}. ${st.special_mechanics || ''}`;
+  }
+
+  if (mechanicsRow) {
+    const allMechs = [...synergy.wall_mechanics, ...synergy.floor_mechanics];
+    if (allMechs.length === 0) {
+      mechanicsRow.innerHTML = '<span class="mini-hazard-pill safe">No Destructibles</span>';
+    } else {
+      mechanicsRow.innerHTML = allMechs.map(m => `<span class="mini-hazard-pill">${m}</span>`).join('');
+    }
+  }
+
+  if (tacticalAdvice) {
+    tacticalAdvice.textContent = synergy.tactical_advice;
+  }
+
+  // 6. Suitable Combos
+  const combosContainer = document.getElementById('suitableCombosContainer');
+  if (combosContainer) {
+    if (!data.suitable_combos || data.suitable_combos.length === 0) {
+      combosContainer.innerHTML = '<div style="color:var(--text-muted); font-size:0.8rem; padding:1rem;">No specific combo route matched for current stage hazards. Standard staple juggles apply.</div>';
+    } else {
+      combosContainer.innerHTML = data.suitable_combos.map(c => `
+        <div class="combo-card">
+          <div class="combo-card-header">
+            <span class="combo-title">${c.title}</span>
+            <span class="combo-dmg-badge">${c.damage} DMG (${c.hits} Hits) • ${c.difficulty}</span>
+          </div>
+          <div class="combo-notation-box">${c.notation}</div>
+          <div class="combo-synergy-note">🎯 ${c.synergy_reason}</div>
+        </div>
+      `).join('');
+    }
+  }
+
+  // 7. Strengths & Weaknesses
+  const strList = document.getElementById('playerStrengthsList');
+  const weakList = document.getElementById('playerWeaknessesList');
+
+  if (strList) {
+    strList.innerHTML = (data.strengths || []).map(s => `<li>${s}</li>`).join('');
+  }
+  if (weakList) {
+    weakList.innerHTML = (data.weaknesses || []).map(w => `<li>${w}</li>`).join('');
+  }
+
+  // 8. Provenance Footer
+  const comp = data.data_completeness;
+  document.getElementById('provMovesAnalyzed').textContent = `${comp.player_moves_analyzed + comp.opponent_moves_analyzed} Moves Evaluated`;
+  document.getElementById('provPatchVersion').textContent = `Patch ${comp.patch_version}`;
+}
+

@@ -23,3 +23,6 @@ class CharacterResponse(CharacterBase):
     move_count: Optional[int] = 0
 
     model_config = ConfigDict(from_attributes=True)
+
+
+CharacterRead = CharacterResponse

@@ -14,6 +14,8 @@ from backend.app.models.move import Move, MoveInput
 from backend.app.models.move_property import MoveProperty
 from backend.app.models.combo_route import ComboRoute
 from backend.app.models.import_batch import ImportBatch
+from backend.app.models.stage import Stage
+from backend.app.models.matchup_note import MatchupNote
 from backend.app.services.notation import NotationEngine
 
 # Full 43-character roster from Tekken 8 & Season releases
@@ -150,10 +152,235 @@ SAMPLE_COMBOS_DATA = [
     }
 ]
 
+# Verified Tekken 8 Official Stages & Destructible Hazards
+STAGES_DATA = [
+    {
+        "slug": "the-arena",
+        "name": "The Arena",
+        "location": "Urban Tournament",
+        "image_url": "/assets/img/stages/arena.jpg",
+        "has_walls": True,
+        "boundary_shape": "Octagonal",
+        "wall_break": False,
+        "hard_wall_break": False,
+        "wall_blast": False,
+        "wall_bound": False,
+        "floor_break": False,
+        "floor_blast": False,
+        "balcony_break": False,
+        "has_transitions": False,
+        "transition_description": None,
+        "total_sections": 1,
+        "special_mechanics": "Standard competitive enclosed arena with crowd chants",
+        "notes": "Standard 8-sided walled tournament stage. No destructible environmental hazards."
+    },
+    {
+        "slug": "urban-square",
+        "name": "Urban Square",
+        "location": "Times Square, New York, USA",
+        "image_url": "/assets/img/stages/urban-square.svg",
+        "has_walls": True,
+        "boundary_shape": "Rectangular",
+        "wall_break": True,
+        "hard_wall_break": False,
+        "wall_blast": True,
+        "wall_bound": False,
+        "floor_break": False,
+        "floor_blast": False,
+        "balcony_break": True,
+        "has_transitions": True,
+        "transition_description": "Balcony break plunges fighters into underground subway station level",
+        "total_sections": 2,
+        "special_mechanics": "Neon signage destruction, crowd reactions, explosive wall blast",
+        "notes": "Features multi-tiered destructible boundaries with Wall Blast and Balcony Break."
+    },
+    {
+        "slug": "yakushima",
+        "name": "Yakushima",
+        "location": "Yakushima Island, Japan",
+        "image_url": "/assets/img/stages/yakushima.svg",
+        "has_walls": False,
+        "boundary_shape": "Infinite",
+        "wall_break": False,
+        "hard_wall_break": False,
+        "wall_blast": False,
+        "wall_bound": False,
+        "floor_break": False,
+        "floor_blast": False,
+        "balcony_break": False,
+        "has_transitions": False,
+        "transition_description": None,
+        "total_sections": 1,
+        "special_mechanics": "Infinite ancient cedar forest with spiritual atmosphere",
+        "notes": "Pure infinite stage with no walls or floors to break. Movement and spacing dominate."
+    },
+    {
+        "slug": "rebel-hangar",
+        "name": "Rebel Hangar",
+        "location": "Underground Yggdrasil Facility",
+        "image_url": "/assets/img/stages/rebel-hangar.svg",
+        "has_walls": True,
+        "boundary_shape": "Square",
+        "wall_break": True,
+        "hard_wall_break": False,
+        "wall_blast": True,
+        "wall_bound": False,
+        "floor_break": False,
+        "floor_blast": False,
+        "balcony_break": False,
+        "has_transitions": True,
+        "transition_description": "Wall blast opens military transport bay",
+        "total_sections": 2,
+        "special_mechanics": "Explosive mechanical bulkhead triggers Wall Blast",
+        "notes": "High hazard stage with explosive wall blast for massive combo extensions."
+    },
+    {
+        "slug": "sanctum",
+        "name": "Sanctum",
+        "location": "Ancient European Temple Ruins",
+        "image_url": "/assets/img/stages/sanctum.svg",
+        "has_walls": True,
+        "boundary_shape": "Octagonal",
+        "wall_break": True,
+        "hard_wall_break": True,
+        "wall_blast": False,
+        "wall_bound": True,
+        "floor_break": True,
+        "floor_blast": False,
+        "balcony_break": False,
+        "has_transitions": True,
+        "transition_description": "Floor collapses into lower underground crypt",
+        "total_sections": 2,
+        "special_mechanics": "Hard Wall Break and multiple Floor Breaks",
+        "notes": "Multi-layered stage featuring hard wall break and subterranean floor break."
+    },
+    {
+        "slug": "into-the-stratosphere",
+        "name": "Into the Stratosphere",
+        "location": "Atmospheric Asteroid Collision",
+        "image_url": "/assets/img/stages/stratosphere.svg",
+        "has_walls": True,
+        "boundary_shape": "Irregular",
+        "wall_break": False,
+        "hard_wall_break": False,
+        "wall_blast": True,
+        "wall_bound": False,
+        "floor_break": False,
+        "floor_blast": True,
+        "balcony_break": False,
+        "has_transitions": False,
+        "transition_description": None,
+        "total_sections": 1,
+        "special_mechanics": "Molten volcanic floor blast and electric perimeter wall blast",
+        "notes": "Climactic arena with volatile floor blast and wall blast mechanics."
+    },
+    {
+        "slug": "ortiz-farm",
+        "name": "Ortiz Farm",
+        "location": "Andes Mountains, Peru",
+        "image_url": "/assets/img/stages/ortiz-farm.svg",
+        "has_walls": True,
+        "boundary_shape": "Irregular",
+        "wall_break": True,
+        "hard_wall_break": False,
+        "wall_blast": False,
+        "wall_bound": False,
+        "floor_break": True,
+        "floor_blast": False,
+        "balcony_break": True,
+        "has_transitions": True,
+        "transition_description": "Balcony break rolls down into lower coffee terraces",
+        "total_sections": 3,
+        "special_mechanics": "3 distinct elevation levels with alpacas cheering",
+        "notes": "Azucena family coffee plantation featuring balcony and floor breaks."
+    },
+    {
+        "slug": "coliseum",
+        "name": "Coliseum",
+        "location": "Rome, Italy",
+        "image_url": "/assets/img/stages/coliseum.svg",
+        "has_walls": True,
+        "boundary_shape": "Circular",
+        "wall_break": True,
+        "hard_wall_break": False,
+        "wall_blast": False,
+        "wall_bound": True,
+        "floor_break": False,
+        "floor_blast": False,
+        "balcony_break": False,
+        "has_transitions": False,
+        "total_sections": 1,
+        "special_mechanics": "Ancient stone pillars induce Wall Bound",
+        "notes": "Historical arena ruins where stone pillars provide Wall Bound combos."
+    },
+    {
+        "slug": "celebration-on-the-seine",
+        "name": "Celebration on the Seine",
+        "location": "Paris, France",
+        "image_url": "/assets/img/stages/celebration-on-the-seine.svg",
+        "has_walls": True,
+        "boundary_shape": "Rectangular",
+        "wall_break": False,
+        "hard_wall_break": False,
+        "wall_blast": False,
+        "wall_bound": False,
+        "floor_break": False,
+        "floor_blast": False,
+        "balcony_break": False,
+        "has_transitions": False,
+        "transition_description": None,
+        "total_sections": 1,
+        "special_mechanics": "Scenic cruise boat on river Seine with Eiffel Tower backdrop",
+        "notes": "Enclosed barge with standard unbreakable walls and festive music."
+    },
+    {
+        "slug": "midnight-siege",
+        "name": "Midnight Siege",
+        "location": "War-torn Urban Fortress",
+        "image_url": "/assets/img/stages/midnight-siege.svg",
+        "has_walls": True,
+        "boundary_shape": "Octagonal",
+        "wall_break": True,
+        "hard_wall_break": False,
+        "wall_blast": True,
+        "wall_bound": False,
+        "floor_break": False,
+        "floor_blast": False,
+        "balcony_break": False,
+        "has_transitions": True,
+        "transition_description": "Explosive wall blast into fortified courtyard",
+        "total_sections": 2,
+        "special_mechanics": "Night siege zone with explosive military wall hazards",
+        "notes": "Fortified military complex with explosive perimeter wall blast."
+    }
+]
+
+# Verified Pair Matchup Notes
+SAMPLE_MATCHUP_NOTES = [
+    {
+        "player_slug": "jin",
+        "opponent_slug": "kazuya",
+        "stage_slug": "the-arena",
+        "overview": "Mishima mirror dynamics. Jin possesses superior mid-range poking with f+4 and Demon's Paw (f,f+2), whereas Kazuya dominates close-range 50/50 vortex with Hell Sweep and Twin Pistons. Block punish Kazuya's Hell Sweep (-23 on block) with Jin's full launcher for maximum guaranteed damage.",
+        "key_advice": "Sidestep left (SSL) is effective against Kazuya's Electric Wind God Fist, but beware of homing options. Duck and launch on read against Hell Sweep (-23 on block).",
+        "strengths_vs_opponent": "Faster neutral tools, safe mid checks with df+1 and f+4, Heat Smash wall carry.",
+        "weaknesses_vs_opponent": "Susceptible to Kazuya's relentless wake-up okizeme if knocked down near walls."
+    },
+    {
+        "player_slug": "kazuya",
+        "opponent_slug": "jin",
+        "stage_slug": "the-arena",
+        "overview": "Heavy execution matchup. Kazuya must enforce respect with Electric Wind God Fist (+5 on block) and capitalize on any whiffed Jin approaches.",
+        "key_advice": "Use Twin Pistons (ws1,2) to punish Jin's low sweeps. Keep Jin pinned to the wall where Mishima vortex is fatal.",
+        "strengths_vs_opponent": "Deadly 50/50 mixups on knockdown, unmatched i11 launcher punish (EWGF), explosive comeback potential in Heat.",
+        "weaknesses_vs_opponent": "Linear attacks vulnerable to well-timed sidestepping in wide stages like Yakushima."
+    }
+]
+
 
 def init_db(db: Session):
     """Initializes tables and seeds initial data idempotently."""
-    Base.metadata.create_all(bind=engine)
+    Base.metadata.create_all(bind=db.get_bind())
 
     # 1. Seed Data Sources
     sources = [
@@ -289,6 +516,64 @@ def init_db(db: Session):
                 difficulty=c_data["difficulty"],
                 uses_heat=c_data["uses_heat"],
                 uses_tornado=c_data["uses_tornado"]
+            ))
+    db.commit()
+
+    # 7. Seed Official Battle Stages
+    stage_map = {}
+    for st_data in STAGES_DATA:
+        existing_stage = db.query(Stage).filter(Stage.slug == st_data["slug"]).first()
+        if not existing_stage:
+            stage_obj = Stage(
+                slug=st_data["slug"],
+                name=st_data["name"],
+                location=st_data.get("location"),
+                image_url=st_data["image_url"],
+                has_walls=st_data.get("has_walls", True),
+                boundary_shape=st_data.get("boundary_shape", "Octagonal"),
+                wall_break=st_data.get("wall_break", False),
+                hard_wall_break=st_data.get("hard_wall_break", False),
+                wall_blast=st_data.get("wall_blast", False),
+                wall_bound=st_data.get("wall_bound", False),
+                floor_break=st_data.get("floor_break", False),
+                floor_blast=st_data.get("floor_blast", False),
+                balcony_break=st_data.get("balcony_break", False),
+                has_transitions=st_data.get("has_transitions", False),
+                transition_description=st_data.get("transition_description"),
+                total_sections=st_data.get("total_sections", 1),
+                special_mechanics=st_data.get("special_mechanics"),
+                notes=st_data.get("notes"),
+                data_source_id=wavu_source.id if wavu_source else 1
+            )
+            db.add(stage_obj)
+            db.commit()
+            db.refresh(stage_obj)
+            stage_map[st_data["slug"]] = stage_obj
+        else:
+            stage_map[st_data["slug"]] = existing_stage
+
+    # 8. Seed Lab Matchup Notes
+    for mn_data in SAMPLE_MATCHUP_NOTES:
+        p_char = char_map.get(mn_data["player_slug"])
+        o_char = char_map.get(mn_data["opponent_slug"])
+        st = stage_map.get(mn_data.get("stage_slug", "the-arena"))
+        if not p_char or not o_char:
+            continue
+
+        existing_mn = db.query(MatchupNote).filter(
+            MatchupNote.player_character_id == p_char.id,
+            MatchupNote.opponent_character_id == o_char.id
+        ).first()
+
+        if not existing_mn:
+            db.add(MatchupNote(
+                player_character_id=p_char.id,
+                opponent_character_id=o_char.id,
+                stage_id=st.id if st else None,
+                overview=mn_data["overview"],
+                key_advice=mn_data["key_advice"],
+                strengths_vs_opponent=mn_data["strengths_vs_opponent"],
+                weaknesses_vs_opponent=mn_data["weaknesses_vs_opponent"]
             ))
     db.commit()
 

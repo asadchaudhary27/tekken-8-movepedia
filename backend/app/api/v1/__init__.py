@@ -5,7 +5,9 @@ from backend.app.api.v1.endpoints import (
     moves,
     notation,
     coverage,
-    sources
+    sources,
+    stages,
+    matchup
 )
 
 api_router = APIRouter()
@@ -15,3 +17,5 @@ api_router.include_router(moves.router, prefix="/moves", tags=["Moves"])
 api_router.include_router(notation.router, prefix="/notation", tags=["Notation"])
 api_router.include_router(coverage.router, prefix="/coverage", tags=["Coverage & QA"])
 api_router.include_router(sources.router, prefix="/sources", tags=["Data Sources"])
+api_router.include_router(stages.router, prefix="/stages", tags=["Stages"])
+api_router.include_router(matchup.router, prefix="/matchup", tags=["Matchup Analyzer"])

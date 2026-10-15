@@ -6,13 +6,17 @@ from fastapi.testclient import TestClient
 from backend.app.database.session import Base, get_db
 from backend.app.database.init_db import init_db
 from backend.app.main import app
+import backend.app.models  # Ensure all models are registered on Base.metadata
+
+from sqlalchemy.pool import StaticPool
 
 # Isolated In-Memory SQLite Test Engine
 SQLALCHEMY_TEST_DATABASE_URL = "sqlite:///:memory:"
 
 test_engine = create_engine(
     SQLALCHEMY_TEST_DATABASE_URL,
-    connect_args={"check_same_thread": False}
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool
 )
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
 

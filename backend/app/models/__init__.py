@@ -9,6 +9,8 @@ from backend.app.models.conflict import DataConflict
 from backend.app.models.missing_data import MissingDataIssue
 from backend.app.models.combo_route import ComboRoute
 from backend.app.models.user_preference import UserPreference
+from backend.app.models.stage import Stage
+from backend.app.models.matchup_note import MatchupNote
 
 __all__ = [
     "DataSource",
@@ -23,4 +25,7 @@ __all__ = [
     "MissingDataIssue",
     "ComboRoute",
     "UserPreference",
+    "Stage",
+    "MatchupNote",
 ]
+

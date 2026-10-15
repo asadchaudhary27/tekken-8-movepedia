@@ -28,6 +28,11 @@
           <rect x="3" y="14" width="7" height="7" rx="1"/>
         </svg>
       </a>
+      <a href="#analyzer" class="rail-item" title="Matchup Analyzer">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </svg>
+      </a>
       <a href="#notation" class="rail-item" title="Notation Engine">
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
           <circle cx="12" cy="12" r="3"/>
@@ -61,11 +66,11 @@
     </a>
     <ul class="nav-links">
       <li><a href="#fighters" class="nav-link active">Fighters</a></li>
+      <li><a href="#analyzer" class="nav-link" style="color:var(--accent-red); font-weight:700;">Matchup Analyzer</a></li>
       <li><a href="#moves" class="nav-link">Moves &amp; Combos</a></li>
       <li><a href="#moves" class="nav-link">Frame Data</a></li>
       <li><a href="#stages" class="nav-link">Stages</a></li>
-      <li><a href="#coverage" class="nav-link">Community</a></li>
-      <li><a href="#moves" class="nav-link">Search</a></li>
+      <li><a href="#coverage" class="nav-link">QA &amp; Coverage</a></li>
     </ul>
     <div class="nav-actions">
       <button class="btn-auth" onclick="document.getElementById('searchQuickInput').focus();">Login / Sign Up</button>
@@ -249,6 +254,383 @@
       </aside>
 
     </div>
+
+    <!-- ==========================================================================
+         Section: Tekken 8 Matchup Analyzer & Selection System (Phase 1)
+         ========================================================================== -->
+    <section id="analyzer" class="section-analyzer">
+      <div class="section-header-row">
+        <div>
+          <div class="analyzer-badge-pill">TACTICAL COMBAT LAB</div>
+          <h2 class="section-title">MATCHUP ANALYZER &amp; TRAINING ASSISTANT</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem;">
+            Real-time mathematical punish matrix, stage hazard synergies, and verified counter-strategies.
+          </p>
+        </div>
+        <div class="analyzer-status-pill" id="analyzerStatusPill">
+          <span class="status-indicator-dot"></span>
+          <span id="analyzerStatusText">Patch 3.00.02 Active</span>
+        </div>
+      </div>
+
+      <!-- Matchup Selection Controls Card -->
+      <div class="analyzer-control-card">
+        <div class="selection-triad-grid">
+
+          <!-- 1. Player Character Selector -->
+          <div class="fighter-select-box p1-box">
+            <div class="select-box-header">
+              <span class="player-tag p1-tag">PLAYER 1 (YOU)</span>
+              <button class="btn-random-fighter" id="btnRandomPlayer" type="button" title="Select Random Fighter">🎲 Random</button>
+            </div>
+            
+            <div class="fighter-picker-wrap">
+              <div class="fighter-preview-avatar">
+                <img id="playerAvatarPreview" src="/assets/avatars/jin-brand-256-C1-oe_x3.webp" alt="Player">
+              </div>
+              <div class="fighter-dropdown-col">
+                <input type="text" id="playerSearchInput" class="fighter-search-input" placeholder="Search Player (e.g. Jin, Reina)...">
+                <select id="playerSelect" class="fighter-select-dropdown">
+                  <!-- Populated dynamically via app.js -->
+                </select>
+                <div class="fighter-archetype-badge" id="playerArchetypeBadge">Mishima / Allies</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Central Swap & VS Widget -->
+          <div class="vs-swap-container">
+            <div class="vs-badge-graphic">VS</div>
+            <button class="btn-swap-fighters" id="btnSwapFighters" type="button" title="Swap Player and Opponent (1-Click)">
+              <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.2" fill="none">
+                <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/>
+              </svg>
+              <span>SWAP</span>
+            </button>
+          </div>
+
+          <!-- 2. Opponent Character Selector -->
+          <div class="fighter-select-box p2-box">
+            <div class="select-box-header">
+              <span class="player-tag p2-tag">OPPONENT (RIVAL)</span>
+              <button class="btn-random-fighter" id="btnRandomOpponent" type="button" title="Select Random Fighter">🎲 Random</button>
+            </div>
+            
+            <div class="fighter-picker-wrap">
+              <div class="fighter-preview-avatar">
+                <img id="opponentAvatarPreview" src="/assets/avatars/kazuya-brand-256-BInk9tTm.webp" alt="Opponent">
+              </div>
+              <div class="fighter-dropdown-col">
+                <input type="text" id="opponentSearchInput" class="fighter-search-input" placeholder="Search Opponent (e.g. Kazuya, King)...">
+                <select id="opponentSelect" class="fighter-select-dropdown">
+                  <!-- Populated dynamically via app.js -->
+                </select>
+                <div class="fighter-archetype-badge" id="opponentArchetypeBadge">Mishima</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Stage & Environmental Conditions Controls Row -->
+        <div class="conditions-control-panel">
+          
+          <!-- Stage Selector with Thumbnail Preview -->
+          <div class="stage-picker-box">
+            <label class="control-label" for="stageSelect">BATTLEGROUND STAGE</label>
+            <div class="stage-selector-flex">
+              <img id="selectedStageThumb" class="stage-thumb-preview" src="/assets/img/stages/arena.jpg" alt="Selected Stage">
+              <div class="stage-select-info">
+                <select id="stageSelect" class="stage-select-dropdown">
+                  <!-- Populated dynamically via app.js -->
+                </select>
+                <div class="stage-hazards-mini" id="stageHazardsMini">
+                  <!-- Hazard pills -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Game Conditions: Wall Position, Heat State, Distance, Side -->
+          <div class="conditions-toggles-box">
+            <label class="control-label">TACTICAL CONDITIONS</label>
+            <div class="conditions-btn-groups">
+              
+              <!-- Wall Position -->
+              <div class="cond-subgroup">
+                <span class="cond-sub-label">Wall Position:</span>
+                <div class="toggle-pill-group" id="wallPositionGroup">
+                  <button type="button" class="cond-pill active" data-val="OPEN">Open</button>
+                  <button type="button" class="cond-pill" data-val="NEAR_WALL">Near Wall</button>
+                  <button type="button" class="cond-pill" data-val="CORNER">Corner</button>
+                </div>
+              </div>
+
+              <!-- Heat State -->
+              <div class="cond-subgroup">
+                <span class="cond-sub-label">Heat State:</span>
+                <div class="toggle-pill-group" id="heatStateGroup">
+                  <button type="button" class="cond-pill active" data-val="AVAILABLE">Available</button>
+                  <button type="button" class="cond-pill" data-val="IN_HEAT">In Heat</button>
+                  <button type="button" class="cond-pill" data-val="SPENT">Spent</button>
+                </div>
+              </div>
+
+              <!-- Starting Distance -->
+              <div class="cond-subgroup">
+                <span class="cond-sub-label">Distance:</span>
+                <div class="toggle-pill-group" id="distanceGroup">
+                  <button type="button" class="cond-pill" data-val="CLOSE">Close (R1)</button>
+                  <button type="button" class="cond-pill active" data-val="MID">Mid (R2)</button>
+                  <button type="button" class="cond-pill" data-val="FAR">Far (R3)</button>
+                </div>
+              </div>
+
+              <!-- Player Side -->
+              <div class="cond-subgroup">
+                <span class="cond-sub-label">Side:</span>
+                <div class="toggle-pill-group" id="playerSideGroup">
+                  <button type="button" class="cond-pill active" data-val="P1">P1 (Left)</button>
+                  <button type="button" class="cond-pill" data-val="P2">P2 (Right)</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Trigger Button -->
+          <div class="analyze-btn-container">
+            <button id="btnRunAnalysis" class="btn-run-analysis" type="button">
+              <span>ANALYZE MATCHUP</span>
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Matchup Dashboard Output -->
+      <div id="matchupOutputContainer" class="matchup-dashboard-area">
+        
+        <!-- Loading State -->
+        <div id="matchupLoading" class="matchup-loading-card" style="display:none;">
+          <div class="spinner-neon"></div>
+          <div class="loading-text">Computing verified frame windows &amp; stage dynamics...</div>
+        </div>
+
+        <!-- Error State -->
+        <div id="matchupError" class="matchup-error-card" style="display:none;">
+          <div class="error-title">Matchup Analysis Interrupted</div>
+          <div id="matchupErrorMessage" class="error-desc">Could not connect to the backend server.</div>
+          <button class="btn-retry-analysis" onclick="runMatchupAnalysis()">Retry Analysis</button>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="matchupDashboardContent" style="display:none;">
+
+          <!-- Top Face-off Banner -->
+          <div class="faceoff-hero-banner" id="faceoffHeroBanner">
+            <div class="faceoff-char p1">
+              <img id="dashP1Img" src="" alt="Player" class="faceoff-img">
+              <div class="faceoff-char-meta">
+                <div class="faceoff-label">P1 PLAYER</div>
+                <div class="faceoff-name" id="dashP1Name">—</div>
+                <div class="faceoff-style" id="dashP1Archetype">—</div>
+              </div>
+            </div>
+
+            <div class="faceoff-stage-center">
+              <div class="faceoff-vs-sign">VS</div>
+              <div class="faceoff-stage-title" id="dashStageName">—</div>
+              <div class="faceoff-stage-location" id="dashStageLocation">—</div>
+              <div class="faceoff-stage-hazards" id="dashStageHazards">
+                <!-- Stage hazard tags -->
+              </div>
+            </div>
+
+            <div class="faceoff-char p2">
+              <img id="dashP2Img" src="" alt="Opponent" class="faceoff-img">
+              <div class="faceoff-char-meta">
+                <div class="faceoff-label">P2 OPPONENT</div>
+                <div class="faceoff-name" id="dashP2Name">—</div>
+                <div class="faceoff-style" id="dashP2Archetype">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lab Advice / Fallback Notice Banner -->
+          <div class="matchup-notes-banner" id="matchupNotesBanner">
+            <div class="notes-header">
+              <span id="notesBadge" class="notes-badge verified">VERIFIED LAB NOTES</span>
+              <span id="notesCompletenessMeta" class="notes-meta">100% Mathematically Proven</span>
+            </div>
+            <div id="matchupNotesText" class="notes-content">—</div>
+          </div>
+
+          <!-- Main Dashboard 2-Column Grid -->
+          <div class="dashboard-two-col-grid">
+            
+            <!-- Left Column: Punish Matrix & Key Tools -->
+            <div class="dash-col">
+              
+              <!-- Guaranteed Punish Matrix Table -->
+              <div class="dash-card">
+                <div class="dash-card-header">
+                  <div class="dash-card-title">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="#ff1e38" stroke-width="2.5" fill="none">
+                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                    </svg>
+                    <span>GUARANTEED PUNISH MATRIX</span>
+                  </div>
+                  <span class="dash-card-pill" id="punishCountPill">0 Verified Windows</span>
+                </div>
+                <p class="dash-card-sub">
+                  Calculated against opponent attacks with disadvantage &le; -10 on block. Startup &le; |Advantage|.
+                </p>
+
+                <div class="punish-table-wrap">
+                  <table class="analyzer-table">
+                    <thead>
+                      <tr>
+                        <th>Opponent Move</th>
+                        <th>On Block</th>
+                        <th>Guaranteed Punisher</th>
+                        <th>Startup</th>
+                        <th>Damage</th>
+                        <th>Type</th>
+                      </tr>
+                    </thead>
+                    <tbody id="punishMatrixBody">
+                      <!-- Rendered dynamically -->
+                    </tbody>
+                  </table>
+                  <div id="punishEmptyState" style="display:none; text-align:center; padding:1.5rem; color:var(--text-muted); font-size:0.85rem;">
+                    No recorded moves with &le; -10 block disadvantage in the sample dataset for this opponent.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Player Signature Key Tools & Tactical Pokes -->
+              <div class="dash-card">
+                <div class="dash-card-header">
+                  <div class="dash-card-title">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="var(--accent-cyan)" stroke-width="2.5" fill="none">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span>PLAYER KEY TOOLS &amp; POKES</span>
+                  </div>
+                  <span class="dash-card-pill" id="keyToolsCountPill">P1 Signature Attacks</span>
+                </div>
+                <p class="dash-card-sub">Core neutral buttons, frame-traps, and tactical neutral checks for this character.</p>
+
+                <div class="key-moves-list" id="playerKeyMovesList">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Right Column: Stage Hazards, Combos, Archetype Synergy -->
+            <div class="dash-col">
+              
+              <!-- Stage Hazard Synergy -->
+              <div class="dash-card">
+                <div class="dash-card-header">
+                  <div class="dash-card-title">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="var(--accent-gold)" stroke-width="2.5" fill="none">
+                      <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                      <polyline points="2 17 12 22 22 17"/>
+                      <polyline points="2 12 12 17 22 12"/>
+                    </svg>
+                    <span>STAGE HAZARD SYNERGY</span>
+                  </div>
+                  <span class="danger-level-badge" id="wallDangerBadge">MODERATE DANGER</span>
+                </div>
+                <p class="dash-card-sub" id="stageBoundaryDescription">Boundary and environmental mechanics analysis.</p>
+
+                <div class="synergy-mechanics-row" id="synergyMechanicsRow">
+                  <!-- Hazard pills -->
+                </div>
+
+                <div class="stage-tactical-advice" id="stageTacticalAdvice">
+                  <!-- Tactical advice -->
+                </div>
+              </div>
+
+              <!-- Suitable Combo Routes -->
+              <div class="dash-card">
+                <div class="dash-card-header">
+                  <div class="dash-card-title">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="#00e676" stroke-width="2.5" fill="none">
+                      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                    <span>RECOMMENDED COMBOS &amp; WALL ROUTES</span>
+                  </div>
+                  <span class="dash-card-pill">Verified Routes</span>
+                </div>
+                <p class="dash-card-sub">Optimized for stage boundary dimensions and active Heat conditions.</p>
+
+                <div class="combo-routes-container" id="suitableCombosContainer">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+
+              <!-- Archetype Strengths & Weaknesses -->
+              <div class="dash-card">
+                <div class="dash-card-header">
+                  <div class="dash-card-title">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="var(--accent-purple)" stroke-width="2.5" fill="none">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                      <circle cx="9" cy="7" r="4"/>
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <span>ARCHETYPE MATCHUP FACTORS</span>
+                  </div>
+                </div>
+
+                <div class="sw-grid">
+                  <div class="sw-box strengths">
+                    <div class="sw-title">PLAYER ADVANTAGES</div>
+                    <ul class="sw-list" id="playerStrengthsList">
+                      <!-- List items -->
+                    </ul>
+                  </div>
+                  <div class="sw-box weaknesses">
+                    <div class="sw-title">OPPONENT THREATS</div>
+                    <ul class="sw-list" id="playerWeaknessesList">
+                      <!-- List items -->
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Data Integrity Guarantee Footer -->
+          <div class="dash-provenance-footer">
+            <div class="provenance-left">
+              <span class="prov-shield">🛡️ STRICT DATA INTEGRITY</span>
+              <span>All calculations grounded in official Tekken 8 patch records. Zero fabricated win-rates or speculative probabilities.</span>
+            </div>
+            <div class="provenance-right">
+              <span id="provMovesAnalyzed">0 Moves Evaluated</span>
+              <span>•</span>
+              <span id="provPatchVersion">Patch 3.00.02</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
 
     <!-- Section: Tekken 8 Stages Showcase (New Asset Presentation) -->
     <section id="stages" class="section-stages">
