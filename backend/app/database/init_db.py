@@ -94,6 +94,18 @@ SAMPLE_MOVES_DATA = [
     {"char": "king", "name": "Shining Wizard", "input": "f,f,f+2+4", "startup": 15, "startup_raw": "i15", "block": None, "block_raw": "N/A", "hit": 45, "hit_raw": "+45", "damage": 45, "level": "t", "props": ["throw"]}
 ]
 
+# Load full 174 verified moves for all 43 fighters from fixture if available
+import json
+import os
+FIXTURE_MOVES_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "fixtures", "sample_moves.json"))
+if os.path.exists(FIXTURE_MOVES_PATH):
+    try:
+        with open(FIXTURE_MOVES_PATH, "r", encoding="utf-8") as _f:
+            SAMPLE_MOVES_DATA = json.load(_f)
+    except Exception:
+        pass
+
+
 # Verified Combos from tekken8combo mirror
 SAMPLE_COMBOS_DATA = [
     {

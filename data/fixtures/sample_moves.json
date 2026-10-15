@@ -1,82 +1,4309 @@
 [
   {
     "character_slug": "feng",
-    "id": "feng_b12",
-    "name": "Iron Fortress",
-    "input": "b+1+2",
-    "startup_frames": 13,
-    "startup_raw": "i13~14",
-    "block_advantage": -19,
-    "block_advantage_raw": "-19",
-    "hit_advantage": 18,
-    "hit_advantage_raw": "+18a (+13)",
+    "char": "feng",
+    "name": "Shifting Cloud Stance",
+    "input": "f+3+4",
+    "startup_frames": null,
+    "startup": null,
+    "startup_raw": "i20",
+    "block_advantage": null,
+    "block": null,
+    "block_raw": "N/A",
+    "hit_advantage": null,
+    "hit": null,
+    "hit_raw": "N/A",
     "ch_advantage": null,
-    "ch_advantage_raw": null,
-    "damage": 25,
-    "damage_raw": "25",
-    "hit_level": "m",
-    "stance_context": null,
-    "properties": ["heat-engager", "power-crush"],
+    "damage": null,
+    "damage_raw": null,
+    "hit_level": "s",
+    "level": "s",
+    "properties": [
+      "parry",
+      "stance"
+    ],
+    "props": [
+      "parry",
+      "stance"
+    ],
     "patch_version": "3.00.02"
   },
   {
-    "character_slug": "feng",
-    "id": "feng_df1",
-    "name": "Demon Palm",
-    "input": "df+1",
-    "startup_frames": 14,
-    "startup_raw": "i14",
-    "block_advantage": 0,
-    "block_advantage_raw": "±0",
-    "hit_advantage": 6,
-    "hit_advantage_raw": "+6",
-    "ch_advantage": 36,
-    "ch_advantage_raw": "+36g",
-    "damage": 11,
-    "damage_raw": "11",
-    "hit_level": "m",
-    "stance_context": null,
-    "properties": [],
-    "patch_version": "3.00.02"
-  },
-  {
-    "character_slug": "jin",
-    "id": "jin_ewhf",
+    "char": "jin",
     "name": "Electric Wind Hook Fist",
     "input": "f,n,d,df+2",
-    "startup_frames": 14,
+    "startup": 14,
     "startup_raw": "i14",
-    "block_advantage": 5,
-    "block_advantage_raw": "+5",
-    "hit_advantage": 42,
-    "hit_advantage_raw": "+42a",
-    "ch_advantage": 42,
-    "ch_advantage_raw": "+42a",
+    "block": 5,
+    "block_raw": "+5",
+    "hit": 42,
+    "hit_raw": "+42a",
     "damage": 23,
-    "damage_raw": "23",
+    "level": "h",
+    "props": [
+      "launcher",
+      "tornado"
+    ],
+    "character_slug": "jin",
+    "startup_frames": 14,
+    "block_advantage": 5,
+    "hit_advantage": 42,
+    "properties": [
+      "launcher",
+      "tornado"
+    ],
     "hit_level": "h",
-    "stance_context": null,
-    "properties": ["launcher", "tornado"],
     "patch_version": "3.00.02"
   },
   {
-    "character_slug": "kazuya",
-    "id": "kazuya_ewgf",
+    "char": "jin",
+    "name": "Demon's Paw",
+    "input": "f,f+2",
+    "startup": 14,
+    "startup_raw": "i14~15",
+    "block": -8,
+    "block_raw": "-8",
+    "hit": 15,
+    "hit_raw": "+15a",
+    "damage": 24,
+    "level": "m",
+    "props": [
+      "heat-engager",
+      "wall-crush"
+    ],
+    "character_slug": "jin",
+    "startup_frames": 14,
+    "block_advantage": -8,
+    "hit_advantage": 15,
+    "properties": [
+      "heat-engager",
+      "wall-crush"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "jin",
+    "name": "Thrusting Knee",
+    "input": "f+4",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -7,
+    "block_raw": "-7",
+    "hit": 4,
+    "hit_raw": "+4",
+    "damage": 21,
+    "level": "m",
+    "props": [
+      "counter-hit-launcher"
+    ],
+    "character_slug": "jin",
+    "startup_frames": 16,
+    "block_advantage": -7,
+    "hit_advantage": 4,
+    "properties": [
+      "counter-hit-launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "jin",
+    "name": "Left Right Combo",
+    "input": "1,2",
+    "startup": 10,
+    "startup_raw": "i10",
+    "block": -1,
+    "block_raw": "-1",
+    "hit": 7,
+    "hit_raw": "+7",
+    "damage": 17,
+    "level": "h,h",
+    "props": [],
+    "character_slug": "jin",
+    "startup_frames": 10,
+    "block_advantage": -1,
+    "hit_advantage": 7,
+    "properties": [],
+    "hit_level": "h,h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "jin",
+    "name": "Zanshin Stance",
+    "input": "b+1+2",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance",
+      "parry"
+    ],
+    "character_slug": "jin",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance",
+      "parry"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kazuya",
     "name": "Electric Wind God Fist",
     "input": "f,n,df+2",
-    "startup_frames": 11,
+    "startup": 11,
     "startup_raw": "i11",
-    "block_advantage": 5,
-    "block_advantage_raw": "+5",
-    "hit_advantage": 40,
-    "hit_advantage_raw": "+40a",
-    "ch_advantage": 40,
-    "ch_advantage_raw": "+40a",
+    "block": 5,
+    "block_raw": "+5",
+    "hit": 40,
+    "hit_raw": "+40a",
     "damage": 25,
-    "damage_raw": "25",
+    "level": "h",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "kazuya",
+    "startup_frames": 11,
+    "block_advantage": 5,
+    "hit_advantage": 40,
+    "properties": [
+      "launcher"
+    ],
     "hit_level": "h",
-    "stance_context": null,
-    "properties": ["launcher"],
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kazuya",
+    "name": "Spinning Demon (Hell Sweep)",
+    "input": "f,n,d,df+4,1",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -23,
+    "block_raw": "-23",
+    "hit": 30,
+    "hit_raw": "+30a",
+    "damage": 30,
+    "level": "l,m",
+    "props": [
+      "knockdown"
+    ],
+    "character_slug": "kazuya",
+    "startup_frames": 16,
+    "block_advantage": -23,
+    "hit_advantage": 30,
+    "properties": [
+      "knockdown"
+    ],
+    "hit_level": "l,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kazuya",
+    "name": "Twin Pistons",
+    "input": "ws1,2",
+    "startup": 13,
+    "startup_raw": "i13",
+    "block": -12,
+    "block_raw": "-12",
+    "hit": 35,
+    "hit_raw": "+35a",
+    "damage": 28,
+    "level": "m,m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "kazuya",
+    "startup_frames": 13,
+    "block_advantage": -12,
+    "hit_advantage": 35,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kazuya",
+    "name": "Demon Scissors",
+    "input": "4~3",
+    "startup": 25,
+    "startup_raw": "i25~26",
+    "block": -9,
+    "block_raw": "-9",
+    "hit": 18,
+    "hit_raw": "+18a",
+    "damage": 27,
+    "level": "m",
+    "props": [
+      "power-crush"
+    ],
+    "character_slug": "kazuya",
+    "startup_frames": 25,
+    "block_advantage": -9,
+    "hit_advantage": 18,
+    "properties": [
+      "power-crush"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kazuya",
+    "name": "Dragon Uppercut",
+    "input": "f,n,d,df+1",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -16,
+    "block_raw": "-16",
+    "hit": 38,
+    "hit_raw": "+38a",
+    "damage": 25,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "kazuya",
+    "startup_frames": 16,
+    "block_advantage": -16,
+    "hit_advantage": 38,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "reina",
+    "name": "Wind God Fist",
+    "input": "f,n,df+2",
+    "startup": 11,
+    "startup_raw": "i11",
+    "block": 5,
+    "block_raw": "+5",
+    "hit": 42,
+    "hit_raw": "+42a",
+    "damage": 22,
+    "level": "h",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "reina",
+    "startup_frames": 11,
+    "block_advantage": 5,
+    "hit_advantage": 42,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "reina",
+    "name": "Sentai Stance Transition",
+    "input": "f+3",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -3,
+    "block_raw": "-3",
+    "hit": 8,
+    "hit_raw": "+8",
+    "damage": 14,
+    "level": "m",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "reina",
+    "startup_frames": 15,
+    "block_advantage": -3,
+    "hit_advantage": 8,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "reina",
+    "name": "Wrath of the Heavens",
+    "input": "b+1+2",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance",
+      "parry"
+    ],
+    "character_slug": "reina",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance",
+      "parry"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "reina",
+    "name": "Senko Renkei",
+    "input": "1,1,2",
+    "startup": 10,
+    "startup_raw": "i10",
+    "block": -17,
+    "block_raw": "-17",
+    "hit": 16,
+    "hit_raw": "+16k",
+    "damage": 25,
+    "level": "h,h,m",
+    "props": [
+      "knockdown"
+    ],
+    "character_slug": "reina",
+    "startup_frames": 10,
+    "block_advantage": -17,
+    "hit_advantage": 16,
+    "properties": [
+      "knockdown"
+    ],
+    "hit_level": "h,h,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "king",
+    "name": "Giant Swing",
+    "input": "f,b,db,d,df,f+1",
+    "startup": 10,
+    "startup_raw": "i10",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": 65,
+    "hit_raw": "+65",
+    "damage": 65,
+    "level": "t",
+    "props": [
+      "throw",
+      "unblockable"
+    ],
+    "character_slug": "king",
+    "startup_frames": 10,
+    "block_advantage": null,
+    "hit_advantage": 65,
+    "properties": [
+      "throw",
+      "unblockable"
+    ],
+    "hit_level": "t",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "king",
+    "name": "Shining Wizard",
+    "input": "f,f,f+2+4",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": 45,
+    "hit_raw": "+45",
+    "damage": 45,
+    "level": "t",
+    "props": [
+      "throw"
+    ],
+    "character_slug": "king",
+    "startup_frames": 15,
+    "block_advantage": null,
+    "hit_advantage": 45,
+    "properties": [
+      "throw"
+    ],
+    "hit_level": "t",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "king",
+    "name": "Muscle Buster",
+    "input": "qcb+1+2",
+    "startup": 11,
+    "startup_raw": "i11",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": 50,
+    "hit_raw": "+50",
+    "damage": 50,
+    "level": "t",
+    "props": [
+      "throw"
+    ],
+    "character_slug": "king",
+    "startup_frames": 11,
+    "block_advantage": null,
+    "hit_advantage": 50,
+    "properties": [
+      "throw"
+    ],
+    "hit_level": "t",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "king",
+    "name": "Capital Punishment",
+    "input": "u+1+2",
+    "startup": 23,
+    "startup_raw": "i23~24",
+    "block": -3,
+    "block_raw": "-3",
+    "hit": 18,
+    "hit_raw": "+18a",
+    "damage": 30,
+    "level": "m",
+    "props": [
+      "power-crush"
+    ],
+    "character_slug": "king",
+    "startup_frames": 23,
+    "block_advantage": -3,
+    "hit_advantage": 18,
+    "properties": [
+      "power-crush"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "feng",
+    "name": "Iron Fortress",
+    "input": "b+1+2",
+    "startup": 13,
+    "startup_raw": "i13~14",
+    "block": -19,
+    "block_raw": "-19",
+    "hit": 18,
+    "hit_raw": "+18a",
+    "damage": 25,
+    "level": "m",
+    "props": [
+      "heat-engager",
+      "power-crush"
+    ],
+    "character_slug": "feng",
+    "startup_frames": 13,
+    "block_advantage": -19,
+    "hit_advantage": 18,
+    "properties": [
+      "heat-engager",
+      "power-crush"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "feng",
+    "name": "Demon Palm",
+    "input": "df+1",
+    "startup": 14,
+    "startup_raw": "i14",
+    "block": 0,
+    "block_raw": "\u00b10",
+    "hit": 6,
+    "hit_raw": "+6",
+    "damage": 11,
+    "level": "m",
+    "props": [],
+    "character_slug": "feng",
+    "startup_frames": 14,
+    "block_advantage": 0,
+    "hit_advantage": 6,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "feng",
+    "name": "Piercing Arrow",
+    "input": "db+3",
+    "startup": 17,
+    "startup_raw": "i17",
+    "block": -15,
+    "block_raw": "-15",
+    "hit": 4,
+    "hit_raw": "+4c",
+    "damage": 16,
+    "level": "l",
+    "props": [
+      "high-crush"
+    ],
+    "character_slug": "feng",
+    "startup_frames": 17,
+    "block_advantage": -15,
+    "hit_advantage": 4,
+    "properties": [
+      "high-crush"
+    ],
+    "hit_level": "l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "feng",
+    "name": "Lapping Waves",
+    "input": "b+4,2",
+    "startup": 12,
+    "startup_raw": "i12~13",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 3,
+    "hit_raw": "+3",
+    "damage": 22,
+    "level": "m,h",
+    "props": [],
+    "character_slug": "feng",
+    "startup_frames": 12,
+    "block_advantage": -6,
+    "hit_advantage": 3,
+    "properties": [],
+    "hit_level": "m,h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "jun",
+    "name": "Matoi Kuzushi",
+    "input": "df+1",
+    "startup": 13,
+    "startup_raw": "i13",
+    "block": -3,
+    "block_raw": "-3",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 12,
+    "level": "m",
+    "props": [],
+    "character_slug": "jun",
+    "startup_frames": 13,
+    "block_advantage": -3,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "jun",
+    "name": "Demon Slayer",
+    "input": "f+2,1+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -12,
+    "block_raw": "-12",
+    "hit": 32,
+    "hit_raw": "+32a",
+    "damage": 28,
+    "level": "m,m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "jun",
+    "startup_frames": 15,
+    "block_advantage": -12,
+    "hit_advantage": 32,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "jun",
+    "name": "Izumo Stance",
+    "input": "u+1+2",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "jun",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "jun",
+    "name": "Sacred Strike",
+    "input": "b+2,1",
+    "startup": 14,
+    "startup_raw": "i14",
+    "block": -7,
+    "block_raw": "-7",
+    "hit": 8,
+    "hit_raw": "+8",
+    "damage": 24,
+    "level": "m,h",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "jun",
+    "startup_frames": 14,
+    "block_advantage": -7,
+    "hit_advantage": 8,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m,h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "paul",
+    "name": "Phoenix Smasher (Deathfist)",
+    "input": "qcf+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -17,
+    "block_raw": "-17",
+    "hit": 28,
+    "hit_raw": "+28k",
+    "damage": 54,
+    "level": "m",
+    "props": [
+      "heat-engager",
+      "wall-crush"
+    ],
+    "character_slug": "paul",
+    "startup_frames": 15,
+    "block_advantage": -17,
+    "hit_advantage": 28,
+    "properties": [
+      "heat-engager",
+      "wall-crush"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "paul",
+    "name": "Demolition Man",
+    "input": "d+4,2:1+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -17,
+    "block_raw": "-17",
+    "hit": 35,
+    "hit_raw": "+35a",
+    "damage": 48,
+    "level": "l,m,m",
+    "props": [
+      "knockdown"
+    ],
+    "character_slug": "paul",
+    "startup_frames": 15,
+    "block_advantage": -17,
+    "hit_advantage": 35,
+    "properties": [
+      "knockdown"
+    ],
+    "hit_level": "l,m,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "paul",
+    "name": "Iron Mountain",
+    "input": "d+1+2",
+    "startup": 12,
+    "startup_raw": "i12",
+    "block": -16,
+    "block_raw": "-16",
+    "hit": 18,
+    "hit_raw": "+18k",
+    "damage": 26,
+    "level": "m",
+    "props": [
+      "power-crush"
+    ],
+    "character_slug": "paul",
+    "startup_frames": 12,
+    "block_advantage": -16,
+    "hit_advantage": 18,
+    "properties": [
+      "power-crush"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "paul",
+    "name": "Bone Breaker",
+    "input": "db+2",
+    "startup": 20,
+    "startup_raw": "i20",
+    "block": -11,
+    "block_raw": "-11",
+    "hit": 3,
+    "hit_raw": "+3",
+    "damage": 17,
+    "level": "l",
+    "props": [],
+    "character_slug": "paul",
+    "startup_frames": 20,
+    "block_advantage": -11,
+    "hit_advantage": 3,
+    "properties": [],
+    "hit_level": "l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "hwoarang",
+    "name": "Hunting Hawk",
+    "input": "uf+3,4,3",
+    "startup": 21,
+    "startup_raw": "i21",
+    "block": -12,
+    "block_raw": "-12",
+    "hit": 28,
+    "hit_raw": "+28k",
+    "damage": 42,
+    "level": "m,m,m",
+    "props": [
+      "knockdown"
+    ],
+    "character_slug": "hwoarang",
+    "startup_frames": 21,
+    "block_advantage": -12,
+    "hit_advantage": 28,
+    "properties": [
+      "knockdown"
+    ],
+    "hit_level": "m,m,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "hwoarang",
+    "name": "Backlash",
+    "input": "3~4",
+    "startup": 27,
+    "startup_raw": "i27",
+    "block": 5,
+    "block_raw": "+5",
+    "hit": 40,
+    "hit_raw": "+40a",
+    "damage": 28,
+    "level": "h",
+    "props": [
+      "power-crush",
+      "launcher",
+      "homing"
+    ],
+    "character_slug": "hwoarang",
+    "startup_frames": 27,
+    "block_advantage": 5,
+    "hit_advantage": 40,
+    "properties": [
+      "power-crush",
+      "launcher",
+      "homing"
+    ],
+    "hit_level": "h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "hwoarang",
+    "name": "Peace Keeper",
+    "input": "f,f+4",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 12,
+    "hit_raw": "+12k",
+    "damage": 25,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "hwoarang",
+    "startup_frames": 16,
+    "block_advantage": -6,
+    "hit_advantage": 12,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "hwoarang",
+    "name": "Left Flamingo Stance",
+    "input": "f+3",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "hwoarang",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "alisa",
+    "name": "Backup Generates",
+    "input": "f,f+3,4,4",
+    "startup": 17,
+    "startup_raw": "i17",
+    "block": -13,
+    "block_raw": "-13",
+    "hit": 36,
+    "hit_raw": "+36a",
+    "damage": 38,
+    "level": "m,h,m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "alisa",
+    "startup_frames": 17,
+    "block_advantage": -13,
+    "hit_advantage": 36,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m,h,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "alisa",
+    "name": "Destructive Form (Chainsaws)",
+    "input": "d+1+2",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "alisa",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "alisa",
+    "name": "Rocket Punch",
+    "input": "1+2",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -14,
+    "block_raw": "-14",
+    "hit": 14,
+    "hit_raw": "+14k",
+    "damage": 22,
+    "level": "h",
+    "props": [
+      "power-crush"
+    ],
+    "character_slug": "alisa",
+    "startup_frames": 16,
+    "block_advantage": -14,
+    "hit_advantage": 14,
+    "properties": [
+      "power-crush"
+    ],
+    "hit_level": "h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "alisa",
+    "name": "Dynamic Range",
+    "input": "b+1",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -9,
+    "block_raw": "-9",
+    "hit": 4,
+    "hit_raw": "+4",
+    "damage": 16,
+    "level": "m",
+    "props": [
+      "homing"
+    ],
+    "character_slug": "alisa",
+    "startup_frames": 15,
+    "block_advantage": -9,
+    "hit_advantage": 4,
+    "properties": [
+      "homing"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "asuka",
+    "name": "Demon Slayer",
+    "input": "f+2",
+    "startup": 17,
+    "startup_raw": "i17",
+    "block": -18,
+    "block_raw": "-18",
+    "hit": 42,
+    "hit_raw": "+42a",
+    "damage": 20,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "asuka",
+    "startup_frames": 17,
+    "block_advantage": -18,
+    "hit_advantage": 42,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "asuka",
+    "name": "Sacred Shield (Parry)",
+    "input": "b+1+2",
+    "startup": 3,
+    "startup_raw": "i3~12",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": 28,
+    "hit_raw": "+28k",
+    "damage": 32,
+    "level": "s",
+    "props": [
+      "parry",
+      "reversal"
+    ],
+    "character_slug": "asuka",
+    "startup_frames": 3,
+    "block_advantage": null,
+    "hit_advantage": 28,
+    "properties": [
+      "parry",
+      "reversal"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "asuka",
+    "name": "Whiplash",
+    "input": "1,1,3",
+    "startup": 10,
+    "startup_raw": "i10",
+    "block": -11,
+    "block_raw": "-11",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 24,
+    "level": "h,h,l",
+    "props": [],
+    "character_slug": "asuka",
+    "startup_frames": 10,
+    "block_advantage": -11,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "h,h,l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "asuka",
+    "name": "Naniwa Gust",
+    "input": "df+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 38,
+    "hit_raw": "+38a",
+    "damage": 17,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "asuka",
+    "startup_frames": 15,
+    "block_advantage": -6,
+    "hit_advantage": 38,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "azucena",
+    "name": "Libertador Stance",
+    "input": "1+2",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance",
+      "auto-dodge"
+    ],
+    "character_slug": "azucena",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance",
+      "auto-dodge"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "azucena",
+    "name": "Coffee Grinder",
+    "input": "df+1,4",
+    "startup": 13,
+    "startup_raw": "i13",
+    "block": -9,
+    "block_raw": "-9",
+    "hit": 8,
+    "hit_raw": "+8",
+    "damage": 22,
+    "level": "m,h",
+    "props": [],
+    "character_slug": "azucena",
+    "startup_frames": 13,
+    "block_advantage": -9,
+    "hit_advantage": 8,
+    "properties": [],
+    "hit_level": "m,h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "azucena",
+    "name": "Espresso Smash",
+    "input": "f,f+3",
+    "startup": 17,
+    "startup_raw": "i17",
+    "block": 4,
+    "block_raw": "+4",
+    "hit": 14,
+    "hit_raw": "+14a",
+    "damage": 25,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "azucena",
+    "startup_frames": 17,
+    "block_advantage": 4,
+    "hit_advantage": 14,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "azucena",
+    "name": "Golden Harvest",
+    "input": "db+3",
+    "startup": 19,
+    "startup_raw": "i19",
+    "block": -13,
+    "block_raw": "-13",
+    "hit": 4,
+    "hit_raw": "+4",
+    "damage": 17,
+    "level": "l",
+    "props": [],
+    "character_slug": "azucena",
+    "startup_frames": 19,
+    "block_advantage": -13,
+    "hit_advantage": 4,
+    "properties": [],
+    "hit_level": "l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "bryan",
+    "name": "Mach Punch",
+    "input": "f,f+2",
+    "startup": 13,
+    "startup_raw": "i13",
+    "block": -10,
+    "block_raw": "-10",
+    "hit": 18,
+    "hit_raw": "+18k",
+    "damage": 30,
+    "level": "h",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "bryan",
+    "startup_frames": 13,
+    "block_advantage": -10,
+    "hit_advantage": 18,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "bryan",
+    "name": "Jet Upper",
+    "input": "f,b+2",
+    "startup": 14,
+    "startup_raw": "i14",
+    "block": -7,
+    "block_raw": "-7",
+    "hit": 40,
+    "hit_raw": "+40a",
+    "damage": 22,
+    "level": "h",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "bryan",
+    "startup_frames": 14,
+    "block_advantage": -7,
+    "hit_advantage": 40,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "bryan",
+    "name": "Hatchet Kick",
+    "input": "qcb+3",
+    "startup": 19,
+    "startup_raw": "i19",
+    "block": -13,
+    "block_raw": "-13",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 21,
+    "level": "l",
+    "props": [],
+    "character_slug": "bryan",
+    "startup_frames": 19,
+    "block_advantage": -13,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "bryan",
+    "name": "Orbital Heel",
+    "input": "uf+4",
+    "startup": 24,
+    "startup_raw": "i24",
+    "block": -5,
+    "block_raw": "-5",
+    "hit": 35,
+    "hit_raw": "+35a",
+    "damage": 23,
+    "level": "m",
+    "props": [
+      "low-crush",
+      "launcher"
+    ],
+    "character_slug": "bryan",
+    "startup_frames": 24,
+    "block_advantage": -5,
+    "hit_advantage": 35,
+    "properties": [
+      "low-crush",
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "claudio",
+    "name": "Ira",
+    "input": "f+1+2",
+    "startup": 12,
+    "startup_raw": "i12",
+    "block": -8,
+    "block_raw": "-8",
+    "hit": 12,
+    "hit_raw": "+12k",
+    "damage": 24,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "claudio",
+    "startup_frames": 12,
+    "block_advantage": -8,
+    "hit_advantage": 12,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "claudio",
+    "name": "Nova Display",
+    "input": "b+1",
+    "startup": 18,
+    "startup_raw": "i18",
+    "block": -5,
+    "block_raw": "-5",
+    "hit": 8,
+    "hit_raw": "+8k",
+    "damage": 22,
+    "level": "m",
+    "props": [
+      "homing"
+    ],
+    "character_slug": "claudio",
+    "startup_frames": 18,
+    "block_advantage": -5,
+    "hit_advantage": 8,
+    "properties": [
+      "homing"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "claudio",
+    "name": "Starburst Blast",
+    "input": "f,f+4",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -4,
+    "block_raw": "-4",
+    "hit": 30,
+    "hit_raw": "+30a",
+    "damage": 26,
+    "level": "m",
+    "props": [
+      "starburst"
+    ],
+    "character_slug": "claudio",
+    "startup_frames": 16,
+    "block_advantage": -4,
+    "hit_advantage": 30,
+    "properties": [
+      "starburst"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "claudio",
+    "name": "Sky Slash Nova",
+    "input": "uf+4",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -13,
+    "block_raw": "-13",
+    "hit": 36,
+    "hit_raw": "+36a",
+    "damage": 18,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "claudio",
+    "startup_frames": 15,
+    "block_advantage": -13,
+    "hit_advantage": 36,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "devil-jin",
+    "name": "Electric Wind God Fist",
+    "input": "f,n,df+2",
+    "startup": 11,
+    "startup_raw": "i11",
+    "block": 5,
+    "block_raw": "+5",
+    "hit": 40,
+    "hit_raw": "+40a",
+    "damage": 25,
+    "level": "h",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "devil-jin",
+    "startup_frames": 11,
+    "block_advantage": 5,
+    "hit_advantage": 40,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "devil-jin",
+    "name": "Hellfire Laser",
+    "input": "1+2",
+    "startup": 30,
+    "startup_raw": "i30",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": 28,
+    "hit_raw": "+28",
+    "damage": 35,
+    "level": "s",
+    "props": [
+      "unblockable"
+    ],
+    "character_slug": "devil-jin",
+    "startup_frames": 30,
+    "block_advantage": null,
+    "hit_advantage": 28,
+    "properties": [
+      "unblockable"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "devil-jin",
+    "name": "Demon Paw",
+    "input": "f,f+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -8,
+    "block_raw": "-8",
+    "hit": 14,
+    "hit_raw": "+14a",
+    "damage": 24,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "devil-jin",
+    "startup_frames": 15,
+    "block_advantage": -8,
+    "hit_advantage": 14,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "devil-jin",
+    "name": "Corpse Thrust",
+    "input": "df+1,2",
+    "startup": 13,
+    "startup_raw": "i13",
+    "block": -8,
+    "block_raw": "-8",
+    "hit": 6,
+    "hit_raw": "+6",
+    "damage": 20,
+    "level": "m,m",
+    "props": [],
+    "character_slug": "devil-jin",
+    "startup_frames": 13,
+    "block_advantage": -8,
+    "hit_advantage": 6,
+    "properties": [],
+    "hit_level": "m,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "dragunov",
+    "name": "Running 2 (Russian Sickle)",
+    "input": "f,f,f+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": 4,
+    "block_raw": "+4",
+    "hit": 22,
+    "hit_raw": "+22k",
+    "damage": 28,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "dragunov",
+    "startup_frames": 15,
+    "block_advantage": 4,
+    "hit_advantage": 22,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "dragunov",
+    "name": "Blizzard Hammer",
+    "input": "b+1+2",
+    "startup": 22,
+    "startup_raw": "i22",
+    "block": 6,
+    "block_raw": "+6",
+    "hit": 14,
+    "hit_raw": "+14",
+    "damage": 24,
+    "level": "m",
+    "props": [
+      "floor-break"
+    ],
+    "character_slug": "dragunov",
+    "startup_frames": 22,
+    "block_advantage": 6,
+    "hit_advantage": 14,
+    "properties": [
+      "floor-break"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "dragunov",
+    "name": "Clip Sweep",
+    "input": "db+3",
+    "startup": 23,
+    "startup_raw": "i23",
+    "block": -15,
+    "block_raw": "-15",
+    "hit": 28,
+    "hit_raw": "+28a",
+    "damage": 22,
+    "level": "l",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "dragunov",
+    "startup_frames": 23,
+    "block_advantage": -15,
+    "hit_advantage": 28,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "dragunov",
+    "name": "Eye Gouge",
+    "input": "f+1+3",
+    "startup": 12,
+    "startup_raw": "i12",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": 45,
+    "hit_raw": "+45",
+    "damage": 45,
+    "level": "t",
+    "props": [
+      "throw"
+    ],
+    "character_slug": "dragunov",
+    "startup_frames": 12,
+    "block_advantage": null,
+    "hit_advantage": 45,
+    "properties": [
+      "throw"
+    ],
+    "hit_level": "t",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "eddy",
+    "name": "Bananeira Stance (Handstand)",
+    "input": "3+4",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "eddy",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "eddy",
+    "name": "Meia Lua De Compasso",
+    "input": "b+3,3",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -14,
+    "block_raw": "-14",
+    "hit": 34,
+    "hit_raw": "+34a",
+    "damage": 32,
+    "level": "m,m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "eddy",
+    "startup_frames": 16,
+    "block_advantage": -14,
+    "hit_advantage": 34,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "eddy",
+    "name": "Armada Sweep",
+    "input": "db+3",
+    "startup": 22,
+    "startup_raw": "i22",
+    "block": -15,
+    "block_raw": "-15",
+    "hit": 24,
+    "hit_raw": "+24k",
+    "damage": 20,
+    "level": "l",
+    "props": [],
+    "character_slug": "eddy",
+    "startup_frames": 22,
+    "block_advantage": -15,
+    "hit_advantage": 24,
+    "properties": [],
+    "hit_level": "l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "eddy",
+    "name": "Capoeira Flurry",
+    "input": "4~3",
+    "startup": 18,
+    "startup_raw": "i18",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 16,
+    "hit_raw": "+16a",
+    "damage": 26,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "eddy",
+    "startup_frames": 18,
+    "block_advantage": -6,
+    "hit_advantage": 16,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "heihachi",
+    "name": "Electric Wind God Fist",
+    "input": "f,n,df+2",
+    "startup": 11,
+    "startup_raw": "i11",
+    "block": 5,
+    "block_raw": "+5",
+    "hit": 42,
+    "hit_raw": "+42a",
+    "damage": 25,
+    "level": "h",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "heihachi",
+    "startup_frames": 11,
+    "block_advantage": 5,
+    "hit_advantage": 42,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "heihachi",
+    "name": "Demon Breath",
+    "input": "1+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -12,
+    "block_raw": "-12",
+    "hit": 18,
+    "hit_raw": "+18k",
+    "damage": 28,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "heihachi",
+    "startup_frames": 15,
+    "block_advantage": -12,
+    "hit_advantage": 18,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "heihachi",
+    "name": "Iron Hand",
+    "input": "f,f+2",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -16,
+    "block_raw": "-16",
+    "hit": 36,
+    "hit_raw": "+36a",
+    "damage": 32,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "heihachi",
+    "startup_frames": 16,
+    "block_advantage": -16,
+    "hit_advantage": 36,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "heihachi",
+    "name": "Hell Axle",
+    "input": "uf+3,4",
+    "startup": 17,
+    "startup_raw": "i17",
+    "block": -10,
+    "block_raw": "-10",
+    "hit": 26,
+    "hit_raw": "+26a",
+    "damage": 35,
+    "level": "m,l",
+    "props": [
+      "tornado"
+    ],
+    "character_slug": "heihachi",
+    "startup_frames": 17,
+    "block_advantage": -10,
+    "hit_advantage": 26,
+    "properties": [
+      "tornado"
+    ],
+    "hit_level": "m,l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "jack-8",
+    "name": "Rocket Uppercut",
+    "input": "df+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -14,
+    "block_raw": "-14",
+    "hit": 38,
+    "hit_raw": "+38a",
+    "damage": 20,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "jack-8",
+    "startup_frames": 15,
+    "block_advantage": -14,
+    "hit_advantage": 38,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "jack-8",
+    "name": "Megaton Sweep",
+    "input": "db+1",
+    "startup": 12,
+    "startup_raw": "i12",
+    "block": -8,
+    "block_raw": "-8",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 14,
+    "level": "l",
+    "props": [],
+    "character_slug": "jack-8",
+    "startup_frames": 12,
+    "block_advantage": -8,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "jack-8",
+    "name": "Gamma Howl Stance",
+    "input": "3+4",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance",
+      "power-crush"
+    ],
+    "character_slug": "jack-8",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance",
+      "power-crush"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "jack-8",
+    "name": "Jack Hammer",
+    "input": "f,f+1",
+    "startup": 18,
+    "startup_raw": "i18",
+    "block": 3,
+    "block_raw": "+3",
+    "hit": 15,
+    "hit_raw": "+15k",
+    "damage": 25,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "jack-8",
+    "startup_frames": 18,
+    "block_advantage": 3,
+    "hit_advantage": 15,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lars",
+    "name": "Dynamic Entry",
+    "input": "f+3",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "lars",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lars",
+    "name": "Zeus",
+    "input": "f,f+2",
+    "startup": 13,
+    "startup_raw": "i13",
+    "block": -11,
+    "block_raw": "-11",
+    "hit": 14,
+    "hit_raw": "+14a",
+    "damage": 24,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "lars",
+    "startup_frames": 13,
+    "block_advantage": -11,
+    "hit_advantage": 14,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lars",
+    "name": "Lightning Screw",
+    "input": "uf+3",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -22,
+    "block_raw": "-22",
+    "hit": 38,
+    "hit_raw": "+38a",
+    "damage": 22,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "lars",
+    "startup_frames": 16,
+    "block_advantage": -22,
+    "hit_advantage": 38,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lars",
+    "name": "Ark Blast",
+    "input": "df+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -8,
+    "block_raw": "-8",
+    "hit": 6,
+    "hit_raw": "+6",
+    "damage": 16,
+    "level": "m",
+    "props": [],
+    "character_slug": "lars",
+    "startup_frames": 15,
+    "block_advantage": -8,
+    "hit_advantage": 6,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "law",
+    "name": "Dragon Uppercut",
+    "input": "df+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -7,
+    "block_raw": "-7",
+    "hit": 38,
+    "hit_raw": "+38a",
+    "damage": 19,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "law",
+    "startup_frames": 15,
+    "block_advantage": -7,
+    "hit_advantage": 38,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "law",
+    "name": "Dragon Tail",
+    "input": "db+4",
+    "startup": 26,
+    "startup_raw": "i26",
+    "block": -26,
+    "block_raw": "-26",
+    "hit": 32,
+    "hit_raw": "+32a",
+    "damage": 26,
+    "level": "l",
+    "props": [
+      "knockdown"
+    ],
+    "character_slug": "law",
+    "startup_frames": 26,
+    "block_advantage": -26,
+    "hit_advantage": 32,
+    "properties": [
+      "knockdown"
+    ],
+    "hit_level": "l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "law",
+    "name": "Legend Kick",
+    "input": "f,f+3",
+    "startup": 20,
+    "startup_raw": "i20",
+    "block": 6,
+    "block_raw": "+6",
+    "hit": 18,
+    "hit_raw": "+18k",
+    "damage": 34,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "law",
+    "startup_frames": 20,
+    "block_advantage": 6,
+    "hit_advantage": 18,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "law",
+    "name": "Dragon Stance",
+    "input": "f+1+2",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "law",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lee",
+    "name": "Acid Rain",
+    "input": "1:3:3:3",
+    "startup": 10,
+    "startup_raw": "i10",
+    "block": -8,
+    "block_raw": "-8",
+    "hit": 28,
+    "hit_raw": "+28k",
+    "damage": 35,
+    "level": "h,l,h,h",
+    "props": [
+      "just-frame"
+    ],
+    "character_slug": "lee",
+    "startup_frames": 10,
+    "block_advantage": -8,
+    "hit_advantage": 28,
+    "properties": [
+      "just-frame"
+    ],
+    "hit_level": "h,l,h,h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lee",
+    "name": "Silver Whip",
+    "input": "f+4,3",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 14,
+    "hit_raw": "+14a",
+    "damage": 25,
+    "level": "m,h",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "lee",
+    "startup_frames": 16,
+    "block_advantage": -6,
+    "hit_advantage": 14,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m,h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lee",
+    "name": "Hitman Stance",
+    "input": "3+4",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "lee",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lee",
+    "name": "Blazing Kick",
+    "input": "d,db+4",
+    "startup": 24,
+    "startup_raw": "i24",
+    "block": -17,
+    "block_raw": "-17",
+    "hit": 40,
+    "hit_raw": "+40a",
+    "damage": 28,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "lee",
+    "startup_frames": 24,
+    "block_advantage": -17,
+    "hit_advantage": 40,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "leo",
+    "name": "Baji Palm",
+    "input": "df+1",
+    "startup": 13,
+    "startup_raw": "i13",
+    "block": -1,
+    "block_raw": "-1",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 12,
+    "level": "m",
+    "props": [],
+    "character_slug": "leo",
+    "startup_frames": 13,
+    "block_advantage": -1,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "leo",
+    "name": "Iron Shoulder",
+    "input": "qcf+2",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -12,
+    "block_raw": "-12",
+    "hit": 15,
+    "hit_raw": "+15k",
+    "damage": 26,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "leo",
+    "startup_frames": 16,
+    "block_advantage": -12,
+    "hit_advantage": 15,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "leo",
+    "name": "Jin Ji Du Li Stance",
+    "input": "f+4",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "leo",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "leo",
+    "name": "Ascending Strike",
+    "input": "df+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -13,
+    "block_raw": "-13",
+    "hit": 36,
+    "hit_raw": "+36a",
+    "damage": 19,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "leo",
+    "startup_frames": 15,
+    "block_advantage": -13,
+    "hit_advantage": 36,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "leroy",
+    "name": "Hermit Stance",
+    "input": "3+4",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "leroy",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "leroy",
+    "name": "Wing Chun Parry",
+    "input": "b+1+2",
+    "startup": 3,
+    "startup_raw": "i3~12",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": 18,
+    "hit_raw": "+18k",
+    "damage": 25,
+    "level": "s",
+    "props": [
+      "parry"
+    ],
+    "character_slug": "leroy",
+    "startup_frames": 3,
+    "block_advantage": null,
+    "hit_advantage": 18,
+    "properties": [
+      "parry"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "leroy",
+    "name": "Twin Dragon Strike",
+    "input": "1+2",
+    "startup": 12,
+    "startup_raw": "i12",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 12,
+    "hit_raw": "+12k",
+    "damage": 24,
+    "level": "m,m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "leroy",
+    "startup_frames": 12,
+    "block_advantage": -6,
+    "hit_advantage": 12,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "leroy",
+    "name": "Dragon Low Strike",
+    "input": "db+3",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -13,
+    "block_raw": "-13",
+    "hit": 3,
+    "hit_raw": "+3",
+    "damage": 16,
+    "level": "l",
+    "props": [],
+    "character_slug": "leroy",
+    "startup_frames": 16,
+    "block_advantage": -13,
+    "hit_advantage": 3,
+    "properties": [],
+    "hit_level": "l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lidia",
+    "name": "Horse Stance",
+    "input": "f+3",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "lidia",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lidia",
+    "name": "Heaven Splitter",
+    "input": "f,f+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -5,
+    "block_raw": "-5",
+    "hit": 16,
+    "hit_raw": "+16a",
+    "damage": 26,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "lidia",
+    "startup_frames": 15,
+    "block_advantage": -5,
+    "hit_advantage": 16,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lidia",
+    "name": "Polskie Chudan Tsuki",
+    "input": "df+1",
+    "startup": 13,
+    "startup_raw": "i13",
+    "block": -2,
+    "block_raw": "-2",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 13,
+    "level": "m",
+    "props": [],
+    "character_slug": "lidia",
+    "startup_frames": 13,
+    "block_advantage": -2,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lidia",
+    "name": "Seiken Zuki",
+    "input": "f+1+2",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -12,
+    "block_raw": "-12",
+    "hit": 32,
+    "hit_raw": "+32a",
+    "damage": 24,
+    "level": "m",
+    "props": [
+      "power-crush"
+    ],
+    "character_slug": "lidia",
+    "startup_frames": 16,
+    "block_advantage": -12,
+    "hit_advantage": 32,
+    "properties": [
+      "power-crush"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lili",
+    "name": "Matterhorn Ascension",
+    "input": "d+3+4",
+    "startup": 20,
+    "startup_raw": "i20",
+    "block": -24,
+    "block_raw": "-24",
+    "hit": 45,
+    "hit_raw": "+45a",
+    "damage": 30,
+    "level": "m,m",
+    "props": [
+      "launcher",
+      "high-crush"
+    ],
+    "character_slug": "lili",
+    "startup_frames": 20,
+    "block_advantage": -24,
+    "hit_advantage": 45,
+    "properties": [
+      "launcher",
+      "high-crush"
+    ],
+    "hit_level": "m,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lili",
+    "name": "Feisty Rabbit Stance",
+    "input": "3+4",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "lili",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lili",
+    "name": "Edelweiss",
+    "input": "db+4",
+    "startup": 25,
+    "startup_raw": "i25",
+    "block": -23,
+    "block_raw": "-23",
+    "hit": 38,
+    "hit_raw": "+38a",
+    "damage": 24,
+    "level": "l",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "lili",
+    "startup_frames": 25,
+    "block_advantage": -23,
+    "hit_advantage": 38,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "lili",
+    "name": "Angel Kneel",
+    "input": "f,f+3",
+    "startup": 18,
+    "startup_raw": "i18",
+    "block": 3,
+    "block_raw": "+3",
+    "hit": 14,
+    "hit_raw": "+14k",
+    "damage": 25,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "lili",
+    "startup_frames": 18,
+    "block_advantage": 3,
+    "hit_advantage": 14,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "nina",
+    "name": "Geyser Cannon",
+    "input": "db+3+4",
+    "startup": 20,
+    "startup_raw": "i20",
+    "block": -19,
+    "block_raw": "-19",
+    "hit": 40,
+    "hit_raw": "+40a",
+    "damage": 22,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "nina",
+    "startup_frames": 20,
+    "block_advantage": -19,
+    "hit_advantage": 40,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "nina",
+    "name": "Blonde Bomb",
+    "input": "f,f+1+2",
+    "startup": 14,
+    "startup_raw": "i14",
+    "block": -8,
+    "block_raw": "-8",
+    "hit": 15,
+    "hit_raw": "+15k",
+    "damage": 28,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "nina",
+    "startup_frames": 14,
+    "block_advantage": -8,
+    "hit_advantage": 15,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "nina",
+    "name": "Evil Mist",
+    "input": "d,df,f+1+2",
+    "startup": 17,
+    "startup_raw": "i17",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": 28,
+    "hit_raw": "+28k",
+    "damage": 30,
+    "level": "s",
+    "props": [
+      "unblockable"
+    ],
+    "character_slug": "nina",
+    "startup_frames": 17,
+    "block_advantage": null,
+    "hit_advantage": 28,
+    "properties": [
+      "unblockable"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "nina",
+    "name": "Wipeout",
+    "input": "df+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -7,
+    "block_raw": "-7",
+    "hit": 35,
+    "hit_raw": "+35a",
+    "damage": 18,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "nina",
+    "startup_frames": 15,
+    "block_advantage": -7,
+    "hit_advantage": 35,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "panda",
+    "name": "Bear Hug",
+    "input": "hcb,f+1+2",
+    "startup": 11,
+    "startup_raw": "i11",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": 55,
+    "hit_raw": "+55",
+    "damage": 55,
+    "level": "t",
+    "props": [
+      "throw"
+    ],
+    "character_slug": "panda",
+    "startup_frames": 11,
+    "block_advantage": null,
+    "hit_advantage": 55,
+    "properties": [
+      "throw"
+    ],
+    "hit_level": "t",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "panda",
+    "name": "Hunting Stance",
+    "input": "3+4",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "panda",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "panda",
+    "name": "Salmon Strike",
+    "input": "f,f+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -13,
+    "block_raw": "-13",
+    "hit": 18,
+    "hit_raw": "+18k",
+    "damage": 30,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "panda",
+    "startup_frames": 15,
+    "block_advantage": -13,
+    "hit_advantage": 18,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "panda",
+    "name": "Wild Swing",
+    "input": "df+2,1",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -12,
+    "block_raw": "-12",
+    "hit": 34,
+    "hit_raw": "+34a",
+    "damage": 28,
+    "level": "m,m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "panda",
+    "startup_frames": 15,
+    "block_advantage": -12,
+    "hit_advantage": 34,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kuma",
+    "name": "Electric Bear Fist",
+    "input": "f,n,d,df+2",
+    "startup": 14,
+    "startup_raw": "i14",
+    "block": 5,
+    "block_raw": "+5",
+    "hit": 42,
+    "hit_raw": "+42a",
+    "damage": 25,
+    "level": "h",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "kuma",
+    "startup_frames": 14,
+    "block_advantage": 5,
+    "hit_advantage": 42,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kuma",
+    "name": "Bear Hug",
+    "input": "hcb,f+1+2",
+    "startup": 11,
+    "startup_raw": "i11",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": 55,
+    "hit_raw": "+55",
+    "damage": 55,
+    "level": "t",
+    "props": [
+      "throw"
+    ],
+    "character_slug": "kuma",
+    "startup_frames": 11,
+    "block_advantage": null,
+    "hit_advantage": 55,
+    "properties": [
+      "throw"
+    ],
+    "hit_level": "t",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kuma",
+    "name": "Hunting Stance",
+    "input": "3+4",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "kuma",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kuma",
+    "name": "Salmon Strike",
+    "input": "f,f+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -13,
+    "block_raw": "-13",
+    "hit": 18,
+    "hit_raw": "+18k",
+    "damage": 30,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "kuma",
+    "startup_frames": 15,
+    "block_advantage": -13,
+    "hit_advantage": 18,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "raven",
+    "name": "Shadow Clone Strike",
+    "input": "df+1+2",
+    "startup": 14,
+    "startup_raw": "i14",
+    "block": -9,
+    "block_raw": "-9",
+    "hit": 16,
+    "hit_raw": "+16a",
+    "damage": 24,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "raven",
+    "startup_frames": 14,
+    "block_advantage": -9,
+    "hit_advantage": 16,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "raven",
+    "name": "Soul Surge",
+    "input": "f,f+3",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -4,
+    "block_raw": "-4",
+    "hit": 32,
+    "hit_raw": "+32a",
+    "damage": 22,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "raven",
+    "startup_frames": 16,
+    "block_advantage": -4,
+    "hit_advantage": 32,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "raven",
+    "name": "Shadow Step",
+    "input": "qcf",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "raven",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "raven",
+    "name": "Windmill Kick",
+    "input": "uf+4",
+    "startup": 20,
+    "startup_raw": "i20",
+    "block": -11,
+    "block_raw": "-11",
+    "hit": 6,
+    "hit_raw": "+6",
+    "damage": 19,
+    "level": "m",
+    "props": [
+      "homing"
+    ],
+    "character_slug": "raven",
+    "startup_frames": 20,
+    "block_advantage": -11,
+    "hit_advantage": 6,
+    "properties": [
+      "homing"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "shaheen",
+    "name": "Stealth Step",
+    "input": "df+3",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "shaheen",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "shaheen",
+    "name": "Crescent Cleaver",
+    "input": "df+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -7,
+    "block_raw": "-7",
+    "hit": 36,
+    "hit_raw": "+36a",
+    "damage": 18,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "shaheen",
+    "startup_frames": 15,
+    "block_advantage": -7,
+    "hit_advantage": 36,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "shaheen",
+    "name": "Sandstorm",
+    "input": "f,f+3",
+    "startup": 17,
+    "startup_raw": "i17",
+    "block": -8,
+    "block_raw": "-8",
+    "hit": 15,
+    "hit_raw": "+15k",
+    "damage": 25,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "shaheen",
+    "startup_frames": 17,
+    "block_advantage": -8,
+    "hit_advantage": 15,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "shaheen",
+    "name": "Altair Kick",
+    "input": "uf+4",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -13,
+    "block_raw": "-13",
+    "hit": 35,
+    "hit_raw": "+35a",
+    "damage": 19,
+    "level": "m",
+    "props": [
+      "launcher",
+      "low-crush"
+    ],
+    "character_slug": "shaheen",
+    "startup_frames": 15,
+    "block_advantage": -13,
+    "hit_advantage": 35,
+    "properties": [
+      "launcher",
+      "low-crush"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "steve",
+    "name": "Sonic Fang",
+    "input": "df+1+2",
+    "startup": 14,
+    "startup_raw": "i14",
+    "block": -12,
+    "block_raw": "-12",
+    "hit": 16,
+    "hit_raw": "+16k",
+    "damage": 28,
+    "level": "m,m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "steve",
+    "startup_frames": 14,
+    "block_advantage": -12,
+    "hit_advantage": 16,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "steve",
+    "name": "Gazelle Punch",
+    "input": "f,f+2",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -8,
+    "block_raw": "-8",
+    "hit": 35,
+    "hit_raw": "+35a",
+    "damage": 22,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "steve",
+    "startup_frames": 16,
+    "block_advantage": -8,
+    "hit_advantage": 35,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "steve",
+    "name": "Peekaboo Stance",
+    "input": "f+3+4",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "steve",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "steve",
+    "name": "British Edge",
+    "input": "df+2",
+    "startup": 17,
+    "startup_raw": "i17",
+    "block": -10,
+    "block_raw": "-10",
+    "hit": 38,
+    "hit_raw": "+38a",
+    "damage": 20,
+    "level": "m",
+    "props": [
+      "counter-hit-launcher"
+    ],
+    "character_slug": "steve",
+    "startup_frames": 17,
+    "block_advantage": -10,
+    "hit_advantage": 38,
+    "properties": [
+      "counter-hit-launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "victor",
+    "name": "Iai Slash",
+    "input": "qcf+1",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -7,
+    "block_raw": "-7",
+    "hit": 16,
+    "hit_raw": "+16k",
+    "damage": 27,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "victor",
+    "startup_frames": 15,
+    "block_advantage": -7,
+    "hit_advantage": 16,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "victor",
+    "name": "Sub-Machine Gun Burst",
+    "input": "2+3",
+    "startup": 20,
+    "startup_raw": "i20",
+    "block": -14,
+    "block_raw": "-14",
+    "hit": 22,
+    "hit_raw": "+22k",
+    "damage": 32,
+    "level": "m,m,m",
+    "props": [],
+    "character_slug": "victor",
+    "startup_frames": 20,
+    "block_advantage": -14,
+    "hit_advantage": 22,
+    "properties": [],
+    "hit_level": "m,m,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "victor",
+    "name": "Teleport Strike",
+    "input": "f,f+2",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -4,
+    "block_raw": "-4",
+    "hit": 34,
+    "hit_raw": "+34a",
+    "damage": 24,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "victor",
+    "startup_frames": 16,
+    "block_advantage": -4,
+    "hit_advantage": 34,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "victor",
+    "name": "Iai Stance",
+    "input": "3+4",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "victor",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "xiaoyu",
+    "name": "Art of Phoenix",
+    "input": "d+1+2",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance",
+      "high-crush",
+      "mid-crush"
+    ],
+    "character_slug": "xiaoyu",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance",
+      "high-crush",
+      "mid-crush"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "xiaoyu",
+    "name": "Rain Dance (Back Turned)",
+    "input": "b+3+4",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "xiaoyu",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "xiaoyu",
+    "name": "Storming Flower",
+    "input": "df+1",
+    "startup": 13,
+    "startup_raw": "i13",
+    "block": -2,
+    "block_raw": "-2",
+    "hit": 4,
+    "hit_raw": "+4",
+    "damage": 12,
+    "level": "m",
+    "props": [],
+    "character_slug": "xiaoyu",
+    "startup_frames": 13,
+    "block_advantage": -2,
+    "hit_advantage": 4,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "xiaoyu",
+    "name": "Sunflower Strike",
+    "input": "f,f+3",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 15,
+    "hit_raw": "+15k",
+    "damage": 25,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "xiaoyu",
+    "startup_frames": 16,
+    "block_advantage": -6,
+    "hit_advantage": 15,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "yoshimitsu",
+    "name": "Manji Flash",
+    "input": "1+4",
+    "startup": 6,
+    "startup_raw": "i6",
+    "block": -15,
+    "block_raw": "-15",
+    "hit": 38,
+    "hit_raw": "+38a",
+    "damage": 25,
+    "level": "m",
+    "props": [
+      "launcher",
+      "fast-punish"
+    ],
+    "character_slug": "yoshimitsu",
+    "startup_frames": 6,
+    "block_advantage": -15,
+    "hit_advantage": 38,
+    "properties": [
+      "launcher",
+      "fast-punish"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "yoshimitsu",
+    "name": "Manji Dragonfly",
+    "input": "u+1+2",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "yoshimitsu",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "yoshimitsu",
+    "name": "Flea Stance",
+    "input": "1+2",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "yoshimitsu",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "yoshimitsu",
+    "name": "Sword Pogo Sweep",
+    "input": "d+1+2",
+    "startup": 18,
+    "startup_raw": "i18",
+    "block": -14,
+    "block_raw": "-14",
+    "hit": 16,
+    "hit_raw": "+16a",
+    "damage": 26,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "yoshimitsu",
+    "startup_frames": 18,
+    "block_advantage": -14,
+    "hit_advantage": 16,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "zafina",
+    "name": "Scarecrow Stance",
+    "input": "3+4",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "zafina",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "zafina",
+    "name": "Tarantula Stance",
+    "input": "d+1+2",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "zafina",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "zafina",
+    "name": "Azazel Claw",
+    "input": "f,f+3",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -7,
+    "block_raw": "-7",
+    "hit": 16,
+    "hit_raw": "+16k",
+    "damage": 25,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "zafina",
+    "startup_frames": 16,
+    "block_advantage": -7,
+    "hit_advantage": 16,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "zafina",
+    "name": "Cursed Dagger",
+    "input": "df+1",
+    "startup": 13,
+    "startup_raw": "i13",
+    "block": -3,
+    "block_raw": "-3",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 13,
+    "level": "m",
+    "props": [],
+    "character_slug": "zafina",
+    "startup_frames": 13,
+    "block_advantage": -3,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "clive",
+    "name": "Phoenix Shift",
+    "input": "f+3",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "clive",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "clive",
+    "name": "Hellfire Thrust",
+    "input": "f,f+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 18,
+    "hit_raw": "+18k",
+    "damage": 28,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "clive",
+    "startup_frames": 15,
+    "block_advantage": -6,
+    "hit_advantage": 18,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "clive",
+    "name": "Ifrit Rising",
+    "input": "df+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -13,
+    "block_raw": "-13",
+    "hit": 36,
+    "hit_raw": "+36a",
+    "damage": 20,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "clive",
+    "startup_frames": 15,
+    "block_advantage": -13,
+    "hit_advantage": 36,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "clive",
+    "name": "Flame Blade Slash",
+    "input": "df+1,2",
+    "startup": 13,
+    "startup_raw": "i13",
+    "block": -8,
+    "block_raw": "-8",
+    "hit": 6,
+    "hit_raw": "+6",
+    "damage": 22,
+    "level": "m,m",
+    "props": [],
+    "character_slug": "clive",
+    "startup_frames": 13,
+    "block_advantage": -8,
+    "hit_advantage": 6,
+    "properties": [],
+    "hit_level": "m,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "anna",
+    "name": "Chaos Judgment",
+    "input": "3+4",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "anna",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "anna",
+    "name": "Scarlet Bomb",
+    "input": "f,f+2",
+    "startup": 14,
+    "startup_raw": "i14",
+    "block": -9,
+    "block_raw": "-9",
+    "hit": 16,
+    "hit_raw": "+16k",
+    "damage": 27,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "anna",
+    "startup_frames": 14,
+    "block_advantage": -9,
+    "hit_advantage": 16,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "anna",
+    "name": "Cold Blade",
+    "input": "db+3",
+    "startup": 20,
+    "startup_raw": "i20",
+    "block": -19,
+    "block_raw": "-19",
+    "hit": 34,
+    "hit_raw": "+34a",
+    "damage": 22,
+    "level": "l",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "anna",
+    "startup_frames": 20,
+    "block_advantage": -19,
+    "hit_advantage": 34,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "anna",
+    "name": "Assassin Slipper",
+    "input": "uf+4",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -13,
+    "block_raw": "-13",
+    "hit": 36,
+    "hit_raw": "+36a",
+    "damage": 19,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "anna",
+    "startup_frames": 15,
+    "block_advantage": -13,
+    "hit_advantage": 36,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "armor-king",
+    "name": "Dark Upper",
+    "input": "f,n,df+2",
+    "startup": 11,
+    "startup_raw": "i11",
+    "block": -10,
+    "block_raw": "-10",
+    "hit": 42,
+    "hit_raw": "+42a",
+    "damage": 24,
+    "level": "h",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "armor-king",
+    "startup_frames": 11,
+    "block_advantage": -10,
+    "hit_advantage": 42,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "armor-king",
+    "name": "Tombstone Piledriver",
+    "input": "qcf+1",
+    "startup": 11,
+    "startup_raw": "i11",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": 58,
+    "hit_raw": "+58",
+    "damage": 58,
+    "level": "t",
+    "props": [
+      "throw"
+    ],
+    "character_slug": "armor-king",
+    "startup_frames": 11,
+    "block_advantage": null,
+    "hit_advantage": 58,
+    "properties": [
+      "throw"
+    ],
+    "hit_level": "t",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "armor-king",
+    "name": "Burning Hammer",
+    "input": "f,f+1+2",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -7,
+    "block_raw": "-7",
+    "hit": 16,
+    "hit_raw": "+16a",
+    "damage": 26,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "armor-king",
+    "startup_frames": 16,
+    "block_advantage": -7,
+    "hit_advantage": 16,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "armor-king",
+    "name": "Black Smoke",
+    "input": "d+1+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -14,
+    "block_raw": "-14",
+    "hit": 20,
+    "hit_raw": "+20k",
+    "damage": 28,
+    "level": "m",
+    "props": [
+      "power-crush"
+    ],
+    "character_slug": "armor-king",
+    "startup_frames": 15,
+    "block_advantage": -14,
+    "hit_advantage": 20,
+    "properties": [
+      "power-crush"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "bob",
+    "name": "Langoustine Elbow",
+    "input": "df+1",
+    "startup": 13,
+    "startup_raw": "i13",
+    "block": -1,
+    "block_raw": "-1",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 13,
+    "level": "m",
+    "props": [],
+    "character_slug": "bob",
+    "startup_frames": 13,
+    "block_advantage": -1,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "bob",
+    "name": "Super Puffy Tackle",
+    "input": "f,f+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 15,
+    "hit_raw": "+15k",
+    "damage": 28,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "bob",
+    "startup_frames": 15,
+    "block_advantage": -6,
+    "hit_advantage": 15,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "bob",
+    "name": "Cougar Punch",
+    "input": "b+2",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -8,
+    "block_raw": "-8",
+    "hit": 34,
+    "hit_raw": "+34a",
+    "damage": 22,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "bob",
+    "startup_frames": 16,
+    "block_advantage": -8,
+    "hit_advantage": 34,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "bob",
+    "name": "G-Clef Cannon",
+    "input": "1,1,2",
+    "startup": 10,
+    "startup_raw": "i10",
+    "block": -14,
+    "block_raw": "-14",
+    "hit": 18,
+    "hit_raw": "+18k",
+    "damage": 26,
+    "level": "h,h,m",
+    "props": [],
+    "character_slug": "bob",
+    "startup_frames": 10,
+    "block_advantage": -14,
+    "hit_advantage": 18,
+    "properties": [],
+    "hit_level": "h,h,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "fahkumram",
+    "name": "Muay Thai Knee",
+    "input": "df+1",
+    "startup": 13,
+    "startup_raw": "i13",
+    "block": -3,
+    "block_raw": "-3",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 14,
+    "level": "m",
+    "props": [],
+    "character_slug": "fahkumram",
+    "startup_frames": 13,
+    "block_advantage": -3,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "fahkumram",
+    "name": "Lightning Kick",
+    "input": "f,f+4",
+    "startup": 18,
+    "startup_raw": "i18",
+    "block": 4,
+    "block_raw": "+4",
+    "hit": 18,
+    "hit_raw": "+18k",
+    "damage": 30,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "fahkumram",
+    "startup_frames": 18,
+    "block_advantage": 4,
+    "hit_advantage": 18,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "fahkumram",
+    "name": "Garuda Slash",
+    "input": "b+1",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -9,
+    "block_raw": "-9",
+    "hit": 38,
+    "hit_raw": "+38a",
+    "damage": 21,
+    "level": "h",
+    "props": [
+      "counter-hit-launcher"
+    ],
+    "character_slug": "fahkumram",
+    "startup_frames": 15,
+    "block_advantage": -9,
+    "hit_advantage": 38,
+    "properties": [
+      "counter-hit-launcher"
+    ],
+    "hit_level": "h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "fahkumram",
+    "name": "Tiger Low Kick",
+    "input": "db+4",
+    "startup": 20,
+    "startup_raw": "i20",
+    "block": -15,
+    "block_raw": "-15",
+    "hit": 4,
+    "hit_raw": "+4",
+    "damage": 18,
+    "level": "l",
+    "props": [],
+    "character_slug": "fahkumram",
+    "startup_frames": 20,
+    "block_advantage": -15,
+    "hit_advantage": 4,
+    "properties": [],
+    "hit_level": "l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kunimitsu",
+    "name": "Setsunagake",
+    "input": "f+3",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "kunimitsu",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kunimitsu",
+    "name": "Shadow Dagger",
+    "input": "f,f+2",
+    "startup": 14,
+    "startup_raw": "i14",
+    "block": -7,
+    "block_raw": "-7",
+    "hit": 14,
+    "hit_raw": "+14k",
+    "damage": 25,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "kunimitsu",
+    "startup_frames": 14,
+    "block_advantage": -7,
+    "hit_advantage": 14,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kunimitsu",
+    "name": "Fox Fire",
+    "input": "b+1+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -12,
+    "block_raw": "-12",
+    "hit": 35,
+    "hit_raw": "+35a",
+    "damage": 22,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "kunimitsu",
+    "startup_frames": 15,
+    "block_advantage": -12,
+    "hit_advantage": 35,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kunimitsu",
+    "name": "Tenka Musou",
+    "input": "uf+3,4",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -10,
+    "block_raw": "-10",
+    "hit": 28,
+    "hit_raw": "+28a",
+    "damage": 28,
+    "level": "m,l",
+    "props": [
+      "tornado"
+    ],
+    "character_slug": "kunimitsu",
+    "startup_frames": 16,
+    "block_advantage": -10,
+    "hit_advantage": 28,
+    "properties": [
+      "tornado"
+    ],
+    "hit_level": "m,l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "miary-zo",
+    "name": "Combat Pirouette",
+    "input": "3+4",
+    "startup": null,
+    "startup_raw": "N/A",
+    "block": null,
+    "block_raw": "N/A",
+    "hit": null,
+    "hit_raw": "N/A",
+    "damage": null,
+    "level": "s",
+    "props": [
+      "stance"
+    ],
+    "character_slug": "miary-zo",
+    "startup_frames": null,
+    "block_advantage": null,
+    "hit_advantage": null,
+    "properties": [
+      "stance"
+    ],
+    "hit_level": "s",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "miary-zo",
+    "name": "Savate High Whip",
+    "input": "uf+4",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -13,
+    "block_raw": "-13",
+    "hit": 36,
+    "hit_raw": "+36a",
+    "damage": 19,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "miary-zo",
+    "startup_frames": 15,
+    "block_advantage": -13,
+    "hit_advantage": 36,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "miary-zo",
+    "name": "Revers Strike",
+    "input": "f,f+2",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 16,
+    "hit_raw": "+16k",
+    "damage": 26,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "miary-zo",
+    "startup_frames": 16,
+    "block_advantage": -6,
+    "hit_advantage": 16,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "miary-zo",
+    "name": "Chasse Bas Low",
+    "input": "db+3",
+    "startup": 18,
+    "startup_raw": "i18",
+    "block": -14,
+    "block_raw": "-14",
+    "hit": 4,
+    "hit_raw": "+4",
+    "damage": 17,
+    "level": "l",
+    "props": [],
+    "character_slug": "miary-zo",
+    "startup_frames": 18,
+    "block_advantage": -14,
+    "hit_advantage": 4,
+    "properties": [],
+    "hit_level": "l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "roger-jr",
+    "name": "Tail Whip",
+    "input": "db+3",
+    "startup": 19,
+    "startup_raw": "i19",
+    "block": -13,
+    "block_raw": "-13",
+    "hit": 4,
+    "hit_raw": "+4",
+    "damage": 18,
+    "level": "l",
+    "props": [],
+    "character_slug": "roger-jr",
+    "startup_frames": 19,
+    "block_advantage": -13,
+    "hit_advantage": 4,
+    "properties": [],
+    "hit_level": "l",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "roger-jr",
+    "name": "Kangaroo Punch",
+    "input": "df+1",
+    "startup": 13,
+    "startup_raw": "i13",
+    "block": -2,
+    "block_raw": "-2",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 12,
+    "level": "m",
+    "props": [],
+    "character_slug": "roger-jr",
+    "startup_frames": 13,
+    "block_advantage": -2,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "roger-jr",
+    "name": "Boxing Uppercut",
+    "input": "df+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -12,
+    "block_raw": "-12",
+    "hit": 36,
+    "hit_raw": "+36a",
+    "damage": 20,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "roger-jr",
+    "startup_frames": 15,
+    "block_advantage": -12,
+    "hit_advantage": 36,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "roger-jr",
+    "name": "Giant Dropkick",
+    "input": "f,f+3",
+    "startup": 17,
+    "startup_raw": "i17",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 16,
+    "hit_raw": "+16k",
+    "damage": 28,
+    "level": "m",
+    "props": [
+      "heat-engager"
+    ],
+    "character_slug": "roger-jr",
+    "startup_frames": 17,
+    "block_advantage": -6,
+    "hit_advantage": 16,
+    "properties": [
+      "heat-engager"
+    ],
+    "hit_level": "m",
     "patch_version": "3.00.02"
   }
 ]
