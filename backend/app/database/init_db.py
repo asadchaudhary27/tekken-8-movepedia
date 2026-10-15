@@ -2036,22 +2036,103 @@ def init_db(db: Session):
     except Exception:
         pass
 
+    # Check if verification_records needs Phase 7 columns
+    try:
+        with db.get_bind().connect() as conn:
+            cursor = conn.exec_driver_sql("PRAGMA table_info(verification_records)")
+            cols = [row[1] for row in cursor.fetchall()]
+            if cols and "entity_type" not in cols:
+                conn.exec_driver_sql("ALTER TABLE verification_records ADD COLUMN entity_type VARCHAR(32) DEFAULT 'MOVE'")
+                conn.exec_driver_sql("ALTER TABLE verification_records ADD COLUMN entity_id INTEGER")
+                conn.exec_driver_sql("ALTER TABLE verification_records ADD COLUMN field_name VARCHAR(64)")
+                conn.exec_driver_sql("ALTER TABLE verification_records ADD COLUMN old_value TEXT")
+                conn.exec_driver_sql("ALTER TABLE verification_records ADD COLUMN new_value TEXT")
+                conn.exec_driver_sql("ALTER TABLE verification_records ADD COLUMN change_summary TEXT")
+                conn.exec_driver_sql("ALTER TABLE verification_records ADD COLUMN patch_version VARCHAR(32) DEFAULT '3.00.02'")
+                conn.exec_driver_sql("ALTER TABLE verification_records ADD COLUMN source_url VARCHAR(255)")
+                conn.commit()
+    except Exception:
+        pass
+
+    # Check if data_sources needs Phase 7 columns
+    try:
+        with db.get_bind().connect() as conn:
+            cursor = conn.exec_driver_sql("PRAGMA table_info(data_sources)")
+            cols = [row[1] for row in cursor.fetchall()]
+            if cols and "attribution_text" not in cols:
+                conn.exec_driver_sql("ALTER TABLE data_sources ADD COLUMN attribution_text TEXT")
+                conn.exec_driver_sql("ALTER TABLE data_sources ADD COLUMN license_url VARCHAR(255)")
+                conn.commit()
+    except Exception:
+        pass
+
     Base.metadata.create_all(bind=db.get_bind())
 
-
-    # 1. Seed Data Sources
+    # 1. Seed Data Sources with Attribution and Licenses
     sources = [
-        {"name": "wavu_wiki", "base_url": "https://wavu.wiki/", "license_type": "CC0 1.0", "approval_status": "APPROVED", "rate_limit_policy": "1 request / sec"},
-        {"name": "tekkendocs", "base_url": "https://tekkendocs.com/", "license_type": "Proprietary Community", "approval_status": "APPROVED_WITH_RESTRICTIONS", "rate_limit_policy": "1 request / 2 sec"},
-        {"name": "tekken8combo", "base_url": "https://tekken8combo.kagewebsite.com/", "license_type": "Community Mirror", "approval_status": "RESEARCH_ONLY", "rate_limit_policy": "Manual only"},
-        {"name": "tekken8_org", "base_url": "https://tekken8.org/frame-data/feng/", "license_type": "Proprietary", "approval_status": "RESEARCH_ONLY", "rate_limit_policy": "Manual reference"},
-        {"name": "t8_notation_maker", "base_url": "https://github.com/LinSDK/t8-notation-maker", "license_type": "MIT", "approval_status": "APPROVED_WITH_RESTRICTIONS", "rate_limit_policy": "Offline client"},
-        {"name": "official_tekken", "base_url": "https://tekken.com/", "license_type": "Proprietary © Bandai Namco", "approval_status": "BLOCKED_PENDING_PERMISSION", "rate_limit_policy": "Prohibited"}
+        {
+            "name": "wavu_wiki",
+            "base_url": "https://wavu.wiki/",
+            "license_type": "CC0 1.0",
+            "attribution_text": "Data provided by wavu.wiki contributors under Creative Commons CC-BY-SA 4.0 / CC0.",
+            "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "approval_status": "APPROVED",
+            "rate_limit_policy": "1 request / sec",
+        },
+        {
+            "name": "tekkendocs",
+            "base_url": "https://tekkendocs.com/",
+            "license_type": "Community Fair Use",
+            "attribution_text": "Frame and combo data indexed from TekkenDocs community archives for educational research.",
+            "license_url": "https://tekkendocs.com/terms",
+            "approval_status": "APPROVED_WITH_RESTRICTIONS",
+            "rate_limit_policy": "1 request / 2 sec",
+        },
+        {
+            "name": "tekken8combo",
+            "base_url": "https://tekken8combo.kagewebsite.com/",
+            "license_type": "Community Mirror",
+            "attribution_text": "Combo routes mirror from KageWebsite community laboratory.",
+            "license_url": "https://tekken8combo.kagewebsite.com/",
+            "approval_status": "RESEARCH_ONLY",
+            "rate_limit_policy": "Manual only",
+        },
+        {
+            "name": "tekken8_org",
+            "base_url": "https://tekken8.org/frame-data/feng/",
+            "license_type": "Proprietary",
+            "attribution_text": "Public reference web records. Proprietary data retained under non-redistribution notice.",
+            "license_url": "https://tekken8.org",
+            "approval_status": "RESEARCH_ONLY",
+            "rate_limit_policy": "Manual reference",
+        },
+        {
+            "name": "t8_notation_maker",
+            "base_url": "https://github.com/LinSDK/t8-notation-maker",
+            "license_type": "MIT License",
+            "attribution_text": "Notation visualization rules adapted from LinSDK/t8-notation-maker under MIT License.",
+            "license_url": "https://github.com/LinSDK/t8-notation-maker/blob/main/LICENSE",
+            "approval_status": "APPROVED_WITH_RESTRICTIONS",
+            "rate_limit_policy": "Offline client",
+        },
+        {
+            "name": "official_tekken",
+            "base_url": "https://tekken.com/",
+            "license_type": "Proprietary © Bandai Namco",
+            "attribution_text": "Tekken 8 characters, trademarks, and artwork are copyright © Bandai Namco Entertainment Inc.",
+            "license_url": "https://tekken.com",
+            "approval_status": "BLOCKED_PENDING_PERMISSION",
+            "rate_limit_policy": "Prohibited",
+        }
     ]
     for s_data in sources:
         existing = db.query(DataSource).filter(DataSource.name == s_data["name"]).first()
         if not existing:
             db.add(DataSource(**s_data))
+        else:
+            existing.license_type = s_data.get("license_type")
+            existing.attribution_text = s_data.get("attribution_text")
+            existing.license_url = s_data.get("license_url")
 
     # 2. Seed Game Patches
     patches = [

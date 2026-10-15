@@ -67,6 +67,13 @@ const state = {
       { raw: 20, notation: 'Hit 5 (Ender)' },
     ]
   },
+  admin: {
+    key: 'tekken8-fyp-admin-secret-2026',
+    user: 'Lead Lab Architect',
+    currentTab: 'tabIssues',
+    dashboardData: null,
+    previewResponse: null
+  },
   stages: [
     {
       id: 1,
@@ -222,6 +229,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await initMatchupAnalyzer();
   initPunishAssistant();
   await loadPunishmentOptions();
+  initAdminHub();
 });
 
 // Event Listeners Setup
@@ -2699,3 +2707,513 @@ async function resetSessionPracticeProgress() {
     console.error('Failed to reset practice progress:', err);
   }
 }
+
+// ==========================================================================
+// Phase 7: Matchup Data Management, Import Studio & Quality Hub
+// ==========================================================================
+
+function initAdminHub() {
+  const keyInput = document.getElementById('adminSecretKeyInput');
+  const userInput = document.getElementById('adminUsernameInput');
+  if (keyInput) keyInput.value = state.admin.key;
+  if (userInput) userInput.value = state.admin.user;
+
+  populateAdminCharacterSelect();
+  refreshAdminDashboard();
+  loadAdminSources();
+}
+
+async function refreshAdminDashboard() {
+  const keyInput = document.getElementById('adminSecretKeyInput');
+  const userInput = document.getElementById('adminUsernameInput');
+  if (keyInput) state.admin.key = keyInput.value.trim();
+  if (userInput) state.admin.user = userInput.value.trim();
+
+  const badge = document.getElementById('adminAuthBadge');
+
+  try {
+    const res = await fetch('/api/v1/admin/dashboard', {
+      headers: {
+        'X-Admin-Key': state.admin.key,
+        'X-Admin-User': state.admin.user
+      }
+    });
+
+    if (!res.ok) {
+      if (badge) {
+        badge.className = 'admin-auth-badge unauthorized';
+        badge.innerHTML = '<span>✕</span> <span>INVALID ADMIN KEY</span>';
+      }
+      return;
+    }
+
+    if (badge) {
+      badge.className = 'admin-auth-badge authorized';
+      badge.innerHTML = '<span>●</span> <span>ADMIN SESSION ACTIVE</span>';
+    }
+
+    const data = await res.json();
+    state.admin.dashboardData = data;
+
+    // Populate KPI cards
+    const setVal = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    };
+
+    setVal('adminMissingFramesVal', data.missing_frame_data_count);
+    setVal('adminMissingStagesVal', data.missing_stage_mechanics_count);
+    setVal('adminCombosNoCompatVal', data.combos_without_opponent_compatibility_count);
+    setVal('adminUnverifiedPunishesVal', data.unverified_punish_options_count);
+    setVal('adminConflictsVal', data.conflicting_records_count);
+    setVal('adminOutdatedPatchVal', data.outdated_patch_records_count);
+    setVal('adminIncompleteSourcesVal', data.incomplete_source_metadata_count);
+    setVal('adminAwaitingReviewVal', data.records_awaiting_review_count);
+
+    // Populate data states chips
+    const dist = data.status_distribution || {};
+    const setChip = (id, label, count) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = `${label} (${count || 0})`;
+    };
+    setChip('chipVerified', 'VERIFIED', dist.VERIFIED);
+    setChip('chipUnverified', 'UNVERIFIED', dist.UNVERIFIED);
+    setChip('chipConflicting', 'CONFLICTING', dist.CONFLICTING);
+    setChip('chipUnavailable', 'UNAVAILABLE', dist.UNAVAILABLE);
+    setChip('chipConfirmedAbsent', 'CONFIRMED ABSENT', dist.CONFIRMED_ABSENT);
+    setChip('chipUnknown', 'UNKNOWN', dist.UNKNOWN);
+    setChip('chipNotProvided', 'NOT PROVIDED', dist.NOT_PROVIDED);
+
+    // Render issues table
+    renderAdminIssues(data.audit_issues || []);
+
+  } catch (err) {
+    console.warn('Failed to load admin quality dashboard:', err);
+    if (badge) {
+      badge.className = 'admin-auth-badge unauthorized';
+      badge.innerHTML = '<span>✕</span> <span>CONNECTION ERROR</span>';
+    }
+  }
+}
+
+function renderAdminIssues(issues) {
+  const tbody = document.getElementById('adminIssuesTableBody');
+  const countTab = document.getElementById('adminIssuesCountTab');
+  if (countTab) countTab.textContent = issues.length;
+  if (!tbody) return;
+
+  if (issues.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align:center; padding:1.5rem; color:#00e676;">
+          ✓ All data records are verified with complete telemetry and zero active discrepancies!
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = issues.map(iss => {
+    let sevClass = 'badge-pending';
+    if (iss.severity === 'CRITICAL' || iss.severity === 'HIGH') sevClass = 'badge-unverified';
+    else if (iss.severity === 'MEDIUM') sevClass = 'badge-review';
+    else sevClass = 'badge-approved';
+
+    return `
+      <tr>
+        <td><span class="feat-badge ${sevClass}">${iss.severity}</span></td>
+        <td><strong style="color:var(--accent-cyan); font-size:0.7rem;">${iss.entity_type}</strong></td>
+        <td><div style="font-weight:700; color:#fff;">${iss.title}</div></td>
+        <td><span style="color:#fbbf24; font-weight:700;">${iss.issue_type}</span></td>
+        <td><span class="state-chip ${iss.status.toLowerCase().replace(/_/g, '-')}">${iss.status}</span></td>
+        <td style="color:var(--text-muted);">${iss.details}</td>
+        <td>
+          <button type="button" class="btn-tb-reset" style="font-size:0.68rem; padding:0.2rem 0.5rem;" onclick="quickUpdateStatus('${iss.entity_type}', ${iss.entity_id}, 'VERIFIED')">
+            Mark Verified
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function switchAdminTab(tabId) {
+  state.admin.currentTab = tabId;
+  document.querySelectorAll('.admin-tab-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tabId);
+  });
+  document.querySelectorAll('.admin-tab-pane').forEach(p => {
+    p.classList.toggle('active', p.id === tabId);
+  });
+
+  if (tabId === 'tabHistory') loadVerificationHistory();
+  if (tabId === 'tabAttribution') loadAdminSources();
+}
+
+async function loadVerificationHistory() {
+  const tbody = document.getElementById('adminHistoryTableBody');
+  if (!tbody) return;
+
+  try {
+    const res = await fetch('/api/v1/admin/history?limit=50', {
+      headers: {
+        'X-Admin-Key': state.admin.key,
+        'X-Admin-User': state.admin.user
+      }
+    });
+    if (!res.ok) return;
+
+    const records = await res.json();
+    if (records.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:1.5rem; color:var(--text-dim);">No verification audit records found yet.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = records.map(r => {
+      const dt = new Date(r.verified_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      return `
+        <tr>
+          <td style="color:var(--text-dim);">${dt}</td>
+          <td><strong style="color:var(--accent-cyan);">${r.entity_type}</strong></td>
+          <td>${r.field_name || '—'}</td>
+          <td style="color:#ff4d6d; font-family:monospace;">${r.old_value !== null ? r.old_value : '—'}</td>
+          <td style="color:#00e676; font-family:monospace;">${r.new_value !== null ? r.new_value : '—'}</td>
+          <td>${r.verified_by}</td>
+          <td><span style="font-size:0.65rem; color:#cbd5e1;">${r.method}</span></td>
+          <td><span class="feat-badge ${r.result === 'VERIFIED' ? 'badge-approved' : 'badge-unverified'}">${r.result}</span></td>
+          <td>${r.patch_version}</td>
+          <td style="color:var(--text-muted); font-size:0.7rem;">${r.evidence_notes || '—'}</td>
+        </tr>
+      `;
+    }).join('');
+  } catch (err) {
+    console.warn('Failed to load history:', err);
+  }
+}
+
+async function loadAdminSources() {
+  const container = document.getElementById('adminSourcesList');
+  if (!container) return;
+
+  try {
+    const res = await fetch('/api/v1/admin/sources', {
+      headers: {
+        'X-Admin-Key': state.admin.key,
+        'X-Admin-User': state.admin.user
+      }
+    });
+    if (!res.ok) return;
+    const sources = await res.json();
+
+    container.innerHTML = sources.map(s => `
+      <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:0.85rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+          <strong style="color:#fff; font-size:0.85rem;">${s.name}</strong>
+          <span class="feat-badge badge-approved">${s.approval_status}</span>
+        </div>
+        <div style="font-size:0.72rem; color:var(--accent-gold); margin-bottom:0.25rem;">
+          License: <strong>${s.license_type}</strong>
+        </div>
+        <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:0.4rem;">
+          ${s.attribution_text || 'Attribution statement pending compliance review.'}
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:0.68rem; color:var(--text-dim);">
+          <span>Rate: ${s.rate_limit_policy}</span>
+          <a href="${s.base_url}" target="_blank" style="color:var(--accent-cyan); text-decoration:none;">Visit Source &rarr;</a>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    console.warn('Failed to load sources:', err);
+  }
+}
+
+function populateAdminCharacterSelect() {
+  const sel = document.getElementById('editMoveCharSelect');
+  if (!sel || !state.characters) return;
+
+  sel.innerHTML = state.characters.map(c => `
+    <option value="${c.id}">${c.name} (${c.slug})</option>
+  `).join('');
+}
+
+async function quickUpdateStatus(entityType, entityId, newStatus) {
+  const reason = prompt(`Enter justification / lab evidence notes to update ${entityType} #${entityId} to ${newStatus}:`, 'Verified in Practice Mode with 60fps frame counter');
+  if (!reason) return;
+
+  try {
+    const res = await fetch('/api/v1/admin/verification-status', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Key': state.admin.key,
+        'X-Admin-User': state.admin.user
+      },
+      body: JSON.stringify({
+        entity_type: entityType,
+        entity_id: entityId,
+        new_status: newStatus,
+        evidence_notes: reason
+      })
+    });
+
+    if (res.ok) {
+      alert(`Status successfully updated to ${newStatus} and recorded in audit trail.`);
+      refreshAdminDashboard();
+    } else {
+      const err = await res.json();
+      alert(`Error updating status: ${err.detail || 'Request failed'}`);
+    }
+  } catch (err) {
+    alert(`Failed to update status: ${err.message}`);
+  }
+}
+
+async function handleAdminSaveMove(e) {
+  e.preventDefault();
+  const feedback = document.getElementById('adminEditorFeedback');
+
+  const charId = parseInt(document.getElementById('editMoveCharSelect').value);
+  const name = document.getElementById('editMoveName').value.trim();
+  const notation = document.getElementById('editMoveNotation').value.trim();
+  const startup = document.getElementById('editMoveStartup').value ? parseInt(document.getElementById('editMoveStartup').value) : null;
+  const block = document.getElementById('editMoveBlock').value ? parseInt(document.getElementById('editMoveBlock').value) : null;
+  const damage = document.getElementById('editMoveDamage').value ? parseInt(document.getElementById('editMoveDamage').value) : null;
+  const hitLevel = document.getElementById('editMoveHitLevel').value.trim() || null;
+  const statusVal = document.getElementById('editMoveStatus').value;
+  const reason = document.getElementById('editMoveReason').value.trim();
+
+  const payload = {
+    character_id: charId,
+    name: name,
+    normalized_notation: notation,
+    original_notation: notation,
+    startup_frames: startup,
+    block_advantage: block,
+    damage: damage,
+    hit_level: hitLevel,
+    verification_status: statusVal,
+    reason_for_change: reason
+  };
+
+  try {
+    const res = await fetch('/api/v1/admin/moves', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Key': state.admin.key,
+        'X-Admin-User': state.admin.user
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      if (feedback) {
+        feedback.style.color = '#00e676';
+        feedback.textContent = `✓ Move '${notation}' saved with audit trail!`;
+      }
+      refreshAdminDashboard();
+    } else {
+      const err = await res.json();
+      if (feedback) {
+        feedback.style.color = '#ff4d6d';
+        feedback.textContent = `Error: ${err.detail || 'Failed to save move'}`;
+      }
+    }
+  } catch (err) {
+    if (feedback) {
+      feedback.style.color = '#ff4d6d';
+      feedback.textContent = `Error: ${err.message}`;
+    }
+  }
+}
+
+function loadSampleImportJson() {
+  const textarea = document.getElementById('importPayloadTextarea');
+  const entitySel = document.getElementById('importEntityTypeSelect');
+  const formatSel = document.getElementById('importFormatSelect');
+
+  if (entitySel) entitySel.value = 'MOVES';
+  if (formatSel) formatSel.value = 'JSON';
+
+  const sample = [
+    {
+      "character_slug": "jin",
+      "name": "Demon Scissors Extension",
+      "normalized_notation": "4~3",
+      "startup_frames": 23,
+      "block_advantage": -13,
+      "damage": 25,
+      "hit_level": "m",
+      "verification_status": "VERIFIED"
+    },
+    {
+      "character_slug": "kazuya",
+      "name": "Abolishing Fist",
+      "normalized_notation": "df+1,2",
+      "startup_frames": 15,
+      "block_advantage": -14,
+      "damage": 32,
+      "hit_level": "m,m",
+      "verification_status": "UNVERIFIED"
+    }
+  ];
+
+  if (textarea) textarea.value = JSON.stringify(sample, null, 2);
+}
+
+function handleImportFileSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const text = event.target.result;
+    const textarea = document.getElementById('importPayloadTextarea');
+    if (textarea) textarea.value = text;
+
+    const formatSel = document.getElementById('importFormatSelect');
+    if (formatSel) {
+      formatSel.value = file.name.endsWith('.csv') ? 'CSV' : 'JSON';
+    }
+  };
+  reader.readAsText(file);
+}
+
+async function previewImportPayload() {
+  const textarea = document.getElementById('importPayloadTextarea');
+  const entityType = document.getElementById('importEntityTypeSelect').value;
+  const formatType = document.getElementById('importFormatSelect').value;
+  const pill = document.getElementById('importPreviewStatusPill');
+  const issuesList = document.getElementById('importIssuesList');
+  const commitBtn = document.getElementById('btnCommitImport');
+
+  if (!textarea || !textarea.value.trim()) {
+    alert('Please enter or load a CSV/JSON payload first.');
+    return;
+  }
+
+  const payload = {
+    entity_type: entityType,
+    format: formatType,
+    raw_content: textarea.value.trim(),
+    source_name: 'Admin Workbench Import'
+  };
+
+  try {
+    const res = await fetch('/api/v1/admin/import/preview', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Key': state.admin.key,
+        'X-Admin-User': state.admin.user
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      alert(`Preview failed: ${err.detail || 'Invalid payload'}`);
+      return;
+    }
+
+    const preview = await res.json();
+    state.admin.previewResponse = preview;
+
+    // Metrics
+    document.getElementById('ipmValid').textContent = preview.valid_rows_count;
+    document.getElementById('ipmErrors').textContent = preview.error_rows_count;
+    document.getElementById('ipmDuplicates').textContent = preview.duplicate_count;
+    document.getElementById('ipmProtected').textContent = preview.verified_protection_count;
+
+    if (pill) {
+      if (preview.is_importable) {
+        pill.className = 'feat-badge badge-approved';
+        pill.textContent = 'VALIDATION PASSED';
+      } else {
+        pill.className = 'feat-badge badge-unverified';
+        pill.textContent = `${preview.error_rows_count} ERRORS DETECTED`;
+      }
+    }
+
+    // Issues list
+    if (issuesList) {
+      if (preview.issues.length === 0) {
+        issuesList.innerHTML = '<div style="color:#00e676; padding:0.5rem;">✓ Zero validation errors or conflict blocks detected. Ready to commit.</div>';
+      } else {
+        issuesList.innerHTML = preview.issues.map(iss => {
+          let color = '#ff4d6d';
+          if (iss.issue_type === 'DUPLICATE') color = '#fbbf24';
+          if (iss.issue_type === 'UNVERIFIED_OVERWRITE_PROTECTED') color = '#c084fc';
+          return `
+            <div style="border-bottom:1px solid rgba(255,255,255,0.05); padding:0.25rem 0;">
+              <span style="color:${color}; font-weight:800;">[Row ${iss.row_index}] ${iss.issue_type}:</span>
+              <span style="color:#e2e8f0;">${iss.message}</span>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    if (commitBtn) {
+      commitBtn.disabled = !preview.is_importable || preview.valid_rows_count === 0;
+    }
+
+  } catch (err) {
+    alert(`Error during preview: ${err.message}`);
+  }
+}
+
+async function executeCommittedImport() {
+  const preview = state.admin.previewResponse;
+  if (!preview || !preview.preview_rows) return;
+
+  const allowOverride = document.getElementById('checkAllowVerifiedOverride').checked;
+  const feedback = document.getElementById('importResultFeedback');
+  const commitBtn = document.getElementById('btnCommitImport');
+
+  if (commitBtn) commitBtn.disabled = true;
+  if (feedback) {
+    feedback.style.color = '#38bdf8';
+    feedback.textContent = 'Executing transaction-safe import...';
+  }
+
+  const payload = {
+    entity_type: preview.entity_type,
+    rows: preview.preview_rows,
+    source_name: 'Admin Workbench Import',
+    allow_override_verified: allowOverride
+  };
+
+  try {
+    const res = await fetch('/api/v1/admin/import/execute', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Key': state.admin.key,
+        'X-Admin-User': state.admin.user
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const summary = await res.json();
+    if (summary.success) {
+      if (feedback) {
+        feedback.style.color = '#00e676';
+        feedback.textContent = `✓ ${summary.message}`;
+      }
+      refreshAdminDashboard();
+    } else {
+      if (feedback) {
+        feedback.style.color = '#ff4d6d';
+        feedback.textContent = `✕ Import rolled back: ${summary.message}`;
+      }
+    }
+  } catch (err) {
+    if (feedback) {
+      feedback.style.color = '#ff4d6d';
+      feedback.textContent = `Error: ${err.message}`;
+    }
+  }
+}
+

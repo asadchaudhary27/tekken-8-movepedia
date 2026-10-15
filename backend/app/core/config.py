@@ -23,6 +23,10 @@ class Settings(BaseSettings):
     # CORS
     CORS_ORIGINS: str = "http://localhost:8000,http://127.0.0.1:8000,http://localhost:3000,*"
 
+    # Admin & Game Patch Defaults
+    ADMIN_SECRET_KEY: str = "tekken8-fyp-admin-secret-2026"
+    CURRENT_GAME_PATCH: str = "3.00.02"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

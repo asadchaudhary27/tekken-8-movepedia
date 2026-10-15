@@ -55,6 +55,11 @@
           <polyline points="2 12 12 17 22 12"/>
         </svg>
       </a>
+      <a href="#admin-hub" class="rail-item" title="Data Admin Hub">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </a>
     </div>
     <div class="rail-bottom">
       <a href="/docs" target="_blank" class="rail-item" title="API Documentation">
@@ -81,6 +86,7 @@
       <li><a href="#moves" class="nav-link">Frame Data</a></li>
       <li><a href="#stages" class="nav-link">Stages</a></li>
       <li><a href="#coverage" class="nav-link">QA &amp; Coverage</a></li>
+      <li><a href="#admin-hub" class="nav-link" style="color:var(--accent-cyan); font-weight:700;">Admin Hub</a></li>
     </ul>
     <div class="nav-actions">
       <button class="btn-auth" onclick="document.getElementById('searchQuickInput').focus();">Login / Sign Up</button>
@@ -1295,6 +1301,369 @@
       <div id="sourcesGrid" class="status-grid">
         <!-- Rendered dynamically -->
       </div>
+    </section>
+
+    <!-- ==========================================================================
+         Section: Matchup Data Management, Imports & Verification (Phase 7)
+         ========================================================================== -->
+    <section id="admin-hub" class="section-admin">
+      <div class="section-header-row">
+        <div>
+          <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
+            <span class="feat-badge badge-approved" style="background:rgba(56,189,248,0.2); border-color:var(--accent-cyan); color:var(--accent-cyan);">ADMIN &amp; DATA MANAGEMENT</span>
+            <span class="feat-badge badge-review" style="font-size:0.65rem;">PHASE 7 VERIFICATION ENGINE</span>
+          </div>
+          <h2 class="section-title">MATCHUP DATA MANAGEMENT &amp; QUALITY HUB</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem;">
+            Quality telemetry, non-destructive audit trail, duplicate/conflict detection, and transaction-safe CSV/JSON imports.
+          </p>
+        </div>
+      </div>
+
+      <!-- Admin Auth Credentials Bar -->
+      <div class="admin-auth-bar">
+        <div class="admin-input-group">
+          <label for="adminSecretKeyInput">Admin Key:</label>
+          <input type="password" id="adminSecretKeyInput" class="admin-text-input" value="tekken8-fyp-admin-secret-2026" placeholder="Enter Admin Secret...">
+        </div>
+        <div class="admin-input-group">
+          <label for="adminUsernameInput">Admin Identity:</label>
+          <input type="text" id="adminUsernameInput" class="admin-text-input" value="Lead Lab Architect" style="width:160px;">
+        </div>
+        <button type="button" class="admin-btn-auth" onclick="refreshAdminDashboard()">
+          ⚡ Authenticate &amp; Refresh
+        </button>
+        <div class="admin-auth-badge authorized" id="adminAuthBadge">
+          <span>●</span> <span>ADMIN SESSION ACTIVE</span>
+        </div>
+      </div>
+
+      <!-- Quality Dashboard KPI Metrics (8 Core Quality Indicators) -->
+      <div class="quality-kpi-grid">
+        <div class="quality-kpi-card alert-high">
+          <div class="qk-label">Missing Frame Data</div>
+          <div class="qk-val" id="adminMissingFramesVal">0</div>
+          <div class="qk-sub">Unrecorded startup/block/hit</div>
+        </div>
+        <div class="quality-kpi-card alert-med">
+          <div class="qk-label">Missing Stage Mechanics</div>
+          <div class="qk-val" id="adminMissingStagesVal">0</div>
+          <div class="qk-sub">Incomplete hazards/layout</div>
+        </div>
+        <div class="quality-kpi-card alert-low">
+          <div class="qk-label">Combos Missing Compat</div>
+          <div class="qk-val" id="adminCombosNoCompatVal">0</div>
+          <div class="qk-sub">Untested on rival profiles</div>
+        </div>
+        <div class="quality-kpi-card alert-high">
+          <div class="qk-label">Unverified Punishes</div>
+          <div class="qk-val" id="adminUnverifiedPunishesVal">0</div>
+          <div class="qk-sub">Punishable moves awaiting lab test</div>
+        </div>
+        <div class="quality-kpi-card alert-high">
+          <div class="qk-label">Active Conflicts</div>
+          <div class="qk-val" id="adminConflictsVal">0</div>
+          <div class="qk-sub">Disputed cross-source values</div>
+        </div>
+        <div class="quality-kpi-card alert-med">
+          <div class="qk-label">Outdated Patch Records</div>
+          <div class="qk-val" id="adminOutdatedPatchVal">0</div>
+          <div class="qk-sub">Prior to current patch (3.00.02)</div>
+        </div>
+        <div class="quality-kpi-card alert-low">
+          <div class="qk-label">Incomplete Attribution</div>
+          <div class="qk-val" id="adminIncompleteSourcesVal">0</div>
+          <div class="qk-sub">Missing license / legal URLs</div>
+        </div>
+        <div class="quality-kpi-card alert-med">
+          <div class="qk-label">Awaiting Review</div>
+          <div class="qk-val" id="adminAwaitingReviewVal">0</div>
+          <div class="qk-sub">Pending verification queue</div>
+        </div>
+      </div>
+
+      <!-- Data States Differentiation Legend Banner -->
+      <div class="data-states-banner">
+        <span class="dsb-title">Data Status Model:</span>
+        <span class="state-chip verified" id="chipVerified">VERIFIED (0)</span>
+        <span class="state-chip unverified" id="chipUnverified">UNVERIFIED (0)</span>
+        <span class="state-chip conflicting" id="chipConflicting">CONFLICTING (0)</span>
+        <span class="state-chip unavailable" id="chipUnavailable">UNAVAILABLE (0)</span>
+        <span class="state-chip confirmed-absent" id="chipConfirmedAbsent">CONFIRMED ABSENT (0)</span>
+        <span class="state-chip unknown" id="chipUnknown">UNKNOWN (0)</span>
+        <span class="state-chip not-provided" id="chipNotProvided">NOT PROVIDED (0)</span>
+        <span style="font-size:0.68rem; color:var(--text-muted); margin-left:auto;">
+          * Missing information is never converted to false, zero, or "incompatible".
+        </span>
+      </div>
+
+      <!-- Admin Sub-Tabs Navigation -->
+      <div class="admin-tabs-nav">
+        <button type="button" class="admin-tab-btn active" data-tab="tabIssues" onclick="switchAdminTab('tabIssues')">
+          ⚠️ Quality Issues &amp; Alerts (<span id="adminIssuesCountTab">0</span>)
+        </button>
+        <button type="button" class="admin-tab-btn" data-tab="tabImport" onclick="switchAdminTab('tabImport')">
+          📥 CSV / JSON Import Studio
+        </button>
+        <button type="button" class="admin-tab-btn" data-tab="tabEditor" onclick="switchAdminTab('tabEditor')">
+          ✏️ Add / Edit Records
+        </button>
+        <button type="button" class="admin-tab-btn" data-tab="tabHistory" onclick="switchAdminTab('tabHistory')">
+          📜 Non-Destructive Audit Trail
+        </button>
+        <button type="button" class="admin-tab-btn" data-tab="tabAttribution" onclick="switchAdminTab('tabAttribution')">
+          ⚖️ Sources &amp; Attribution Licenses
+        </button>
+      </div>
+
+      <!-- Tab 1: Quality Issues & Alerts -->
+      <div id="tabIssues" class="admin-tab-pane active">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+          <h4 style="color:#fff; font-size:0.85rem; text-transform:uppercase; font-weight:800;">
+            Active Discrepancies &amp; Incomplete Data
+          </h4>
+          <span style="font-size:0.72rem; color:var(--text-muted);">
+            Items prioritized by data integrity severity
+          </span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="admin-issue-table">
+            <thead>
+              <tr>
+                <th>Severity</th>
+                <th>Entity Type</th>
+                <th>Item / Notation</th>
+                <th>Issue Type</th>
+                <th>Status Classification</th>
+                <th>Audit Details</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminIssuesTableBody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 2: CSV / JSON Import Studio -->
+      <div id="tabImport" class="admin-tab-pane">
+        <div class="import-studio-grid">
+          
+          <!-- Left: Input & Configuration -->
+          <div class="import-editor-box">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-weight:700; color:#fff; font-size:0.85rem;">Payload Specification</span>
+              <div style="display:flex; gap:0.5rem;">
+                <select id="importEntityTypeSelect" class="form-input-admin" style="padding:0.25rem 0.5rem;">
+                  <option value="MOVES">Moves</option>
+                  <option value="COMBOS">Combos</option>
+                  <option value="STAGES">Stages</option>
+                </select>
+                <select id="importFormatSelect" class="form-input-admin" style="padding:0.25rem 0.5rem;">
+                  <option value="JSON">JSON</option>
+                  <option value="CSV">CSV</option>
+                </select>
+              </div>
+            </div>
+
+            <textarea id="importPayloadTextarea" class="import-textarea" placeholder="Paste JSON array or CSV text here... e.g.:
+[
+  {
+    &quot;character_slug&quot;: &quot;jin&quot;,
+    &quot;name&quot;: &quot;Left Right Axe&quot;,
+    &quot;normalized_notation&quot;: &quot;1,2,3&quot;,
+    &quot;startup_frames&quot;: 10,
+    &quot;block_advantage&quot;: -8,
+    &quot;damage&quot;: 28,
+    &quot;hit_level&quot;: &quot;h,h,m&quot;,
+    &quot;verification_status&quot;: &quot;UNVERIFIED&quot;
+  }
+]"></textarea>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+              <div style="display:flex; gap:0.5rem; align-items:center;">
+                <input type="file" id="importFileInput" accept=".json,.csv" style="display:none;" onchange="handleImportFileSelect(event)">
+                <button type="button" class="btn-tb-reset" onclick="document.getElementById('importFileInput').click()">
+                  📂 Load File
+                </button>
+                <button type="button" class="btn-tb-reset" onclick="loadSampleImportJson()">
+                  Load Sample Move
+                </button>
+              </div>
+              <button type="button" class="admin-btn-auth" onclick="previewImportPayload()">
+                🔍 Validate &amp; Preview Import
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Validation, Duplicate & Conflict Detector -->
+          <div class="import-preview-box">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-weight:700; color:#fff; font-size:0.85rem;">Validation &amp; Integrity Report</span>
+              <span id="importPreviewStatusPill" class="feat-badge badge-pending">AWAITING PREVIEW</span>
+            </div>
+
+            <div id="importPreviewMetrics" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.5rem; text-align:center;">
+              <div style="background:rgba(0,0,0,0.3); padding:0.4rem; border-radius:4px;">
+                <div style="font-size:0.65rem; color:var(--text-dim);">VALID</div>
+                <div id="ipmValid" style="font-weight:800; color:#00e676;">0</div>
+              </div>
+              <div style="background:rgba(0,0,0,0.3); padding:0.4rem; border-radius:4px;">
+                <div style="font-size:0.65rem; color:var(--text-dim);">ERRORS</div>
+                <div id="ipmErrors" style="font-weight:800; color:#ff4d6d;">0</div>
+              </div>
+              <div style="background:rgba(0,0,0,0.3); padding:0.4rem; border-radius:4px;">
+                <div style="font-size:0.65rem; color:var(--text-dim);">DUPLICATES</div>
+                <div id="ipmDuplicates" style="font-weight:800; color:#fbbf24;">0</div>
+              </div>
+              <div style="background:rgba(0,0,0,0.3); padding:0.4rem; border-radius:4px;">
+                <div style="font-size:0.65rem; color:var(--text-dim);">PROTECTED</div>
+                <div id="ipmProtected" style="font-weight:800; color:#c084fc;">0</div>
+              </div>
+            </div>
+
+            <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">Row Diagnostics &amp; Protection Warnings:</div>
+            <div class="preview-issues-list" id="importIssuesList">
+              <div style="color:var(--text-dim); text-align:center; padding:1.5rem;">Click "Validate &amp; Preview Import" to run integrity checks.</div>
+            </div>
+
+            <div style="background:rgba(0,0,0,0.4); padding:0.6rem; border-radius:4px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+              <label class="combo-check-label" style="font-size:0.72rem;">
+                <input type="checkbox" id="checkAllowVerifiedOverride">
+                <span style="color:#fbbf24;">Allow explicit override of VERIFIED records (logged in audit history)</span>
+              </label>
+              <button type="button" class="btn-admin-submit" id="btnCommitImport" disabled onclick="executeCommittedImport()">
+                ⚡ Commit Transaction Safe Import
+              </button>
+            </div>
+            <div id="importResultFeedback" style="font-size:0.72rem; font-weight:700; margin-top:0.25rem;"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Tab 3: Record Editor (Moves / Combos / Stages) -->
+      <div id="tabEditor" class="admin-tab-pane">
+        <div style="background:rgba(15,23,42,0.6); padding:1rem; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+            <h4 style="color:#fff; font-size:0.85rem; text-transform:uppercase; font-weight:800;">
+              Non-Destructive Record Editor
+            </h4>
+            <span style="font-size:0.72rem; color:var(--text-muted);">
+              Every edit appends to the verification audit trail with documented rationale.
+            </span>
+          </div>
+
+          <form id="adminEditMoveForm" onsubmit="handleAdminSaveMove(event)">
+            <div class="admin-form-grid">
+              <div class="form-group-admin">
+                <label>Target Fighter:</label>
+                <select id="editMoveCharSelect" class="form-input-admin" required>
+                  <!-- Populated dynamically -->
+                </select>
+              </div>
+              <div class="form-group-admin">
+                <label>Move Name:</label>
+                <input type="text" id="editMoveName" class="form-input-admin" placeholder="e.g. Electric Wind Hook Fist" required>
+              </div>
+              <div class="form-group-admin">
+                <label>Normalized Notation:</label>
+                <input type="text" id="editMoveNotation" class="form-input-admin" placeholder="e.g. f,n,d,df+2" required>
+              </div>
+              <div class="form-group-admin">
+                <label>Startup Frames (i):</label>
+                <input type="number" id="editMoveStartup" class="form-input-admin" placeholder="e.g. 14">
+              </div>
+              <div class="form-group-admin">
+                <label>Block Disadvantage:</label>
+                <input type="number" id="editMoveBlock" class="form-input-admin" placeholder="e.g. -12 or +5">
+              </div>
+              <div class="form-group-admin">
+                <label>Damage:</label>
+                <input type="number" id="editMoveDamage" class="form-input-admin" placeholder="e.g. 23">
+              </div>
+              <div class="form-group-admin">
+                <label>Hit Level:</label>
+                <input type="text" id="editMoveHitLevel" class="form-input-admin" placeholder="e.g. h, m, l, sm, tc">
+              </div>
+              <div class="form-group-admin">
+                <label>Verification Status:</label>
+                <select id="editMoveStatus" class="form-input-admin">
+                  <option value="VERIFIED">VERIFIED</option>
+                  <option value="UNVERIFIED">UNVERIFIED</option>
+                  <option value="CONFLICTING">CONFLICTING</option>
+                  <option value="UNAVAILABLE">UNAVAILABLE</option>
+                  <option value="CONFIRMED_ABSENT">CONFIRMED ABSENT</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="margin-top:0.85rem;" class="form-group-admin">
+              <label>Reason for Edit / Lab Evidence Note (Required for Audit Trail):</label>
+              <input type="text" id="editMoveReason" class="form-input-admin" placeholder="Document source, frame counter footage, or patch notes justification..." required>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem;">
+              <span id="adminEditorFeedback" style="font-size:0.75rem; font-weight:700;"></span>
+              <button type="submit" class="btn-admin-submit">
+                💾 Save Record &amp; Write Audit Log
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tab 4: Non-Destructive Audit Trail -->
+      <div id="tabHistory" class="admin-tab-pane">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+          <h4 style="color:#fff; font-size:0.85rem; text-transform:uppercase; font-weight:800;">
+            Provenance History &amp; Change Audit Trail
+          </h4>
+          <button type="button" class="btn-tb-reset" onclick="loadVerificationHistory()">
+            🔄 Refresh Audit History
+          </button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="admin-issue-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Entity</th>
+                <th>Field Changed</th>
+                <th>Previous Value</th>
+                <th>New Value</th>
+                <th>Verified By</th>
+                <th>Method</th>
+                <th>Result</th>
+                <th>Patch</th>
+                <th>Evidence Notes</th>
+              </tr>
+            </thead>
+            <tbody id="adminHistoryTableBody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 5: Data Sources & Attribution Licenses -->
+      <div id="tabAttribution" class="admin-tab-pane">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+          <h4 style="color:#fff; font-size:0.85rem; text-transform:uppercase; font-weight:800;">
+            Audited External Data Providers &amp; Licensing Compliance
+          </h4>
+          <div style="display:flex; gap:0.5rem;">
+            <a href="/api/v1/admin/export/moves?format=JSON" target="_blank" class="btn-tb-reset" style="text-decoration:none;">Export Moves (JSON)</a>
+            <a href="/api/v1/admin/export/moves?format=CSV" target="_blank" class="btn-tb-reset" style="text-decoration:none;">Export Moves (CSV)</a>
+            <a href="/api/v1/admin/export/combos?format=JSON" target="_blank" class="btn-tb-reset" style="text-decoration:none;">Export Combos (JSON)</a>
+          </div>
+        </div>
+        <div id="adminSourcesList" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:0.85rem;">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
     </section>
 
     <!-- ==========================================================================
