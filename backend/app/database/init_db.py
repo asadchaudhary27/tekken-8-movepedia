@@ -2066,6 +2066,24 @@ def init_db(db: Session):
     except Exception:
         pass
 
+    # Check if user_preferences needs columns
+    try:
+        with db.get_bind().connect() as conn:
+            cursor = conn.exec_driver_sql("PRAGMA table_info(user_preferences)")
+            cols = [row[1] for row in cursor.fetchall()]
+            if cols:
+                if "last_player_character_id" not in cols:
+                    conn.exec_driver_sql("ALTER TABLE user_preferences ADD COLUMN last_player_character_id INTEGER")
+                if "last_opponent_character_id" not in cols:
+                    conn.exec_driver_sql("ALTER TABLE user_preferences ADD COLUMN last_opponent_character_id INTEGER")
+                if "last_stage_id" not in cols:
+                    conn.exec_driver_sql("ALTER TABLE user_preferences ADD COLUMN last_stage_id INTEGER")
+                if "last_conditions_json" not in cols:
+                    conn.exec_driver_sql("ALTER TABLE user_preferences ADD COLUMN last_conditions_json VARCHAR(512)")
+                conn.commit()
+    except Exception:
+        pass
+
     Base.metadata.create_all(bind=db.get_bind())
 
     # 1. Seed Data Sources with Attribution and Licenses

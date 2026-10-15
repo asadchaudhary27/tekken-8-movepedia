@@ -212,6 +212,11 @@ const FIGHTING_STYLES = {
 };
 
 // In-Memory API Cache & In-Flight Request Deduplication (Phase 8 Performance)
+// Dynamic API Base URL — supports direct file://, local dev servers (5500, 3000), and FastAPI (8000)
+const API_BASE = (typeof window !== 'undefined' && window.location && (window.location.protocol === 'file:' || (window.location.port !== '8000' && window.location.port !== '')))
+  ? 'http://127.0.0.1:8000/api/v1'
+  : '/api/v1';
+
 const apiCache = new Map();
 const inflightRequests = new Map();
 
@@ -226,7 +231,7 @@ async function fetchAPI(endpoint, useCache = false) {
 
   const reqPromise = (async () => {
     try {
-      const res = await fetch(`/api/v1${endpoint}`);
+      const res = await fetch(`${API_BASE}${endpoint}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       if (useCache) {
@@ -842,14 +847,16 @@ function renderMovesTable(movesList, resetPage = true) {
     // Move Property Badges
     const props = m.properties || [];
     const propBadges = props.map(p => {
-      const pName = typeof p === 'string' ? p : p.property_name;
+      const rawName = typeof p === 'string' ? p : (p.property_type || p.property_name || p.name || '');
+      const pName = (rawName || '').toLowerCase();
+      if (!pName) return '';
       if (pName.includes('heat')) return `<span class="feat-badge badge-launcher" style="padding:0.15rem 0.4rem; font-size:0.65rem;">HEAT</span>`;
       if (pName.includes('rage')) return `<span class="feat-badge badge-crush" style="padding:0.15rem 0.4rem; font-size:0.65rem;">RAGE</span>`;
-      if (pName.includes('crush')) return `<span class="feat-badge badge-crush" style="padding:0.15rem 0.4rem; font-size:0.65rem;">CRUSH</span>`;
-      if (pName.includes('launcher')) return `<span class="feat-badge badge-launcher" style="padding:0.15rem 0.4rem; font-size:0.65rem;">LAUNCH</span>`;
+      if (pName.includes('crush') || pName.includes('power')) return `<span class="feat-badge badge-crush" style="padding:0.15rem 0.4rem; font-size:0.65rem;">CRUSH</span>`;
+      if (pName.includes('launcher') || pName.includes('launch')) return `<span class="feat-badge badge-launcher" style="padding:0.15rem 0.4rem; font-size:0.65rem;">LAUNCH</span>`;
       if (pName.includes('tornado')) return `<span class="feat-badge badge-block" style="padding:0.15rem 0.4rem; font-size:0.65rem;">TORNADO</span>`;
-      return `<span class="hazard-pill">${pName}</span>`;
-    }).join(' ');
+      return `<span class="hazard-pill">${rawName.replace(/-/g, ' ').toUpperCase()}</span>`;
+    }).filter(Boolean).join(' ');
 
     return `
       <tr onclick="testNotationString('${m.original_notation}')" style="cursor:pointer;" title="Click to test in Notation Engine">
@@ -924,7 +931,7 @@ async function updateNotationDisplay() {
 
   // Server-side conversion call
   try {
-    const res = await fetch('/api/v1/notation/convert', {
+    const res = await fetch(`${API_BASE}/notation/convert`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1300,15 +1307,18 @@ function updatePlayerPreview() {
   const badge = document.getElementById('playerArchetypeBadge');
   if (!pSelect) return;
 
-  const selectedOpt = pSelect.selectedOptions[0];
-  if (selectedOpt) {
-    const avatar = selectedOpt.dataset.avatar || '/assets/avatars/jin-brand-256-C1-oe_x3.webp';
-    if (avatarImg) {
-      avatarImg.src = avatar;
-      avatarImg.onerror = () => { avatarImg.src = '/assets/avatars/jin-brand-256-C1-oe_x3.webp'; };
-    }
-    if (badge) badge.textContent = selectedOpt.dataset.archetype || 'Fighter';
+  const charId = parseInt(pSelect.value);
+  const char = state.characters.find(c => c.id === charId);
+  const selectedOpt = (pSelect.selectedOptions && pSelect.selectedOptions.length > 0) ? pSelect.selectedOptions[0] : null;
+
+  const avatar = (char && char.avatar_url) || (selectedOpt && selectedOpt.dataset && selectedOpt.dataset.avatar) || '/assets/avatars/jin-brand-256-C1-oe_x3.webp';
+  const archetype = (char && char.archetype) || (selectedOpt && selectedOpt.dataset && selectedOpt.dataset.archetype) || 'Mishima / Allies';
+
+  if (avatarImg) {
+    avatarImg.src = avatar;
+    avatarImg.onerror = () => { avatarImg.src = '/assets/avatars/jin-brand-256-C1-oe_x3.webp'; };
   }
+  if (badge) badge.textContent = archetype;
 }
 
 function updateOpponentPreview() {
@@ -1317,15 +1327,18 @@ function updateOpponentPreview() {
   const badge = document.getElementById('opponentArchetypeBadge');
   if (!oSelect) return;
 
-  const selectedOpt = oSelect.selectedOptions[0];
-  if (selectedOpt) {
-    const avatar = selectedOpt.dataset.avatar || '/assets/avatars/kazuya-brand-256-BInk9tTm.webp';
-    if (avatarImg) {
-      avatarImg.src = avatar;
-      avatarImg.onerror = () => { avatarImg.src = '/assets/avatars/kazuya-brand-256-BInk9tTm.webp'; };
-    }
-    if (badge) badge.textContent = selectedOpt.dataset.archetype || 'Fighter';
+  const charId = parseInt(oSelect.value);
+  const char = state.characters.find(c => c.id === charId);
+  const selectedOpt = (oSelect.selectedOptions && oSelect.selectedOptions.length > 0) ? oSelect.selectedOptions[0] : null;
+
+  const avatar = (char && char.avatar_url) || (selectedOpt && selectedOpt.dataset && selectedOpt.dataset.avatar) || '/assets/avatars/kazuya-brand-256-BInk9tTm.webp';
+  const archetype = (char && char.archetype) || (selectedOpt && selectedOpt.dataset && selectedOpt.dataset.archetype) || 'Mishima';
+
+  if (avatarImg) {
+    avatarImg.src = avatar;
+    avatarImg.onerror = () => { avatarImg.src = '/assets/avatars/kazuya-brand-256-BInk9tTm.webp'; };
   }
+  if (badge) badge.textContent = archetype;
 }
 
 function updateStagePreview() {
@@ -1483,7 +1496,7 @@ async function runMatchupAnalysis() {
   if (dashEl) dashEl.style.display = 'none';
 
   try {
-    const response = await fetch('/api/v1/matchup/analyze', {
+    const response = await fetch(`${API_BASE}/matchup/analyze`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1756,7 +1769,9 @@ function renderMatchupDashboard(data) {
   // 9. SECTION 10: Stage-Aware Strategy Engine & Character-Specific Juggle Compatibility
   loadStageStrategy(st.id, p1.id, p2.id);
   loadComboRecommendations(p1.id, p2.id, st.id);
-  if (stageAdvantageBox) {
+  const stageAdvantageBox = document.getElementById('characterStageAdvantage');
+  const sms = data.stage_matchup_synergy || {};
+  if (stageAdvantageBox && sms.character_stage_advantage) {
     stageAdvantageBox.innerHTML = `<strong>Stage Win-Condition:</strong> ${sms.character_stage_advantage}`;
   }
 
@@ -1809,7 +1824,7 @@ async function loadStageStrategy(stageId, playerId, opponentId) {
 
     state.stageStrategy.currentReport = report;
     renderStageStrategyUI(report);
-    applyStageComboFilter();
+    renderComboRecommendations();
   } catch (err) {
     console.warn('Error loading stage strategy:', err);
   }
@@ -1829,12 +1844,14 @@ function renderStageStrategyUI(report) {
   if (dimPill) dimPill.textContent = report.wall_distance || 'Standard (24m)';
   if (boundaryDesc) boundaryDesc.textContent = report.layout_description;
 
+  const stageObj = (report && report.stage) ? report.stage : {};
+
   // Danger Badge
   if (dangerBadge) {
-    if (!report.stage.has_walls) {
+    if (!stageObj.has_walls) {
       dangerBadge.textContent = 'SAFE (INFINITE)';
       dangerBadge.className = 'danger-level-badge safe';
-    } else if (report.stage.wall_blast || (report.stage.wall_break && report.stage.balcony_break)) {
+    } else if (stageObj.wall_blast || (stageObj.wall_break && stageObj.balcony_break)) {
       dangerBadge.textContent = 'HIGH HAZARD STAGE';
       dangerBadge.className = 'danger-level-badge extreme';
     } else {
@@ -1890,35 +1907,36 @@ function renderStageStrategyUI(report) {
         <div class="stage-blueprint-legend">
           <div class="stage-legend-item"><span class="stage-legend-dot" style="background:var(--accent-red);"></span> Boundary Perimeter</div>
           <div class="stage-legend-item"><span class="stage-legend-dot" style="background:#38bdf8;"></span> Center Standoff (${geo.width_meters}m)</div>
-          ${report.stage.wall_break ? '<div class="stage-legend-item"><span class="stage-legend-dot" style="background:#ef4444;"></span> Wall Break</div>' : ''}
-          ${report.stage.floor_break ? '<div class="stage-legend-item"><span class="stage-legend-dot" style="background:#f97316;"></span> Floor Break</div>' : ''}
-          ${report.stage.balcony_break ? '<div class="stage-legend-item"><span class="stage-legend-dot" style="background:#f59e0b;"></span> Balcony Rail</div>' : ''}
+          ${stageObj.wall_break ? '<div class="stage-legend-item"><span class="stage-legend-dot" style="background:#ef4444;"></span> Wall Break</div>' : ''}
+          ${stageObj.floor_break ? '<div class="stage-legend-item"><span class="stage-legend-dot" style="background:#f97316;"></span> Floor Break</div>' : ''}
+          ${stageObj.balcony_break ? '<div class="stage-legend-item"><span class="stage-legend-dot" style="background:#f59e0b;"></span> Balcony Rail</div>' : ''}
         </div>
       `;
       blueprintContainer.innerHTML = svgMarkup;
     } else {
       // Unmapped / Infinite Stage panel (Zero Fabricated Geometry)
+      const stageName = stageObj.name || 'Selected Stage';
       blueprintContainer.innerHTML = `
         <div class="stage-unmapped-panel">
           <div class="stage-unmapped-header">
             <svg viewBox="0 0 24 24" width="16" height="16" stroke="#f59e0b" stroke-width="2.5" fill="none"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span>${report.stage.name} • UNBOUNDED / INFINITE BATTLEGROUND</span>
+            <span>${stageName} • UNBOUNDED / INFINITE BATTLEGROUND</span>
           </div>
           <p class="stage-unmapped-text">
-            ⚠️ <strong>Zero Fabricated Geometry Rule:</strong> ${report.stage.name} features unbounded open terrain with no perimeter wall bounds. Movement is unrestricted; no artificial polygonal boundary mesh is displayed.
+            ⚠️ <strong>Zero Fabricated Geometry Rule:</strong> ${stageName} features unbounded open terrain with no perimeter wall bounds. Movement is unrestricted; no artificial polygonal boundary mesh is displayed.
           </p>
           <div class="stage-unmapped-metrics-grid">
             <div class="stage-unmapped-metric-cell">
               <div class="label">Boundary Shape</div>
-              <div class="value">${report.stage.boundary_shape || 'Infinite'}</div>
+              <div class="value">${stageObj.boundary_shape || 'Infinite'}</div>
             </div>
             <div class="stage-unmapped-metric-cell">
               <div class="label">Wall Distance</div>
-              <div class="value">${report.wall_distance}</div>
+              <div class="value">${report.wall_distance || 'Standard'}</div>
             </div>
             <div class="stage-unmapped-metric-cell">
               <div class="label">Wall Splat Status</div>
-              <div class="value" style="color:#ef4444;">${report.wall_availability_status}</div>
+              <div class="value" style="color:#ef4444;">${report.wall_availability_status || 'Unavailable'}</div>
             </div>
             <div class="stage-unmapped-metric-cell">
               <div class="label">Environmental Break</div>
@@ -2981,7 +2999,7 @@ async function recordPracticeTrial(result) {
   };
 
   try {
-    const res = await fetch('/api/v1/punishment/practice/record', {
+    const res = await fetch(`${API_BASE}/punishment/practice/record`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -3012,7 +3030,7 @@ function updateModalMasteryUI(record) {
 
 async function loadMovePracticeProgress(moveName) {
   try {
-    const res = await fetch(`/api/v1/punishment/practice/progress?session_token=${state.sessionToken}`);
+    const res = await fetch(`${API_BASE}/punishment/practice/progress?session_token=${state.sessionToken}`);
     if (res.ok) {
       const data = await res.json();
       const rec = (data.records || []).find(r => r.opponent_move_name === moveName);
@@ -3034,7 +3052,7 @@ async function loadMovePracticeProgress(moveName) {
 
 async function loadGlobalPracticeProgress() {
   try {
-    const res = await fetch(`/api/v1/punishment/practice/progress?session_token=${state.sessionToken}`);
+    const res = await fetch(`${API_BASE}/punishment/practice/progress?session_token=${state.sessionToken}`);
     if (res.ok) {
       const data = await res.json();
       const accEl = document.getElementById('pmAccuracy');
@@ -3050,7 +3068,7 @@ async function loadGlobalPracticeProgress() {
 async function resetSessionPracticeProgress() {
   if (!confirm('Are you sure you want to reset all training progress for this session?')) return;
   try {
-    const res = await fetch(`/api/v1/punishment/practice/reset?session_token=${state.sessionToken}`, {
+    const res = await fetch(`${API_BASE}/punishment/practice/reset?session_token=${state.sessionToken}`, {
       method: 'POST'
     });
     if (res.ok) {
@@ -3091,7 +3109,7 @@ async function refreshAdminDashboard() {
   const badge = document.getElementById('adminAuthBadge');
 
   try {
-    const res = await fetch('/api/v1/admin/dashboard', {
+    const res = await fetch(`${API_BASE}/admin/dashboard`, {
       headers: {
         'X-Admin-Key': state.admin.key,
         'X-Admin-User': state.admin.user
@@ -3214,7 +3232,7 @@ async function loadVerificationHistory() {
   if (!tbody) return;
 
   try {
-    const res = await fetch('/api/v1/admin/history?limit=50', {
+    const res = await fetch(`${API_BASE}/admin/history?limit=50`, {
       headers: {
         'X-Admin-Key': state.admin.key,
         'X-Admin-User': state.admin.user
@@ -3255,7 +3273,7 @@ async function loadAdminSources() {
   if (!container) return;
 
   try {
-    const res = await fetch('/api/v1/admin/sources', {
+    const res = await fetch(`${API_BASE}/admin/sources`, {
       headers: {
         'X-Admin-Key': state.admin.key,
         'X-Admin-User': state.admin.user
@@ -3301,7 +3319,7 @@ async function quickUpdateStatus(entityType, entityId, newStatus) {
   if (!reason) return;
 
   try {
-    const res = await fetch('/api/v1/admin/verification-status', {
+    const res = await fetch(`${API_BASE}/admin/verification-status`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -3356,7 +3374,7 @@ async function handleAdminSaveMove(e) {
   };
 
   try {
-    const res = await fetch('/api/v1/admin/moves', {
+    const res = await fetch(`${API_BASE}/admin/moves`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -3460,7 +3478,7 @@ async function previewImportPayload() {
   };
 
   try {
-    const res = await fetch('/api/v1/admin/import/preview', {
+    const res = await fetch(`${API_BASE}/admin/import/preview`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -3545,7 +3563,7 @@ async function executeCommittedImport() {
   };
 
   try {
-    const res = await fetch('/api/v1/admin/import/execute', {
+    const res = await fetch(`${API_BASE}/admin/import/execute`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
