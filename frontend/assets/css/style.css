@@ -2659,6 +2659,575 @@ body.has-left-rail {
   align-items: center;
 }
 
+/* ==========================================================================
+   Phase 2: Character Matchup Intelligence Styles
+   ========================================================================== */
+
+/* Overall Assessment Card */
+.matchup-assessment-card {
+  background: linear-gradient(135deg, rgba(20, 20, 28, 0.95), rgba(12, 12, 18, 0.98));
+  border: 1px solid rgba(255, 30, 56, 0.35);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.matchup-assessment-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff1e38, #ff8c00, #00e676, #00b0ff);
+}
+
+.assessment-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.assessment-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.assessment-tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: var(--accent-red, #ff1e38);
+  text-transform: uppercase;
+}
+
+.assessment-direction-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.rating-badge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+/* Rating Badge with Accessible Colors & Text Labels */
+.rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 30px;
+  font-weight: 900;
+  font-size: 0.95rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.rating-badge.favorable {
+  background: rgba(0, 230, 118, 0.18);
+  border: 1px solid #00e676;
+  color: #00e676;
+  box-shadow: 0 0 15px rgba(0, 230, 118, 0.3);
+}
+
+.rating-badge.even {
+  background: rgba(0, 176, 255, 0.18);
+  border: 1px solid #00b0ff;
+  color: #00b0ff;
+  box-shadow: 0 0 15px rgba(0, 176, 255, 0.3);
+}
+
+.rating-badge.unfavorable {
+  background: rgba(255, 30, 56, 0.2);
+  border: 1px solid #ff1e38;
+  color: #ff1e38;
+  box-shadow: 0 0 15px rgba(255, 30, 56, 0.3);
+}
+
+.rating-badge.insufficient, .rating-badge.insufficient_data {
+  background: rgba(255, 179, 0, 0.18);
+  border: 1px solid #ffb300;
+  color: #ffb300;
+  box-shadow: 0 0 15px rgba(255, 179, 0, 0.3);
+}
+
+.rating-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 6px currentColor;
+}
+
+.confidence-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+}
+
+.confidence-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+.confidence-pill.high {
+  background: rgba(0, 230, 118, 0.15);
+  color: #00e676;
+  border: 1px solid rgba(0, 230, 118, 0.3);
+}
+
+.confidence-pill.medium {
+  background: rgba(0, 176, 255, 0.15);
+  color: #00b0ff;
+  border: 1px solid rgba(0, 176, 255, 0.3);
+}
+
+.confidence-pill.low, .confidence-pill.none {
+  background: rgba(255, 179, 0, 0.15);
+  color: #ffb300;
+  border: 1px solid rgba(255, 179, 0, 0.3);
+}
+
+.confidence-meter-bar {
+  width: 140px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffb300, #00e676);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.assessment-reasoning-para {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #e0e0e8;
+  margin: 0.75rem 0 1.25rem 0;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid #ff1e38;
+  border-radius: 0 6px 6px 0;
+}
+
+/* Evidence & Unknowns Row */
+.evidence-unknowns-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.evidence-box, .unknowns-box {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.evidence-box-label, .unknowns-box-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #aaa;
+  margin-bottom: 0.5rem;
+}
+
+.evidence-tags-wrap, .unknowns-tags-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.evidence-tag-pill {
+  font-size: 0.72rem;
+  background: rgba(0, 230, 118, 0.12);
+  color: #80f2ad;
+  border: 1px solid rgba(0, 230, 118, 0.25);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+
+.unknown-tag-pill {
+  font-size: 0.72rem;
+  background: rgba(255, 179, 0, 0.12);
+  color: #ffca4f;
+  border: 1px solid rgba(255, 179, 0, 0.25);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+
+.unknown-tag-pill.safe {
+  background: rgba(255, 255, 255, 0.05);
+  color: #aaa;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Defensive Tactics Subbox */
+.tactical-defense-subbox {
+  margin-top: 1.25rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.td-row {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.td-icon {
+  font-size: 1rem;
+}
+
+.td-label {
+  font-weight: 700;
+  color: #fff;
+  margin-right: 0.35rem;
+}
+
+.td-text {
+  color: #ccc;
+}
+
+/* Useful Moves Cards */
+.useful-moves-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.useful-move-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.85rem;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.useful-move-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 230, 255, 0.4);
+  background: rgba(0, 230, 255, 0.05);
+}
+
+.um-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.um-name {
+  font-weight: 800;
+  color: #fff;
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+}
+
+.um-role-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: rgba(0, 176, 255, 0.15);
+  color: #00b0ff;
+  border: 1px solid rgba(0, 176, 255, 0.3);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.um-stats-row {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.78rem;
+  color: #aaa;
+  margin-bottom: 0.4rem;
+}
+
+.um-purpose {
+  font-size: 0.82rem;
+  color: #bbb;
+  line-height: 1.4;
+}
+
+/* Opponent Dangerous Moves */
+.dangerous-moves-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.danger-move-card {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  padding: 0.85rem;
+  border-left: 4px solid #ff1e38;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.danger-move-card.extreme {
+  border-left-color: #ff1744;
+  background: rgba(255, 23, 68, 0.04);
+}
+
+.danger-move-card.high {
+  border-left-color: #ff5252;
+}
+
+.danger-move-card.medium {
+  border-left-color: #ff9100;
+}
+
+.dm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.dm-name {
+  font-weight: 800;
+  color: #fff;
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+}
+
+.dm-risk-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.dm-risk-badge.extreme {
+  background: rgba(255, 23, 68, 0.2);
+  color: #ff5252;
+  border: 1px solid #ff1744;
+}
+
+.dm-risk-badge.high {
+  background: rgba(255, 82, 82, 0.2);
+  color: #ff8a80;
+  border: 1px solid #ff5252;
+}
+
+.dm-risk-badge.medium {
+  background: rgba(255, 145, 0, 0.2);
+  color: #ffb74d;
+  border: 1px solid #ff9100;
+}
+
+.dm-desc {
+  font-size: 0.82rem;
+  color: #ccc;
+  margin-bottom: 0.4rem;
+  line-height: 1.4;
+}
+
+.dm-counter {
+  font-size: 0.82rem;
+  color: #00e676;
+  background: rgba(0, 230, 118, 0.06);
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 230, 118, 0.15);
+}
+
+/* Spacing Details */
+.spacing-details-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.spacing-strategy-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  padding: 0.75rem 0.85rem;
+}
+
+.spacing-subhead {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #38ef7d;
+  letter-spacing: 0.8px;
+  margin-bottom: 0.35rem;
+}
+
+.spacing-text {
+  font-size: 0.82rem;
+  color: #ccc;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.range-badge-pill {
+  font-size: 0.72rem;
+  font-weight: 800;
+  background: rgba(56, 239, 125, 0.15);
+  color: #38ef7d;
+  border: 1px solid rgba(56, 239, 125, 0.3);
+  padding: 0.25rem 0.7rem;
+  border-radius: 12px;
+}
+
+/* Sidestep & Tracking */
+.sidestep-badge-pill {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+.sidestep-badge-pill.ssl {
+  background: rgba(0, 176, 255, 0.18);
+  color: #00b0ff;
+  border: 1px solid #00b0ff;
+}
+
+.sidestep-badge-pill.ssr {
+  background: rgba(255, 61, 0, 0.18);
+  color: #ff6e40;
+  border: 1px solid #ff3d00;
+}
+
+.sidestep-badge-pill.neutral {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tracking-subbox {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+}
+
+.tracking-col {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 0.65rem 0.75rem;
+}
+
+.tr-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #aaa;
+  margin-bottom: 0.35rem;
+}
+
+.tr-list {
+  list-style: square;
+  padding-left: 1rem;
+  margin: 0;
+  font-size: 0.78rem;
+  color: #ddd;
+}
+
+.tr-list.homing {
+  color: #ffb74d;
+}
+
+/* Heat Mechanics Grid */
+.heat-mechanics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.heat-info-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  padding: 0.75rem 0.85rem;
+}
+
+.heat-info-box.full-width {
+  grid-column: 1 / -1;
+}
+
+.heat-subhead {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #ff007f;
+  letter-spacing: 0.8px;
+  margin-bottom: 0.35rem;
+}
+
+.heat-text {
+  font-size: 0.82rem;
+  color: #ccc;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* Stage Advantage Box */
+.stage-advantage-box {
+  margin-top: 0.75rem;
+  font-size: 0.82rem;
+  color: var(--accent-gold, #ffb300);
+  background: rgba(255, 179, 0, 0.06);
+  border: 1px solid rgba(255, 179, 0, 0.2);
+  border-radius: 6px;
+  padding: 0.6rem 0.85rem;
+  line-height: 1.45;
+}
+
+/* Provenance Status Pill */
+.prov-status-pill {
+  font-size: 0.68rem;
+  font-weight: 800;
+  background: rgba(0, 230, 118, 0.15);
+  color: #00e676;
+  border: 1px solid rgba(0, 230, 118, 0.3);
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+}
+
 /* Responsive adjustments for Matchup Analyzer */
 @media (max-width: 1024px) {
   .selection-triad-grid {
@@ -2695,6 +3264,22 @@ body.has-left-rail {
     flex-direction: row;
     text-align: left;
   }
+
+  .evidence-unknowns-row {
+    grid-template-columns: 1fr;
+  }
+
+  .tracking-subbox {
+    grid-template-columns: 1fr;
+  }
+
+  .heat-mechanics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rating-badge-container {
+    align-items: flex-start;
+  }
 }
 
 @media (max-width: 600px) {
@@ -2713,4 +3298,5 @@ body.has-left-rail {
     text-align: center;
   }
 }
+
 

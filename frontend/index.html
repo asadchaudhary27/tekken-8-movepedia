@@ -461,29 +461,76 @@
             </div>
           </div>
 
-          <!-- Lab Advice / Fallback Notice Banner -->
-          <div class="matchup-notes-banner" id="matchupNotesBanner">
-            <div class="notes-header">
-              <span id="notesBadge" class="notes-badge verified">VERIFIED LAB NOTES</span>
-              <span id="notesCompletenessMeta" class="notes-meta">100% Mathematically Proven</span>
+          <!-- SECTION 1: Overall Matchup Assessment Banner -->
+          <div class="matchup-assessment-card" id="matchupAssessmentCard">
+            <div class="assessment-header-row">
+              <div class="assessment-title-wrap">
+                <span class="assessment-tag">DIRECTIONAL MATCHUP INTELLIGENCE</span>
+                <div class="assessment-direction-pill" id="matchupDirectionBadge">
+                  <span class="p-dir-icon">⚔️</span>
+                  <span id="provenanceDirectionText">Jin Kazama (P1) ➔ Kazuya Mishima (P2)</span>
+                </div>
+              </div>
+
+              <!-- Rating Badge (Accessible: Color + Distinct Text Label) -->
+              <div class="rating-badge-container">
+                <div id="matchupRatingBadge" class="rating-badge favorable">
+                  <span class="rating-dot"></span>
+                  <span id="matchupRatingText">FAVORABLE MATCHUP</span>
+                </div>
+                <!-- Confidence Indicator -->
+                <div class="confidence-wrap">
+                  <span class="confidence-pill high" id="matchupConfidencePill">HIGH CONFIDENCE (88%)</span>
+                  <div class="confidence-meter-bar" title="Confidence grounded in verified frame lab records">
+                    <div class="confidence-fill" id="matchupConfidenceFill" style="width: 88%;"></div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div id="matchupNotesText" class="notes-content">—</div>
+
+            <!-- Textual Reasoning Paragraph -->
+            <p id="matchupReasoningText" class="assessment-reasoning-para">
+              Jin maintains a structural advantage in mid-range neutral control through f+4 and Demon's Paw.
+            </p>
+
+            <!-- Evidence Base & Unknowns Grid -->
+            <div class="evidence-unknowns-row">
+              <div class="evidence-box">
+                <div class="evidence-box-label">
+                  <svg viewBox="0 0 24 24" width="14" height="14" stroke="#00e676" stroke-width="2.5" fill="none"><path d="M20 6L9 17l-5-5"/></svg>
+                  <span>VERIFIED EVIDENCE BASE</span>
+                </div>
+                <div class="evidence-tags-wrap" id="matchupEvidenceList">
+                  <!-- Tag pills rendered dynamically -->
+                </div>
+              </div>
+
+              <div class="unknowns-box">
+                <div class="unknowns-box-label">
+                  <svg viewBox="0 0 24 24" width="14" height="14" stroke="#ffb300" stroke-width="2.5" fill="none"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span>LIMITATIONS &amp; UNVERIFIED LAB</span>
+                </div>
+                <div class="unknowns-tags-wrap" id="matchupUnknownsList">
+                  <!-- Tag pills rendered dynamically -->
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Main Dashboard 2-Column Grid -->
           <div class="dashboard-two-col-grid">
             
-            <!-- Left Column: Punish Matrix & Key Tools -->
+            <!-- Left Column: Punishes, Defenses, Key Tools, Spacing -->
             <div class="dash-col">
               
-              <!-- Guaranteed Punish Matrix Table -->
+              <!-- SECTION 7: Defensive Options & Guaranteed Punish Matrix -->
               <div class="dash-card">
                 <div class="dash-card-header">
                   <div class="dash-card-title">
                     <svg viewBox="0 0 24 24" width="18" height="18" stroke="#ff1e38" stroke-width="2.5" fill="none">
                       <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                     </svg>
-                    <span>GUARANTEED PUNISH MATRIX</span>
+                    <span>SECTION 7: GUARANTEED PUNISH MATRIX</span>
                   </div>
                   <span class="dash-card-pill" id="punishCountPill">0 Verified Windows</span>
                 </div>
@@ -511,9 +558,34 @@
                     No recorded moves with &le; -10 block disadvantage in the sample dataset for this opponent.
                   </div>
                 </div>
+
+                <!-- Defensive Tactics Box (Fuzzy Guard & Interrupts) -->
+                <div class="tactical-defense-subbox">
+                  <div class="td-row">
+                    <span class="td-icon">🛡️</span>
+                    <div class="td-content">
+                      <span class="td-label">Fuzzy Guard &amp; Duckable Strings:</span>
+                      <span id="fuzzyGuardText" class="td-text">—</span>
+                    </div>
+                  </div>
+                  <div class="td-row">
+                    <span class="td-icon">⚡</span>
+                    <div class="td-content">
+                      <span class="td-label">Interrupt Opportunities:</span>
+                      <span id="interruptText" class="td-text">—</span>
+                    </div>
+                  </div>
+                  <div class="td-row">
+                    <span class="td-icon">⚠️</span>
+                    <div class="td-content">
+                      <span class="td-label">Low Defense Priority:</span>
+                      <span id="lowDefenseText" class="td-text">—</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <!-- Player Signature Key Tools & Tactical Pokes -->
+              <!-- SECTION 4: Player's Useful Moves against Opponent -->
               <div class="dash-card">
                 <div class="dash-card-header">
                   <div class="dash-card-title">
@@ -521,23 +593,124 @@
                       <circle cx="12" cy="12" r="10"/>
                       <polyline points="12 6 12 12 16 14"/>
                     </svg>
-                    <span>PLAYER KEY TOOLS &amp; POKES</span>
+                    <span>SECTION 4: PLAYER USEFUL MOVES (VS THIS RIVAL)</span>
                   </div>
-                  <span class="dash-card-pill" id="keyToolsCountPill">P1 Signature Attacks</span>
+                  <span class="dash-card-pill" id="usefulMovesCountPill">Key Tactical Tools</span>
                 </div>
-                <p class="dash-card-sub">Core neutral buttons, frame-traps, and tactical neutral checks for this character.</p>
+                <p class="dash-card-sub">Specific pokes, whiff-punishers, keepout moves, and crush tools optimal against this rival.</p>
 
-                <div class="key-moves-list" id="playerKeyMovesList">
+                <div class="useful-moves-grid" id="usefulMovesGrid">
                   <!-- Rendered dynamically -->
+                </div>
+              </div>
+
+              <!-- SECTION 6: Range, Approach, Spacing and Movement -->
+              <div class="dash-card">
+                <div class="dash-card-header">
+                  <div class="dash-card-title">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="#38ef7d" stroke-width="2.5" fill="none">
+                      <circle cx="12" cy="12" r="3"/>
+                      <path d="M3 12h3M18 12h3M12 3v3M12 18v3"/>
+                    </svg>
+                    <span>SECTION 6: RANGE, SPACING &amp; MOVEMENT</span>
+                  </div>
+                  <span class="range-badge-pill" id="optimalRangePill">Range 2 (Mid-Range)</span>
+                </div>
+                <div class="spacing-details-wrap">
+                  <div class="spacing-strategy-box">
+                    <div class="spacing-subhead">NEUTRAL SPACING STRATEGY</div>
+                    <p id="neutralStrategyText" class="spacing-text">—</p>
+                  </div>
+                  <div class="spacing-strategy-box">
+                    <div class="spacing-subhead">APPROACH &amp; GAP CLOSING</div>
+                    <p id="approachAdviceText" class="spacing-text">—</p>
+                  </div>
+                  <div class="spacing-strategy-box">
+                    <div class="spacing-subhead">RETREAT &amp; WHIFF BAITING</div>
+                    <p id="retreatSpacingText" class="spacing-text">—</p>
+                  </div>
                 </div>
               </div>
 
             </div>
 
-            <!-- Right Column: Stage Hazards, Combos, Archetype Synergy -->
+            <!-- Right Column: Opponent Dangerous Moves, Sidestep, Heat, Stages, Factors -->
             <div class="dash-col">
-              
-              <!-- Stage Hazard Synergy -->
+
+              <!-- SECTION 5: Opponent Dangerous Moves Requiring Special Attention -->
+              <div class="dash-card">
+                <div class="dash-card-header">
+                  <div class="dash-card-title">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="#ff3d00" stroke-width="2.5" fill="none">
+                      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                      <line x1="12" y1="9" x2="12" y2="13"/>
+                      <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <span>SECTION 5: OPPONENT DANGEROUS MOVES</span>
+                  </div>
+                  <span class="threat-alert-pill" id="threatAlertPill">High Threat Tools</span>
+                </div>
+                <p class="dash-card-sub">Unsafe launchers, plus-frame traps, unseeable sweeps, and how to counter them.</p>
+
+                <div class="dangerous-moves-list" id="dangerousMovesList">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+
+              <!-- SECTION 8: Side-Step, Tracking & Evasive Considerations -->
+              <div class="dash-card">
+                <div class="dash-card-header">
+                  <div class="dash-card-title">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="var(--accent-cyan)" stroke-width="2.5" fill="none">
+                      <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                    <span>SECTION 8: SIDE-STEP &amp; TRACKING EVASION</span>
+                  </div>
+                  <span class="sidestep-badge-pill" id="sidestepBadge">SSL (Sidestep Left)</span>
+                </div>
+                <p class="dash-card-sub" id="sidestepReasoningText">Lateral evasion notes based on verified move tracking.</p>
+
+                <div class="tracking-subbox">
+                  <div class="tracking-col">
+                    <div class="tr-label">LINEAR ATTACKS TO STEP:</div>
+                    <ul class="tr-list" id="linearMovesList"></ul>
+                  </div>
+                  <div class="tracking-col">
+                    <div class="tr-label">OPPONENT HOMING MOVES:</div>
+                    <ul class="tr-list homing" id="homingMovesList"></ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SECTION 9: Heat Mechanics & Character Stance Dynamics -->
+              <div class="dash-card">
+                <div class="dash-card-header">
+                  <div class="dash-card-title">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="#ff007f" stroke-width="2.5" fill="none">
+                      <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+                    </svg>
+                    <span>SECTION 9: HEAT &amp; CHARACTER MECHANICS</span>
+                  </div>
+                  <span class="dash-card-pill">T8 System Synergy</span>
+                </div>
+
+                <div class="heat-mechanics-grid">
+                  <div class="heat-info-box">
+                    <div class="heat-subhead">PLAYER HEAT FOCUS</div>
+                    <p id="playerHeatFocus" class="heat-text">—</p>
+                  </div>
+                  <div class="heat-info-box">
+                    <div class="heat-subhead">OPPONENT HEAT THREATS</div>
+                    <p id="opponentHeatThreats" class="heat-text">—</p>
+                  </div>
+                  <div class="heat-info-box full-width">
+                    <div class="heat-subhead">HEAT SMASH &amp; STANCE DYNAMICS</div>
+                    <p id="heatSmashDynamics" class="heat-text">—</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SECTION 10: Stage Hazards & Tactical Considerations -->
               <div class="dash-card">
                 <div class="dash-card-header">
                   <div class="dash-card-title">
@@ -546,7 +719,7 @@
                       <polyline points="2 17 12 22 22 17"/>
                       <polyline points="2 12 12 17 22 12"/>
                     </svg>
-                    <span>STAGE HAZARD SYNERGY</span>
+                    <span>SECTION 10: STAGE MATCHUP SYNERGY</span>
                   </div>
                   <span class="danger-level-badge" id="wallDangerBadge">MODERATE DANGER</span>
                 </div>
@@ -558,6 +731,9 @@
 
                 <div class="stage-tactical-advice" id="stageTacticalAdvice">
                   <!-- Tactical advice -->
+                </div>
+                <div class="stage-advantage-box" id="characterStageAdvantage">
+                  <!-- Character stage advantage -->
                 </div>
               </div>
 
@@ -579,7 +755,7 @@
                 </div>
               </div>
 
-              <!-- Archetype Strengths & Weaknesses -->
+              <!-- SECTION 2 & 3: Archetype Matchup Factors -->
               <div class="dash-card">
                 <div class="dash-card-header">
                   <div class="dash-card-title">
@@ -589,19 +765,19 @@
                       <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
                       <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                     </svg>
-                    <span>ARCHETYPE MATCHUP FACTORS</span>
+                    <span>SECTIONS 2 &amp; 3: MATCHUP ADVANTAGES &amp; THREATS</span>
                   </div>
                 </div>
 
                 <div class="sw-grid">
                   <div class="sw-box strengths">
-                    <div class="sw-title">PLAYER ADVANTAGES</div>
+                    <div class="sw-title">SECTION 2: PLAYER ADVANTAGES</div>
                     <ul class="sw-list" id="playerStrengthsList">
                       <!-- List items -->
                     </ul>
                   </div>
                   <div class="sw-box weaknesses">
-                    <div class="sw-title">OPPONENT THREATS</div>
+                    <div class="sw-title">SECTION 3: OPPONENT THREATS</div>
                     <ul class="sw-list" id="playerWeaknessesList">
                       <!-- List items -->
                     </ul>
@@ -613,18 +789,25 @@
 
           </div>
 
-          <!-- Data Integrity Guarantee Footer -->
+          <!-- SECTION 11: Directional Provenance & Strict Data Integrity Footer -->
           <div class="dash-provenance-footer">
             <div class="provenance-left">
-              <span class="prov-shield">🛡️ STRICT DATA INTEGRITY</span>
-              <span>All calculations grounded in official Tekken 8 patch records. Zero fabricated win-rates or speculative probabilities.</span>
+              <span class="prov-shield">🛡️ DIRECTIONAL LAB PROVENANCE</span>
+              <span id="provDirectionText">Jin Kazama (P1) vs Kazuya Mishima (P2)</span>
+              <span>•</span>
+              <span id="provStatusText" class="prov-status-pill">VERIFIED</span>
+              <span>•</span>
+              <span id="provContributorText">Tekken Lab Consortium</span>
             </div>
             <div class="provenance-right">
+              <span id="provLastReviewedText">Reviewed: 2026-03-15</span>
+              <span>•</span>
               <span id="provMovesAnalyzed">0 Moves Evaluated</span>
               <span>•</span>
               <span id="provPatchVersion">Patch 3.00.02</span>
             </div>
           </div>
+
 
         </div>
 

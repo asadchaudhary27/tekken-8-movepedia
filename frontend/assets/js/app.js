@@ -1094,89 +1094,168 @@ function renderMatchupDashboard(data) {
     hazardsBox.innerHTML = (st.hazards || []).map(h => `<span class="hazard-pill">${h}</span>`).join('');
   }
 
-  // 2. Lab Notes Banner
-  const notesBadge = document.getElementById('notesBadge');
-  const notesMeta = document.getElementById('notesCompletenessMeta');
-  const notesText = document.getElementById('matchupNotesText');
+  // 2. SECTION 1: Overall Matchup Assessment Banner
+  const oa = data.overall_assessment;
+  const prov = data.directional_provenance;
 
-  if (data.has_specific_lab_notes) {
-    notesBadge.className = 'notes-badge verified';
-    notesBadge.textContent = 'VERIFIED LAB NOTES';
-    notesMeta.textContent = 'Pair-Specific Lab Cross-Referenced';
-  } else {
-    notesBadge.className = 'notes-badge fallback';
-    notesBadge.textContent = 'GENERAL FRAME DATA ANALYSIS';
-    notesMeta.textContent = 'Mathematical Frame Derivation';
+  const dirTextEl = document.getElementById('provenanceDirectionText');
+  if (dirTextEl) dirTextEl.textContent = prov.direction;
+
+  const ratingBadge = document.getElementById('matchupRatingBadge');
+  const ratingText = document.getElementById('matchupRatingText');
+  if (ratingBadge && ratingText) {
+    ratingBadge.className = `rating-badge ${oa.rating.toLowerCase()}`;
+    ratingText.textContent = `${oa.rating_label.toUpperCase()} MATCHUP`;
   }
-  notesText.textContent = data.matchup_notes;
 
-  // 3. Punish Matrix
+  const confPill = document.getElementById('matchupConfidencePill');
+  const confFill = document.getElementById('matchupConfidenceFill');
+  if (confPill && confFill) {
+    confPill.className = `confidence-pill ${oa.confidence_level.toLowerCase()}`;
+    confPill.textContent = `${oa.confidence_level} CONFIDENCE (${oa.confidence_score}%)`;
+    confFill.style.width = `${oa.confidence_score}%`;
+  }
+
+  const reasoningPara = document.getElementById('matchupReasoningText');
+  if (reasoningPara) {
+    reasoningPara.textContent = oa.reasoning;
+  }
+
+  const evidenceList = document.getElementById('matchupEvidenceList');
+  if (evidenceList) {
+    evidenceList.innerHTML = (oa.evidence_sources || []).map(e => `
+      <span class="evidence-tag-pill">${e}</span>
+    `).join('');
+  }
+
+  const unknownsList = document.getElementById('matchupUnknownsList');
+  if (unknownsList) {
+    if (!oa.unknowns || oa.unknowns.length === 0) {
+      unknownsList.innerHTML = '<span class="unknown-tag-pill safe">No unresolved laboratory discrepancies</span>';
+    } else {
+      unknownsList.innerHTML = oa.unknowns.map(u => `
+        <span class="unknown-tag-pill">${u}</span>
+      `).join('');
+    }
+  }
+
+  // 3. SECTION 7: Guaranteed Punish Matrix Table & Defensive Tactics
   const punishPill = document.getElementById('punishCountPill');
   const punishTbody = document.getElementById('punishMatrixBody');
   const punishEmpty = document.getElementById('punishEmptyState');
 
-  punishPill.textContent = `${data.punish_matrix.length} Verified Punishes`;
+  if (punishPill) punishPill.textContent = `${data.punish_matrix.length} Verified Punishes`;
 
   if (!data.punish_matrix || data.punish_matrix.length === 0) {
-    punishTbody.innerHTML = '';
-    punishEmpty.style.display = 'block';
+    if (punishTbody) punishTbody.innerHTML = '';
+    if (punishEmpty) punishEmpty.style.display = 'block';
   } else {
-    punishEmpty.style.display = 'none';
-    punishTbody.innerHTML = data.punish_matrix.map(p => {
-      let tierClass = 'jab';
-      if (p.punish_tier.includes('Launch')) tierClass = 'launch';
-      else if (p.punish_tier.includes('Intermediate') || p.punish_tier.includes('i14')) tierClass = 'intermediate';
-
-      return `
-        <tr>
-          <td>
-            <div style="font-weight:700; color:#fff;">${p.opponent_move_name}</div>
-            <div style="font-family:monospace; font-size:0.75rem; color:var(--text-muted);">${p.opponent_move_input}</div>
-          </td>
-          <td>
-            <span class="frame-disadvantage-badge">${p.opponent_block_advantage}</span>
-          </td>
-          <td>
-            <div style="font-weight:700; color:#fff;">${p.recommended_punish_name}</div>
-            <span class="km-input-badge">${p.recommended_punish_input}</span>
-          </td>
-          <td>
-            <span class="punish-startup-badge">i${p.punish_startup}</span>
-          </td>
-          <td>
-            <span style="font-weight:800; color:var(--accent-gold);">${p.damage !== null ? p.damage : '—'}</span>
-          </td>
-          <td>
-            <span class="punish-tier-badge ${tierClass}">${p.punish_type}</span>
-          </td>
-        </tr>
-      `;
-    }).join('');
-  }
-
-  // 4. Player Key Tools
-  const keyList = document.getElementById('playerKeyMovesList');
-  if (keyList) {
-    if (!data.player_key_moves || data.player_key_moves.length === 0) {
-      keyList.innerHTML = '<div style="color:var(--text-muted); font-size:0.8rem; padding:1rem;">No key tools recorded.</div>';
-    } else {
-      keyList.innerHTML = data.player_key_moves.map(km => {
-        const blk = km.block_advantage !== null ? (km.block_advantage > 0 ? `+${km.block_advantage}` : `${km.block_advantage}`) : 'N/A';
-        const blkCls = km.block_advantage !== null ? (km.block_advantage >= 0 ? 'frame-plus' : 'frame-minus') : 'frame-null';
-        const stp = km.startup_frames !== null ? `i${km.startup_frames}` : 'N/A';
-        const dmg = km.damage !== null ? km.damage : '—';
+    if (punishEmpty) punishEmpty.style.display = 'none';
+    if (punishTbody) {
+      punishTbody.innerHTML = data.punish_matrix.map(p => {
+        let tierClass = 'jab';
+        if (p.punish_tier.includes('Launch')) tierClass = 'launch';
+        else if (p.punish_tier.includes('Intermediate') || p.punish_tier.includes('i14')) tierClass = 'intermediate';
 
         return `
-          <div class="key-move-row" onclick="testNotationString('${km.input}')" title="Click to test in Notation Engine">
-            <div class="km-info-col">
-              <span class="km-name">${km.move_name}</span>
-              <span class="km-input-badge">${km.input}</span>
-              <span class="km-role-tag">${km.role}</span>
+          <tr>
+            <td>
+              <div style="font-weight:700; color:#fff;">${p.opponent_move_name}</div>
+              <div style="font-family:monospace; font-size:0.75rem; color:var(--text-muted);">${p.opponent_move_input}</div>
+            </td>
+            <td>
+              <span class="frame-disadvantage-badge">${p.opponent_block_advantage}</span>
+            </td>
+            <td>
+              <div style="font-weight:700; color:#fff;">${p.recommended_punish_name}</div>
+              <span class="km-input-badge">${p.recommended_punish_input}</span>
+            </td>
+            <td>
+              <span class="punish-startup-badge">i${p.punish_startup}</span>
+            </td>
+            <td>
+              <span style="font-weight:800; color:var(--accent-gold);">${p.damage !== null ? p.damage : '—'}</span>
+            </td>
+            <td>
+              <span class="punish-tier-badge ${tierClass}">${p.punish_type}</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+  }
+
+  // Defensive Tactics (Fuzzy Guard, Interrupts, Low Defense)
+  const dt = data.defensive_tactics;
+  const fuzzyEl = document.getElementById('fuzzyGuardText');
+  const interruptEl = document.getElementById('interruptText');
+  const lowDefEl = document.getElementById('lowDefenseText');
+  if (fuzzyEl) fuzzyEl.textContent = dt.fuzzy_guard_notes || 'Fuzzy guard against strings with high extensions.';
+  if (interruptEl) interruptEl.textContent = dt.interrupt_opportunities || 'Use fastest jab check to break stance transitions.';
+  if (lowDefEl) lowDefEl.textContent = dt.low_defense_priority || 'Stay standing by default; react to launch-punishable sweeps.';
+
+  // 4. SECTION 4: Player's Useful Moves (vs this Rival)
+  const usefulGrid = document.getElementById('usefulMovesGrid');
+  const usefulPill = document.getElementById('usefulMovesCountPill');
+  if (usefulPill) usefulPill.textContent = `${data.useful_moves.length} Recommended Tools`;
+
+  if (usefulGrid) {
+    if (!data.useful_moves || data.useful_moves.length === 0) {
+      usefulGrid.innerHTML = '<div style="color:var(--text-muted); padding:1rem;">No specific moves cataloged yet.</div>';
+    } else {
+      usefulGrid.innerHTML = data.useful_moves.map(m => {
+        const stp = m.startup_frames ? `i${m.startup_frames}` : '—';
+        const blk = m.block_advantage !== null ? (m.block_advantage > 0 ? `+${m.block_advantage}` : `${m.block_advantage}`) : '—';
+        const blkCls = m.block_advantage !== null ? (m.block_advantage >= 0 ? 'frame-plus' : 'frame-minus') : '';
+        const dmg = m.damage ? `${m.damage} DMG` : '—';
+
+        return `
+          <div class="useful-move-card" onclick="testNotationString('${m.input}')" title="Click to test in Notation Engine">
+            <div class="um-header">
+              <div>
+                <span class="um-name">${m.move_name}</span>
+                <span class="km-input-badge">${m.input}</span>
+              </div>
+              <span class="um-role-tag">${m.role}</span>
             </div>
-            <div class="km-stats-col">
-              <span>${stp}</span>
-              <span class="${blkCls}">${blk}</span>
-              <span style="color:var(--accent-gold); font-weight:700;">${dmg} DMG</span>
+            <div class="um-stats-row">
+              <span>Startup: <strong>${stp}</strong></span>
+              <span class="${blkCls}">Block: <strong>${blk}</strong></span>
+              <span style="color:var(--accent-gold);"><strong>${dmg}</strong></span>
+            </div>
+            <div class="um-purpose">${m.tactical_purpose}</div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  // 5. SECTION 5: Opponent Dangerous Moves Requiring Special Attention
+  const dangerList = document.getElementById('dangerousMovesList');
+  const threatAlert = document.getElementById('threatAlertPill');
+  if (threatAlert) threatAlert.textContent = `${data.dangerous_moves.length} Major Threats`;
+
+  if (dangerList) {
+    if (!data.dangerous_moves || data.dangerous_moves.length === 0) {
+      dangerList.innerHTML = '<div style="color:var(--text-muted); padding:1rem;">No high-risk opponent moves flagged in current dataset.</div>';
+    } else {
+      dangerList.innerHTML = data.dangerous_moves.map(dm => {
+        const riskCls = (dm.risk_level || 'HIGH').toLowerCase();
+        const blk = dm.block_advantage !== null ? `${dm.block_advantage}` : 'N/A';
+        const stp = dm.startup_frames ? `i${dm.startup_frames}` : '';
+
+        return `
+          <div class="danger-move-card ${riskCls}">
+            <div class="dm-header">
+              <div class="dm-title-col">
+                <span class="dm-name">${dm.move_name}</span>
+                <span class="km-input-badge">${dm.input}</span>
+              </div>
+              <span class="dm-risk-badge ${riskCls}">${dm.risk_level} (${blk} on block ${stp})</span>
+            </div>
+            <div class="dm-desc">${dm.threat_description}</div>
+            <div class="dm-counter">
+              <strong>Recommended Counter:</strong> ${dm.recommended_counter}
             </div>
           </div>
         `;
@@ -1184,36 +1263,76 @@ function renderMatchupDashboard(data) {
     }
   }
 
-  // 5. Stage Hazard Synergy
-  const synergy = data.stage_synergy;
+  // 6. SECTION 6: Range, Spacing & Movement
+  const sm = data.spacing_and_movement;
+  const optRange = document.getElementById('optimalRangePill');
+  const neutralStrat = document.getElementById('neutralStrategyText');
+  const approachAdv = document.getElementById('approachAdviceText');
+  const retreatSpc = document.getElementById('retreatSpacingText');
+
+  if (optRange) optRange.textContent = sm.optimal_range;
+  if (neutralStrat) neutralStrat.textContent = sm.neutral_strategy;
+  if (approachAdv) approachAdv.textContent = sm.approach_advice;
+  if (retreatSpc) retreatSpc.textContent = sm.retreat_spacing;
+
+  // 7. SECTION 8: Side-Step & Tracking Evasion
+  const st_evasion = data.sidestep_and_tracking;
+  const sideBadge = document.getElementById('sidestepBadge');
+  const sideReason = document.getElementById('sidestepReasoningText');
+  const linearList = document.getElementById('linearMovesList');
+  const homingList = document.getElementById('homingMovesList');
+
+  if (sideBadge) {
+    sideBadge.textContent = st_evasion.side_label;
+    sideBadge.className = `sidestep-badge-pill ${st_evasion.recommended_side.toLowerCase()}`;
+  }
+  if (sideReason) sideReason.textContent = st_evasion.reasoning;
+  if (linearList) {
+    linearList.innerHTML = (st_evasion.linear_moves_to_step || []).map(m => `<li>${m}</li>`).join('');
+  }
+  if (homingList) {
+    homingList.innerHTML = (st_evasion.opponent_homing_moves || []).map(m => `<li>${m}</li>`).join('');
+  }
+
+  // 8. SECTION 9: Heat Mechanics & Stance Dynamics
+  const hm = data.heat_and_mechanics;
+  const pHeat = document.getElementById('playerHeatFocus');
+  const oHeat = document.getElementById('opponentHeatThreats');
+  const hSmash = document.getElementById('heatSmashDynamics');
+
+  if (pHeat) pHeat.textContent = hm.player_heat_focus;
+  if (oHeat) oHeat.textContent = hm.opponent_heat_threats;
+  if (hSmash) hSmash.textContent = `${hm.heat_smash_interaction} • ${hm.stance_and_install_dynamics}`;
+
+  // 9. SECTION 10: Stage Hazards & Suitable Combos
+  const sms = data.stage_matchup_synergy;
   const dangerBadge = document.getElementById('wallDangerBadge');
   const boundaryDesc = document.getElementById('stageBoundaryDescription');
   const mechanicsRow = document.getElementById('synergyMechanicsRow');
   const tacticalAdvice = document.getElementById('stageTacticalAdvice');
+  const stageAdvantageBox = document.getElementById('characterStageAdvantage');
 
   if (dangerBadge) {
-    dangerBadge.textContent = synergy.wall_danger_level;
-    dangerBadge.className = 'danger-level-badge ' + (synergy.wall_danger_level.toLowerCase().includes('extreme') ? 'extreme' : (synergy.wall_danger_level.toLowerCase().includes('safe') ? 'safe' : 'moderate'));
+    dangerBadge.textContent = sms.wall_danger_level;
+    dangerBadge.className = 'danger-level-badge ' + (sms.wall_danger_level.toLowerCase().includes('extreme') ? 'extreme' : (sms.wall_danger_level.toLowerCase().includes('safe') ? 'safe' : 'moderate'));
   }
-
   if (boundaryDesc) {
     boundaryDesc.textContent = st.notes || `Boundary shape: ${st.boundary_shape || 'Enclosed'}. ${st.special_mechanics || ''}`;
   }
-
   if (mechanicsRow) {
-    const allMechs = [...synergy.wall_mechanics, ...synergy.floor_mechanics];
+    const allMechs = [...sms.wall_mechanics, ...sms.floor_mechanics];
     if (allMechs.length === 0) {
       mechanicsRow.innerHTML = '<span class="mini-hazard-pill safe">No Destructibles</span>';
     } else {
       mechanicsRow.innerHTML = allMechs.map(m => `<span class="mini-hazard-pill">${m}</span>`).join('');
     }
   }
-
-  if (tacticalAdvice) {
-    tacticalAdvice.textContent = synergy.tactical_advice;
+  if (tacticalAdvice) tacticalAdvice.textContent = sms.tactical_advice;
+  if (stageAdvantageBox) {
+    stageAdvantageBox.innerHTML = `<strong>Stage Win-Condition:</strong> ${sms.character_stage_advantage}`;
   }
 
-  // 6. Suitable Combos
+  // Suitable Combos
   const combosContainer = document.getElementById('suitableCombosContainer');
   if (combosContainer) {
     if (!data.suitable_combos || data.suitable_combos.length === 0) {
@@ -1232,20 +1351,33 @@ function renderMatchupDashboard(data) {
     }
   }
 
-  // 7. Strengths & Weaknesses
+  // 10. SECTIONS 2 & 3: Matchup Factors (Advantages vs Threats)
   const strList = document.getElementById('playerStrengthsList');
   const weakList = document.getElementById('playerWeaknessesList');
-
   if (strList) {
-    strList.innerHTML = (data.strengths || []).map(s => `<li>${s}</li>`).join('');
+    strList.innerHTML = (data.player_strengths || []).map(s => `<li>${s}</li>`).join('');
   }
   if (weakList) {
-    weakList.innerHTML = (data.weaknesses || []).map(w => `<li>${w}</li>`).join('');
+    weakList.innerHTML = (data.opponent_strengths || []).map(w => `<li>${w}</li>`).join('');
   }
 
-  // 8. Provenance Footer
-  const comp = data.data_completeness;
-  document.getElementById('provMovesAnalyzed').textContent = `${comp.player_moves_analyzed + comp.opponent_moves_analyzed} Moves Evaluated`;
-  document.getElementById('provPatchVersion').textContent = `Patch ${comp.patch_version}`;
+  // 11. SECTION 11: Directional Provenance Footer
+  const provDir = document.getElementById('provDirectionText');
+  const provStatus = document.getElementById('provStatusText');
+  const provContrib = document.getElementById('provContributorText');
+  const provDate = document.getElementById('provLastReviewedText');
+  const provMoves = document.getElementById('provMovesAnalyzed');
+  const provPatch = document.getElementById('provPatchVersion');
+
+  if (provDir) provDir.textContent = prov.direction;
+  if (provStatus) provStatus.textContent = prov.verification_status;
+  if (provContrib) provContrib.textContent = prov.contributor;
+  if (provDate) provDate.textContent = `Reviewed: ${prov.last_reviewed || '2026-03-15'}`;
+  if (provMoves) {
+    const comp = data.data_completeness;
+    provMoves.textContent = `${comp.player_moves_analyzed + comp.opponent_moves_analyzed} Moves Evaluated`;
+  }
+  if (provPatch) provPatch.textContent = `Patch ${prov.patch_version}`;
 }
+
 
