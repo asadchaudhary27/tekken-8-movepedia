@@ -4112,3 +4112,506 @@ body.has-left-rail {
     flex-direction: column;
   }
 }
+
+/* ==========================================================================
+   Phase 4: Stage-Aware Strategy Engine & Blueprint Visualization
+   ========================================================================== */
+
+.stage-dim-pill {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+  text-transform: uppercase;
+}
+
+.stage-blueprint-container {
+  margin: 1.25rem 0;
+  background: radial-gradient(circle at center, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.8) 100%);
+  border: 1px solid var(--border-metallic);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.stage-blueprint-svg-wrap {
+  width: 100%;
+  max-width: 440px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stage-svg-element {
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.stage-svg-element:hover {
+  filter: drop-shadow(0 0 10px currentColor);
+}
+
+.stage-blueprint-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.stage-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.stage-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* Unmapped / Infinite Stage Info Matrix (Strict Data Integrity) */
+.stage-unmapped-panel {
+  width: 100%;
+  padding: 1.25rem;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px dashed rgba(245, 158, 11, 0.4);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.stage-unmapped-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #f59e0b;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.stage-unmapped-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.stage-unmapped-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.stage-unmapped-metric-cell {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-metallic);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+}
+
+.stage-unmapped-metric-cell .label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.stage-unmapped-metric-cell .value {
+  font-size: 0.85rem;
+  color: #fff;
+  font-weight: 800;
+  margin-top: 0.2rem;
+}
+
+/* Unavailable Mechanics Warning Alert Banner */
+.stage-unavailable-alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.stage-unavailable-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  background: rgba(239, 68, 68, 0.08);
+  border-left: 3px solid #ef4444;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0 4px 4px 0;
+  font-size: 0.78rem;
+  color: #fca5a5;
+  line-height: 1.45;
+}
+
+.stage-unavailable-item svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Corner Pressure & Wall Positioning Blueprint Grid */
+.stage-tactical-blueprint-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.st-blueprint-box {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border-metallic);
+  border-radius: 6px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.st-blueprint-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.st-blueprint-text {
+  font-size: 0.82rem;
+  color: #e2e8f0;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.st-blueprint-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.st-hazard-interactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.st-hazard-interaction-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.45rem 0.65rem;
+  border-radius: 4px;
+}
+
+.st-hazard-tag {
+  font-weight: 800;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.st-hazard-tag.wall-break {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.st-hazard-tag.balcony-break {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.st-hazard-tag.floor-break {
+  background: rgba(249, 115, 22, 0.2);
+  color: #fb923c;
+  border: 1px solid rgba(249, 115, 22, 0.4);
+}
+
+/* Combo Filter Toolbar */
+.combo-filter-toolbar {
+  margin: 1.25rem 0 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-metallic);
+  border-radius: 6px;
+  padding: 0.85rem;
+}
+
+.combo-type-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.combo-filter-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-metallic);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.combo-filter-btn:hover {
+  background: rgba(255, 30, 56, 0.12);
+  border-color: rgba(255, 30, 56, 0.4);
+  color: #fff;
+}
+
+.combo-filter-btn.active {
+  background: var(--accent-red);
+  border-color: var(--accent-red);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(255, 30, 56, 0.4);
+}
+
+.combo-modifier-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.combo-check-label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  color: #cbd5e1;
+  cursor: pointer;
+}
+
+.combo-check-label input[type="checkbox"] {
+  accent-color: var(--accent-red);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.combo-diff-select-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.combo-diff-select {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-metallic);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Enhanced Combo Cards */
+.combo-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-metallic);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.combo-card:hover {
+  border-color: rgba(0, 230, 118, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.combo-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.combo-card-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.combo-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.combo-tags-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.combo-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.combo-tag.type-midscreen {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+}
+
+.combo-tag.type-wall-carry {
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  color: #c084fc;
+}
+
+.combo-tag.type-wall-combo {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+.combo-tag.type-wall-break {
+  background: rgba(239, 68, 68, 0.25);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #ef4444;
+}
+
+.combo-tag.type-floor-break {
+  background: rgba(249, 115, 22, 0.2);
+  border: 1px solid rgba(249, 115, 22, 0.4);
+  color: #fb923c;
+}
+
+.combo-tag.type-balcony-break {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+}
+
+.combo-tag.stage-dep {
+  background: rgba(236, 72, 153, 0.15);
+  border: 1px solid rgba(236, 72, 153, 0.35);
+  color: #f472b6;
+}
+
+.combo-tag.universal {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+}
+
+.combo-metrics-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.combo-dmg-badge {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.combo-notation-box {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 0.6rem 0.85rem;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #fff;
+  letter-spacing: 0.04em;
+  word-break: break-word;
+  user-select: all;
+}
+
+.combo-starter-ender-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.combo-starter-ender-row strong {
+  color: #e2e8f0;
+}
+
+.combo-synergy-note {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  line-height: 1.4;
+  border-left: 2px solid var(--accent-cyan);
+  padding-left: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .stage-tactical-blueprint-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .combo-modifier-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .combo-diff-select-wrap {
+    margin-left: 0;
+  }
+}
+

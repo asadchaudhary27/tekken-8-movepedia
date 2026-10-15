@@ -726,8 +726,8 @@
                 </div>
               </div>
 
-              <!-- SECTION 10: Stage Hazards & Tactical Considerations -->
-              <div class="dash-card">
+              <!-- SECTION 10: Stage-Aware Strategy Engine & Tactical Blueprint -->
+              <div class="dash-card stage-strategy-card" id="stageStrategyCard">
                 <div class="dash-card-header">
                   <div class="dash-card-title">
                     <svg viewBox="0 0 24 24" width="18" height="18" stroke="var(--accent-gold)" stroke-width="2.5" fill="none">
@@ -735,37 +735,111 @@
                       <polyline points="2 17 12 22 22 17"/>
                       <polyline points="2 12 12 17 22 12"/>
                     </svg>
-                    <span>SECTION 10: STAGE MATCHUP SYNERGY</span>
+                    <span>SECTION 10: STAGE-AWARE STRATEGY &amp; BLUEPRINT</span>
                   </div>
-                  <span class="danger-level-badge" id="wallDangerBadge">MODERATE DANGER</span>
+                  <div style="display:flex; gap:0.5rem; align-items:center;">
+                    <span class="stage-dim-pill" id="stageDimensionsPill">24m Octagon</span>
+                    <span class="danger-level-badge" id="wallDangerBadge">MODERATE DANGER</span>
+                  </div>
                 </div>
-                <p class="dash-card-sub" id="stageBoundaryDescription">Boundary and environmental mechanics analysis.</p>
+                <p class="dash-card-sub" id="stageBoundaryDescription">
+                  Boundary configuration, destructible hazards, and stage geometry analysis.
+                </p>
 
-                <div class="synergy-mechanics-row" id="synergyMechanicsRow">
-                  <!-- Hazard pills -->
+                <!-- Tactical Blueprint / Stage Geometry Map or Info Matrix -->
+                <div class="stage-blueprint-container" id="stageBlueprintContainer">
+                  <!-- SVG Map or Structured Info Panel rendered dynamically -->
                 </div>
 
-                <div class="stage-tactical-advice" id="stageTacticalAdvice">
-                  <!-- Tactical advice -->
+                <!-- Unavailable Mechanics Alert Banner -->
+                <div class="stage-unavailable-alerts" id="stageUnavailableAlerts">
+                  <!-- Rendered dynamically -->
                 </div>
+
+                <!-- Corner Pressure & Wall Positioning Blueprint -->
+                <div class="stage-tactical-blueprint-grid">
+                  <div class="st-blueprint-box">
+                    <div class="st-blueprint-title">
+                      <svg viewBox="0 0 24 24" width="14" height="14" stroke="#ff1e38" stroke-width="2.5" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                      <span>CORNER PRESSURE &amp; WALL POSITIONING</span>
+                    </div>
+                    <p id="cornerPressureStrategyText" class="st-blueprint-text">
+                      Loading corner pressure strategy...
+                    </p>
+                    <div id="wallPositioningAdviceText" class="st-blueprint-sub">
+                      Loading positioning advice...
+                    </div>
+                  </div>
+
+                  <div class="st-blueprint-box">
+                    <div class="st-blueprint-title">
+                      <svg viewBox="0 0 24 24" width="14" height="14" stroke="var(--accent-cyan)" stroke-width="2.5" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+                      <span>ENVIRONMENTAL HAZARDS &amp; BREAKS</span>
+                    </div>
+                    <div class="st-hazard-interactions-list" id="stageHazardInteractionsList">
+                      <!-- Rendered dynamically -->
+                    </div>
+                  </div>
+                </div>
+
                 <div class="stage-advantage-box" id="characterStageAdvantage">
-                  <!-- Character stage advantage -->
+                  <!-- Character stage advantage summary -->
                 </div>
               </div>
 
-              <!-- Suitable Combo Routes -->
-              <div class="dash-card">
+              <!-- Stage-Aware Combo Engine & Multi-Faceted Filter Toolbar -->
+              <div class="dash-card combo-engine-card">
                 <div class="dash-card-header">
                   <div class="dash-card-title">
                     <svg viewBox="0 0 24 24" width="18" height="18" stroke="#00e676" stroke-width="2.5" fill="none">
                       <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                     </svg>
-                    <span>RECOMMENDED COMBOS &amp; WALL ROUTES</span>
+                    <span>STAGE-AWARE COMBO REPERTOIRE</span>
                   </div>
-                  <span class="dash-card-pill">Verified Routes</span>
+                  <div style="display:flex; gap:0.5rem; align-items:center;">
+                    <span class="dash-card-pill" id="comboCountPill">0 Verified Combos</span>
+                  </div>
                 </div>
-                <p class="dash-card-sub">Optimized for stage boundary dimensions and active Heat conditions.</p>
+                <p class="dash-card-sub">
+                  Combos filtered specifically for stage boundary dimensions, wall distance, and active hazard breaks.
+                </p>
 
+                <!-- Filter Toolbar -->
+                <div class="combo-filter-toolbar">
+                  <!-- Category Pills -->
+                  <div class="combo-type-pills" id="comboTypePills">
+                    <button type="button" class="combo-filter-btn active" data-type="ALL">All Categories</button>
+                    <button type="button" class="combo-filter-btn" data-type="MIDSCREEN">Midscreen</button>
+                    <button type="button" class="combo-filter-btn" data-type="WALL_CARRY">Wall Carry</button>
+                    <button type="button" class="combo-filter-btn" data-type="WALL_COMBO">Wall Combo</button>
+                    <button type="button" class="combo-filter-btn" data-type="WALL_BREAK">Wall Break</button>
+                    <button type="button" class="combo-filter-btn" data-type="FLOOR_BREAK">Floor Break</button>
+                    <button type="button" class="combo-filter-btn" data-type="BALCONY_BREAK">Balcony Break</button>
+                  </div>
+
+                  <!-- Modifier Toggles -->
+                  <div class="combo-modifier-row">
+                    <label class="combo-check-label">
+                      <input type="checkbox" id="comboCheckHeat">
+                      <span>Heat Required</span>
+                    </label>
+                    <label class="combo-check-label">
+                      <input type="checkbox" id="comboCheckCH">
+                      <span>Counter-Hit Starter</span>
+                    </label>
+                    <div class="combo-diff-select-wrap">
+                      <label for="comboDiffSelect">Difficulty:</label>
+                      <select id="comboDiffSelect" class="combo-diff-select">
+                        <option value="ALL">All Difficulties</option>
+                        <option value="EASY">Easy</option>
+                        <option value="MEDIUM">Medium</option>
+                        <option value="HARD">Hard</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Combo List Container -->
                 <div class="combo-routes-container" id="suitableCombosContainer">
                   <!-- Rendered dynamically -->
                 </div>

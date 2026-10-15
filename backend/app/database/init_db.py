@@ -109,28 +109,9 @@ if os.path.exists(FIXTURE_MOVES_PATH):
         pass
 
 
-# Verified Combos from tekken8combo mirror
+# Verified Combos with Phase 4 Tactical Categorization & Stage Linkages
 SAMPLE_COMBOS_DATA = [
-    {
-        "char": "kuma",
-        "title": "Hunting Max Heat Ender",
-        "notation": "Hunting, 1, 2*(max) ► u, 1+2, D ► Hunting, 1 ► b, 2, 1, D ► Hunting ► d, 1+2 ► df, 2 ► Hunting ► df, 1 ► Heat Burst ► f, f, 1+2, F ► Bear Roll ► 3",
-        "damage": 99,
-        "hits": 12,
-        "difficulty": "HARD",
-        "uses_heat": True,
-        "uses_tornado": True
-    },
-    {
-        "char": "panda",
-        "title": "Down Forward Launcher Bread & Butter",
-        "notation": "df, 2, 1 ► u, 1+2, D ► Hunting ► 1 ► b, 2, 1, D ► Hunting ► d, 1+2 ► df, 2 ► df, 1 ► Heat Burst ► f, f, 1+2, F ► Bear Roll ► 3",
-        "damage": 95,
-        "hits": 12,
-        "difficulty": "HARD",
-        "uses_heat": True,
-        "uses_tornado": True
-    },
+    # --- JIN KAZAMA ---
     {
         "char": "jin",
         "title": "Electric Hook Fist Staple Juggle",
@@ -138,8 +119,166 @@ SAMPLE_COMBOS_DATA = [
         "damage": 72,
         "hits": 8,
         "difficulty": "MEDIUM",
+        "combo_type": "MIDSCREEN",
         "uses_heat": False,
-        "uses_tornado": True
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Electric Wind Hook Fist",
+        "starter_move_input": "f,n,d,df+2",
+        "ender_move_name": "Downward Punch",
+        "ender_move_input": "d+2",
+        "conditions_notes": "Universal midscreen staple. Works consistently on all stages.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "jin",
+        "title": "Thrusting Knee Counter-Hit Launcher",
+        "notation": "f+4 (CH) ► Dash ► b+3, f ► ZEN 1 ► b+3, f ► ZEN 1, 3 ► Tornado ► f, f, f+3",
+        "damage": 76,
+        "hits": 7,
+        "difficulty": "HARD",
+        "combo_type": "MIDSCREEN",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": True,
+        "is_stage_dependent": False,
+        "starter_move_name": "Thrusting Knee",
+        "starter_move_input": "f+4",
+        "ender_move_name": "Slash Kick",
+        "ender_move_input": "f,f,f+3",
+        "conditions_notes": "Requires Counter-Hit on f+4. Deep micro-dash required after starter.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "jin",
+        "title": "Demon's Paw Wall Carry Route",
+        "notation": "df+2 ► 4 ► 1, 3, 2, 1, 4 ► Tornado ► Dash ► b+3, f ► ZEN 1, 2 ► Wall Splat",
+        "damage": 68,
+        "hits": 9,
+        "difficulty": "MEDIUM",
+        "combo_type": "WALL_CARRY",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Demon's Claws Launcher",
+        "starter_move_input": "df+2",
+        "ender_move_name": "ZEN Rush to Wall Splat",
+        "ender_move_input": "ZEN 1,2",
+        "conditions_notes": "Max-distance carry designed to reach perimeter walls from standard 24m distance.",
+        "source": "TekkenDocs Lab"
+    },
+    {
+        "char": "jin",
+        "title": "Zen Stance Wall Splat Ender",
+        "notation": "Wall Splat ► db+2, 2, 3 ► ZEN 3+4 ► d+1+2",
+        "damage": 38,
+        "hits": 5,
+        "difficulty": "MEDIUM",
+        "combo_type": "WALL_COMBO",
+        "uses_heat": False,
+        "uses_tornado": False,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Wall Splat Recovery",
+        "starter_move_input": "Wall Splat",
+        "ender_move_name": "Corpse Thrust",
+        "ender_move_input": "d+1+2",
+        "conditions_notes": "Optimal wall ender for maximum damage once the opponent hits the wall.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "jin",
+        "title": "Urban Square Balcony Plunge Route",
+        "notation": "f, n, d, df+2 ► b+3, f ► ZEN 1 ► b+3, f ► ZEN 1, 3 ► Tornado ► Dash ► f, f+2 (Balcony Break) ► Plunge ► Dash ► b+3, f ► ZEN 1, 2",
+        "damage": 94,
+        "hits": 12,
+        "difficulty": "HARD",
+        "combo_type": "BALCONY_BREAK",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": True,
+        "stage_slug": "urban-square",
+        "stage_section": "Times Square Overlook",
+        "starter_move_name": "Electric Wind Hook Fist",
+        "starter_move_input": "f,n,d,df+2",
+        "ender_move_name": "Subway Floor Cleanup",
+        "ender_move_input": "ZEN 1,2",
+        "conditions_notes": "Only works on Urban Square near the south balcony railing. Demon's Paw (f,f+2) breaks railing.",
+        "source": "Tekken 8 Tournament Archives"
+    },
+    {
+        "char": "jin",
+        "title": "Sanctum Altar Crypt Floor Shatter",
+        "notation": "f, n, d, df+2 ► 4 ► b+3, f ► ZEN 1 ► Tornado ► Heat Burst ► f, f+2 ► 2+3 (Floor Break) ► Drop ► df+1, 4 ► f, f+4",
+        "damage": 91,
+        "hits": 11,
+        "difficulty": "HARD",
+        "combo_type": "FLOOR_BREAK",
+        "uses_heat": True,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": True,
+        "stage_slug": "sanctum",
+        "stage_section": "Altar Center",
+        "starter_move_name": "Electric Wind Hook Fist",
+        "starter_move_input": "f,n,d,df+2",
+        "ender_move_name": "Stomp Down",
+        "ender_move_input": "f,f+4",
+        "conditions_notes": "Specific to Sanctum central altar. Downward Heat Smash spikes opponent through stone floor.",
+        "source": "Tekken 8 Strategy Lab"
+    },
+    {
+        "char": "jin",
+        "title": "Rebel Hangar Heat Wall Blast Burst",
+        "notation": "f, f+2 (Heat Engager) ► Heat Dash ► b+3, f ► ZEN 1, 3 ► Tornado ► Dash ► f, f+2 (Wall Blast) ► Wall Blast Rebound ► f, f, f+3",
+        "damage": 88,
+        "hits": 8,
+        "difficulty": "HARD",
+        "combo_type": "WALL_BREAK",
+        "uses_heat": True,
+        "uses_tornado": True,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": True,
+        "stage_slug": "rebel-hangar",
+        "stage_section": "Munitions Bay East",
+        "starter_move_name": "Demon's Paw Heat Engager",
+        "starter_move_input": "f,f+2",
+        "ender_move_name": "Slash Kick Rebound Ender",
+        "ender_move_input": "f,f,f+3",
+        "conditions_notes": "Rebel Hangar east ordnance wall blast. Consumes Heat Dash to trigger massive blast rebound.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+
+    # --- KAZUYA MISHIMA ---
+    {
+        "char": "kazuya",
+        "title": "Twin Pistons Staple Midscreen",
+        "notation": "ws1, 2 ► Dash ► 3, 1, 4 ► Tornado ► Dash ► cd+4, 1",
+        "damage": 66,
+        "hits": 6,
+        "difficulty": "EASY",
+        "combo_type": "MIDSCREEN",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Twin Pistons",
+        "starter_move_input": "ws1,2",
+        "ender_move_name": "Hell Sweep Ender",
+        "ender_move_input": "f,n,d,df+4,1",
+        "conditions_notes": "Universal i13 while-rising block punisher combo. Standard bread & butter.",
+        "source": "wavu.wiki / Tekken 8 Lab"
     },
     {
         "char": "kazuya",
@@ -148,12 +287,505 @@ SAMPLE_COMBOS_DATA = [
         "damage": 76,
         "hits": 7,
         "difficulty": "HARD",
+        "combo_type": "WALL_CARRY",
         "uses_heat": False,
-        "uses_tornado": True
+        "uses_tornado": True,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Electric Wind God Fist",
+        "starter_move_input": "f,n,df+2",
+        "ender_move_name": "Twin Fang Splat",
+        "ender_move_input": "df+1,df+2",
+        "conditions_notes": "High execution double electric carry into Tornado for long-distance wall reach.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "kazuya",
+        "title": "Counter-Hit df+2 Stun Launcher",
+        "notation": "df+2 (CH) ► f, n, df+2 ► 3, 1, 4 ► Tornado ► Dash ► f, f, f+3",
+        "damage": 82,
+        "hits": 6,
+        "difficulty": "HARD",
+        "combo_type": "MIDSCREEN",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": True,
+        "is_stage_dependent": False,
+        "starter_move_name": "Demon Gut Fist",
+        "starter_move_input": "df+2",
+        "ender_move_name": "Left Slash Kick",
+        "ender_move_input": "f,f,f+3",
+        "conditions_notes": "Counter Hit only. Requires fast follow-up EWGF pickup before crumple state ends.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "kazuya",
+        "title": "Demon God Fist Wall Splat Ender",
+        "notation": "Wall Splat ► 1, 1, 2 ► d+1+2",
+        "damage": 34,
+        "hits": 4,
+        "difficulty": "MEDIUM",
+        "combo_type": "WALL_COMBO",
+        "uses_heat": False,
+        "uses_tornado": False,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Wall Splat",
+        "starter_move_input": "Wall Splat",
+        "ender_move_name": "Demon Scissors Ground Hit",
+        "ender_move_input": "d+1+2",
+        "conditions_notes": "High wall splat required for reliable 1,1,2 sequence into ground pound.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "kazuya",
+        "title": "Urban Square Subway Balcony Break",
+        "notation": "f, n, df+2 ► f, n, df+2 ► b+2, 2 ► Tornado ► Dash ► cd+4, 1 (Balcony Break) ► Plunge ► Dash ► EWGF",
+        "damage": 96,
+        "hits": 10,
+        "difficulty": "HARD",
+        "combo_type": "BALCONY_BREAK",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": True,
+        "stage_slug": "urban-square",
+        "stage_section": "Upper Balcony",
+        "starter_move_name": "Electric Wind God Fist",
+        "starter_move_input": "f,n,df+2",
+        "ender_move_name": "Underground EWGF Pickup",
+        "ender_move_input": "f,n,df+2",
+        "conditions_notes": "Urban Square balcony railing break. Hell sweep second hit breaks railing.",
+        "source": "TekkenDocs Lab"
+    },
+    {
+        "char": "kazuya",
+        "title": "Sanctum Crypt Floor Shatter",
+        "notation": "f, n, df+2 ► 3, 1, 4 ► Tornado ► Heat Burst ► 2+3 (Floor Break) ► Drop into Crypt ► f, f, f+3",
+        "damage": 92,
+        "hits": 8,
+        "difficulty": "HARD",
+        "combo_type": "FLOOR_BREAK",
+        "uses_heat": True,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": True,
+        "stage_slug": "sanctum",
+        "stage_section": "Temple Altar",
+        "starter_move_name": "Electric Wind God Fist",
+        "starter_move_input": "f,n,df+2",
+        "ender_move_name": "Crypt Slash Kick",
+        "ender_move_input": "f,f,f+3",
+        "conditions_notes": "Sanctum altar floor break using Kazuya's Heat Smash downward slam.",
+        "source": "Tekken 8 Lab"
+    },
+    {
+        "char": "kazuya",
+        "title": "Rebel Hangar Electric Wall Blast",
+        "notation": "f, n, df+2 ► 3, 1, 4 ► Tornado ► Dash ► df+1, 2 (Wall Blast) ► Rebound ► f, n, df+2",
+        "damage": 89,
+        "hits": 7,
+        "difficulty": "HARD",
+        "combo_type": "WALL_BREAK",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": True,
+        "stage_slug": "rebel-hangar",
+        "stage_section": "East Ordnance",
+        "starter_move_name": "Electric Wind God Fist",
+        "starter_move_input": "f,n,df+2",
+        "ender_move_name": "Rebound Electric",
+        "ender_move_input": "f,n,df+2",
+        "conditions_notes": "Triggers explosive wall blast on Rebel Hangar east wall.",
+        "source": "Tekken 8 Lab"
+    },
+
+    # --- REINA ---
+    {
+        "char": "reina",
+        "title": "Wind God Fist Staple Juggle",
+        "notation": "f, n, df+2 ► 3, 4 ► f+2, 3 ► Tornado ► Dash ► SEN 1+2",
+        "damage": 68,
+        "hits": 7,
+        "difficulty": "HARD",
+        "combo_type": "MIDSCREEN",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Wind God Fist",
+        "starter_move_input": "f,n,df+2",
+        "ender_move_name": "Sentai Double Palm",
+        "ender_move_input": "SEN 1+2",
+        "conditions_notes": "Standard high damage midscreen route for Reina.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "reina",
+        "title": "Sentai 3 Heat Engager Wall Carry",
+        "notation": "f+3, 3 (Heat Engager) ► Heat Dash ► 3, 4 ► f+2, 3 ► Tornado ► Dash ► f, f+2 ► Wall Splat",
+        "damage": 78,
+        "hits": 8,
+        "difficulty": "MEDIUM",
+        "combo_type": "WALL_CARRY",
+        "uses_heat": True,
+        "uses_tornado": True,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Sentai Kick",
+        "starter_move_input": "f+3,3",
+        "ender_move_name": "Demon Paw Splat",
+        "ender_move_input": "f,f+2",
+        "conditions_notes": "Carries full screen into wall splat with Heat Dash extension.",
+        "source": "TekkenDocs Lab"
+    },
+    {
+        "char": "reina",
+        "title": "Writhing Tiger Wall Combo Ender",
+        "notation": "Wall Splat ► df+1 ► db+2 ► HW 3+4",
+        "damage": 36,
+        "hits": 4,
+        "difficulty": "MEDIUM",
+        "combo_type": "WALL_COMBO",
+        "uses_heat": False,
+        "uses_tornado": False,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Wall Splat",
+        "starter_move_input": "Wall Splat",
+        "ender_move_name": "Heaven's Wrath Stomp",
+        "ender_move_input": "HW 3+4",
+        "conditions_notes": "Reina high damage wall ender using Heaven's Wrath transition.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "reina",
+        "title": "Urban Square Wall Break Overdrive",
+        "notation": "f, n, df+2 ► 3, 4 ► Tornado ► Dash ► f, f+2 (Wall Blast) ► Rebound ► f, f, f+3",
+        "damage": 86,
+        "hits": 7,
+        "difficulty": "HARD",
+        "combo_type": "WALL_BREAK",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": True,
+        "stage_slug": "urban-square",
+        "starter_move_name": "Wind God Fist",
+        "starter_move_input": "f,n,df+2",
+        "ender_move_name": "Running Kick Rebound",
+        "ender_move_input": "f,f,f+3",
+        "conditions_notes": "Wall blast on Urban Square east billboard perimeter.",
+        "source": "Tekken 8 Strategy Lab"
+    },
+    {
+        "char": "reina",
+        "title": "Sanctum Stone Floor Break",
+        "notation": "f, n, df+2 ► 3, 4 ► Tornado ► Heat Burst ► 2+3 (Floor Break) ► Crypt Drop ► SEN 1+2",
+        "damage": 90,
+        "hits": 9,
+        "difficulty": "HARD",
+        "combo_type": "FLOOR_BREAK",
+        "uses_heat": True,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": True,
+        "stage_slug": "sanctum",
+        "starter_move_name": "Wind God Fist",
+        "starter_move_input": "f,n,df+2",
+        "ender_move_name": "Crypt Sentai Finisher",
+        "ender_move_input": "SEN 1+2",
+        "conditions_notes": "Breaks through Sanctum altar floor with Reina Heat Smash.",
+        "source": "Tekken 8 Lab"
+    },
+
+    # --- KING ---
+    {
+        "char": "king",
+        "title": "Hopkick Midscreen Bread & Butter",
+        "notation": "uf+4 ► 4 ► df+4, 3 ► Tornado ► Dash ► f, f, f+2+4",
+        "damage": 69,
+        "hits": 6,
+        "difficulty": "EASY",
+        "combo_type": "MIDSCREEN",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Jumping Knee Hopkick",
+        "starter_move_input": "uf+4",
+        "ender_move_name": "Shining Wizard",
+        "ender_move_input": "f,f,f+2+4",
+        "conditions_notes": "King's universal staple hopkick conversion into Shining Wizard throw ender.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "king",
+        "title": "Running Exploder Wall Carry",
+        "notation": "uf+4 ► 4 ► 1, 2 ► df+4, 3 ► Tornado ► Dash ► f, f, f+3 ► Wall Splat",
+        "damage": 72,
+        "hits": 8,
+        "difficulty": "MEDIUM",
+        "combo_type": "WALL_CARRY",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Hopkick",
+        "starter_move_input": "uf+4",
+        "ender_move_name": "Running Exploder",
+        "ender_move_input": "f,f,f+3",
+        "conditions_notes": "High pushback route designed for long-distance wall splats.",
+        "source": "TekkenDocs Lab"
+    },
+    {
+        "char": "king",
+        "title": "Tombstone Wall Splat Ender",
+        "notation": "Wall Splat ► d+1+2 ► d+2+4",
+        "damage": 42,
+        "hits": 3,
+        "difficulty": "MEDIUM",
+        "combo_type": "WALL_COMBO",
+        "uses_heat": False,
+        "uses_tornado": False,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Wall Splat",
+        "starter_move_input": "Wall Splat",
+        "ender_move_name": "Tombstone Piledriver",
+        "ender_move_input": "d+2+4",
+        "conditions_notes": "Devastating grapple wall ender after high wall splat.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "king",
+        "title": "Giant Swing Balcony Drop",
+        "notation": "uf+4 ► df+4, 3 ► Tornado ► Dash ► f, b, db, d, df, f+1 (Balcony Break) ► Plunge ► Shining Wizard",
+        "damage": 98,
+        "hits": 6,
+        "difficulty": "HARD",
+        "combo_type": "BALCONY_BREAK",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": True,
+        "stage_slug": "urban-square",
+        "starter_move_name": "Hopkick",
+        "starter_move_input": "uf+4",
+        "ender_move_name": "Subway Shining Wizard",
+        "ender_move_input": "f,f,f+2+4",
+        "conditions_notes": "Giant Swing throw wall splat breaks Urban Square balcony into subway station.",
+        "source": "Tekken 8 Strategy Lab"
+    },
+
+    # --- FENG WEI ---
+    {
+        "char": "feng",
+        "title": "Demon Palm Midscreen Staple",
+        "notation": "df+1 ► 3, 3 ► b+4 ► Tornado ► Dash ► f, f+4, 3",
+        "damage": 65,
+        "hits": 6,
+        "difficulty": "EASY",
+        "combo_type": "MIDSCREEN",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Demon Palm",
+        "starter_move_input": "df+1",
+        "ender_move_name": "Dragon Stomp",
+        "ender_move_input": "f,f+4,3",
+        "conditions_notes": "Consistent low-execution bread & butter for Feng Wei.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "feng",
+        "title": "Iron Fortress Wall Carry",
+        "notation": "b+1+2 (Power Crush) ► f+1+2 ► 3, 3 ► Tornado ► Dash ► f, f+3 ► Wall Splat",
+        "damage": 74,
+        "hits": 6,
+        "difficulty": "MEDIUM",
+        "combo_type": "WALL_CARRY",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Iron Fortress",
+        "starter_move_input": "b+1+2",
+        "ender_move_name": "Front Kick Splat",
+        "ender_move_input": "f,f+3",
+        "conditions_notes": "Absorbs attack with Power Crush then carries rival to the wall.",
+        "source": "TekkenDocs Lab"
+    },
+    {
+        "char": "feng",
+        "title": "Shifting Cloud Wall Combo Finisher",
+        "notation": "Wall Splat ► f+3+4 ► STC 1, 2 ► db+1+2",
+        "damage": 39,
+        "hits": 4,
+        "difficulty": "MEDIUM",
+        "combo_type": "WALL_COMBO",
+        "uses_heat": False,
+        "uses_tornado": False,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Wall Splat",
+        "starter_move_input": "Wall Splat",
+        "ender_move_name": "Dual Palm Strike",
+        "ender_move_input": "db+1+2",
+        "conditions_notes": "High wall splat Shifting Cloud stance sequence.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "feng",
+        "title": "Demon's Claws Balcony Breaker",
+        "notation": "df+2, 2 ► 3, 3 ► Tornado ► Dash ► b+1+2 (Balcony Break) ► Plunge ► Dash ► f, f+4, 3",
+        "damage": 92,
+        "hits": 8,
+        "difficulty": "HARD",
+        "combo_type": "BALCONY_BREAK",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": True,
+        "stage_slug": "urban-square",
+        "starter_move_name": "Demon's Claws",
+        "starter_move_input": "df+2,2",
+        "ender_move_name": "Subway Dragon Stomp",
+        "ender_move_input": "f,f+4,3",
+        "conditions_notes": "Breaks balcony rail on Urban Square.",
+        "source": "Tekken 8 Lab"
+    },
+    {
+        "char": "feng",
+        "title": "Downward Palm Crypt Floor Breaker",
+        "notation": "df+2, 2 ► 3, 3 ► Tornado ► Heat Burst ► 2+3 (Floor Break) ► Drop ► db+1+2",
+        "damage": 88,
+        "hits": 7,
+        "difficulty": "HARD",
+        "combo_type": "FLOOR_BREAK",
+        "uses_heat": True,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": True,
+        "stage_slug": "sanctum",
+        "starter_move_name": "Demon's Claws",
+        "starter_move_input": "df+2,2",
+        "ender_move_name": "Dual Palm Ground Hit",
+        "ender_move_input": "db+1+2",
+        "conditions_notes": "Shatters stone floor on Sanctum altar.",
+        "source": "Tekken 8 Lab"
+    },
+
+    # --- PAUL PHOENIX ---
+    {
+        "char": "paul",
+        "title": "Phoenix Smasher Wall Splat Max Damage",
+        "notation": "Wall Splat ► Heat Burst ► qcf+2 (Deathfist)",
+        "damage": 52,
+        "hits": 2,
+        "difficulty": "MEDIUM",
+        "combo_type": "WALL_COMBO",
+        "uses_heat": True,
+        "uses_tornado": False,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Wall Splat",
+        "starter_move_input": "Wall Splat",
+        "ender_move_name": "Clean Deathfist",
+        "ender_move_input": "qcf+2",
+        "conditions_notes": "Guaranteed clean hit Phoenix Smasher on wall splat for catastrophic damage.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+
+    # --- BRYAN FURY ---
+    {
+        "char": "bryan",
+        "title": "Fisherman Slam Wall Carry",
+        "notation": "qcf+1 ► 1+2 ► b+2, 4 ► Tornado ► Dash ► f, f+4 ► Wall Splat",
+        "damage": 75,
+        "hits": 7,
+        "difficulty": "HARD",
+        "combo_type": "WALL_CARRY",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": True,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Fisherman Slam",
+        "starter_move_input": "qcf+1",
+        "ender_move_name": "Mach Kick Wall Splat",
+        "ender_move_input": "f,f+4",
+        "conditions_notes": "Long-distance wall carry with Mach Kick wall splat.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+
+    # --- BEARS (KUMA & PANDA) ---
+    {
+        "char": "kuma",
+        "title": "Hunting Max Heat Ender",
+        "notation": "Hunting, 1, 2*(max) ► u, 1+2, D ► Hunting, 1 ► b, 2, 1, D ► Hunting ► d, 1+2 ► df, 2 ► Hunting ► df, 1 ► Heat Burst ► f, f, 1+2, F ► Bear Roll ► 3",
+        "damage": 99,
+        "hits": 12,
+        "difficulty": "HARD",
+        "combo_type": "MIDSCREEN",
+        "uses_heat": True,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Hunting Claw",
+        "starter_move_input": "Hunting 1",
+        "ender_move_name": "Bear Roll Kick",
+        "ender_move_input": "Bear Roll 3",
+        "conditions_notes": "High damage bear staple with Heat Burst extension.",
+        "source": "tekken8combo mirror"
+    },
+    {
+        "char": "panda",
+        "title": "Down Forward Launcher Bread & Butter",
+        "notation": "df, 2, 1 ► u, 1+2, D ► Hunting ► 1 ► b, 2, 1, D ► Hunting ► d, 1+2 ► df, 2 ► df, 1 ► Heat Burst ► f, f, 1+2, F ► Bear Roll ► 3",
+        "damage": 95,
+        "hits": 12,
+        "difficulty": "HARD",
+        "combo_type": "MIDSCREEN",
+        "uses_heat": True,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Panda Uppercut",
+        "starter_move_input": "df+2,1",
+        "ender_move_name": "Bear Roll Kick",
+        "ender_move_input": "Bear Roll 3",
+        "conditions_notes": "Panda staple juggle into maximum Heat extension.",
+        "source": "tekken8combo mirror"
     }
 ]
 
-# Verified Tekken 8 Official Stages & Destructible Hazards
+# Verified Tekken 8 Official Stages & Destructible Hazards (Phase 4 Structured Geometries)
 STAGES_DATA = [
     {
         "slug": "the-arena",
@@ -162,18 +794,51 @@ STAGES_DATA = [
         "image_url": "/assets/img/stages/arena.jpg",
         "has_walls": True,
         "boundary_shape": "Octagonal",
+        "wall_distance": "24m Octagon (Medium)",
+        "layout_description": "Standard enclosed 8-sided tournament octagon ring without breakable hazards.",
         "wall_break": False,
         "hard_wall_break": False,
         "wall_blast": False,
         "wall_bound": False,
+        "wall_break_interaction": None,
         "floor_break": False,
         "floor_blast": False,
+        "floor_break_interaction": None,
         "balcony_break": False,
+        "balcony_break_interaction": None,
         "has_transitions": False,
         "transition_description": None,
+        "transition_conditions": None,
         "total_sections": 1,
         "special_mechanics": "Standard competitive enclosed arena with crowd chants",
-        "notes": "Standard 8-sided walled tournament stage. No destructible environmental hazards."
+        "notes": "Standard 8-sided walled tournament stage. No destructible environmental hazards.",
+        "geometry_data_json": json.dumps({
+            "is_verified": True,
+            "shape": "Octagonal",
+            "width_meters": 24.0,
+            "length_meters": 24.0,
+            "canvas_viewbox": "0 0 400 400",
+            "elements": [
+                {
+                    "element_type": "wall",
+                    "label": "Tournament Perimeter Barrier",
+                    "x": 200,
+                    "y": 200,
+                    "points": "120,40 280,40 360,120 360,280 280,360 120,360 40,280 40,120",
+                    "color": "var(--accent-red)",
+                    "notes": "Solid unbroken tournament wall boundary."
+                },
+                {
+                    "element_type": "spawn",
+                    "label": "Starting Engagement Zone",
+                    "x": 200,
+                    "y": 200,
+                    "radius": 36,
+                    "color": "#38bdf8",
+                    "notes": "Neutral standoff opening distance."
+                }
+            ]
+        })
     },
     {
         "slug": "urban-square",
@@ -182,18 +847,82 @@ STAGES_DATA = [
         "image_url": "/assets/img/stages/urban-square.svg",
         "has_walls": True,
         "boundary_shape": "Rectangular",
+        "wall_distance": "26m x 18m (Rectangular)",
+        "layout_description": "Multi-tiered city intersection with explosive electronic signage and street overlook.",
         "wall_break": True,
         "hard_wall_break": False,
         "wall_blast": True,
         "wall_bound": False,
+        "wall_break_interaction": "Perimeter digital billboards explode on wall-splat causing Wall Blast with massive knockback.",
         "floor_break": False,
         "floor_blast": False,
+        "floor_break_interaction": None,
         "balcony_break": True,
+        "balcony_break_interaction": "South railing fractures on heavy impact, plunging fighters into the lower subway station.",
         "has_transitions": True,
         "transition_description": "Balcony break plunges fighters into underground subway station level",
+        "transition_conditions": "Requires wall-splat with heavy horizontal knockback against south railing.",
         "total_sections": 2,
         "special_mechanics": "Neon signage destruction, crowd reactions, explosive wall blast",
-        "notes": "Features multi-tiered destructible boundaries with Wall Blast and Balcony Break."
+        "notes": "Features multi-tiered destructible boundaries with Wall Blast and Balcony Break.",
+        "geometry_data_json": json.dumps({
+            "is_verified": True,
+            "shape": "Rectangular",
+            "width_meters": 26.0,
+            "length_meters": 18.0,
+            "canvas_viewbox": "0 0 400 300",
+            "elements": [
+                {
+                    "element_type": "wall",
+                    "label": "North Perimeter Wall",
+                    "x": 200,
+                    "y": 25,
+                    "width": 320,
+                    "height": 12,
+                    "color": "#64748b",
+                    "notes": "Unbreakable building front."
+                },
+                {
+                    "element_type": "hazard",
+                    "label": "Wall Blast Zone (East)",
+                    "x": 355,
+                    "y": 150,
+                    "width": 12,
+                    "height": 160,
+                    "color": "#ef4444",
+                    "notes": "Explosive digital billboard triggers Wall Blast on wall splat."
+                },
+                {
+                    "element_type": "balcony",
+                    "label": "Balcony Break Railing (South)",
+                    "x": 200,
+                    "y": 265,
+                    "width": 260,
+                    "height": 12,
+                    "color": "#f59e0b",
+                    "notes": "Balcony break sends opponent down to subway station."
+                },
+                {
+                    "element_type": "wall",
+                    "label": "West Perimeter Wall",
+                    "x": 45,
+                    "y": 150,
+                    "width": 12,
+                    "height": 160,
+                    "color": "#64748b",
+                    "notes": "Storefront wall boundary."
+                },
+                {
+                    "element_type": "spawn",
+                    "label": "Crosswalk Neutral Standoff",
+                    "x": 200,
+                    "y": 150,
+                    "radius": 32,
+                    "color": "#38bdf8",
+                    "notes": "Round start spawn position."
+                }
+            ]
+        })
     },
     {
         "slug": "yakushima",
@@ -202,18 +931,25 @@ STAGES_DATA = [
         "image_url": "/assets/img/stages/yakushima.svg",
         "has_walls": False,
         "boundary_shape": "Infinite",
+        "wall_distance": "Infinite",
+        "layout_description": "Boundless natural cedar forest with no outer boundaries, barriers, or floor hazards.",
         "wall_break": False,
         "hard_wall_break": False,
         "wall_blast": False,
         "wall_bound": False,
+        "wall_break_interaction": None,
         "floor_break": False,
         "floor_blast": False,
+        "floor_break_interaction": None,
         "balcony_break": False,
+        "balcony_break_interaction": None,
         "has_transitions": False,
         "transition_description": None,
+        "transition_conditions": None,
         "total_sections": 1,
         "special_mechanics": "Infinite ancient cedar forest with spiritual atmosphere",
-        "notes": "Pure infinite stage with no walls or floors to break. Movement and spacing dominate."
+        "notes": "Pure infinite stage with no walls or floors to break. Movement and spacing dominate.",
+        "geometry_data_json": None  # Strictly uncataloged / infinite; zero fabricated geometry
     },
     {
         "slug": "rebel-hangar",
@@ -222,18 +958,82 @@ STAGES_DATA = [
         "image_url": "/assets/img/stages/rebel-hangar.svg",
         "has_walls": True,
         "boundary_shape": "Square",
+        "wall_distance": "20m x 20m (Square)",
+        "layout_description": "Compact underground Yggdrasil hangar with explosive munitions bulkhead on east wall.",
         "wall_break": True,
         "hard_wall_break": False,
         "wall_blast": True,
         "wall_bound": False,
+        "wall_break_interaction": "East munitions bulkhead detonates upon heavy wall-splat for Wall Blast extension.",
         "floor_break": False,
         "floor_blast": False,
+        "floor_break_interaction": None,
         "balcony_break": False,
+        "balcony_break_interaction": None,
         "has_transitions": True,
         "transition_description": "Wall blast opens military transport bay",
+        "transition_conditions": "Wall splat on east explosive bulkhead.",
         "total_sections": 2,
         "special_mechanics": "Explosive mechanical bulkhead triggers Wall Blast",
-        "notes": "High hazard stage with explosive wall blast for massive combo extensions."
+        "notes": "High hazard stage with explosive wall blast for massive combo extensions.",
+        "geometry_data_json": json.dumps({
+            "is_verified": True,
+            "shape": "Square",
+            "width_meters": 20.0,
+            "length_meters": 20.0,
+            "canvas_viewbox": "0 0 400 400",
+            "elements": [
+                {
+                    "element_type": "wall",
+                    "label": "North Perimeter Wall",
+                    "x": 200,
+                    "y": 45,
+                    "width": 290,
+                    "height": 14,
+                    "color": "#475569",
+                    "notes": "Reinforced steel hangar wall."
+                },
+                {
+                    "element_type": "hazard",
+                    "label": "Wall Blast Ordnance Bay (East)",
+                    "x": 345,
+                    "y": 200,
+                    "width": 14,
+                    "height": 220,
+                    "color": "#ef4444",
+                    "notes": "Munitions storage bulkhead triggers explosive Wall Blast."
+                },
+                {
+                    "element_type": "wall",
+                    "label": "South Perimeter Wall",
+                    "x": 200,
+                    "y": 355,
+                    "width": 290,
+                    "height": 14,
+                    "color": "#475569",
+                    "notes": "Steel bulkhead wall."
+                },
+                {
+                    "element_type": "wall",
+                    "label": "Maintenance Bay Wall (West)",
+                    "x": 55,
+                    "y": 200,
+                    "width": 14,
+                    "height": 220,
+                    "color": "#475569",
+                    "notes": "Standard industrial steel wall."
+                },
+                {
+                    "element_type": "spawn",
+                    "label": "Hangar Center Standoff",
+                    "x": 200,
+                    "y": 200,
+                    "radius": 34,
+                    "color": "#38bdf8",
+                    "notes": "Flight deck starting spawn."
+                }
+            ]
+        })
     },
     {
         "slug": "sanctum",
@@ -242,18 +1042,60 @@ STAGES_DATA = [
         "image_url": "/assets/img/stages/sanctum.svg",
         "has_walls": True,
         "boundary_shape": "Octagonal",
+        "wall_distance": "22m Octagon (Medium)",
+        "layout_description": "Ancient subterranean ruins featuring hard breakable perimeter columns and a breakable altar floor.",
         "wall_break": True,
         "hard_wall_break": True,
         "wall_blast": False,
         "wall_bound": True,
+        "wall_break_interaction": "Hard stone pillars fracture on heavy impact, inducing Wall Bound for vertical juggle.",
         "floor_break": True,
         "floor_blast": False,
+        "floor_break_interaction": "Center altar floor shatters on downward spike knockdown, collapsing fighters into subterranean crypt.",
         "balcony_break": False,
+        "balcony_break_interaction": None,
         "has_transitions": True,
         "transition_description": "Floor collapses into lower underground crypt",
+        "transition_conditions": "Requires downward knockdown / spike combo ender over central altar.",
         "total_sections": 2,
         "special_mechanics": "Hard Wall Break and multiple Floor Breaks",
-        "notes": "Multi-layered stage featuring hard wall break and subterranean floor break."
+        "notes": "Multi-layered stage featuring hard wall break and subterranean floor break.",
+        "geometry_data_json": json.dumps({
+            "is_verified": True,
+            "shape": "Octagonal",
+            "width_meters": 22.0,
+            "length_meters": 22.0,
+            "canvas_viewbox": "0 0 400 400",
+            "elements": [
+                {
+                    "element_type": "wall",
+                    "label": "Ancient Temple Columns",
+                    "x": 200,
+                    "y": 200,
+                    "points": "130,50 270,50 350,130 350,270 270,350 130,350 50,270 50,130",
+                    "color": "#8b5cf6",
+                    "notes": "Hard wall break zone and stone pillars inducing wall bound."
+                },
+                {
+                    "element_type": "break_zone",
+                    "label": "Subterranean Crypt Floor Break",
+                    "x": 200,
+                    "y": 200,
+                    "radius": 50,
+                    "color": "#f97316",
+                    "notes": "Spike or downward knockdown breaks floor into subterranean crypt."
+                },
+                {
+                    "element_type": "spawn",
+                    "label": "Central Altar",
+                    "x": 200,
+                    "y": 200,
+                    "radius": 30,
+                    "color": "#38bdf8",
+                    "notes": "Opening duel position."
+                }
+            ]
+        })
     },
     {
         "slug": "into-the-stratosphere",
@@ -262,18 +1104,25 @@ STAGES_DATA = [
         "image_url": "/assets/img/stages/stratosphere.svg",
         "has_walls": True,
         "boundary_shape": "Irregular",
+        "wall_distance": "24m Irregular",
+        "layout_description": "Volatile atmospheric meteor rim with electrified perimeter barriers and molten floor vents.",
         "wall_break": False,
         "hard_wall_break": False,
         "wall_blast": True,
         "wall_bound": False,
+        "wall_break_interaction": "Electrified perimeter boundary triggers explosive Wall Blast.",
         "floor_break": False,
         "floor_blast": True,
+        "floor_break_interaction": "Molten magma vents trigger Floor Blast upon downward spikes, bouncing opponents upward.",
         "balcony_break": False,
+        "balcony_break_interaction": None,
         "has_transitions": False,
         "transition_description": None,
+        "transition_conditions": None,
         "total_sections": 1,
         "special_mechanics": "Molten volcanic floor blast and electric perimeter wall blast",
-        "notes": "Climactic arena with volatile floor blast and wall blast mechanics."
+        "notes": "Climactic arena with volatile floor blast and wall blast mechanics.",
+        "geometry_data_json": None  # Irregular boundary geometry without verified SVG mesh; avoid fabrication
     },
     {
         "slug": "ortiz-farm",
@@ -282,18 +1131,25 @@ STAGES_DATA = [
         "image_url": "/assets/img/stages/ortiz-farm.svg",
         "has_walls": True,
         "boundary_shape": "Irregular",
+        "wall_distance": "26m x 22m (Irregular)",
+        "layout_description": "Three-tiered Peruvian hillside plantation with balcony rails and wooden floor cellar hatches.",
         "wall_break": True,
         "hard_wall_break": False,
         "wall_blast": False,
         "wall_bound": False,
+        "wall_break_interaction": "Wooden barn fencing fractures into side farmyard.",
         "floor_break": True,
         "floor_blast": False,
+        "floor_break_interaction": "Storage shed trapdoors break under heavy spike impacts into lower cellar.",
         "balcony_break": True,
+        "balcony_break_interaction": "Terrace wooden railing snaps, dropping fighters down coffee plantation terraces.",
         "has_transitions": True,
         "transition_description": "Balcony break rolls down into lower coffee terraces",
+        "transition_conditions": "Terrace railing impact (Balcony Break) or cellar hatch spike (Floor Break).",
         "total_sections": 3,
         "special_mechanics": "3 distinct elevation levels with alpacas cheering",
-        "notes": "Azucena family coffee plantation featuring balcony and floor breaks."
+        "notes": "Azucena family coffee plantation featuring balcony and floor breaks.",
+        "geometry_data_json": None  # Multi-tiered irregular layout; uncataloged coordinates
     },
     {
         "slug": "coliseum",
@@ -302,17 +1158,51 @@ STAGES_DATA = [
         "image_url": "/assets/img/stages/coliseum.svg",
         "has_walls": True,
         "boundary_shape": "Circular",
+        "wall_distance": "24m Diameter (Circular)",
+        "layout_description": "Historic stone amphitheater with destructible perimeter pillars.",
         "wall_break": True,
         "hard_wall_break": False,
         "wall_blast": False,
         "wall_bound": True,
+        "wall_break_interaction": "Stone pillars collapse upon wall-splat inducing Wall Bound.",
         "floor_break": False,
         "floor_blast": False,
+        "floor_break_interaction": None,
         "balcony_break": False,
+        "balcony_break_interaction": None,
         "has_transitions": False,
+        "transition_description": None,
+        "transition_conditions": None,
         "total_sections": 1,
         "special_mechanics": "Ancient stone pillars induce Wall Bound",
-        "notes": "Historical arena ruins where stone pillars provide Wall Bound combos."
+        "notes": "Historical arena ruins where stone pillars provide Wall Bound combos.",
+        "geometry_data_json": json.dumps({
+            "is_verified": True,
+            "shape": "Circular",
+            "width_meters": 24.0,
+            "length_meters": 24.0,
+            "canvas_viewbox": "0 0 400 400",
+            "elements": [
+                {
+                    "element_type": "wall",
+                    "label": "Coliseum Circular Wall",
+                    "x": 200,
+                    "y": 200,
+                    "radius": 150,
+                    "color": "#a855f7",
+                    "notes": "Circular perimeter with destructible stone pillars."
+                },
+                {
+                    "element_type": "spawn",
+                    "label": "Arena Center",
+                    "x": 200,
+                    "y": 200,
+                    "radius": 35,
+                    "color": "#38bdf8",
+                    "notes": "Center spawn area."
+                }
+            ]
+        })
     },
     {
         "slug": "celebration-on-the-seine",
@@ -321,18 +1211,52 @@ STAGES_DATA = [
         "image_url": "/assets/img/stages/celebration-on-the-seine.svg",
         "has_walls": True,
         "boundary_shape": "Rectangular",
+        "wall_distance": "28m x 16m (Narrow Rectangular)",
+        "layout_description": "Enclosed celebration barge cruising down the Seine river; reinforced railing with no breaks.",
         "wall_break": False,
         "hard_wall_break": False,
         "wall_blast": False,
         "wall_bound": False,
+        "wall_break_interaction": None,
         "floor_break": False,
         "floor_blast": False,
+        "floor_break_interaction": None,
         "balcony_break": False,
+        "balcony_break_interaction": None,
         "has_transitions": False,
         "transition_description": None,
+        "transition_conditions": None,
         "total_sections": 1,
         "special_mechanics": "Scenic cruise boat on river Seine with Eiffel Tower backdrop",
-        "notes": "Enclosed barge with standard unbreakable walls and festive music."
+        "notes": "Enclosed barge with standard unbreakable walls and festive music.",
+        "geometry_data_json": json.dumps({
+            "is_verified": True,
+            "shape": "Rectangular",
+            "width_meters": 28.0,
+            "length_meters": 16.0,
+            "canvas_viewbox": "0 0 400 260",
+            "elements": [
+                {
+                    "element_type": "wall",
+                    "label": "Barge Railing Perimeter",
+                    "x": 200,
+                    "y": 130,
+                    "width": 340,
+                    "height": 180,
+                    "color": "#3b82f6",
+                    "notes": "Solid barge perimeter railings."
+                },
+                {
+                    "element_type": "spawn",
+                    "label": "Dance Floor Center",
+                    "x": 200,
+                    "y": 130,
+                    "radius": 30,
+                    "color": "#38bdf8",
+                    "notes": "Opening duel spawn."
+                }
+            ]
+        })
     },
     {
         "slug": "midnight-siege",
@@ -341,18 +1265,61 @@ STAGES_DATA = [
         "image_url": "/assets/img/stages/midnight-siege.svg",
         "has_walls": True,
         "boundary_shape": "Octagonal",
+        "wall_distance": "22m Octagon (Medium)",
+        "layout_description": "Military fortress courtyard at night with fortified explosive wall blast barriers.",
         "wall_break": True,
         "hard_wall_break": False,
         "wall_blast": True,
         "wall_bound": False,
+        "wall_break_interaction": "Explosive barricades detonate upon wall-splat triggering Wall Blast.",
         "floor_break": False,
         "floor_blast": False,
+        "floor_break_interaction": None,
         "balcony_break": False,
+        "balcony_break_interaction": None,
         "has_transitions": True,
         "transition_description": "Explosive wall blast into fortified courtyard",
+        "transition_conditions": "Wall splat on barricaded wall section.",
         "total_sections": 2,
         "special_mechanics": "Night siege zone with explosive military wall hazards",
-        "notes": "Fortified military complex with explosive perimeter wall blast."
+        "notes": "Fortified military complex with explosive perimeter wall blast.",
+        "geometry_data_json": json.dumps({
+            "is_verified": True,
+            "shape": "Octagonal",
+            "width_meters": 22.0,
+            "length_meters": 22.0,
+            "canvas_viewbox": "0 0 400 400",
+            "elements": [
+                {
+                    "element_type": "wall",
+                    "label": "Fortress Bastion Walls",
+                    "x": 200,
+                    "y": 200,
+                    "points": "130,50 270,50 350,130 350,270 270,350 130,350 50,270 50,130",
+                    "color": "#64748b",
+                    "notes": "Perimeter stone bastion walls."
+                },
+                {
+                    "element_type": "hazard",
+                    "label": "Explosive Perimeter Barricade (North)",
+                    "x": 200,
+                    "y": 50,
+                    "width": 140,
+                    "height": 14,
+                    "color": "#ef4444",
+                    "notes": "Detonates into secondary courtyard upon heavy wall-splat."
+                },
+                {
+                    "element_type": "spawn",
+                    "label": "Siege Courtyard Center",
+                    "x": 200,
+                    "y": 200,
+                    "radius": 34,
+                    "color": "#38bdf8",
+                    "notes": "Starting engagement zone."
+                }
+            ]
+        })
     }
 ]
 
@@ -809,6 +1776,28 @@ def init_db(db: Session):
     except Exception:
         pass
 
+    # Check if stages needs migration (Phase 4 geometry & break columns)
+    try:
+        with db.get_bind().connect() as conn:
+            cursor = conn.exec_driver_sql("PRAGMA table_info(stages)")
+            cols = [row[1] for row in cursor.fetchall()]
+            if cols and "wall_distance" not in cols:
+                conn.exec_driver_sql("DROP TABLE stages")
+                conn.commit()
+    except Exception:
+        pass
+
+    # Check if combo_routes needs migration (Phase 4 combo_type & stage columns)
+    try:
+        with db.get_bind().connect() as conn:
+            cursor = conn.exec_driver_sql("PRAGMA table_info(combo_routes)")
+            cols = [row[1] for row in cursor.fetchall()]
+            if cols and "combo_type" not in cols:
+                conn.exec_driver_sql("DROP TABLE combo_routes")
+                conn.commit()
+    except Exception:
+        pass
+
     Base.metadata.create_all(bind=db.get_bind())
 
 
@@ -927,29 +1916,7 @@ def init_db(db: Session):
                 ))
             db.commit()
 
-    # 6. Seed Combos
-    for c_data in SAMPLE_COMBOS_DATA:
-        char = char_map.get(c_data["char"])
-        if not char:
-            continue
-        existing_combo = db.query(ComboRoute).filter(
-            ComboRoute.character_id == char.id,
-            ComboRoute.title == c_data["title"]
-        ).first()
-        if not existing_combo:
-            db.add(ComboRoute(
-                character_id=char.id,
-                title=c_data["title"],
-                notation_sequence=c_data["notation"],
-                total_damage=c_data["damage"],
-                hit_count=c_data["hits"],
-                difficulty=c_data["difficulty"],
-                uses_heat=c_data["uses_heat"],
-                uses_tornado=c_data["uses_tornado"]
-            ))
-    db.commit()
-
-    # 7. Seed Official Battle Stages
+    # 6. Seed Official Battle Stages
     stage_map = {}
     for st_data in STAGES_DATA:
         existing_stage = db.query(Stage).filter(Stage.slug == st_data["slug"]).first()
@@ -961,16 +1928,23 @@ def init_db(db: Session):
                 image_url=st_data["image_url"],
                 has_walls=st_data.get("has_walls", True),
                 boundary_shape=st_data.get("boundary_shape", "Octagonal"),
+                wall_distance=st_data.get("wall_distance"),
+                layout_description=st_data.get("layout_description"),
                 wall_break=st_data.get("wall_break", False),
                 hard_wall_break=st_data.get("hard_wall_break", False),
                 wall_blast=st_data.get("wall_blast", False),
                 wall_bound=st_data.get("wall_bound", False),
+                wall_break_interaction=st_data.get("wall_break_interaction"),
                 floor_break=st_data.get("floor_break", False),
                 floor_blast=st_data.get("floor_blast", False),
+                floor_break_interaction=st_data.get("floor_break_interaction"),
                 balcony_break=st_data.get("balcony_break", False),
+                balcony_break_interaction=st_data.get("balcony_break_interaction"),
                 has_transitions=st_data.get("has_transitions", False),
                 transition_description=st_data.get("transition_description"),
+                transition_conditions=st_data.get("transition_conditions"),
                 total_sections=st_data.get("total_sections", 1),
+                geometry_data_json=st_data.get("geometry_data_json"),
                 special_mechanics=st_data.get("special_mechanics"),
                 notes=st_data.get("notes"),
                 data_source_id=wavu_source.id if wavu_source else 1
@@ -980,7 +1954,66 @@ def init_db(db: Session):
             db.refresh(stage_obj)
             stage_map[st_data["slug"]] = stage_obj
         else:
+            existing_stage.wall_distance = st_data.get("wall_distance")
+            existing_stage.layout_description = st_data.get("layout_description")
+            existing_stage.wall_break_interaction = st_data.get("wall_break_interaction")
+            existing_stage.floor_break_interaction = st_data.get("floor_break_interaction")
+            existing_stage.balcony_break_interaction = st_data.get("balcony_break_interaction")
+            existing_stage.transition_conditions = st_data.get("transition_conditions")
+            existing_stage.geometry_data_json = st_data.get("geometry_data_json")
+            db.commit()
             stage_map[st_data["slug"]] = existing_stage
+
+    # 7. Seed Combos
+    for c_data in SAMPLE_COMBOS_DATA:
+        char = char_map.get(c_data["char"])
+        if not char:
+            continue
+        stage_slug = c_data.get("stage_slug")
+        stage_ref = stage_map.get(stage_slug) if stage_slug else None
+
+        existing_combo = db.query(ComboRoute).filter(
+            ComboRoute.character_id == char.id,
+            ComboRoute.title == c_data["title"]
+        ).first()
+
+        if not existing_combo:
+            db.add(ComboRoute(
+                character_id=char.id,
+                title=c_data["title"],
+                notation_sequence=c_data["notation"],
+                total_damage=c_data.get("damage", 0),
+                hit_count=c_data.get("hits", 0),
+                difficulty=c_data.get("difficulty", "MEDIUM"),
+                combo_type=c_data.get("combo_type", "MIDSCREEN"),
+                uses_heat=c_data.get("uses_heat", False),
+                uses_tornado=c_data.get("uses_tornado", False),
+                uses_wall=c_data.get("uses_wall", False),
+                requires_counter_hit=c_data.get("requires_counter_hit", False),
+                is_stage_dependent=c_data.get("is_stage_dependent", False),
+                stage_id=stage_ref.id if stage_ref else None,
+                stage_section=c_data.get("stage_section"),
+                starter_move_name=c_data.get("starter_move_name"),
+                starter_move_input=c_data.get("starter_move_input"),
+                ender_move_name=c_data.get("ender_move_name"),
+                ender_move_input=c_data.get("ender_move_input"),
+                conditions_notes=c_data.get("conditions_notes"),
+                source=c_data.get("source", "wavu.wiki / Tekken 8 Lab")
+            ))
+        else:
+            existing_combo.combo_type = c_data.get("combo_type", "MIDSCREEN")
+            existing_combo.uses_wall = c_data.get("uses_wall", False)
+            existing_combo.requires_counter_hit = c_data.get("requires_counter_hit", False)
+            existing_combo.is_stage_dependent = c_data.get("is_stage_dependent", False)
+            existing_combo.stage_id = stage_ref.id if stage_ref else None
+            existing_combo.stage_section = c_data.get("stage_section")
+            existing_combo.starter_move_name = c_data.get("starter_move_name")
+            existing_combo.starter_move_input = c_data.get("starter_move_input")
+            existing_combo.ender_move_name = c_data.get("ender_move_name")
+            existing_combo.ender_move_input = c_data.get("ender_move_input")
+            existing_combo.conditions_notes = c_data.get("conditions_notes")
+            existing_combo.source = c_data.get("source", "wavu.wiki / Tekken 8 Lab")
+    db.commit()
 
     # 8. Seed Lab Matchup Notes
     for mn_data in SAMPLE_MATCHUP_NOTES:

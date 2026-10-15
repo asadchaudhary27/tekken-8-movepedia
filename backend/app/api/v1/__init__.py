@@ -8,7 +8,8 @@ from backend.app.api.v1.endpoints import (
     sources,
     stages,
     matchup,
-    punishment
+    punishment,
+    combos
 )
 
 api_router = APIRouter()
@@ -21,3 +22,4 @@ api_router.include_router(sources.router, prefix="/sources", tags=["Data Sources
 api_router.include_router(stages.router, prefix="/stages", tags=["Stages"])
 api_router.include_router(matchup.router, prefix="/matchup", tags=["Matchup Analyzer"])
 api_router.include_router(punishment.router, prefix="/punishment", tags=["Smart Punishment"])
+api_router.include_router(combos.router, prefix="/combos", tags=["Combos & Stage Routes"])

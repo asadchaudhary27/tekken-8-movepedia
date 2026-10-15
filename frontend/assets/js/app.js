@@ -41,6 +41,15 @@ const state = {
       player_side: 'P1'
     }
   },
+  stageStrategy: {
+    currentReport: null,
+    comboFilter: {
+      type: 'ALL',
+      requiresHeat: false,
+      requiresCH: false,
+      difficulty: 'ALL'
+    }
+  },
   stages: [
     {
       id: 1,
@@ -833,6 +842,43 @@ function setupMatchupControls() {
       });
     });
   });
+
+  // Stage Combo Filter Toolbar (Phase 4)
+  const comboTypePills = document.getElementById('comboTypePills');
+  if (comboTypePills) {
+    comboTypePills.querySelectorAll('.combo-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        comboTypePills.querySelectorAll('.combo-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.stageStrategy.comboFilter.type = btn.dataset.type;
+        applyStageComboFilter();
+      });
+    });
+  }
+
+  const checkHeat = document.getElementById('comboCheckHeat');
+  if (checkHeat) {
+    checkHeat.addEventListener('change', (e) => {
+      state.stageStrategy.comboFilter.requiresHeat = e.target.checked;
+      applyStageComboFilter();
+    });
+  }
+
+  const checkCH = document.getElementById('comboCheckCH');
+  if (checkCH) {
+    checkCH.addEventListener('change', (e) => {
+      state.stageStrategy.comboFilter.requiresCH = e.target.checked;
+      applyStageComboFilter();
+    });
+  }
+
+  const diffSelect = document.getElementById('comboDiffSelect');
+  if (diffSelect) {
+    diffSelect.addEventListener('change', (e) => {
+      state.stageStrategy.comboFilter.difficulty = e.target.value;
+      applyStageComboFilter();
+    });
+  }
 }
 
 function filterSelectOptions(selectEl, query) {
@@ -1307,51 +1353,10 @@ function renderMatchupDashboard(data) {
   if (oHeat) oHeat.textContent = hm.opponent_heat_threats;
   if (hSmash) hSmash.textContent = `${hm.heat_smash_interaction} • ${hm.stance_and_install_dynamics}`;
 
-  // 9. SECTION 10: Stage Hazards & Suitable Combos
-  const sms = data.stage_matchup_synergy;
-  const dangerBadge = document.getElementById('wallDangerBadge');
-  const boundaryDesc = document.getElementById('stageBoundaryDescription');
-  const mechanicsRow = document.getElementById('synergyMechanicsRow');
-  const tacticalAdvice = document.getElementById('stageTacticalAdvice');
-  const stageAdvantageBox = document.getElementById('characterStageAdvantage');
-
-  if (dangerBadge) {
-    dangerBadge.textContent = sms.wall_danger_level;
-    dangerBadge.className = 'danger-level-badge ' + (sms.wall_danger_level.toLowerCase().includes('extreme') ? 'extreme' : (sms.wall_danger_level.toLowerCase().includes('safe') ? 'safe' : 'moderate'));
-  }
-  if (boundaryDesc) {
-    boundaryDesc.textContent = st.notes || `Boundary shape: ${st.boundary_shape || 'Enclosed'}. ${st.special_mechanics || ''}`;
-  }
-  if (mechanicsRow) {
-    const allMechs = [...sms.wall_mechanics, ...sms.floor_mechanics];
-    if (allMechs.length === 0) {
-      mechanicsRow.innerHTML = '<span class="mini-hazard-pill safe">No Destructibles</span>';
-    } else {
-      mechanicsRow.innerHTML = allMechs.map(m => `<span class="mini-hazard-pill">${m}</span>`).join('');
-    }
-  }
-  if (tacticalAdvice) tacticalAdvice.textContent = sms.tactical_advice;
+  // 9. SECTION 10: Stage-Aware Strategy Engine & Blueprint Analysis
+  loadStageStrategy(st.id, p1.id, p2.id);
   if (stageAdvantageBox) {
     stageAdvantageBox.innerHTML = `<strong>Stage Win-Condition:</strong> ${sms.character_stage_advantage}`;
-  }
-
-  // Suitable Combos
-  const combosContainer = document.getElementById('suitableCombosContainer');
-  if (combosContainer) {
-    if (!data.suitable_combos || data.suitable_combos.length === 0) {
-      combosContainer.innerHTML = '<div style="color:var(--text-muted); font-size:0.8rem; padding:1rem;">No specific combo route matched for current stage hazards. Standard staple juggles apply.</div>';
-    } else {
-      combosContainer.innerHTML = data.suitable_combos.map(c => `
-        <div class="combo-card">
-          <div class="combo-card-header">
-            <span class="combo-title">${c.title}</span>
-            <span class="combo-dmg-badge">${c.damage} DMG (${c.hits} Hits) • ${c.difficulty}</span>
-          </div>
-          <div class="combo-notation-box">${c.notation}</div>
-          <div class="combo-synergy-note">🎯 ${c.synergy_reason}</div>
-        </div>
-      `).join('');
-    }
   }
 
   // 10. SECTIONS 2 & 3: Matchup Factors (Advantages vs Threats)
@@ -1384,6 +1389,330 @@ function renderMatchupDashboard(data) {
 }
 
 
+// ==========================================================================
+// Phase 4: Stage-Aware Strategy Engine & Blueprint Visualization
+// ==========================================================================
+
+async function loadStageStrategy(stageId, playerId, opponentId) {
+  if (!stageId || !playerId) return;
+
+  const wallPos = state.matchup.conditions.wall_position || 'OPEN';
+  const heatSt = state.matchup.conditions.heat_state || 'AVAILABLE';
+
+  try {
+    const report = await fetchAPI(
+      `/stages/${stageId}/strategy?player_character_id=${playerId}&opponent_character_id=${opponentId || ''}&wall_position=${wallPos}&heat_state=${heatSt}`
+    );
+    if (!report) return;
+
+    state.stageStrategy.currentReport = report;
+    renderStageStrategyUI(report);
+    applyStageComboFilter();
+  } catch (err) {
+    console.warn('Error loading stage strategy:', err);
+  }
+}
+
+function renderStageStrategyUI(report) {
+  const dimPill = document.getElementById('stageDimensionsPill');
+  const boundaryDesc = document.getElementById('stageBoundaryDescription');
+  const dangerBadge = document.getElementById('wallDangerBadge');
+  const blueprintContainer = document.getElementById('stageBlueprintContainer');
+  const alertsContainer = document.getElementById('stageUnavailableAlerts');
+  const cornerPressureEl = document.getElementById('cornerPressureStrategyText');
+  const wallPositioningEl = document.getElementById('wallPositioningAdviceText');
+  const hazardList = document.getElementById('stageHazardInteractionsList');
+
+  // Dimensions & Description
+  if (dimPill) dimPill.textContent = report.wall_distance || 'Standard (24m)';
+  if (boundaryDesc) boundaryDesc.textContent = report.layout_description;
+
+  // Danger Badge
+  if (dangerBadge) {
+    if (!report.stage.has_walls) {
+      dangerBadge.textContent = 'SAFE (INFINITE)';
+      dangerBadge.className = 'danger-level-badge safe';
+    } else if (report.stage.wall_blast || (report.stage.wall_break && report.stage.balcony_break)) {
+      dangerBadge.textContent = 'HIGH HAZARD STAGE';
+      dangerBadge.className = 'danger-level-badge extreme';
+    } else {
+      dangerBadge.textContent = 'STANDARD WALLED';
+      dangerBadge.className = 'danger-level-badge moderate';
+    }
+  }
+
+  // Tactical Blueprint / Geometry Map
+  if (blueprintContainer) {
+    if (report.geometry_available && report.geometry_data) {
+      const geo = report.geometry_data;
+      let svgMarkup = `
+        <div class="stage-blueprint-svg-wrap">
+          <svg viewBox="${geo.canvas_viewbox || '0 0 400 400'}" width="100%" height="100%" style="overflow:visible;">
+            <defs>
+              <pattern id="gridPattern" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#gridPattern)" rx="6" />
+      `;
+
+      (geo.elements || []).forEach(elem => {
+        if (elem.points) {
+          svgMarkup += `
+            <polygon points="${elem.points}" fill="rgba(255,30,56,0.08)" stroke="${elem.color || 'var(--accent-red)'}" stroke-width="3" class="stage-svg-element">
+              <title>${elem.label} - ${elem.notes || ''}</title>
+            </polygon>
+          `;
+        } else if (elem.radius) {
+          const isSpawn = elem.element_type === 'spawn';
+          svgMarkup += `
+            <circle cx="${elem.x}" cy="${elem.y}" r="${elem.radius}" fill="${isSpawn ? 'rgba(56,189,248,0.1)' : 'rgba(249,115,22,0.15)'}" stroke="${elem.color || '#38bdf8'}" stroke-width="2" stroke-dasharray="${isSpawn ? '5,5' : 'none'}" class="stage-svg-element">
+              <title>${elem.label} - ${elem.notes || ''}</title>
+            </circle>
+          `;
+        } else if (elem.width && elem.height) {
+          const rx = elem.x - elem.width / 2;
+          const ry = elem.y - elem.height / 2;
+          svgMarkup += `
+            <rect x="${rx}" y="${ry}" width="${elem.width}" height="${elem.height}" rx="3" fill="${elem.color || '#475569'}" stroke="rgba(255,255,255,0.25)" stroke-width="1" class="stage-svg-element">
+              <title>${elem.label} - ${elem.notes || ''}</title>
+            </rect>
+          `;
+        }
+      });
+
+      svgMarkup += `
+            <text x="200" y="204" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="'Segoe UI', sans-serif" font-weight="700" letter-spacing="1">ENGAGEMENT AXIS</text>
+          </svg>
+        </div>
+        <div class="stage-blueprint-legend">
+          <div class="stage-legend-item"><span class="stage-legend-dot" style="background:var(--accent-red);"></span> Boundary Perimeter</div>
+          <div class="stage-legend-item"><span class="stage-legend-dot" style="background:#38bdf8;"></span> Center Standoff (${geo.width_meters}m)</div>
+          ${report.stage.wall_break ? '<div class="stage-legend-item"><span class="stage-legend-dot" style="background:#ef4444;"></span> Wall Break</div>' : ''}
+          ${report.stage.floor_break ? '<div class="stage-legend-item"><span class="stage-legend-dot" style="background:#f97316;"></span> Floor Break</div>' : ''}
+          ${report.stage.balcony_break ? '<div class="stage-legend-item"><span class="stage-legend-dot" style="background:#f59e0b;"></span> Balcony Rail</div>' : ''}
+        </div>
+      `;
+      blueprintContainer.innerHTML = svgMarkup;
+    } else {
+      // Unmapped / Infinite Stage panel (Zero Fabricated Geometry)
+      blueprintContainer.innerHTML = `
+        <div class="stage-unmapped-panel">
+          <div class="stage-unmapped-header">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="#f59e0b" stroke-width="2.5" fill="none"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>${report.stage.name} • UNBOUNDED / INFINITE BATTLEGROUND</span>
+          </div>
+          <p class="stage-unmapped-text">
+            ⚠️ <strong>Zero Fabricated Geometry Rule:</strong> ${report.stage.name} features unbounded open terrain with no perimeter wall bounds. Movement is unrestricted; no artificial polygonal boundary mesh is displayed.
+          </p>
+          <div class="stage-unmapped-metrics-grid">
+            <div class="stage-unmapped-metric-cell">
+              <div class="label">Boundary Shape</div>
+              <div class="value">${report.stage.boundary_shape || 'Infinite'}</div>
+            </div>
+            <div class="stage-unmapped-metric-cell">
+              <div class="label">Wall Distance</div>
+              <div class="value">${report.wall_distance}</div>
+            </div>
+            <div class="stage-unmapped-metric-cell">
+              <div class="label">Wall Splat Status</div>
+              <div class="value" style="color:#ef4444;">${report.wall_availability_status}</div>
+            </div>
+            <div class="stage-unmapped-metric-cell">
+              <div class="label">Environmental Break</div>
+              <div class="value" style="color:#38bdf8;">None (Solid Floor)</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  // Unavailable Mechanics Alert Banner
+  if (alertsContainer) {
+    if (report.unavailable_mechanics_warning && report.unavailable_mechanics_warning.length > 0) {
+      alertsContainer.innerHTML = report.unavailable_mechanics_warning.map(w => `
+        <div class="stage-unavailable-item">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="#ef4444" stroke-width="2.5" fill="none"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div>${w}</div>
+        </div>
+      `).join('');
+    } else {
+      alertsContainer.innerHTML = '';
+    }
+  }
+
+  // Corner Pressure & Spacing Advice
+  if (cornerPressureEl) cornerPressureEl.textContent = report.corner_pressure_strategy;
+  if (wallPositioningEl) wallPositioningEl.textContent = report.wall_positioning_notes;
+
+  // Hazard Interactions List
+  if (hazardList) {
+    const items = [];
+    if (report.wall_break_interaction) {
+      items.push(`
+        <div class="st-hazard-interaction-row">
+          <span class="st-hazard-tag wall-break">Wall Break</span>
+          <div>${report.wall_break_interaction}</div>
+        </div>
+      `);
+    }
+    if (report.balcony_break_interaction) {
+      items.push(`
+        <div class="st-hazard-interaction-row">
+          <span class="st-hazard-tag balcony-break">Balcony Break</span>
+          <div>${report.balcony_break_interaction}</div>
+        </div>
+      `);
+    }
+    if (report.floor_break_interaction) {
+      items.push(`
+        <div class="st-hazard-interaction-row">
+          <span class="st-hazard-tag floor-break">Floor Break</span>
+          <div>${report.floor_break_interaction}</div>
+        </div>
+      `);
+    }
+    if (items.length === 0) {
+      items.push(`
+        <div class="st-hazard-interaction-row">
+          <span class="st-hazard-tag" style="background:rgba(255,255,255,0.06); color:var(--text-muted);">No Breaks</span>
+          <div>This arena has solid, unbreakable foundations and boundaries. Standard wall splats only.</div>
+        </div>
+      `);
+    }
+    hazardList.innerHTML = items.join('');
+  }
+}
+
+function applyStageComboFilter() {
+  const report = state.stageStrategy.currentReport;
+  const container = document.getElementById('suitableCombosContainer');
+  const countPill = document.getElementById('comboCountPill');
+  if (!container || !report) return;
+
+  const f = state.stageStrategy.comboFilter;
+
+  // Aggregate all combo sets from report
+  const allCombos = [
+    ...(report.midscreen_combos || []),
+    ...(report.wall_carry_routes || []),
+    ...(report.wall_combo_enders || []),
+    ...(report.wall_break_routes || []),
+    ...(report.floor_break_routes || []),
+    ...(report.balcony_break_routes || [])
+  ];
+
+  // De-duplicate by combo ID
+  const seenIds = new Set();
+  const uniqueCombos = [];
+  allCombos.forEach(c => {
+    if (!seenIds.has(c.id)) {
+      seenIds.add(c.id);
+      uniqueCombos.push(c);
+    }
+  });
+
+  // Apply filters
+  const filtered = uniqueCombos.filter(c => {
+    // Type filter
+    if (f.type !== 'ALL' && (c.combo_type || '').toUpperCase() !== f.type.toUpperCase()) {
+      return false;
+    }
+    // Heat filter
+    if (f.requiresHeat && !c.uses_heat) {
+      return false;
+    }
+    // Counter-Hit filter
+    if (f.requiresCH && !c.requires_counter_hit) {
+      return false;
+    }
+    // Difficulty filter
+    if (f.difficulty !== 'ALL' && (c.difficulty || '').toUpperCase() !== f.difficulty.toUpperCase()) {
+      return false;
+    }
+    return true;
+  });
+
+  if (countPill) countPill.textContent = `${filtered.length} Verified Routes`;
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center; padding:2rem; color:var(--text-muted); font-size:0.85rem;">
+        No combo routes match the active filter criteria for this stage configuration.
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filtered.map(c => {
+    const ctype = (c.combo_type || 'MIDSCREEN').toUpperCase();
+    let typeClass = 'type-midscreen';
+    if (ctype === 'WALL_CARRY') typeClass = 'type-wall-carry';
+    else if (ctype === 'WALL_COMBO') typeClass = 'type-wall-combo';
+    else if (ctype === 'WALL_BREAK') typeClass = 'type-wall-break';
+    else if (ctype === 'FLOOR_BREAK') typeClass = 'type-floor-break';
+    else if (ctype === 'BALCONY_BREAK') typeClass = 'type-balcony-break';
+
+    const stageTag = c.is_stage_dependent
+      ? `<span class="combo-tag stage-dep">Stage Specific: ${c.stage_section || report.stage.name}</span>`
+      : `<span class="combo-tag universal">Universal</span>`;
+
+    const heatTag = c.uses_heat
+      ? `<span class="combo-tag" style="background:rgba(255,0,127,0.15); border:1px solid rgba(255,0,127,0.3); color:#ff007f;">Heat</span>`
+      : '';
+
+    const chTag = c.requires_counter_hit
+      ? `<span class="combo-tag" style="background:rgba(255,215,0,0.15); border:1px solid rgba(255,215,0,0.3); color:var(--accent-gold);">Counter Hit</span>`
+      : '';
+
+    const starterEnder = (c.starter_move_name || c.ender_move_name)
+      ? `
+        <div class="combo-starter-ender-row">
+          ${c.starter_move_name ? `<span>Starter: <strong>${c.starter_move_name}</strong> (${c.starter_move_input || ''})</span>` : ''}
+          ${c.ender_move_name ? `<span>• Ender: <strong>${c.ender_move_name}</strong> (${c.ender_move_input || ''})</span>` : ''}
+        </div>
+      `
+      : '';
+
+    const notes = c.conditions_notes
+      ? `<div class="combo-synergy-note">🎯 ${c.conditions_notes}</div>`
+      : '';
+
+    return `
+      <div class="combo-card">
+        <div class="combo-card-header">
+          <div class="combo-card-title-group">
+            <span class="combo-title">${c.title}</span>
+            <div class="combo-tags-group">
+              <span class="combo-tag ${typeClass}">${c.combo_type}</span>
+              ${stageTag}
+              ${heatTag}
+              ${chTag}
+            </div>
+          </div>
+          <div class="combo-metrics-group">
+            <span class="combo-dmg-badge">${c.total_damage} DMG (${c.hit_count} Hits)</span>
+            <span class="feat-badge badge-approved" style="font-size:0.65rem;">${c.difficulty}</span>
+          </div>
+        </div>
+
+        <div class="combo-notation-box" title="Click to test in notation engine" onclick="testNotationString('${(c.notation_sequence || '').replace(/'/g, "\\'")}')">
+          ${c.notation_sequence}
+        </div>
+
+        ${starterEnder}
+        ${notes}
+
+        <div style="text-align:right; margin-top:0.25rem;">
+          <button type="button" class="btn-reset-record" style="font-size:0.7rem; padding:0.25rem 0.6rem;" onclick="testNotationString('${(c.notation_sequence || '').replace(/'/g, "\\'")}')">
+            ⚡ Test in Notation Engine &rarr;
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
 
 
 // ==========================================================================

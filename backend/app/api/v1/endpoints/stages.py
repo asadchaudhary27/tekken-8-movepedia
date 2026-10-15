@@ -3,8 +3,11 @@ from fastapi import APIRouter, Depends, Query, HTTPException, status
 from sqlalchemy.orm import Session
 from backend.app.database.session import get_db
 from backend.app.models.stage import Stage
+from backend.app.models.character import Character
 from backend.app.schemas.stage import StageRead
+from backend.app.schemas.stage_strategy import StageStrategyReport
 from backend.app.services.matchup_analyzer import MatchupAnalyzerEngine
+from backend.app.services.stage_strategy_engine import StageStrategyEngine
 
 router = APIRouter()
 
@@ -46,6 +49,57 @@ def list_stages(
     return results
 
 
+@router.get("/{stage_id}/strategy", response_model=StageStrategyReport, summary="Get stage-aware strategy and tactical recommendations")
+def get_stage_strategy(
+    stage_id: int,
+    player_character_id: Optional[int] = Query(None, description="Selected player character ID"),
+    player_slug: Optional[str] = Query(None, description="Selected player character slug"),
+    opponent_character_id: Optional[int] = Query(None, description="Opponent character ID"),
+    opponent_slug: Optional[str] = Query(None, description="Opponent character slug"),
+    wall_position: Optional[str] = Query("OPEN", description="OPEN, NEAR_WALL, or CORNER"),
+    heat_state: Optional[str] = Query("AVAILABLE", description="AVAILABLE, IN_HEAT, or SPENT"),
+    db: Session = Depends(get_db)
+):
+    """
+    Analyzes stage boundary geometry, wall positions, and destructible hazards for the selected
+    character pair. Filters and categorizes midscreen combos, wall-carry routes, wall enders,
+    wall breaks, floor breaks, balcony breaks, corner pressure, and flags unavailable mechanics.
+    """
+    stage = db.query(Stage).filter(Stage.id == stage_id).first()
+    if not stage:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Stage ID {stage_id} not found."
+        )
+
+    player_char = None
+    if player_character_id is not None:
+        player_char = db.query(Character).filter(Character.id == player_character_id).first()
+    elif player_slug:
+        player_char = db.query(Character).filter(Character.slug == player_slug).first()
+
+    if not player_char:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Player character not found (ID: {player_character_id}, slug: '{player_slug}')."
+        )
+
+    opponent_char = None
+    if opponent_character_id is not None:
+        opponent_char = db.query(Character).filter(Character.id == opponent_character_id).first()
+    elif opponent_slug:
+        opponent_char = db.query(Character).filter(Character.slug == opponent_slug).first()
+
+    return StageStrategyEngine.analyze_stage_strategy(
+        db=db,
+        stage=stage,
+        player_char=player_char,
+        opponent_char=opponent_char,
+        wall_position=wall_position,
+        heat_state=heat_state
+    )
+
+
 @router.get("/{stage_id_or_slug}", response_model=StageRead, summary="Get stage by ID or slug")
 def get_stage(stage_id_or_slug: str, db: Session = Depends(get_db)):
     """
@@ -65,3 +119,4 @@ def get_stage(stage_id_or_slug: str, db: Session = Depends(get_db)):
     s_read = StageRead.model_validate(stage)
     s_read.hazards = MatchupAnalyzerEngine.get_stage_hazards_list(stage)
     return s_read
+
