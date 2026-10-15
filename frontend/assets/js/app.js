@@ -93,7 +93,7 @@ const state = {
       id: "urban-square",
       name: "Urban Square",
       location: "Times Square, New York",
-      image: "/assets/img/stages/urban-square.svg",
+      image: "/assets/img/stages/urban-square.jpg",
       hazards: ["Wall Break", "Balcony Break"],
       gimmick: "Rain-slicked neon metropolitan streets with breakable glass barriers"
     },
@@ -101,7 +101,7 @@ const state = {
       id: "yakushima",
       name: "Yakushima",
       location: "Sacred Misty Forest, Japan",
-      image: "/assets/img/stages/yakushima.svg",
+      image: "/assets/img/stages/yakushima.jpg",
       hazards: ["Hard Wall Break"],
       gimmick: "Ancient mystical mossy cedar forest with morning fog and sacred shrines"
     },
@@ -109,7 +109,7 @@ const state = {
       id: "rebel-hangar",
       name: "Rebel Hangar",
       location: "Yggdrasil Military Base",
-      image: "/assets/img/stages/rebel-hangar.svg",
+      image: "/assets/img/stages/rebel-hangar.jpg",
       hazards: ["Wall Blast", "Floor Break"],
       gimmick: "High-tech military fortress with combat mechs and attack jets"
     },
@@ -117,7 +117,7 @@ const state = {
       id: "sanctum",
       name: "Sanctum",
       location: "Subterranean Magma Ruins",
-      image: "/assets/img/stages/sanctum.svg",
+      image: "/assets/img/stages/sanctum.jpg",
       hazards: ["Floor Break", "Hard Wall Break"],
       gimmick: "Ancient volcanic sacrificial temple with cascading lava pools"
     },
@@ -125,7 +125,7 @@ const state = {
       id: "stratosphere",
       name: "Into the Stratosphere",
       location: "Outer Atmosphere Orbit",
-      image: "/assets/img/stages/stratosphere.svg",
+      image: "/assets/img/stages/stratosphere.jpg",
       hazards: ["Wall Blast", "Floor Blast"],
       gimmick: "Zero-gravity cataclysmic battle atop orbital meteor debris"
     },
@@ -133,7 +133,7 @@ const state = {
       id: "ortiz-farm",
       name: "Ortiz Farm",
       location: "Andes Coffee Valley, Peru",
-      image: "/assets/img/stages/ortiz-farm.svg",
+      image: "/assets/img/stages/ortiz-farm.jpg",
       hazards: ["Balcony Break", "Floor Break"],
       gimmick: "Sunlit Peruvian mountain terrace coffee plantation"
     },
@@ -141,7 +141,7 @@ const state = {
       id: "coliseum",
       name: "Colosseum",
       location: "Ancient Imperial Arena, Italy",
-      image: "/assets/img/stages/coliseum.svg",
+      image: "/assets/img/stages/coliseum.jpg",
       hazards: ["Wall Break"],
       gimmick: "Timeless Roman amphitheater bathed in golden sunset glow"
     },
@@ -149,7 +149,7 @@ const state = {
       id: "celebration-on-the-seine",
       name: "Celebration on the Seine",
       location: "River Seine Cruise, France",
-      image: "/assets/img/stages/celebration-on-the-seine.svg",
+      image: "/assets/img/stages/celebration-on-the-seine.jpg",
       hazards: ["Balcony Break"],
       gimmick: "Parisian festival riverboat with Eiffel Tower fireworks in the night sky"
     },
@@ -157,7 +157,7 @@ const state = {
       id: "midnight-siege",
       name: "Midnight Siege",
       location: "G Corp Skyscraper Rooftop",
-      image: "/assets/img/stages/midnight-siege.svg",
+      image: "/assets/img/stages/midnight-siege.jpg",
       hazards: ["Wall Blast", "Floor Break"],
       gimmick: "Thunderstorm siege on G Corporation executive headquarters"
     }
@@ -249,6 +249,164 @@ function invalidateApiCache() {
   apiCache.clear();
 }
 
+/**
+ * Tekken 8 Notation Breakdown & Arcade Button Mapping Engine
+ * Transforms raw string commands into authentic arcade/gamepad visual button chips:
+ * Directions (➡ ↘ ⬇ ↙ ⬅ ↗ ↖ ⬆ ★), Buttons (1=Cyan, 2=Yellow, 3=Green, 4=Pink),
+ * Stances/States (WS, FC, WR, SS, BT, HEAT, RAGE), Connectors (›, +, ~).
+ */
+function formatTekkenNotation(raw) {
+  if (!raw || typeof raw !== 'string') return '';
+  const trimmed = raw.trim();
+  if (!trimmed) return '';
+  if (trimmed.startsWith('<div class="tk-') || trimmed.startsWith('<span class="tk-')) return trimmed;
+
+  // Split sequence by major combo step separators (">", "->", "=>", "→")
+  if (trimmed.includes('>') || trimmed.includes('→')) {
+    const steps = trimmed.split(/\s*(?:>|->|=>|→)\s*/);
+    return `<div class="tk-combo-sequence">${steps.map(s => formatSingleStep(s)).join('<span class="tk-next-arrow">›</span>')}</div>`;
+  }
+
+  return formatSingleStep(trimmed);
+}
+
+function formatSingleStep(step) {
+  step = step.trim();
+  if (!step) return '';
+
+  // Separate space-delimited annotations (like "(T!)", "(W!)", "dash", etc.)
+  const words = step.split(/\s+/);
+  return `<span class="tk-step-wrapper">${words.map(w => formatWord(w)).join(' ')}</span>`;
+}
+
+function formatWord(w) {
+  w = w.trim();
+  if (!w) return '';
+
+  // Special tags in parentheses
+  if (w.startsWith('(') && w.endsWith(')')) {
+    const tag = w.slice(1, -1).trim();
+    if (tag.toUpperCase() === 'T!') return '<span class="tk-tag-tornado">TORNADO</span>';
+    if (tag.toUpperCase() === 'W!') return '<span class="tk-tag-wall">WALL SPLAT</span>';
+    if (tag.toUpperCase() === 'FB!') return '<span class="tk-tag-break">FLOOR BREAK</span>';
+    if (tag.toUpperCase() === 'WB!') return '<span class="tk-tag-break">WALL BREAK</span>';
+    if (tag.toLowerCase() === 'heat') return '<span class="tk-tag-heat">HEAT</span>';
+    return `<span class="tk-tag-generic">${tag}</span>`;
+  }
+
+  // Common movement words
+  const lower = w.toLowerCase();
+  if (lower === 'dash') return '<span class="tk-move-action">DASH</span>';
+  if (lower === 'microdash') return '<span class="tk-move-action">MICRODASH</span>';
+  if (lower === 'run') return '<span class="tk-move-action">RUN</span>';
+
+  // Check prefixes like R. or H.
+  let prefixHtml = '';
+  if (w.startsWith('R.') || w.startsWith('r.')) {
+    prefixHtml = '<span class="tk-state-chip tk-rage-badge">RAGE</span> ';
+    w = w.slice(2);
+  } else if (w.startsWith('H.') || w.startsWith('h.')) {
+    prefixHtml = '<span class="tk-state-chip tk-heat-badge">HEAT</span> ';
+    w = w.slice(2);
+  }
+
+  // Check state prefixes: WS, FC, WR, SSL, SSR, SS, BT
+  const stateMatch = w.match(/^(ws|fc|wr|ssl|ssr|ss|bt)(.*)$/i);
+  let stateHtml = '';
+  if (stateMatch) {
+    const st = stateMatch[1].toUpperCase();
+    stateHtml = `<span class="tk-state-chip">${st}</span> `;
+    w = stateMatch[2];
+  }
+
+  // Subtokens split by commas or tildes (e.g. "1,2" or "df+1,2" or "f,n,d,df+2")
+  const subTokens = w.split(/([,~])/);
+  let bodyHtml = '<span class="tk-notation-chain">';
+  for (let t of subTokens) {
+    if (t === ',') {
+      bodyHtml += '<span class="tk-sep-chip">,</span>';
+    } else if (t === '~') {
+      bodyHtml += '<span class="tk-sep-chip">~</span>';
+    } else if (t.trim()) {
+      bodyHtml += formatAtom(t.trim());
+    }
+  }
+  bodyHtml += '</span>';
+
+  return `${prefixHtml}${stateHtml}${bodyHtml}`;
+}
+
+function formatAtom(atom) {
+  // Check if atom is pure button expression (e.g. "1", "2", "1+2", "3+4", "2+3")
+  const btnOnly = formatButtons(atom);
+  if (btnOnly) return btnOnly;
+
+  // If atom has '+', split into direction and buttons
+  if (atom.includes('+')) {
+    const parts = atom.split('+');
+    const dirPart = parts[0].trim();
+    const btnPart = parts.slice(1).join('+').trim();
+
+    const dirHtml = dirPart ? formatDirection(dirPart) : '';
+    const btnHtml = btnPart ? (formatButtons(btnPart) || `<span class="tk-btn-chip tk-btn-multi">${btnPart}</span>`) : '';
+
+    if (dirHtml && btnHtml) {
+      return `${dirHtml}<span class="tk-plus-chip">+</span>${btnHtml}`;
+    } else if (dirHtml) {
+      return dirHtml;
+    } else if (btnHtml) {
+      return btnHtml;
+    }
+  }
+
+  // Check if direction
+  const dirOnly = formatDirection(atom, true);
+  if (dirOnly) return dirOnly;
+
+  return `<span class="tk-raw-text">${atom}</span>`;
+}
+
+function formatDirection(dirStr, strict = false) {
+  const map = {
+    'f': '➡', 'b': '⬅', 'u': '⬆', 'd': '⬇',
+    'df': '↘', 'd/f': '↘', 'db': '↙', 'd/b': '↙',
+    'uf': '↗', 'u/f': '↗', 'ub': '↖', 'u/b': '↖',
+    'n': '★', '★': '★'
+  };
+
+  const lower = dirStr.toLowerCase();
+  if (map[lower]) {
+    const isHold = (dirStr === dirStr.toUpperCase()) && dirStr !== 'N' && dirStr !== '★';
+    const isStar = lower === 'n' || lower === '★';
+    return `<span class="tk-dir-chip ${isHold ? 'tk-hold' : ''} ${isStar ? 'tk-dir-star' : ''}">${map[lower]}</span>`;
+  }
+
+  // Quarter / Half circle motions
+  if (lower === 'qcf') return '<span class="tk-dir-chip">⬇</span><span class="tk-dir-chip">↘</span><span class="tk-dir-chip">➡</span>';
+  if (lower === 'qcb') return '<span class="tk-dir-chip">⬇</span><span class="tk-dir-chip">↙</span><span class="tk-dir-chip">⬅</span>';
+  if (lower === 'hcf') return '<span class="tk-dir-chip">⬅</span><span class="tk-dir-chip">↙</span><span class="tk-dir-chip">⬇</span><span class="tk-dir-chip">↘</span><span class="tk-dir-chip">➡</span>';
+  if (lower === 'hcb') return '<span class="tk-dir-chip">➡</span><span class="tk-dir-chip">↘</span><span class="tk-dir-chip">⬇</span><span class="tk-dir-chip">↙</span><span class="tk-dir-chip">⬅</span>';
+
+  if (strict) return null;
+  return `<span class="tk-raw-text">${dirStr}</span>`;
+}
+
+function formatButtons(btnStr) {
+  const norm = btnStr.replace(/\s+/g, '');
+  if (norm === '1') return '<span class="tk-btn-chip tk-btn-1" title="Left Punch (1)">1</span>';
+  if (norm === '2') return '<span class="tk-btn-chip tk-btn-2" title="Right Punch (2)">2</span>';
+  if (norm === '3') return '<span class="tk-btn-chip tk-btn-3" title="Left Kick (3)">3</span>';
+  if (norm === '4') return '<span class="tk-btn-chip tk-btn-4" title="Right Kick (4)">4</span>';
+  if (norm === '1+2') return '<span class="tk-btn-chip tk-btn-1-2" title="1+2 (LP+RP)">1+2</span>';
+  if (norm === '3+4') return '<span class="tk-btn-chip tk-btn-3-4" title="3+4 (LK+RK)">3+4</span>';
+  if (norm === '1+4') return '<span class="tk-btn-chip tk-btn-multi" title="1+4 (LP+RK)">1+4</span>';
+  if (norm === '2+3') return '<span class="tk-btn-chip tk-btn-multi" title="2+3 (RP+LK)">2+3</span>';
+  if (norm === '1+3') return '<span class="tk-btn-chip tk-btn-1-2" title="1+3 (Throw)">1+3</span>';
+  if (norm === '2+4') return '<span class="tk-btn-chip tk-btn-3-4" title="2+4 (Throw)">2+4</span>';
+  if (/^[1-4\+]+$/.test(norm)) return `<span class="tk-btn-chip tk-btn-multi">${norm}</span>`;
+  return null;
+}
+
 // 1. Initial Load
 document.addEventListener('DOMContentLoaded', async () => {
   setupEventListeners();
@@ -261,6 +419,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initPunishAssistant();
   await loadPunishmentOptions();
   initAdminHub();
+  renderFeaturedMoves();
 });
 
 // Event Listeners Setup
@@ -300,19 +459,28 @@ function setupEventListeners() {
     });
   });
 
-  // Carousel Navigation Buttons (< and >)
+  // Carousel Navigation Buttons (< and >) & Side-Scroll Mousewheel
   const prevBtn = document.getElementById('carouselPrevBtn');
   const nextBtn = document.getElementById('carouselNextBtn');
   const track = document.getElementById('carouselTrack');
   if (prevBtn && track) {
     prevBtn.addEventListener('click', () => {
-      track.scrollBy({ left: -320, behavior: 'smooth' });
+      track.scrollBy({ left: -260, behavior: 'smooth' });
     });
   }
   if (nextBtn && track) {
     nextBtn.addEventListener('click', () => {
-      track.scrollBy({ left: 320, behavior: 'smooth' });
+      track.scrollBy({ left: 260, behavior: 'smooth' });
     });
+  }
+  if (track) {
+    // Enable effortless horizontal side-scrolling via mouse wheel
+    track.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        track.scrollBy({ left: e.deltaY * 1.6, behavior: 'auto' });
+      }
+    }, { passive: false });
   }
 
   // Quick Search Box
@@ -388,19 +556,19 @@ function renderCarousel() {
 
   track.innerHTML = filtered.map(c => {
     const isSelected = state.selectedCharacter && state.selectedCharacter.slug === c.slug;
-    const styleName = FIGHTING_STYLES[c.slug] || (c.archetype ? c.archetype.split('/')[0].trim() : 'Tekken Fighter');
     return `
       <div class="carousel-fighter-card ${isSelected ? 'active' : ''}" 
            id="card_${c.slug}"
-           onclick="selectCharacter('${c.slug}')">
+           onclick="selectCharacter('${c.slug}')"
+           title="${c.name} (${c.archetype || 'Tekken 8'})">
         <div class="carousel-avatar-wrap">
           <img class="carousel-avatar" 
                src="${c.avatar_url || '/assets/avatars/jin-brand-256-C1-oe_x3.webp'}" 
                alt="${c.name}"
+               loading="lazy"
                onerror="this.src='/assets/avatars/jin-brand-256-C1-oe_x3.webp'"/>
         </div>
-        <div class="carousel-name" title="${c.name}">${c.name}</div>
-        <div class="carousel-style" title="${styleName}">${styleName}</div>
+        <div class="carousel-name">${c.name}</div>
       </div>
     `;
   }).join('');
@@ -436,6 +604,111 @@ function renderSidebarQuickFighters(filterCategory = 'ALL') {
     `;
   }).join('');
 }
+
+// Render Dynamic Featured Moves & Combos with authentic Arcade Button Mapping
+function renderFeaturedMoves() {
+  const container = document.getElementById('featuredMovesList');
+  if (!container) return;
+
+  const featured = [
+    {
+      characterSlug: 'jin',
+      characterName: 'Jin',
+      avatar: '/assets/avatars/jin-brand-256-C1-oe_x3.webp',
+      moveName: 'Electric Wind Hook Fist',
+      input: 'f,n,d,df+2',
+      damage: '23',
+      badges: [
+        { text: 'LAUNCHER', cls: 'badge-launcher' },
+        { text: '+5 OB', cls: 'badge-block-plus' }
+      ]
+    },
+    {
+      characterSlug: 'kazuya',
+      characterName: 'Kazuya',
+      avatar: '/assets/avatars/kazuya-brand-256-BInk9tTm.webp',
+      moveName: 'Spinning Demon (Hell Sweep)',
+      input: 'f,n,d,df+4,1',
+      damage: '33',
+      badges: [
+        { text: 'HIGH CRUSH', cls: 'badge-crush' },
+        { text: '-23 OB', cls: 'badge-block-neg' }
+      ]
+    },
+    {
+      characterSlug: 'reina',
+      characterName: 'Reina',
+      avatar: '/assets/avatars/reina-brand-256-DDc7iMts.webp',
+      moveName: 'Wind God Fist',
+      input: 'f,n,df+2',
+      damage: '22',
+      badges: [
+        { text: 'LAUNCHER', cls: 'badge-launcher' },
+        { text: '+5 OB', cls: 'badge-block-plus' }
+      ]
+    },
+    {
+      characterSlug: 'king',
+      characterName: 'King',
+      avatar: '/assets/avatars/king-brand-256-Dq_98Qq3.webp',
+      moveName: 'Giant Swing',
+      input: 'f,b,db,d,df,f+1',
+      damage: '65',
+      badges: [
+        { text: 'THROW', cls: 'badge-throw' },
+        { text: '1 BREAK', cls: 'badge-crush' }
+      ]
+    },
+    {
+      characterSlug: 'feng',
+      characterName: 'Feng',
+      avatar: '/assets/avatars/feng-brand-256-Cfyw5tOe.webp',
+      moveName: 'Iron Fortress',
+      input: 'b+1+2',
+      damage: '25',
+      badges: [
+        { text: 'POWER CRUSH', cls: 'badge-crush' },
+        { text: '-13 OB', cls: 'badge-block-neg' }
+      ]
+    },
+    {
+      characterSlug: 'jun',
+      characterName: 'Jun',
+      avatar: '/assets/avatars/jun-brand-256-eieDvySl.webp',
+      moveName: 'White Heron Dance',
+      input: '1+4,2,4',
+      damage: '38',
+      badges: [
+        { text: 'NATURAL COMBO', cls: 'badge-block' },
+        { text: 'M-H-L', cls: 'badge-crush' }
+      ]
+    }
+  ];
+
+  container.innerHTML = featured.map(m => {
+    const formattedInput = formatTekkenNotation(m.input);
+    const badgesHtml = m.badges.map(b => `<span class="feat-badge ${b.cls}">${b.text}</span>`).join('');
+    return `
+      <div class="featured-move-row" onclick="onFeaturedMoveClick('${m.characterSlug}', '${m.moveName.replace(/'/g, "\\'")}')" title="${m.characterName}: ${m.moveName}">
+        <img class="feat-char-avatar" src="${m.avatar}" alt="${m.characterName}" loading="lazy" onerror="this.src='/assets/avatars/jin-brand-256-C1-oe_x3.webp'">
+        <div class="feat-meta-wrap">
+          <div class="feat-move-title">${m.characterName}: ${m.moveName}</div>
+          <div class="feat-notation-wrap">${formattedInput}</div>
+        </div>
+        <div class="feat-damage">${m.damage}</div>
+        <div class="feat-badge-group">
+          ${badgesHtml}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function onFeaturedMoveClick(slug, moveName) {
+  selectCharacter(slug);
+  filterByMoveText(moveName);
+}
+
 
 // Select Character Action
 async function selectCharacter(slug) {
@@ -581,7 +854,7 @@ function renderMovesTable(movesList, resetPage = true) {
     return `
       <tr onclick="testNotationString('${m.original_notation}')" style="cursor:pointer;" title="Click to test in Notation Engine">
         <td style="font-weight:700; color:#fff;">${m.name}</td>
-        <td><span class="cmd-badge">${m.original_notation}</span></td>
+        <td>${formatTekkenNotation(m.original_notation)}</td>
         <td><span style="font-weight:800; color:var(--text-muted);">${hitLevel}</span></td>
         <td><span style="font-weight:700;">${startupStr}</span></td>
         <td><span class="${blockClass}">${blockStr}</span></td>
@@ -629,7 +902,7 @@ function renderStages() {
     return `
       <div class="stage-card" title="${gimmickStr}">
         <div class="stage-img-wrap">
-          <img class="stage-img" src="${imgSrc}" alt="${s.name}" onerror="this.src='/assets/img/stages/arena.svg'">
+          <img class="stage-img" src="${imgSrc}" alt="${s.name}" onerror="this.src='/assets/img/stages/arena.jpg'">
         </div>
         <div class="stage-meta">
           <div class="stage-name">${s.name}</div>
@@ -1066,7 +1339,7 @@ function updateStagePreview() {
   if (stage) {
     if (thumb) {
       thumb.src = stage.image_url || stage.image || '/assets/img/stages/arena.jpg';
-      thumb.onerror = () => { thumb.src = '/assets/img/stages/arena.svg'; };
+      thumb.onerror = () => { thumb.src = '/assets/img/stages/arena.jpg'; };
     }
     if (hazardsBox) {
       const hazards = stage.hazards || [];
@@ -1390,7 +1663,7 @@ function renderMatchupDashboard(data) {
             <div class="um-header">
               <div>
                 <span class="um-name">${m.move_name}</span>
-                <span class="km-input-badge">${m.input}</span>
+                <div style="margin-top:0.2rem;">${formatTekkenNotation(m.input)}</div>
               </div>
               <span class="um-role-tag">${m.role}</span>
             </div>
@@ -1425,7 +1698,7 @@ function renderMatchupDashboard(data) {
             <div class="dm-header">
               <div class="dm-title-col">
                 <span class="dm-name">${dm.move_name}</span>
-                <span class="km-input-badge">${dm.input}</span>
+                <div style="margin-top:0.2rem;">${formatTekkenNotation(dm.input)}</div>
               </div>
               <span class="dm-risk-badge ${riskCls}">${dm.risk_level} (${blk} on block ${stp})</span>
             </div>
@@ -1899,8 +2172,8 @@ function renderComboRecommendations() {
     const starterEnder = (c.starter_move_name || c.ender_move_name)
       ? `
         <div class="combo-starter-ender-row">
-          ${c.starter_move_name ? `<span>Starter: <strong>${c.starter_move_name}</strong> (${c.starter_move_input || ''})</span>` : ''}
-          ${c.ender_move_name ? `<span>• Ender: <strong>${c.ender_move_name}</strong> (${c.ender_move_input || ''})</span>` : ''}
+          ${c.starter_move_name ? `<span>Starter: <strong>${c.starter_move_name}</strong> (${formatTekkenNotation(c.starter_move_input)})</span>` : ''}
+          ${c.ender_move_name ? `<span>• Ender: <strong>${c.ender_move_name}</strong> (${formatTekkenNotation(c.ender_move_input)})</span>` : ''}
           ${c.launcher_type ? `<span>• Launcher: <strong style="color:var(--accent-gold);">${c.launcher_type}</strong></span>` : ''}
         </div>
       `
@@ -1960,7 +2233,7 @@ function renderComboRecommendations() {
         </div>
 
         <div class="combo-notation-box" title="Click to test in notation engine" onclick="testNotationString('${(c.notation_sequence || '').replace(/'/g, "\\'")}')">
-          ${c.notation_sequence}
+          ${formatTekkenNotation(c.notation_sequence)}
         </div>
 
         ${starterEnder}
@@ -2458,7 +2731,7 @@ function renderPunishTable(options) {
 
     // Recommended Punish details
     const punName = opt.recommended_punish_name || (opt.is_safe ? 'Neutral Guard' : 'No option found');
-    const punInput = opt.recommended_punish_input ? `<span class="km-input-badge">${opt.recommended_punish_input}</span>` : '—';
+    const punInput = opt.recommended_punish_input ? formatTekkenNotation(opt.recommended_punish_input) : '—';
     const punStp = opt.punish_startup ? `i${opt.punish_startup}` : '—';
     const punDmg = opt.punish_damage ? `<span style="color:var(--accent-gold); font-weight:800;">${opt.punish_damage} DMG</span>` : '—';
     const punTier = opt.punish_tier ? `<span class="punish-tier-badge ${opt.punish_tier.toLowerCase().includes('launch') ? 'launch' : (opt.punish_tier.toLowerCase().includes('ws') ? 'intermediate' : 'jab')}">${opt.punish_tier}</span>` : '';
@@ -2468,7 +2741,7 @@ function renderPunishTable(options) {
         <td>
           <div style="font-weight:700; color:#fff;">${opt.opponent_move_name}</div>
           <div style="display:flex; align-items:center; gap:0.4rem; margin-top:0.25rem;">
-            <span class="km-input-badge" style="font-size:0.75rem;">${opt.opponent_move_input}</span>
+            ${formatTekkenNotation(opt.opponent_move_input)}
             <span class="step-tag">${opt.opponent_hit_level ? opt.opponent_hit_level.toUpperCase() : 'M'}</span>
           </div>
         </td>

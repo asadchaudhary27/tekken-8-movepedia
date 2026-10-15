@@ -4,12 +4,15 @@
    ========================================================================== */
 
 :root {
-  --bg-primary: #07080c;
-  --bg-surface: #0e1017;
-  --bg-surface-elevated: #161922;
-  --bg-card: #12141c;
-  --bg-card-hover: #1c202d;
+  --bg-primary: #0a0c10;
+  --bg-surface: #11141c;
+  --bg-surface-elevated: #171b26;
+  --bg-card: #141722;
+  --bg-card-matti: #151824;
+  --bg-card-hover: #1c2130;
+  
   --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-matti: rgba(215, 185, 155, 0.14);
   --border-metallic: rgba(255, 255, 255, 0.16);
   --border-bright: rgba(255, 255, 255, 0.28);
   
@@ -22,6 +25,12 @@
   --accent-gold: #ffbe0b;
   --accent-purple: #9d4edd;
   
+  /* Tekken 8 Arcade Button Mapping Colors */
+  --btn-lp-cyan: #00e5ff;
+  --btn-rp-yellow: #ffd600;
+  --btn-lk-green: #00e676;
+  --btn-rk-pink: #ff1744;
+
   --text-main: #f0f2f5;
   --text-muted: #8b92a5;
   --text-dim: #5c6375;
@@ -43,8 +52,9 @@ body {
   line-height: 1.5;
   overflow-x: hidden;
   background-image: 
-    radial-gradient(circle at 50% 0%, rgba(255, 30, 56, 0.08) 0%, transparent 60%),
-    linear-gradient(to bottom, #07080c 0%, #0c0e14 100%);
+    radial-gradient(ellipse at 50% 0%, rgba(255, 30, 56, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse at 85% 15%, rgba(190, 140, 90, 0.05) 0%, transparent 45%),
+    linear-gradient(to bottom, #090a0e 0%, #0d0f15 100%);
   min-height: 100vh;
 }
 
@@ -61,7 +71,7 @@ body.has-left-rail {
   top: 0;
   bottom: 0;
   width: 54px;
-  background: #090a0f;
+  background: #0a0b10;
   border-right: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
@@ -126,7 +136,7 @@ body.has-left-rail {
 }
 
 /* ==========================================================================
-   Top Navigation Bar
+   Top Navigation Bar - Polished Glassmorphic Design
    ========================================================================== */
 .navbar {
   position: sticky;
@@ -136,9 +146,11 @@ body.has-left-rail {
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 2.5rem;
-  background: rgba(7, 8, 12, 0.92);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(11, 13, 19, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
 }
 
 .brand-container {
@@ -151,7 +163,7 @@ body.has-left-rail {
 .brand-logo-img {
   height: 32px;
   width: auto;
-  filter: drop-shadow(0 0 8px rgba(255, 30, 56, 0.4));
+  filter: drop-shadow(0 0 8px rgba(255, 30, 56, 0.45));
 }
 
 .brand-logo-sub {
@@ -162,81 +174,139 @@ body.has-left-rail {
   text-shadow: 0 0 12px var(--accent-cyan-glow);
 }
 
+.nav-patch-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.28);
+  color: #a5f3fc;
+  font-family: var(--font-family-display);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 0.25rem 0.55rem;
+  border-radius: 9999px;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.15);
+  margin-left: 0.35rem;
+}
+
+.radar-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #00e5ff;
+  box-shadow: 0 0 8px #00e5ff;
+  animation: radarPulse 2s infinite ease-in-out;
+}
+
+@keyframes radarPulse {
+  0%, 100% {
+    transform: scale(0.9);
+    opacity: 0.7;
+    box-shadow: 0 0 4px #00e5ff;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+    box-shadow: 0 0 10px #00e5ff, 0 0 16px rgba(0, 229, 255, 0.6);
+  }
+}
+
+
 .nav-links {
   display: flex;
   list-style: none;
-  gap: 1.75rem;
+  gap: 1.5rem;
+  align-items: center;
 }
 
 .nav-link {
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.4rem 0;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
   position: relative;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.nav-link:hover, .nav-link.active {
-  color: #fff;
+.nav-link:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-link.active {
+  color: #ffffff;
+  background: rgba(255, 30, 56, 0.12);
 }
 
 .nav-link.active::after {
   content: '';
   position: absolute;
-  bottom: -4px;
-  left: 0;
-  right: 0;
-  height: 2.5px;
+  bottom: 0;
+  left: 15%;
+  right: 15%;
+  height: 2px;
   background: var(--accent-red);
-  box-shadow: 0 0 10px var(--accent-red);
+  box-shadow: 0 0 8px var(--accent-red);
+  border-radius: 2px;
 }
 
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
 }
 
 .btn-auth {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--border-bright);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   color: #fff;
   padding: 0.45rem 1.1rem;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .btn-auth:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #fff;
+  background: rgba(255, 30, 56, 0.15);
+  border-color: var(--accent-red);
+  box-shadow: 0 0 10px rgba(255, 30, 56, 0.35);
+  color: #fff;
 }
 
 .btn-swagger {
-  background: rgba(0, 229, 255, 0.08);
-  border: 1px solid rgba(0, 229, 255, 0.3);
+  background: rgba(0, 229, 255, 0.09);
+  border: 1px solid rgba(0, 229, 255, 0.35);
   color: var(--accent-cyan);
-  padding: 0.45rem 0.85rem;
+  padding: 0.45rem 0.95rem;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border-radius: 4px;
+  border-radius: 6px;
   text-decoration: none;
   transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .btn-swagger:hover {
-  background: rgba(0, 229, 255, 0.2);
+  background: rgba(0, 229, 255, 0.22);
   border-color: var(--accent-cyan);
+  box-shadow: 0 0 12px var(--accent-cyan-glow);
 }
 
 /* ==========================================================================
@@ -390,37 +460,55 @@ body.has-left-rail {
 /* ==========================================================================
    Choose Your Fighter Section & Carousel
    ========================================================================== */
+/* ==========================================================================
+   Choose Your Fighter Section - Concise Horizontal Ribbon (Side-Scrollable)
+   ========================================================================== */
 .section-choose-fighter {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, rgba(20, 23, 33, 0.92) 0%, rgba(15, 17, 24, 0.96) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.85rem 1.25rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  position: relative;
 }
 
 .choose-header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.6rem;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.6rem;
 }
 
 .choose-title {
   font-family: var(--font-family-display);
-  font-size: 1.35rem;
+  font-size: 1.15rem;
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   font-style: italic;
   color: #ffffff;
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.choose-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 14px;
+  background: var(--accent-red);
+  box-shadow: 0 0 8px var(--accent-red);
+  border-radius: 2px;
 }
 
 .filter-pills {
   display: flex;
-  gap: 0.4rem;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 0.25rem;
+  gap: 0.3rem;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 0.2rem;
   border-radius: 6px;
   border: 1px solid var(--border-subtle);
 }
@@ -429,10 +517,10 @@ body.has-left-rail {
   background: transparent;
   border: none;
   color: var(--text-muted);
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.72rem;
+  font-weight: 800;
   letter-spacing: 0.05em;
-  padding: 0.3rem 0.85rem;
+  padding: 0.25rem 0.7rem;
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -440,6 +528,7 @@ body.has-left-rail {
 
 .filter-btn:hover {
   color: #fff;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .filter-btn.active {
@@ -452,87 +541,114 @@ body.has-left-rail {
   position: relative;
   display: flex;
   align-items: center;
+  gap: 0.35rem;
 }
 
 .carousel-nav-btn {
-  background: rgba(14, 16, 23, 0.85);
-  border: 1px solid var(--border-bright);
+  background: rgba(17, 20, 29, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   color: #fff;
-  width: 32px;
-  height: 60px;
+  width: 26px;
+  height: 68px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: 800;
-  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 900;
+  border-radius: 6px;
   z-index: 5;
   transition: all 0.2s ease;
   user-select: none;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .carousel-nav-btn:hover {
   background: var(--accent-red);
   border-color: var(--accent-red);
-  box-shadow: 0 0 12px var(--accent-red-glow);
+  box-shadow: 0 0 14px var(--accent-red-glow);
+  color: #fff;
 }
 
 .carousel-track {
   display: flex;
-  gap: 0.85rem;
+  gap: 0.5rem;
   overflow-x: auto;
   scroll-behavior: smooth;
-  padding: 0.5rem 0.25rem;
+  padding: 0.4rem 0.2rem;
   flex: 1;
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 30, 56, 0.4) transparent;
+  -webkit-overflow-scrolling: touch;
 }
 
 .carousel-track::-webkit-scrollbar {
-  display: none;
+  height: 4px;
 }
 
+.carousel-track::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.carousel-track::-webkit-scrollbar-thumb {
+  background: rgba(255, 30, 56, 0.4);
+  border-radius: 2px;
+}
+
+.carousel-track::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-red);
+}
+
+/* Compact Concise Fighter Card */
 .carousel-fighter-card {
-  min-width: 105px;
-  max-width: 105px;
+  min-width: 78px;
+  max-width: 78px;
   background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.22s ease;
+  transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding-bottom: 0.5rem;
+  padding: 0.35rem 0.25rem;
+  flex-shrink: 0;
+  position: relative;
 }
 
 .carousel-fighter-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--border-bright);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
   background: var(--bg-card-hover);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
 }
 
 .carousel-fighter-card.active {
-  border: 2px solid var(--accent-red);
-  box-shadow: 0 0 18px var(--accent-red-glow);
-  background: #191319;
+  border: 1.5px solid var(--accent-red);
+  box-shadow: 0 0 16px var(--accent-red-glow), inset 0 0 10px rgba(255, 30, 56, 0.15);
+  background: linear-gradient(180deg, #221217 0%, #151822 100%);
 }
 
 .carousel-avatar-wrap {
-  width: 100%;
-  aspect-ratio: 1;
+  width: 52px;
+  height: 52px;
+  border-radius: 6px;
   overflow: hidden;
-  background: #090b10;
+  background: #0a0c12;
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .carousel-avatar {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.25s ease;
+  transition: transform 0.22s ease;
 }
 
 .carousel-fighter-card:hover .carousel-avatar {
@@ -540,27 +656,333 @@ body.has-left-rail {
 }
 
 .carousel-name {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 0.4rem;
+  letter-spacing: 0.04em;
+  margin-top: 0.3rem;
   color: #fff;
-  padding: 0 0.25rem;
+  padding: 0 0.15rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
+  line-height: 1.2;
 }
 
 .carousel-style {
-  font-size: 0.65rem;
-  color: var(--accent-red);
-  padding: 0 0.25rem;
+  font-size: 0.58rem;
+  color: var(--text-dim);
+  padding: 0 0.15rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
+  line-height: 1.1;
+  margin-top: 0.1rem;
+}
+
+.carousel-fighter-card.active .carousel-name {
+  color: var(--accent-cyan);
+}
+
+.carousel-fighter-card.active .carousel-style {
+  color: #ff8592;
+}
+
+/* ==========================================================================
+   Dynamic Glassmorphic Finish (DGF) & Earthy Matti Theming
+   Applied selectively to elevate visual depth without clutter
+   ========================================================================== */
+.card-dgf,
+.dgf-card {
+  background: linear-gradient(135deg, rgba(23, 27, 38, 0.88) 0%, rgba(18, 21, 30, 0.94) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 15px rgba(215, 185, 155, 0.03);
+  border-radius: 10px;
+  position: relative;
+}
+
+.dgf-card-accent {
+  position: relative;
+}
+
+.dgf-card-accent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-red) 0%, rgba(255, 30, 56, 0.3) 60%, transparent 100%);
+  border-radius: 10px 10px 0 0;
+}
+
+/* ==========================================================================
+   Tekken 8 Notation Breakdown & Arcade Button Mapping
+   Authentic Namco arcade button styling: 1=Cyan, 2=Yellow, 3=Green, 4=Pink
+   ========================================================================== */
+.tk-combo-sequence {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  line-height: 1.8;
+}
+
+.tk-step-wrapper {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 0.15rem 0.35rem;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tk-notation-chain {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  vertical-align: middle;
+}
+
+/* Direction Arrow Chips */
+.tk-dir-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 0.25rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 900;
+  line-height: 1;
+  background: #191c26;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #f1f5f9;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 4px rgba(0, 0, 0, 0.4);
+  user-select: none;
+}
+
+.tk-dir-chip.tk-hold {
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+  box-shadow: 0 0 6px var(--accent-red-glow);
+}
+
+.tk-dir-chip.tk-dir-star {
+  color: var(--accent-gold);
+  font-size: 0.95rem;
+}
+
+/* Action Button Chips (1=Cyan, 2=Yellow, 3=Green, 4=Pink) */
+.tk-btn-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 0.35rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  user-select: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tk-btn-chip:hover {
+  transform: translateY(-1px);
+}
+
+/* 1: Left Punch (Cyan) */
+.tk-btn-1 {
+  background: linear-gradient(180deg, #102a36 0%, #061821 100%);
+  border: 1.5px solid var(--btn-lp-cyan);
+  color: #e0faff;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* 2: Right Punch (Yellow) */
+.tk-btn-2 {
+  background: linear-gradient(180deg, #322b0c 0%, #1e1903 100%);
+  border: 1.5px solid var(--btn-rp-yellow);
+  color: #fffde7;
+  box-shadow: 0 0 8px rgba(255, 214, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* 3: Left Kick (Green) */
+.tk-btn-3 {
+  background: linear-gradient(180deg, #0e2f1b 0%, #051a0d 100%);
+  border: 1.5px solid var(--btn-lk-green);
+  color: #e8f5e9;
+  box-shadow: 0 0 8px rgba(0, 230, 118, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* 4: Right Kick (Pink/Red) */
+.tk-btn-4 {
+  background: linear-gradient(180deg, #380e18 0%, #20040a 100%);
+  border: 1.5px solid var(--btn-rk-pink);
+  color: #ffebee;
+  box-shadow: 0 0 8px rgba(255, 23, 68, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* Simultaneous Button Combinations */
+.tk-btn-1-2 {
+  background: linear-gradient(135deg, #09202a 0%, #231e08 100%);
+  border: 1.5px solid #80ed99;
+  color: #ffffff;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.3);
+}
+
+.tk-btn-3-4 {
+  background: linear-gradient(135deg, #0d2618 0%, #290a13 100%);
+  border: 1.5px solid #ff70a6;
+  color: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 23, 68, 0.3);
+}
+
+.tk-btn-multi {
+  background: linear-gradient(135deg, #1e1b2e 0%, #2b1d28 100%);
+  border: 1.5px solid #a855f7;
+  color: #f3e8ff;
+  box-shadow: 0 0 8px rgba(168, 85, 247, 0.35);
+}
+
+/* Stance & State Badges (WS, FC, WR, SS, BT) */
+.tk-state-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.35rem;
+  height: 20px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #cbd5e1;
+}
+
+.tk-state-chip.tk-heat-badge {
+  background: rgba(255, 0, 127, 0.2);
+  border-color: #ff007f;
+  color: #ff80bf;
+  box-shadow: 0 0 8px rgba(255, 0, 127, 0.4);
+}
+
+.tk-state-chip.tk-rage-badge {
+  background: rgba(255, 30, 56, 0.2);
+  border-color: var(--accent-red);
+  color: #ff8592;
+  box-shadow: 0 0 8px var(--accent-red-glow);
+}
+
+/* Connectors */
+.tk-plus-chip {
+  color: var(--text-muted);
+  font-weight: 900;
+  font-size: 0.72rem;
+  padding: 0 0.1rem;
+}
+
+.tk-sep-chip {
+  color: var(--text-dim);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 0 0.1rem;
+}
+
+.tk-next-arrow {
+  color: var(--accent-red);
+  font-weight: 900;
+  font-size: 1rem;
+  margin: 0 0.2rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.tk-move-action {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+  background: rgba(0, 229, 255, 0.12);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 3px;
+  padding: 0.1rem 0.35rem;
+  text-transform: uppercase;
+}
+
+.tk-tag-tornado {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 3px;
+  padding: 0.1rem 0.35rem;
+  text-transform: uppercase;
+}
+
+.tk-tag-wall {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #f97316;
+  background: rgba(249, 115, 22, 0.15);
+  border: 1px solid rgba(249, 115, 22, 0.35);
+  border-radius: 3px;
+  padding: 0.1rem 0.35rem;
+  text-transform: uppercase;
+}
+
+.tk-tag-break {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #a855f7;
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 3px;
+  padding: 0.1rem 0.35rem;
+  text-transform: uppercase;
+}
+
+.tk-tag-heat {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #ff007f;
+  background: rgba(255, 0, 127, 0.15);
+  border: 1px solid rgba(255, 0, 127, 0.35);
+  border-radius: 3px;
+  padding: 0.1rem 0.35rem;
+  text-transform: uppercase;
+}
+
+.tk-tag-generic {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  padding: 0.1rem 0.35rem;
+}
+
+.tk-raw-text {
+  font-weight: 700;
+  color: #e2e8f0;
+  font-size: 0.8rem;
 }
 
 /* ==========================================================================
@@ -747,13 +1169,32 @@ body.has-left-rail {
   object-fit: cover;
   margin-right: 0.75rem;
   border: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.feat-meta-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.feat-move-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.02em;
 }
 
 .feat-notation-wrap {
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  flex: 1;
+  flex-wrap: wrap;
 }
 
 .feat-glyph {
@@ -807,23 +1248,27 @@ body.has-left-rail {
   font-size: 0.95rem;
   font-weight: 900;
   color: #fff;
-  margin: 0 0.75rem;
-  min-width: 28px;
+  margin: 0 0.6rem;
+  min-width: 24px;
   text-align: right;
+  flex-shrink: 0;
 }
 
 .feat-badge-group {
   display: flex;
   gap: 0.35rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
 .feat-badge {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 800;
   letter-spacing: 0.05em;
-  padding: 0.2rem 0.5rem;
+  padding: 0.18rem 0.45rem;
   border-radius: 3px;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .badge-launcher {
@@ -836,6 +1281,31 @@ body.has-left-rail {
   background: rgba(0, 180, 216, 0.15);
   border: 1px solid var(--accent-teal);
   color: var(--accent-teal);
+}
+
+.badge-block-plus {
+  background: rgba(0, 230, 118, 0.15);
+  border: 1px solid #00e676;
+  color: #00e676;
+}
+
+.badge-block-neg {
+  background: rgba(255, 30, 56, 0.15);
+  border: 1px solid #ff1e38;
+  color: #ff8592;
+}
+
+.badge-heat {
+  background: rgba(255, 0, 127, 0.2);
+  border: 1px solid #ff007f;
+  color: #ff80bf;
+  box-shadow: 0 0 6px rgba(255, 0, 127, 0.35);
+}
+
+.badge-throw {
+  background: rgba(255, 171, 0, 0.15);
+  border: 1px solid #ffab00;
+  color: #ffab00;
 }
 
 .badge-crush {
@@ -1471,12 +1941,18 @@ body.has-left-rail {
   }
 
   .carousel-fighter-card {
-    min-width: 90px;
-    max-width: 90px;
+    min-width: 74px;
+    max-width: 74px;
+    padding: 0.3rem 0.15rem;
+  }
+
+  .carousel-avatar-wrap {
+    width: 48px;
+    height: 48px;
   }
 
   .carousel-nav-btn {
-    width: 26px;
+    width: 24px;
     height: 52px;
     font-size: 0.95rem;
   }
@@ -1605,16 +2081,22 @@ body.has-left-rail {
   }
 
   .carousel-fighter-card {
-    min-width: 82px;
-    max-width: 82px;
+    min-width: 68px;
+    max-width: 68px;
+    padding: 0.25rem 0.1rem;
+  }
+
+  .carousel-avatar-wrap {
+    width: 44px;
+    height: 44px;
   }
 
   .carousel-name {
-    font-size: 0.68rem;
+    font-size: 0.62rem;
   }
 
   .carousel-style {
-    font-size: 0.58rem;
+    display: none;
   }
 
   .featured-move-row {
