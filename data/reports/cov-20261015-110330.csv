@@ -1,0 +1,44 @@
+character_slug,character_name,total_moves,startup_coverage_pct,block_coverage_pct,hit_coverage_pct,ch_coverage_pct,damage_coverage_pct,unverified_count,conflict_count
+jin,Jin Kazama,4,100.0,100.0,100.0,0.0,100.0,0,0
+kazuya,Kazuya Mishima,3,100.0,100.0,100.0,0.0,100.0,0,0
+reina,Reina,2,100.0,100.0,100.0,0.0,100.0,0,0
+jun,Jun Kazama,0,0.0,0.0,0.0,0.0,0.0,0,0
+king,King,2,100.0,0.0,100.0,0.0,100.0,0,0
+paul,Paul Phoenix,0,0.0,0.0,0.0,0.0,0.0,0,0
+hwoarang,Hwoarang,0,0.0,0.0,0.0,0.0,0.0,0,0
+alisa,Alisa Bosconovitch,0,0.0,0.0,0.0,0.0,0.0,0,0
+asuka,Asuka Kazama,0,0.0,0.0,0.0,0.0,0.0,0,0
+azucena,Azucena Milagros,0,0.0,0.0,0.0,0.0,0.0,0,0
+bryan,Bryan Fury,0,0.0,0.0,0.0,0.0,0.0,0,0
+claudio,Claudio Serafino,0,0.0,0.0,0.0,0.0,0.0,0,0
+devil-jin,Devil Jin,0,0.0,0.0,0.0,0.0,0.0,0,0
+dragunov,Sergei Dragunov,0,0.0,0.0,0.0,0.0,0.0,0,0
+feng,Feng Wei,7,85.71,85.71,100.0,0.0,85.71,0,0
+jack-8,Jack-8,0,0.0,0.0,0.0,0.0,0.0,0,0
+lars,Lars Alexandersson,0,0.0,0.0,0.0,0.0,0.0,0,0
+law,Marshall Law,0,0.0,0.0,0.0,0.0,0.0,0,0
+lee,Lee Chaolan,0,0.0,0.0,0.0,0.0,0.0,0,0
+leo,Leo Kliesen,0,0.0,0.0,0.0,0.0,0.0,0,0
+leroy,Leroy Smith,0,0.0,0.0,0.0,0.0,0.0,0,0
+lili,Lili,0,0.0,0.0,0.0,0.0,0.0,0,0
+nina,Nina Williams,0,0.0,0.0,0.0,0.0,0.0,0,0
+panda,Panda,0,0.0,0.0,0.0,0.0,0.0,0,0
+kuma,Kuma,0,0.0,0.0,0.0,0.0,0.0,0,0
+raven,Raven,0,0.0,0.0,0.0,0.0,0.0,0,0
+shaheen,Shaheen,0,0.0,0.0,0.0,0.0,0.0,0,0
+steve,Steve Fox,0,0.0,0.0,0.0,0.0,0.0,0,0
+victor,Victor Chevalier,0,0.0,0.0,0.0,0.0,0.0,0,0
+xiaoyu,Ling Xiaoyu,0,0.0,0.0,0.0,0.0,0.0,0,0
+yoshimitsu,Yoshimitsu,0,0.0,0.0,0.0,0.0,0.0,0,0
+zafina,Zafina,0,0.0,0.0,0.0,0.0,0.0,0,0
+eddy,Eddy Gordo,0,0.0,0.0,0.0,0.0,0.0,0,0
+lidia,Lidia Sobieska,0,0.0,0.0,0.0,0.0,0.0,0,0
+heihachi,Heihachi Mishima,0,0.0,0.0,0.0,0.0,0.0,0,0
+clive,Clive Rosfield,0,0.0,0.0,0.0,0.0,0.0,0,0
+anna,Anna Williams,0,0.0,0.0,0.0,0.0,0.0,0,0
+armor-king,Armor King,0,0.0,0.0,0.0,0.0,0.0,0,0
+bob,Bob Richards,0,0.0,0.0,0.0,0.0,0.0,0,0
+fahkumram,Fahkumram,0,0.0,0.0,0.0,0.0,0.0,0,0
+kunimitsu,Kunimitsu,0,0.0,0.0,0.0,0.0,0.0,0,0
+miary-zo,Miary Zo,0,0.0,0.0,0.0,0.0,0.0,0,0
+roger-jr,Roger Jr.,0,0.0,0.0,0.0,0.0,0.0,0,0

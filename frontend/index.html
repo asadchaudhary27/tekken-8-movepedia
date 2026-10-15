@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tekken 8 Movepedia — Frame Data, Notation & Training Assistant</title>
+  <meta name="description" content="Professional Tekken 8 frame data reference, 4-mode notation visualization, and training assistant.">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="icon" type="image/png" href="/assets/avatars/jin-brand-256-C1-oe_x3.webp">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <a href="/" class="brand-container">
+      <span class="brand-logo-t8">TEKKEN<span>8</span></span>
+      <span class="brand-logo-sub">MOVEPEDIA</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#fighters" class="nav-link active">Fighters</a></li>
+      <li><a href="#notation" class="nav-link">Notation Engine</a></li>
+      <li><a href="#moves" class="nav-link">Moves & Frame Data</a></li>
+      <li><a href="#coverage" class="nav-link">Coverage & QA</a></li>
+      <li><a href="#sources" class="nav-link">Sources Audit</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/docs" target="_blank" class="btn-auth" style="text-decoration:none;">OpenAPI Swagger</a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-wrapper">
+    
+    <!-- Top Dashboard Grid: Hero Banner + Featured Combos Sidebar -->
+    <div class="dashboard-grid">
+      
+      <!-- Hero Banner -->
+      <section class="hero-banner">
+        <div class="hero-backdrop"></div>
+        <div class="hero-content">
+          <span class="hero-tag">Computer Science Final Year Project — Phase 1</span>
+          <h1 class="hero-title">Master Your Fate</h1>
+          <p class="hero-subtitle">All Characters, Combos, Frame Data, &amp; 4-Mode Notation Visualization for Tekken 8.</p>
+          <div class="hero-btn-group">
+            <a href="#fighters" class="btn-primary" style="text-decoration:none;">Browse Fighters</a>
+            <a href="#notation" class="btn-secondary" style="text-decoration:none;">Notation Engine</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sidebar: Featured Combos & Verified Frame Moves -->
+      <aside class="sidebar-panel">
+        <div class="panel-header">
+          <span class="panel-title">Featured Moves &amp; Combos</span>
+          <span class="panel-tag">Verified Patch 3.00.02</span>
+        </div>
+
+        <div class="mini-combo-list">
+          <!-- Featured Move 1: Jin EWGF -->
+          <div class="mini-combo-card">
+            <div class="mini-combo-header">
+              <div class="mini-combo-char">
+                <img class="mini-avatar" src="/assets/avatars/jin-brand-256-C1-oe_x3.webp" alt="Jin">
+                <span>Jin Kazama</span>
+              </div>
+              <div class="mini-badges">
+                <span class="badge badge-launcher">Launcher</span>
+                <span class="badge badge-heat">+5 Block</span>
+              </div>
+            </div>
+            <div class="mini-notation">f, n, d, df+2 (Electric Wind Hook Fist)</div>
+          </div>
+
+          <!-- Featured Move 2: Kazuya EWGF -->
+          <div class="mini-combo-card">
+            <div class="mini-combo-header">
+              <div class="mini-combo-char">
+                <img class="mini-avatar" src="/assets/avatars/kazuya-brand-256-BInk9tTm.webp" alt="Kazuya">
+                <span>Kazuya Mishima</span>
+              </div>
+              <div class="mini-badges">
+                <span class="badge badge-launcher">Launcher</span>
+                <span class="badge badge-heat">+5 Block</span>
+              </div>
+            </div>
+            <div class="mini-notation">f, n, df+2 (Electric Wind God Fist)</div>
+          </div>
+
+          <!-- Featured Move 3: Feng Wei -->
+          <div class="mini-combo-card">
+            <div class="mini-combo-header">
+              <div class="mini-combo-char">
+                <img class="mini-avatar" src="/assets/avatars/feng-brand-256-Cfyw5tOe.webp" alt="Feng">
+                <span>Feng Wei</span>
+              </div>
+              <div class="mini-badges">
+                <span class="badge badge-damage">25 Dmg</span>
+                <span class="badge badge-crush">Power Crush</span>
+              </div>
+            </div>
+            <div class="mini-notation">b+1+2 (Iron Fortress)</div>
+          </div>
+
+          <!-- Featured Combo: Kuma Heat Ender -->
+          <div class="mini-combo-card">
+            <div class="mini-combo-header">
+              <div class="mini-combo-char">
+                <img class="mini-avatar" src="/assets/avatars/kuma-brand-256-Dl0_dNEV.webp" alt="Kuma">
+                <span>Kuma (Combo #2556)</span>
+              </div>
+              <div class="mini-badges">
+                <span class="badge badge-damage">99 Dmg</span>
+                <span class="badge badge-heat">12 Hits</span>
+              </div>
+            </div>
+            <div class="mini-notation">Hunting, 1, 2*(max) ► u, 1+2, D ► Bear Roll ► 3</div>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- Section: Choose Your Fighter (All 43 Characters) -->
+    <section id="fighters" class="section-roster">
+      <div class="section-header-row">
+        <div>
+          <h2 class="section-title">Choose Your Fighter</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Click any fighter to view full move list and frame data</p>
+        </div>
+        <div class="filter-pills">
+          <button class="filter-btn active" data-filter="ALL">All</button>
+          <button class="filter-btn" data-filter="ALLIES">Allies</button>
+          <button class="filter-btn" data-filter="MISHIMA">Mishima</button>
+          <button class="filter-btn" data-filter="REBELS">Rebels</button>
+          <button class="filter-btn" data-filter="NEWCOMERS">Newcomers</button>
+        </div>
+      </div>
+
+      <div id="rosterGrid" class="roster-grid">
+        <!-- Rendered dynamically via app.js -->
+        <div style="color:var(--text-muted); padding:2rem;">Loading character roster...</div>
+      </div>
+    </section>
+
+    <!-- Section: Notation Engine Prototype (Section 7) -->
+    <section id="notation" class="section-notation">
+      <div class="section-header-row">
+        <div>
+          <h2 class="section-title">Notation Engine Prototype</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Translates raw Tekken notation into 4 standardized display projections in real-time</p>
+        </div>
+        <div class="controller-toggle-group">
+          <button class="ctl-btn active" data-layout="PLAYSTATION">PlayStation (□, △, ✕, ○)</button>
+          <button class="ctl-btn" data-layout="XBOX">Xbox (X, Y, A, B)</button>
+          <button class="ctl-btn" data-layout="ARCADE">Arcade (1, 2, 3, 4)</button>
+        </div>
+      </div>
+
+      <div class="notation-input-bar">
+        <input type="text" id="notationInput" class="notation-input" value="df+2" placeholder="Try df+2, f,n,d,df+2, 1+2, f,f+1+2, or any notation...">
+      </div>
+
+      <div id="unsupportedAlert" style="display:none; background:rgba(255,190,11,0.15); border:1px solid var(--accent-gold); color:var(--accent-gold); padding:0.6rem 1rem; border-radius:4px; font-size:0.8rem; margin-bottom:1rem;"></div>
+
+      <div class="notation-modes-grid">
+        <!-- Mode 1: Arrows -->
+        <div class="notation-mode-card">
+          <span class="mode-badge">Mode 1 • Directional Arrows</span>
+          <div id="modeArrow" class="mode-value">↘ + 2</div>
+          <p style="font-size:0.7rem; color:var(--text-dim);">9 canonical directions (↑, ↖, ↗, ←, •, →, ↙, ↓, ↘)</p>
+        </div>
+
+        <!-- Mode 2: English -->
+        <div class="notation-mode-card">
+          <span class="mode-badge">Mode 2 • English Names</span>
+          <div id="modeEnglish" class="mode-value">Down Forward + Right Punch</div>
+          <p style="font-size:0.7rem; color:var(--text-dim);">Full English terminology for directions &amp; attack limbs</p>
+        </div>
+
+        <!-- Mode 3: Numpad -->
+        <div class="notation-mode-card">
+          <span class="mode-badge">Mode 3 • Numpad Notation</span>
+          <div id="modeNumpad" class="mode-value">3 + 2</div>
+          <p style="font-size:0.7rem; color:var(--text-dim);">Direction (1-9) and attack buttons separated</p>
+        </div>
+
+        <!-- Mode 4: Controller -->
+        <div class="notation-mode-card">
+          <span class="mode-badge">Mode 4 • Physical Controller</span>
+          <div id="modeController" class="mode-value">↘ + △</div>
+          <p style="font-size:0.7rem; color:var(--text-dim);">Configurable console &amp; arcade button labels</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Live Move Reference & Frame Data Table -->
+    <section id="moves" class="section-moves">
+      <div class="section-header-row">
+        <div>
+          <h2 id="currentFighterTitle" class="section-title">Character Moves &amp; Frame Data</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Official numerical values (Negative = Disadvantage, Positive = Advantage, Null = Inapplicable/Unknown)</p>
+        </div>
+      </div>
+
+      <div class="moves-table-container">
+        <table class="moves-table">
+          <thead>
+            <tr>
+              <th>Move Name</th>
+              <th>Command</th>
+              <th>Level</th>
+              <th>Startup</th>
+              <th>Block</th>
+              <th>Hit</th>
+              <th>Damage</th>
+              <th>Properties</th>
+            </tr>
+          </thead>
+          <tbody id="movesTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+        <div id="movesEmptyState" style="display:none; text-align:center; padding:3rem; color:var(--text-dim);">
+          No moves recorded yet for this fighter in the initial seed dataset.
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Coverage Report Summary (Section 8) -->
+    <section id="coverage" class="section-moves">
+      <div class="section-header-row">
+        <div>
+          <h2 class="section-title">Data Completeness &amp; Quality QA</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Mathematical field completeness metrics separating missing, unknown, and inapplicable attributes</p>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          <a href="/api/v1/coverage/export/json" target="_blank" class="btn-secondary" style="text-decoration:none; font-size:0.75rem; padding:0.4rem 0.8rem;">Export JSON</a>
+          <a href="/api/v1/coverage/export/csv" target="_blank" class="btn-secondary" style="text-decoration:none; font-size:0.75rem; padding:0.4rem 0.8rem;">Export CSV</a>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem; margin-top:1rem;">
+        <div class="source-card">
+          <span style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase;">Roster Coverage</span>
+          <div id="covRosterCount" style="font-size:1.5rem; font-weight:800; color:#fff;">43 / 43</div>
+          <span id="covRosterPct" style="font-size:0.75rem; color:#00e676; font-weight:700;">100% Ingested</span>
+        </div>
+        <div class="source-card">
+          <span style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase;">Total Moves Cataloged</span>
+          <div id="covTotalMoves" style="font-size:1.5rem; font-weight:800; color:#fff;">—</div>
+          <span style="font-size:0.75rem; color:var(--accent-cyan); font-weight:700;">Verified Seeds</span>
+        </div>
+        <div class="source-card">
+          <span style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase;">Field Completeness</span>
+          <div id="covOverallPct" style="font-size:1.5rem; font-weight:800; color:#fff;">—</div>
+          <span style="font-size:0.75rem; color:var(--accent-gold); font-weight:700;">Applicable Fields Only</span>
+        </div>
+        <div class="source-card">
+          <span style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase;">Duplicate Records</span>
+          <div id="covDuplicates" style="font-size:1.5rem; font-weight:800; color:#fff;">0</div>
+          <span style="font-size:0.75rem; color:#00e676; font-weight:700;">Zero Redundancy</span>
+        </div>
+        <div class="source-card">
+          <span style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase;">Unverified Moves</span>
+          <div id="covUnverified" style="font-size:1.5rem; font-weight:800; color:#fff;">0</div>
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Pending Phase 2 Import</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Audited Data Sources (Section 4) -->
+    <section id="sources" class="section-moves">
+      <div class="section-header-row">
+        <div>
+          <h2 class="section-title">Audited Data Sources &amp; Legal Status</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Compliance audit of 11 external sources detailing licensing, permissions, and rate limits</p>
+        </div>
+      </div>
+
+      <div id="sourcesGrid" class="status-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Tekken 8 Movepedia &amp; Training Assistant — Academic Final Year Project (FYP).</p>
+    <p style="margin-top:0.4rem;">
+      Frame data measurements and community guides curated with credit to 
+      <a href="https://wavu.wiki/" target="_blank">wavu.wiki</a>, 
+      <a href="https://tekkendocs.com/" target="_blank">tekkendocs.com</a>, and 
+      <a href="https://rbnorway.org/" target="_blank">rbnorway.org</a>.
+    </p>
+    <p style="margin-top:0.4rem; font-size:0.75rem;">
+      TEKKEN™8 &amp; © Bandai Namco Entertainment Inc. All character designs, logos, and artwork are trademarks of their respective owners.
+    </p>
+  </footer>
+
+  <script src="/assets/js/app.js"></script>
+</body>
+</html>
