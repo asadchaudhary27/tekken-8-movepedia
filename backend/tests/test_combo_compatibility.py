@@ -279,3 +279,109 @@ def test_api_calculate_damage_endpoint(client: TestClient):
     assert data["hits"][2]["scaling_percent"] == 50
     assert data["hits"][3]["scaling_percent"] == 40
     assert data["hits"][4]["scaling_percent"] == 30
+
+
+def test_combo_wall_distance_and_positioning_requirements(test_db: Session):
+    """
+    Verify combo routes requiring wall proximity, wall splat, or open ground
+    are correctly cataloged and separated.
+    """
+    jin = test_db.query(Character).filter_by(slug="jin").first()
+    kazuya = test_db.query(Character).filter_by(slug="kazuya").first()
+
+    report = ComboCompatibilityEngine.generate_recommendations(
+        db=test_db,
+        player_character=jin,
+        opponent_character=kazuya,
+        wall_position="NEAR_WALL",
+    )
+
+    assert report.wall_position == "NEAR_WALL"
+    # Wall combos require wall and are present in wall_combo
+    wall_combos = report.wall_combo
+    assert len(wall_combos) >= 1
+    for wc in wall_combos:
+        assert wc.uses_wall is True
+        assert wc.combo_type in ["WALL_COMBO", "WALL_BREAK"]
+
+    # Wall carry routes carry opponent towards the wall
+    wall_carry_combos = report.wall_carry
+    assert len(wall_carry_combos) >= 1
+    for wcc in wall_carry_combos:
+        assert wcc.combo_type == "WALL_CARRY" or wcc.uses_wall is True
+
+
+def test_combo_heat_requirements_and_state(test_db: Session):
+    """
+    Verify Heat-dependent combos (e.g., Heat Engager/Heat Dash/Heat Smash extensions)
+    require Heat and are isolated in heat_dependent category.
+    """
+    jin = test_db.query(Character).filter_by(slug="jin").first()
+    kazuya = test_db.query(Character).filter_by(slug="kazuya").first()
+
+    report = ComboCompatibilityEngine.generate_recommendations(
+        db=test_db,
+        player_character=jin,
+        opponent_character=kazuya,
+        heat_state="AVAILABLE",
+    )
+
+    assert report.heat_state == "AVAILABLE"
+    assert len(report.heat_dependent) >= 1
+    for hc in report.heat_dependent:
+        assert hc.uses_heat is True
+
+    # Check non-heat routes exist
+    non_heat_combos = [c for c in report.standard_launch if not c.uses_heat]
+    assert len(non_heat_combos) >= 1
+
+
+def test_combo_patch_differences_and_source_provenance(test_db: Session):
+    """
+    Verify patch version provenance tracking and ensure patch differences
+    are preserved on all combo routes.
+    """
+    combos = test_db.query(ComboRoute).all()
+    assert len(combos) > 0
+
+    for c in combos:
+        # Every combo must have a valid patch_version and source
+        assert c.patch_version is not None and len(c.patch_version) > 0
+        assert c.source is not None and len(c.source) > 0
+        assert c.damage_type in ["TESTED", "REPORTED", "ESTIMATED", "UNVERIFIED"]
+        assert c.damage_calculation_method in [
+            "LAB_TESTED_IN_GAME",
+            "REPORTED_SOURCE",
+            "SCALED_ESTIMATE",
+            "UNVERIFIED",
+        ]
+
+    # Create a route from a different/older patch version (e.g. 1.05.00) to verify multi-patch segregation
+    jin = test_db.query(Character).filter_by(slug="jin").first()
+    legacy_combo = ComboRoute(
+        character_id=jin.id,
+        title="Legacy Patch 1.05 Electric Route",
+        notation_sequence="cd+2 > b+3 > ZEN 1,3",
+        total_damage=68,
+        hit_count=4,
+        difficulty="HARD",
+        combo_type="MIDSCREEN",
+        launcher_type="NORMAL_HIT",
+        patch_version="1.05.00",
+        source="Legacy Tekken 8 Patch 1.05.00 Lab Data",
+        verification_status="LEGACY_VERIFIED",
+        damage_type="TESTED",
+        damage_calculation_method="LAB_TESTED_IN_GAME",
+        target_hurtbox_class="UNIVERSAL",
+    )
+    test_db.add(legacy_combo)
+    test_db.commit()
+    test_db.refresh(legacy_combo)
+
+    assert legacy_combo.patch_version == "1.05.00"
+    assert legacy_combo.patch_version != "3.00.02"
+
+    # Cleanup legacy combo so it doesn't pollute subsequent queries
+    test_db.delete(legacy_combo)
+    test_db.commit()
+

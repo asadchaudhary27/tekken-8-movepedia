@@ -1797,6 +1797,10 @@ function renderComboRecommendations() {
       ? `<span class="combo-tag" style="background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.3); color:#fbbf24;">Target: ${c.target_hurtbox_class} Only</span>`
       : '';
 
+    const wallPositionTag = c.uses_wall
+      ? `<span class="combo-tag" style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); color:#38bdf8;">Wall: ${c.stage_section || (c.combo_type === 'WALL_COMBO' ? 'Wall Splat' : 'Wall Carry')}</span>`
+      : `<span class="combo-tag" style="background:rgba(148,163,184,0.1); border:1px solid rgba(148,163,184,0.2); color:#94a3b8;">Position: Open Ground</span>`;
+
     const starterEnder = (c.starter_move_name || c.ender_move_name)
       ? `
         <div class="combo-starter-ender-row">
@@ -1850,6 +1854,7 @@ function renderComboRecommendations() {
               ${chTag}
               ${stanceTag}
               ${targetHurtboxTag}
+              ${wallPositionTag}
             </div>
           </div>
           <div class="combo-metrics-group">
@@ -1876,6 +1881,11 @@ function renderComboRecommendations() {
           <button type="button" class="btn-reset-record" style="font-size:0.7rem; padding:0.25rem 0.6rem;" onclick="testNotationString('${(c.notation_sequence || '').replace(/'/g, "\\'")}')">
             ⚡ Test in Notation Engine &rarr;
           </button>
+        </div>
+
+        <div class="combo-provenance-meta" style="font-size:0.68rem; color:#94a3b8; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.06); padding-top:0.35rem; margin-top:0.45rem;">
+          <span>🛡️ <strong style="color:#38bdf8;">${c.verification_status}</strong> • Patch: <strong style="color:#e2e8f0;">${c.patch_version}</strong></span>
+          <span>Source: <em>${c.source}</em></span>
         </div>
       </div>
     `;
