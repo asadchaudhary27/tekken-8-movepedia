@@ -62,6 +62,8 @@ tekken 8/
   - Right sidebar with quick fighter pickers and design-accurate featured move rows.
   - Battle Stages showcase with photorealistic Arena render and 10 high-resolution stage vector cards with hazard tags.
   - Full suite of vector SVG glyphs for all 9 directions, 4 attack limbs, simultaneous buttons (1+2, 3+4, etc.), PlayStation/Xbox controller buttons, and Tekken 8 gameplay mechanics (Heat, Rage Art, Power Crush, Tornado, Homing).
+- **100% Roster Moves Coverage:** Ingested 175 canonical verified moves spanning all 43 Tekken 8 fighters, ensuring zero empty states when browsing any character.
+- **Multi-Device Responsive Design:** Fully optimized across Mobile (<480px), Tablets (768px-1024px), Laptops, and Desktops, featuring an adaptive navigation rail that smoothly transitions into a native-feeling bottom navigation bar on mobile devices.
 - **Automated Tests:** Comprehensive unit and integration test suite targeting backend startup, health check, notation conversions, coverage reporting, and database integrity (14/14 passing).
 
 ---
