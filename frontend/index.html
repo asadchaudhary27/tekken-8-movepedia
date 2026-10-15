@@ -74,23 +74,37 @@
 
   <!-- Top Navigation Bar -->
   <header class="navbar">
-    <a href="/" class="brand-container">
-      <img src="/assets/img/tekken8-logo.svg" alt="Tekken 8" class="brand-logo-img">
-      <span class="brand-logo-sub">MOVEPEDIA</span>
-      <span class="nav-patch-badge"><span class="radar-dot"></span> v3.00.02</span>
-    </a>
-    <ul class="nav-links">
+    <div class="nav-brand-group">
+      <button class="nav-mobile-toggle" id="navMobileToggle" aria-label="Toggle Navigation Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <a href="/" class="brand-container">
+        <img src="/assets/img/tekken8-logo.svg" alt="Tekken 8" class="brand-logo-img">
+        <span class="brand-logo-sub">MOVEPEDIA</span>
+        <span class="nav-patch-badge"><span class="radar-dot"></span> v3.00.02</span>
+      </a>
+    </div>
+
+    <ul class="nav-links" id="mainNavLinks">
       <li><a href="#fighters" class="nav-link active">Fighters</a></li>
       <li><a href="#analyzer" class="nav-link" style="color:var(--accent-red); font-weight:700;">Matchup Analyzer</a></li>
       <li><a href="#punish-assistant" class="nav-link" style="color:var(--accent-gold); font-weight:700;">Smart Punish</a></li>
-      <li><a href="#moves" class="nav-link">Moves &amp; Combos</a></li>
-      <li><a href="#moves" class="nav-link">Frame Data</a></li>
+      <li><a href="#moves" class="nav-link">Moves &amp; Frame Data</a></li>
       <li><a href="#stages" class="nav-link">Stages</a></li>
       <li><a href="#coverage" class="nav-link">QA &amp; Coverage</a></li>
       <li><a href="#admin-hub" class="nav-link" style="color:var(--accent-cyan); font-weight:700;">Admin Hub</a></li>
     </ul>
+
     <div class="nav-actions">
-      <button class="btn-auth" onclick="document.getElementById('searchQuickInput').focus();">Login / Sign Up</button>
+      <!-- Universal Attack Button Mapping Toggle (Arcade / PlayStation / Xbox) -->
+      <div class="nav-controller-toggle" id="navControllerToggle" title="Universal Button Mapping Notation">
+        <button type="button" class="nav-ctl-btn active" data-layout="ARCADE" title="Arcade Notation: 1, 2, 3, 4">🕹️ 1·2·3·4</button>
+        <button type="button" class="nav-ctl-btn" data-layout="PLAYSTATION" title="PlayStation Notation: □, △, ✕, ○">🎮 PS</button>
+        <button type="button" class="nav-ctl-btn" data-layout="XBOX" title="Xbox Notation: X, Y, A, B">🎮 XB</button>
+      </div>
+      <button class="btn-auth" onclick="document.getElementById('searchQuickInput').focus();">Search</button>
       <a href="/docs" target="_blank" class="btn-swagger" title="OpenAPI Swagger Spec">API Docs</a>
     </div>
   </header>
@@ -390,7 +404,7 @@
         <!-- Dashboard Content -->
         <div id="matchupDashboardContent" style="display:none;">
 
-          <!-- Top Face-off Banner -->
+          <!-- Top Face-off Banner (Dynamic Stage Backdrop + Fighter Avatars) -->
           <div class="faceoff-hero-banner" id="faceoffHeroBanner">
             <div class="faceoff-char p1">
               <img id="dashP1Img" src="" alt="Player" class="faceoff-img">
@@ -402,7 +416,10 @@
             </div>
 
             <div class="faceoff-stage-center">
-              <div class="faceoff-vs-sign">VS</div>
+              <div class="faceoff-stage-preview-wrap">
+                <img id="dashStageImg" src="/assets/img/stages/arena.jpg" alt="Selected Stage" class="faceoff-stage-thumb">
+                <div class="faceoff-vs-sign">VS</div>
+              </div>
               <div class="faceoff-stage-title" id="dashStageName">—</div>
               <div class="faceoff-stage-location" id="dashStageLocation">—</div>
               <div class="faceoff-stage-hazards" id="dashStageHazards">
@@ -694,6 +711,20 @@
                 <p class="dash-card-sub" id="stageBoundaryDescription">
                   Boundary configuration, destructible hazards, and stage geometry analysis.
                 </p>
+
+                <!-- Stage Real Artwork Photo Banner -->
+                <div class="stage-tactical-photo-card" id="stageTacticalPhotoCard">
+                  <img id="stageTacticalPhotoImg" class="stage-tactical-img" src="/assets/img/stages/arena.jpg" alt="Stage Artwork">
+                  <div class="stage-tactical-photo-overlay">
+                    <div>
+                      <div class="st-photo-name" id="stageTacticalPhotoName">THE ARENA</div>
+                      <div class="st-photo-loc" id="stageTacticalPhotoLoc">Urban Tournament</div>
+                    </div>
+                    <div class="st-photo-hazards" id="stageTacticalPhotoHazards">
+                      <!-- Hazard chips -->
+                    </div>
+                  </div>
+                </div>
 
                 <!-- Tactical Blueprint / Stage Geometry Map or Info Matrix -->
                 <div class="stage-blueprint-container" id="stageBlueprintContainer">

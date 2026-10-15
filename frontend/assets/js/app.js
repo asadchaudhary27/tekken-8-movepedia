@@ -267,9 +267,9 @@ function formatTekkenNotation(raw) {
   if (trimmed.startsWith('<div class="tk-') || trimmed.startsWith('<span class="tk-')) return trimmed;
 
   // Split sequence by major combo step separators (">", "->", "=>", "→")
-  if (trimmed.includes('>') || trimmed.includes('→')) {
+  if (trimmed.includes('>') || trimmed.includes('→') || trimmed.includes('->')) {
     const steps = trimmed.split(/\s*(?:>|->|=>|→)\s*/);
-    return `<div class="tk-combo-sequence">${steps.map(s => formatSingleStep(s)).join('<span class="tk-next-arrow">›</span>')}</div>`;
+    return `<div class="tk-combo-sequence">${steps.map(s => formatSingleStep(s)).join('<span class="tk-next-arrow tk-break-btn" title="Combo Link Step">➔</span>')}</div>`;
   }
 
   return formatSingleStep(trimmed);
@@ -329,9 +329,9 @@ function formatWord(w) {
   let bodyHtml = '<span class="tk-notation-chain">';
   for (let t of subTokens) {
     if (t === ',') {
-      bodyHtml += '<span class="tk-sep-chip">,</span>';
+      bodyHtml += '<span class="tk-sep-chip tk-break-btn" title="Sequence Break (,)">,</span>';
     } else if (t === '~') {
-      bodyHtml += '<span class="tk-sep-chip">~</span>';
+      bodyHtml += '<span class="tk-sep-chip tk-break-btn" title="Slide Input (~)">~</span>';
     } else if (t.trim()) {
       bodyHtml += formatAtom(t.trim());
     }
@@ -398,18 +398,94 @@ function formatDirection(dirStr, strict = false) {
 
 function formatButtons(btnStr) {
   const norm = btnStr.replace(/\s+/g, '');
-  if (norm === '1') return '<span class="tk-btn-chip tk-btn-1" title="Left Punch (1)">1</span>';
-  if (norm === '2') return '<span class="tk-btn-chip tk-btn-2" title="Right Punch (2)">2</span>';
-  if (norm === '3') return '<span class="tk-btn-chip tk-btn-3" title="Left Kick (3)">3</span>';
-  if (norm === '4') return '<span class="tk-btn-chip tk-btn-4" title="Right Kick (4)">4</span>';
-  if (norm === '1+2') return '<span class="tk-btn-chip tk-btn-1-2" title="1+2 (LP+RP)">1+2</span>';
-  if (norm === '3+4') return '<span class="tk-btn-chip tk-btn-3-4" title="3+4 (LK+RK)">3+4</span>';
-  if (norm === '1+4') return '<span class="tk-btn-chip tk-btn-multi" title="1+4 (LP+RK)">1+4</span>';
-  if (norm === '2+3') return '<span class="tk-btn-chip tk-btn-multi" title="2+3 (RP+LK)">2+3</span>';
-  if (norm === '1+3') return '<span class="tk-btn-chip tk-btn-1-2" title="1+3 (Throw)">1+3</span>';
-  if (norm === '2+4') return '<span class="tk-btn-chip tk-btn-3-4" title="2+4 (Throw)">2+4</span>';
-  if (/^[1-4\+]+$/.test(norm)) return `<span class="tk-btn-chip tk-btn-multi">${norm}</span>`;
+  const layout = state.controllerLayout || 'ARCADE';
+
+  // Authentic Tekken button mappings with tactile arcade styling
+  const mapping = {
+    ARCADE: {
+      '1': { text: '1', title: '1 (Left Punch)', cls: 'tk-btn-1' },
+      '2': { text: '2', title: '2 (Right Punch)', cls: 'tk-btn-2' },
+      '3': { text: '3', title: '3 (Left Kick)', cls: 'tk-btn-3' },
+      '4': { text: '4', title: '4 (Right Kick)', cls: 'tk-btn-4' },
+      '1+2': { text: '1+2', title: '1+2 (LP+RP)', cls: 'tk-btn-1-2' },
+      '3+4': { text: '3+4', title: '3+4 (LK+RK)', cls: 'tk-btn-3-4' },
+      '1+3': { text: '1+3', title: '1+3 (Throw)', cls: 'tk-btn-1-2' },
+      '2+4': { text: '2+4', title: '2+4 (Throw)', cls: 'tk-btn-3-4' },
+      '1+4': { text: '1+4', title: '1+4 (LP+RK)', cls: 'tk-btn-multi' },
+      '2+3': { text: '2+3', title: '2+3 (RP+LK)', cls: 'tk-btn-multi' },
+      '1+2+3': { text: '1+2+3', title: '1+2+3', cls: 'tk-btn-multi' },
+      '1+2+4': { text: '1+2+4', title: '1+2+4', cls: 'tk-btn-multi' },
+      '1+2+3+4': { text: 'Ki', title: 'Ki Charge (1+2+3+4)', cls: 'tk-btn-ki' },
+    },
+    PLAYSTATION: {
+      '1': { text: '□', title: 'Square (Left Punch)', cls: 'tk-btn-1 tk-btn-ps' },
+      '2': { text: '△', title: 'Triangle (Right Punch)', cls: 'tk-btn-2 tk-btn-ps' },
+      '3': { text: '✕', title: 'Cross (Left Kick)', cls: 'tk-btn-3 tk-btn-ps' },
+      '4': { text: '○', title: 'Circle (Right Kick)', cls: 'tk-btn-4 tk-btn-ps' },
+      '1+2': { text: '□+△', title: 'Square + Triangle (LP+RP)', cls: 'tk-btn-1-2 tk-btn-ps' },
+      '3+4': { text: '✕+○', title: 'Cross + Circle (LK+RK)', cls: 'tk-btn-3-4 tk-btn-ps' },
+      '1+3': { text: '□+✕', title: 'Throw (Square + Cross)', cls: 'tk-btn-1-2 tk-btn-ps' },
+      '2+4': { text: '△+○', title: 'Throw (Triangle + Circle)', cls: 'tk-btn-3-4 tk-btn-ps' },
+      '1+4': { text: '□+○', title: 'Square + Circle', cls: 'tk-btn-multi tk-btn-ps' },
+      '2+3': { text: '△+✕', title: 'Triangle + Cross', cls: 'tk-btn-multi tk-btn-ps' },
+      '1+2+3+4': { text: 'Ki', title: 'Ki Charge', cls: 'tk-btn-ki tk-btn-ps' },
+    },
+    XBOX: {
+      '1': { text: 'X', title: 'X Button (Left Punch)', cls: 'tk-btn-1 tk-btn-xb' },
+      '2': { text: 'Y', title: 'Y Button (Right Punch)', cls: 'tk-btn-2 tk-btn-xb' },
+      '3': { text: 'A', title: 'A Button (Left Kick)', cls: 'tk-btn-3 tk-btn-xb' },
+      '4': { text: 'B', title: 'B Button (Right Kick)', cls: 'tk-btn-4 tk-btn-xb' },
+      '1+2': { text: 'X+Y', title: 'X + Y Buttons (LP+RP)', cls: 'tk-btn-1-2 tk-btn-xb' },
+      '3+4': { text: 'A+B', title: 'A + B Buttons (LK+RK)', cls: 'tk-btn-3-4 tk-btn-xb' },
+      '1+3': { text: 'X+A', title: 'Throw (X + A)', cls: 'tk-btn-1-2 tk-btn-xb' },
+      '2+4': { text: 'Y+B', title: 'Throw (Y + B)', cls: 'tk-btn-3-4 tk-btn-xb' },
+      '1+4': { text: 'X+B', title: 'X + B Buttons', cls: 'tk-btn-multi tk-btn-xb' },
+      '2+3': { text: 'Y+A', title: 'Y + A Buttons', cls: 'tk-btn-multi tk-btn-xb' },
+      '1+2+3+4': { text: 'Ki', title: 'Ki Charge', cls: 'tk-btn-ki tk-btn-xb' },
+    }
+  };
+
+  const currentMap = mapping[layout] || mapping.ARCADE;
+  if (currentMap[norm]) {
+    const item = currentMap[norm];
+    return `<span class="tk-btn-chip ${item.cls}" title="${item.title}">${item.text}</span>`;
+  }
+
+  if (/^[1-4\+]+$/.test(norm)) {
+    if (layout === 'PLAYSTATION') {
+      const psCustom = norm.replace(/1/g, '□').replace(/2/g, '△').replace(/3/g, '✕').replace(/4/g, '○');
+      return `<span class="tk-btn-chip tk-btn-multi tk-btn-ps">${psCustom}</span>`;
+    } else if (layout === 'XBOX') {
+      const xbCustom = norm.replace(/1/g, 'X').replace(/2/g, 'Y').replace(/3/g, 'A').replace(/4/g, 'B');
+      return `<span class="tk-btn-chip tk-btn-multi tk-btn-xb">${xbCustom}</span>`;
+    }
+    return `<span class="tk-btn-chip tk-btn-multi">${norm}</span>`;
+  }
   return null;
+}
+
+// Universal Button Mapping Switcher (Re-renders all notation in real-time)
+function setControllerLayout(layout) {
+  state.controllerLayout = layout;
+  try {
+    localStorage.setItem('tekken8_controller_layout', layout);
+  } catch (e) {}
+
+  // Synchronize all toggle buttons across navbar and notation section
+  document.querySelectorAll('.ctl-btn, .nav-ctl-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.layout === layout);
+  });
+
+  // Re-render move tables, combos, punishes, and featured moves
+  if (state.movesPagination && state.movesPagination.filteredMoves) {
+    renderMovesTable(state.movesPagination.filteredMoves, false);
+  }
+  renderFeaturedMoves();
+  if (state.lastMatchupData) {
+    renderMatchupDashboard(state.lastMatchupData);
+  }
+  renderComboRecommendations();
+  updateNotationDisplay();
 }
 
 // 1. Initial Load
@@ -429,21 +505,38 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Event Listeners Setup
 function setupEventListeners() {
+  // Restore saved controller layout (Arcade, PlayStation, Xbox)
+  const savedLayout = localStorage.getItem('tekken8_controller_layout') || 'ARCADE';
+  state.controllerLayout = savedLayout;
+  document.querySelectorAll('.ctl-btn, .nav-ctl-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.layout === savedLayout);
+    btn.addEventListener('click', (e) => {
+      const layout = e.currentTarget.dataset.layout;
+      if (layout) setControllerLayout(layout);
+    });
+  });
+
+  // Mobile Menu Toggle
+  const mobileToggle = document.getElementById('navMobileToggle');
+  const mainNav = document.getElementById('mainNavLinks');
+  if (mobileToggle && mainNav) {
+    mobileToggle.addEventListener('click', () => {
+      mainNav.classList.toggle('mobile-open');
+      mobileToggle.classList.toggle('active');
+    });
+    mainNav.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mainNav.classList.remove('mobile-open');
+        mobileToggle.classList.remove('active');
+      });
+    });
+  }
+
   // Notation Input
   const notInput = document.getElementById('notationInput');
   if (notInput) {
     notInput.addEventListener('input', debounce(updateNotationDisplay, 150));
   }
-
-  // Controller Toggles
-  document.querySelectorAll('.ctl-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      document.querySelectorAll('.ctl-btn').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      state.controllerLayout = e.target.dataset.layout;
-      updateNotationDisplay();
-    });
-  });
 
   // Carousel Filters
   document.querySelectorAll('#carouselFilterPills .filter-btn').forEach(btn => {
@@ -744,6 +837,13 @@ async function selectCharacter(slug) {
     titleEl.textContent = `${char.name.toUpperCase()} — MOVES & FRAME DATA`;
   }
 
+  // Synchronize Player 1 in Matchup Analyzer
+  const pSelect = document.getElementById('playerSelect');
+  if (pSelect && pSelect.value != char.id) {
+    pSelect.value = char.id;
+    updatePlayerPreview();
+  }
+
   // Fetch moves for this fighter
   await loadMovesForCharacter(char.id);
 }
@@ -896,24 +996,67 @@ async function loadStages() {
   renderStages();
 }
 
+function selectStage(stageId) {
+  const sSelect = document.getElementById('stageSelect');
+  if (sSelect) {
+    sSelect.value = stageId;
+    updateStagePreview();
+  }
+  state.selectedStageId = stageId;
+  document.querySelectorAll('.stage-card').forEach(c => c.classList.remove('active'));
+  const sc = document.getElementById(`stage_card_${stageId}`);
+  if (sc) sc.classList.add('active');
+
+  // Smooth scroll to Matchup Analyzer
+  const analyzerEl = document.getElementById('analyzer');
+  if (analyzerEl) {
+    analyzerEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
 function renderStages() {
   const container = document.getElementById('stagesGrid');
   if (!container) return;
+
+  const currentSelect = document.getElementById('stageSelect');
+  const activeStageId = currentSelect ? parseInt(currentSelect.value) : (state.selectedStageId || 1);
 
   container.innerHTML = state.stages.map(s => {
     const hazardsList = s.hazards || [];
     const imgSrc = s.image_url || s.image || '/assets/img/stages/arena.jpg';
     const locationStr = s.location || 'Official Arena';
     const gimmickStr = s.notes || s.special_mechanics || s.gimmick || (s.has_walls ? 'Walled tournament battleground' : 'Infinite arena');
+    const isSelected = s.id === activeStageId;
+
+    // Destructible Hazard Badges
+    const hazardBadges = [];
+    if (s.wall_break) hazardBadges.push('<span class="stage-overlay-badge badge-wallbreak">WALL BREAK</span>');
+    if (s.floor_break) hazardBadges.push('<span class="stage-overlay-badge badge-floorbreak">FLOOR BREAK</span>');
+    if (s.balcony_break) hazardBadges.push('<span class="stage-overlay-badge badge-balcony">BALCONY BREAK</span>');
+    if (!s.has_walls) hazardBadges.push('<span class="stage-overlay-badge badge-infinite">INFINITE</span>');
 
     return `
-      <div class="stage-card" title="${gimmickStr}">
+      <div class="stage-card ${isSelected ? 'active' : ''}" 
+           id="stage_card_${s.id}" 
+           onclick="selectStage(${s.id})"
+           title="${gimmickStr}">
         <div class="stage-img-wrap">
-          <img class="stage-img" src="${imgSrc}" alt="${s.name}" onerror="this.src='/assets/img/stages/arena.jpg'">
+          <img class="stage-img" src="${imgSrc}" alt="${s.name}" loading="lazy" onerror="this.src='/assets/img/stages/arena.jpg'">
+          <div class="stage-img-overlay-badges">
+            ${hazardBadges.join('')}
+          </div>
+          ${isSelected ? '<div class="stage-selected-indicator"><span>ACTIVE ARENA</span></div>' : ''}
         </div>
         <div class="stage-meta">
-          <div class="stage-name">${s.name}</div>
-          <div class="stage-location">${locationStr}</div>
+          <div class="stage-meta-header">
+            <div>
+              <div class="stage-name">${s.name}</div>
+              <div class="stage-location">${locationStr}</div>
+            </div>
+            <button class="stage-select-btn ${isSelected ? 'selected' : ''}" type="button">
+              ${isSelected ? 'Selected' : 'Select'}
+            </button>
+          </div>
           <div class="stage-hazards">
             ${hazardsList.map(h => `<span class="hazard-pill">${h}</span>`).join('')}
           </div>
@@ -1350,10 +1493,36 @@ function updateStagePreview() {
   const stageId = parseInt(sSelect.value);
   const stage = state.stages.find(s => s.id === stageId);
   if (stage) {
+    const stageImgSrc = stage.image_url || stage.image || '/assets/img/stages/arena.jpg';
     if (thumb) {
-      thumb.src = stage.image_url || stage.image || '/assets/img/stages/arena.jpg';
+      thumb.src = stageImgSrc;
       thumb.onerror = () => { thumb.src = '/assets/img/stages/arena.jpg'; };
     }
+    const dashStageImg = document.getElementById('dashStageImg');
+    if (dashStageImg) {
+      dashStageImg.src = stageImgSrc;
+      dashStageImg.onerror = () => { dashStageImg.src = '/assets/img/stages/arena.jpg'; };
+    }
+    const faceoffBanner = document.getElementById('faceoffHeroBanner');
+    if (faceoffBanner) {
+      faceoffBanner.style.backgroundImage = `linear-gradient(180deg, rgba(14, 17, 24, 0.78) 0%, rgba(10, 12, 18, 0.94) 100%), radial-gradient(circle at 50% 50%, rgba(255, 30, 56, 0.12), transparent 70%), url('${stageImgSrc}')`;
+      faceoffBanner.style.backgroundSize = 'cover';
+      faceoffBanner.style.backgroundPosition = 'center';
+    }
+    const stagePhotoImg = document.getElementById('stageTacticalPhotoImg');
+    if (stagePhotoImg) {
+      stagePhotoImg.src = stageImgSrc;
+      stagePhotoImg.onerror = () => { stagePhotoImg.src = '/assets/img/stages/arena.jpg'; };
+    }
+    const stagePhotoName = document.getElementById('stageTacticalPhotoName');
+    if (stagePhotoName) {
+      stagePhotoName.textContent = stage.name.toUpperCase();
+    }
+    const stagePhotoLoc = document.getElementById('stageTacticalPhotoLoc');
+    if (stagePhotoLoc) {
+      stagePhotoLoc.textContent = stage.location || 'Official Arena';
+    }
+
     if (hazardsBox) {
       const hazards = stage.hazards || [];
       if (hazards.length === 0) {
@@ -1365,6 +1534,11 @@ function updateStagePreview() {
         }).join('');
       }
     }
+
+    // Highlight active card in stages showcase
+    document.querySelectorAll('.stage-card').forEach(c => c.classList.remove('active'));
+    const sc = document.getElementById(`stage_card_${stageId}`);
+    if (sc) sc.classList.add('active');
   }
 }
 
@@ -1535,7 +1709,9 @@ function renderMatchupDashboard(data) {
   if (errorEl) errorEl.style.display = 'none';
   if (dashEl) dashEl.style.display = 'block';
 
-  // 1. Face-off Hero Banner
+  state.lastMatchupData = data;
+
+  // 1. Face-off Hero Banner (Stage Image Backdrop & Fighter Cards)
   const p1 = data.player_character;
   const p2 = data.opponent_character;
   const st = data.stage;
@@ -1547,6 +1723,19 @@ function renderMatchupDashboard(data) {
   document.getElementById('dashP2Img').src = p2.avatar_url || '/assets/avatars/kazuya-brand-256-BInk9tTm.webp';
   document.getElementById('dashP2Name').textContent = p2.name;
   document.getElementById('dashP2Archetype').textContent = p2.archetype || 'Fighter';
+
+  const stageImgSrc = (st && st.image_url) ? st.image_url : '/assets/img/stages/arena.jpg';
+  const dashStageImg = document.getElementById('dashStageImg');
+  if (dashStageImg) {
+    dashStageImg.src = stageImgSrc;
+    dashStageImg.onerror = () => { dashStageImg.src = '/assets/img/stages/arena.jpg'; };
+  }
+  const faceoffBanner = document.getElementById('faceoffHeroBanner');
+  if (faceoffBanner) {
+    faceoffBanner.style.backgroundImage = `linear-gradient(180deg, rgba(14, 17, 24, 0.78) 0%, rgba(10, 12, 18, 0.94) 100%), radial-gradient(circle at 50% 50%, rgba(255, 30, 56, 0.12), transparent 70%), url('${stageImgSrc}')`;
+    faceoffBanner.style.backgroundSize = 'cover';
+    faceoffBanner.style.backgroundPosition = 'center';
+  }
 
   document.getElementById('dashStageName').textContent = st.name;
   document.getElementById('dashStageLocation').textContent = st.location || 'Tekken 8 Arena';
@@ -1840,11 +2029,31 @@ function renderStageStrategyUI(report) {
   const wallPositioningEl = document.getElementById('wallPositioningAdviceText');
   const hazardList = document.getElementById('stageHazardInteractionsList');
 
-  // Dimensions & Description
-  if (dimPill) dimPill.textContent = report.wall_distance || 'Standard (24m)';
-  if (boundaryDesc) boundaryDesc.textContent = report.layout_description;
-
   const stageObj = (report && report.stage) ? report.stage : {};
+
+  // Stage Real Artwork Photo Banner
+  const stagePhotoImg = document.getElementById('stageTacticalPhotoImg');
+  if (stagePhotoImg) {
+    stagePhotoImg.src = stageObj.image_url || '/assets/img/stages/arena.jpg';
+    stagePhotoImg.onerror = () => { stagePhotoImg.src = '/assets/img/stages/arena.jpg'; };
+  }
+  const stagePhotoName = document.getElementById('stageTacticalPhotoName');
+  if (stagePhotoName) {
+    stagePhotoName.textContent = (stageObj.name || 'Selected Arena').toUpperCase();
+  }
+  const stagePhotoLoc = document.getElementById('stageTacticalPhotoLoc');
+  if (stagePhotoLoc) {
+    stagePhotoLoc.textContent = stageObj.location || 'Official Arena';
+  }
+  const stagePhotoHazards = document.getElementById('stageTacticalPhotoHazards');
+  if (stagePhotoHazards) {
+    const badges = [];
+    if (stageObj.wall_break) badges.push('<span class="stage-overlay-badge badge-wallbreak">WALL BREAK</span>');
+    if (stageObj.floor_break) badges.push('<span class="stage-overlay-badge badge-floorbreak">FLOOR BREAK</span>');
+    if (stageObj.balcony_break) badges.push('<span class="stage-overlay-badge badge-balcony">BALCONY BREAK</span>');
+    if (!stageObj.has_walls) badges.push('<span class="stage-overlay-badge badge-infinite">INFINITE</span>');
+    stagePhotoHazards.innerHTML = badges.join('');
+  }
 
   // Danger Badge
   if (dangerBadge) {
