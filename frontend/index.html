@@ -787,38 +787,64 @@
                 </div>
               </div>
 
-              <!-- Stage-Aware Combo Engine & Multi-Faceted Filter Toolbar -->
+              <!-- Phase 5: Character-Specific Combo & Juggle Compatibility Engine -->
               <div class="dash-card combo-engine-card">
                 <div class="dash-card-header">
                   <div class="dash-card-title">
-                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="#00e676" stroke-width="2.5" fill="none">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="#00e676" stroke-width="2.5" fill="none">
                       <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                     </svg>
-                    <span>STAGE-AWARE COMBO REPERTOIRE</span>
+                    <span>CHARACTER-SPECIFIC JUGGLE COMPATIBILITY &amp; COMBO ENGINE</span>
                   </div>
-                  <div style="display:flex; gap:0.5rem; align-items:center;">
+                  <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+                    <button type="button" class="btn-scaling-calculator-open" id="btnOpenScalingCalc" onclick="openDamageCalculatorSandbox()">
+                      📊 Damage Scaling Sandbox
+                    </button>
                     <span class="dash-card-pill" id="comboCountPill">0 Verified Combos</span>
                   </div>
                 </div>
-                <p class="dash-card-sub">
-                  Combos filtered specifically for stage boundary dimensions, wall distance, and active hazard breaks.
-                </p>
 
-                <!-- Filter Toolbar -->
+                <!-- Opponent Hurtbox Archetype & Quirks Intelligence Bar -->
+                <div class="opponent-hurtbox-banner" id="opponentHurtboxBanner">
+                  <div class="hurtbox-badge-col">
+                    <span class="hurtbox-badge-tag" id="oppHurtboxClassBadge">MALE_STANDARD HURTBOX</span>
+                    <div class="hurtbox-badge-sub" id="oppHurtboxTargetName">Target: Kazuya Mishima</div>
+                  </div>
+                  <div class="hurtbox-details-col">
+                    <p class="hurtbox-desc" id="oppHurtboxDesc">
+                      Baseline reference hurtbox. Universal combo routes connect with standard frame timing.
+                    </p>
+                    <div class="hurtbox-quirks-wrap" id="oppHurtboxQuirksList">
+                      <!-- Rendered dynamically -->
+                    </div>
+                  </div>
+                  <div class="hurtbox-provenance-col">
+                    <span class="hurtbox-prov-badge">🛡️ NON-NUMERIC MODEL</span>
+                    <span class="hurtbox-prov-note">Real Tekken 8 hurtbox geometry • Zero artificial weight scaling</span>
+                  </div>
+                </div>
+
+                <!-- 10 Analytical Recommendation Category Filter Pills -->
                 <div class="combo-filter-toolbar">
-                  <!-- Category Pills -->
                   <div class="combo-type-pills" id="comboTypePills">
-                    <button type="button" class="combo-filter-btn active" data-type="ALL">All Categories</button>
-                    <button type="button" class="combo-filter-btn" data-type="MIDSCREEN">Midscreen</button>
-                    <button type="button" class="combo-filter-btn" data-type="WALL_CARRY">Wall Carry</button>
-                    <button type="button" class="combo-filter-btn" data-type="WALL_COMBO">Wall Combo</button>
-                    <button type="button" class="combo-filter-btn" data-type="WALL_BREAK">Wall Break</button>
-                    <button type="button" class="combo-filter-btn" data-type="FLOOR_BREAK">Floor Break</button>
-                    <button type="button" class="combo-filter-btn" data-type="BALCONY_BREAK">Balcony Break</button>
+                    <button type="button" class="combo-filter-btn active" data-cat="ALL">All Recommended</button>
+                    <button type="button" class="combo-filter-btn" data-cat="beginner_friendly">🔰 Beginner-Friendly</button>
+                    <button type="button" class="combo-filter-btn" data-cat="standard_launch">⚡ Standard Launch</button>
+                    <button type="button" class="combo-filter-btn" data-cat="high_damage_optimal">💥 High-Dmg Optimal</button>
+                    <button type="button" class="combo-filter-btn" data-cat="wall_carry">🧱 Wall Carry</button>
+                    <button type="button" class="combo-filter-btn" data-cat="wall_combo">🥊 Wall Combo</button>
+                    <button type="button" class="combo-filter-btn" data-cat="heat_dependent">🔥 Heat Dependent</button>
+                    <button type="button" class="combo-filter-btn" data-cat="counter_hit">🎯 Counter-Hit</button>
+                    <button type="button" class="combo-filter-btn" data-cat="character_specific">🐻 Character-Specific</button>
+                    <button type="button" class="combo-filter-btn" data-cat="stage_break">🏛️ Stage Break</button>
+                    <button type="button" class="combo-filter-btn" data-cat="alternative_routes">🔀 Easier Alternatives</button>
                   </div>
 
-                  <!-- Modifier Toggles -->
+                  <!-- Modifier Filters Row -->
                   <div class="combo-modifier-row">
+                    <div class="combo-search-field">
+                      <input type="text" id="comboSearchInput" class="combo-search-input" placeholder="Search combo by move, starter, or notation...">
+                    </div>
                     <label class="combo-check-label">
                       <input type="checkbox" id="comboCheckHeat">
                       <span>Heat Required</span>
@@ -834,9 +860,30 @@
                         <option value="EASY">Easy</option>
                         <option value="MEDIUM">Medium</option>
                         <option value="HARD">Hard</option>
+                        <option value="OPTIMAL">Optimal</option>
+                      </select>
+                    </div>
+                    <div class="combo-diff-select-wrap">
+                      <label for="comboHurtboxFilter">Target Profile:</label>
+                      <select id="comboHurtboxFilter" class="combo-diff-select">
+                        <option value="ALL">All Targets</option>
+                        <option value="UNIVERSAL">Universal Only</option>
+                        <option value="BEARS">Bears (Kuma/Panda)</option>
+                        <option value="FEMALE_COMPACT">Compact / Female</option>
+                        <option value="BIG">Big (Jack-8/King)</option>
                       </select>
                     </div>
                   </div>
+                </div>
+
+                <!-- Compatibility Legend / Status Bar -->
+                <div class="combo-compat-legend-bar">
+                  <span class="legend-title">Opponent Compatibility:</span>
+                  <span class="compat-legend-item verified">● Verified For Opponent</span>
+                  <span class="compat-legend-item tested">● Tested Under Conditions</span>
+                  <span class="compat-legend-item reported">● Reported Untested</span>
+                  <span class="compat-legend-item unknown">● Unknown (Default)</span>
+                  <span class="compat-legend-item incompatible">● Documented Incompatible</span>
                 </div>
 
                 <!-- Combo List Container -->
@@ -1360,6 +1407,107 @@
           </div>
         </div>
 
+    <!-- ==========================================================================
+         Phase 5: Damage Scaling & Mechanics Modal
+         ========================================================================== -->
+    <div id="damageScalingModal" class="practice-modal-backdrop" style="display:none;">
+      <div class="practice-modal-card scaling-modal-card">
+        <div class="practice-modal-header">
+          <div class="pm-title-wrap">
+            <span class="pm-badge" style="background:#00e676; color:#000;">TEKKEN 8 DAMAGE DYNAMICS</span>
+            <h3 class="pm-title" id="scalingModalComboTitle">AERIAL JUGGLE DAMAGE SCALING BREAKDOWN</h3>
+          </div>
+          <button class="btn-modal-close" id="btnCloseScalingModal" type="button" onclick="closeDamageScalingModal()">&times;</button>
+        </div>
+
+        <div class="scaling-modal-body">
+          <!-- Scaling Formula Banner -->
+          <div class="scaling-formula-banner">
+            <div class="sfb-header">
+              <svg viewBox="0 0 24 24" width="16" height="16" stroke="var(--accent-gold)" stroke-width="2.5" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <span>VERIFIED JUGGLE SCALING RULE (ZERO BLIND SUMMATION)</span>
+            </div>
+            <div class="sfb-steps">
+              <div class="sfb-step"><span class="step-num">HIT 1</span><span class="step-pct">100% (120% CH)</span></div>
+              <span class="sfb-arr">➔</span>
+              <div class="sfb-step"><span class="step-num">HIT 2</span><span class="step-pct">70%</span></div>
+              <span class="sfb-arr">➔</span>
+              <div class="sfb-step"><span class="step-num">HIT 3</span><span class="step-pct">50%</span></div>
+              <span class="sfb-arr">➔</span>
+              <div class="sfb-step"><span class="step-num">HIT 4</span><span class="step-pct">40%</span></div>
+              <span class="sfb-arr">➔</span>
+              <div class="sfb-step floor"><span class="step-num">HIT 5+</span><span class="step-pct">30% (FLOOR)</span></div>
+            </div>
+            <p class="sfb-explanation" id="scalingModalExplanation">
+              Tekken 8 progressively dampens hit damage during aerial juggles. Blind summation (e.g. 20+15+25=60) drastically overstates damage.
+            </p>
+          </div>
+
+          <!-- Comparison Metrics Bar -->
+          <div class="scaling-comparison-grid">
+            <div class="scaling-comp-card unscaled">
+              <div class="scc-label">BLIND RAW SUM</div>
+              <div class="scc-val" id="scalingRawSumVal">— DMG</div>
+              <div class="scc-note">Unscaled move damages added</div>
+            </div>
+            <div class="scaling-comp-card scaled">
+              <div class="scc-label">VERIFIED SCALED TOTAL</div>
+              <div class="scc-val" id="scalingScaledVal">— DMG</div>
+              <div class="scc-note">With Tekken 8 decay decay curve</div>
+            </div>
+            <div class="scaling-comp-card in-game">
+              <div class="scc-label">IN-GAME TESTED</div>
+              <div class="scc-val" id="scalingTestedVal">— DMG</div>
+              <div class="scc-note" id="scalingDamageTypeBadge">TESTED IN LAB</div>
+            </div>
+            <div class="scaling-comp-card delta">
+              <div class="scc-label">AVOIDED OVERESTIMATION</div>
+              <div class="scc-val" id="scalingOverestimationVal">+0 DMG</div>
+              <div class="scc-note">False damage prevented</div>
+            </div>
+          </div>
+
+          <!-- Hit-by-Hit Table -->
+          <div class="scaling-table-wrap">
+            <table class="scaling-table">
+              <thead>
+                <tr>
+                  <th>Hit #</th>
+                  <th>Notation / Step</th>
+                  <th>Raw Dmg</th>
+                  <th>Scaling %</th>
+                  <th>Scaled Output</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody id="scalingTableBody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Interactive Sandbox Section -->
+          <div class="scaling-sandbox-box">
+            <div class="sandbox-header">
+              <div style="font-weight:700; color:#fff; font-size:0.9rem;">🧪 INTERACTIVE SCALING LAB SANDBOX</div>
+              <label class="combo-check-label" style="font-size:0.75rem;">
+                <input type="checkbox" id="sandboxCheckCH" onchange="recalculateSandbox()">
+                <span>Counter-Hit Starter (120%)</span>
+              </label>
+            </div>
+            <div class="sandbox-inputs-row" id="sandboxHitsContainer">
+              <!-- Dynamically populated hit inputs -->
+            </div>
+            <div class="sandbox-actions-row">
+              <button type="button" class="btn-tb-reset" onclick="addSandboxHit()">+ Add Hit</button>
+              <button type="button" class="btn-tb-reset" onclick="resetSandboxHits()">Reset Sandbox</button>
+              <div style="margin-left:auto; font-weight:800; color:var(--accent-gold);" id="sandboxLiveResult">
+                Result: 0 Scaled / 0 Raw
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
 

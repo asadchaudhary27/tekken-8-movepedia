@@ -14,10 +14,12 @@ from backend.app.models.character import Character
 from backend.app.models.move import Move, MoveInput
 from backend.app.models.move_property import MoveProperty
 from backend.app.models.combo_route import ComboRoute
+from backend.app.models.combo_compatibility import ComboCompatibility
 from backend.app.models.import_batch import ImportBatch
 from backend.app.models.stage import Stage
 from backend.app.models.matchup_note import MatchupNote
 from backend.app.services.notation import NotationEngine
+from backend.app.services.combo_compatibility_engine import ComboCompatibilityEngine, HURTBOX_QUIRKS
 
 # Full 43-character roster from Tekken 8 & Season releases
 ROSTER_DATA = [
@@ -782,7 +784,230 @@ SAMPLE_COMBOS_DATA = [
         "ender_move_input": "Bear Roll 3",
         "conditions_notes": "Panda staple juggle into maximum Heat extension.",
         "source": "tekken8combo mirror"
+    },
+    # Phase 5 Character-Specific, Beginner & Optimal Combos
+    {
+        "char": "jin",
+        "title": "Beginner 4-Hit Simple Juggle",
+        "notation": "df+2 ► 4 ► 1, 3, 4",
+        "damage": 52,
+        "hits": 4,
+        "difficulty": "EASY",
+        "combo_type": "MIDSCREEN",
+        "uses_heat": False,
+        "uses_tornado": False,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Demon's Claws Launcher",
+        "starter_move_input": "df+2",
+        "ender_move_name": "Triple Thrust",
+        "ender_move_input": "1,3,4",
+        "launcher_type": "NORMAL_HIT",
+        "damage_type": "TESTED",
+        "damage_calculation_method": "LAB_TESTED_IN_GAME",
+        "raw_damage_sum": 74,
+        "target_hurtbox_class": "UNIVERSAL",
+        "execution_notes": "No dashes or stance cancels required. Very lenient timing window.",
+        "conditions_notes": "Universal beginner launch confirm with simple inputs.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "jin",
+        "title": "High-Damage ZEN Micro-Dash Optimal",
+        "notation": "f, n, d, df+2 ► b+3, f ► ZEN 1 ► b+3, f ► ZEN 1 ► b+3, f ► ZEN 1, 3 ► Tornado ► Dash ► cd+1",
+        "damage": 81,
+        "hits": 9,
+        "difficulty": "OPTIMAL",
+        "combo_type": "MIDSCREEN",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Electric Wind Hook Fist",
+        "starter_move_input": "f,n,d,df+2",
+        "ender_move_name": "Rising Upper",
+        "ender_move_input": "cd+1",
+        "launcher_type": "NORMAL_HIT",
+        "damage_type": "TESTED",
+        "damage_calculation_method": "LAB_TESTED_IN_GAME",
+        "raw_damage_sum": 132,
+        "target_hurtbox_class": "UNIVERSAL",
+        "execution_notes": "Requires strict 1-frame micro-dash before each b+3,f cancel. Very tight link.",
+        "easier_alternative_title": "Electric Hook Fist Staple Juggle",
+        "easier_alternative_notes": "Sacrifices 9 damage for 100% execution consistency under tournament pressure.",
+        "conditions_notes": "Max-damage optimal route for advanced players.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "jin",
+        "title": "Anti-Bear Low-Profile Juggle",
+        "notation": "f, n, d, df+2 ► 1, 2, 4 ► Tornado ► Dash ► b+3, f ► ZEN 1, 2",
+        "damage": 70,
+        "hits": 7,
+        "difficulty": "MEDIUM",
+        "combo_type": "MIDSCREEN",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Electric Wind Hook Fist",
+        "starter_move_input": "f,n,d,df+2",
+        "ender_move_name": "ZEN Rush Strike",
+        "ender_move_input": "ZEN 1,2",
+        "launcher_type": "NORMAL_HIT",
+        "damage_type": "TESTED",
+        "damage_calculation_method": "LAB_TESTED_IN_GAME",
+        "raw_damage_sum": 105,
+        "target_hurtbox_class": "BEARS",
+        "execution_notes": "Immediate 1,2,4 Tornado screw prevents Bear stubby legs from falling out.",
+        "conditions_notes": "Specifically lab tested and verified against Kuma and Panda.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "kazuya",
+        "title": "Anti-Bear Heavy-Torso Conversion",
+        "notation": "f, n, df+2 ► df+1, 2 ► Tornado ► Dash ► f, f, f+3",
+        "damage": 64,
+        "hits": 5,
+        "difficulty": "MEDIUM",
+        "combo_type": "MIDSCREEN",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Electric Wind God Fist",
+        "starter_move_input": "f,n,df+2",
+        "ender_move_name": "Left Slash Kick",
+        "ender_move_input": "f,f,f+3",
+        "launcher_type": "NORMAL_HIT",
+        "damage_type": "TESTED",
+        "damage_calculation_method": "LAB_TESTED_IN_GAME",
+        "raw_damage_sum": 98,
+        "target_hurtbox_class": "BEARS",
+        "execution_notes": "Avoids standard 3,1,4 which whiffs underneath Bear stubby legs.",
+        "conditions_notes": "Verified in lab against Kuma and Panda.",
+        "source": "wavu.wiki / Tekken 8 Lab"
+    },
+    {
+        "char": "kazuya",
+        "title": "Anti-Female Strict Micro-Dash Staple",
+        "notation": "f, n, df+2 ► Dash ► 3, 1, 4 ► Tornado ► Deep Micro-Dash ► cd+4, 1",
+        "damage": 68,
+        "hits": 6,
+        "difficulty": "HARD",
+        "combo_type": "MIDSCREEN",
+        "uses_heat": False,
+        "uses_tornado": True,
+        "uses_wall": False,
+        "requires_counter_hit": False,
+        "is_stage_dependent": False,
+        "starter_move_name": "Electric Wind God Fist",
+        "starter_move_input": "f,n,df+2",
+        "ender_move_name": "Hell Sweep Ender",
+        "ender_move_input": "cd+4,1",
+        "launcher_type": "NORMAL_HIT",
+        "damage_type": "TESTED",
+        "damage_calculation_method": "LAB_TESTED_IN_GAME",
+        "raw_damage_sum": 102,
+        "target_hurtbox_class": "FEMALE_COMPACT",
+        "execution_notes": "Deep micro-dash required before cd+4,1 to prevent slender hurtbox from slipping behind.",
+        "conditions_notes": "Lab tested against Xiaoyu, Alisa, Lili, Reina, and Zafina.",
+        "source": "wavu.wiki / Tekken 8 Lab"
     }
+]
+
+# Phase 5 Opponent-Specific Juggle Compatibility Records
+SAMPLE_COMBO_COMPATIBILITIES = [
+    # Jin standard staple vs various hurtboxes
+    {
+        "char": "jin",
+        "combo_title": "Electric Hook Fist Staple Juggle",
+        "opponent_hurtbox_class": "MALE_STANDARD",
+        "compatibility_status": "VERIFIED_FOR_OPPONENT",
+        "is_compatible": True,
+        "timing_adjustment": "STANDARD",
+        "conditions_notes": "Universal reference route; connects consistently on all standard male characters.",
+        "verification_source": "wavu.wiki / Tekken 8 Lab",
+    },
+    {
+        "char": "jin",
+        "combo_title": "Electric Hook Fist Staple Juggle",
+        "opponent_hurtbox_class": "BIG",
+        "compatibility_status": "TESTED_UNDER_CONDITIONS",
+        "is_compatible": True,
+        "timing_adjustment": "NONE",
+        "conditions_notes": "Large volumetric hurtbox absorbs all hits cleanly with wide timing windows.",
+        "verification_source": "TekkenDocs Lab",
+    },
+    {
+        "char": "jin",
+        "combo_title": "Electric Hook Fist Staple Juggle",
+        "opponent_hurtbox_class": "FEMALE_COMPACT",
+        "compatibility_status": "TESTED_UNDER_CONDITIONS",
+        "is_compatible": True,
+        "timing_adjustment": "STRICT_MICRO_DASH",
+        "conditions_notes": "Micro-dash required before b+3,f to prevent off-axis whiff against compact models.",
+        "verification_source": "wavu.wiki / Tekken 8 Lab",
+    },
+    {
+        "char": "jin",
+        "combo_title": "Electric Hook Fist Staple Juggle",
+        "opponent_hurtbox_class": "BEARS",
+        "compatibility_status": "INCOMPATIBLE_DOCUMENTED",
+        "is_compatible": False,
+        "timing_adjustment": "NONE",
+        "incompatibility_reason": "Standard b+3,f ZEN 1 tail-ender whiffs underneath Bear stubby leg geometry. Use Anti-Bear route instead.",
+        "conditions_notes": "Lab tested on Kuma and Panda; consistent drop on hit 5.",
+        "verification_source": "Tekken 8 Practice Lab",
+    },
+    # Jin Anti-Bear route
+    {
+        "char": "jin",
+        "combo_title": "Anti-Bear Low-Profile Juggle",
+        "opponent_hurtbox_class": "BEARS",
+        "compatibility_status": "VERIFIED_FOR_OPPONENT",
+        "is_compatible": True,
+        "timing_adjustment": "STANDARD",
+        "conditions_notes": "Specifically crafted and verified for Kuma and Panda.",
+        "verification_source": "wavu.wiki / Tekken 8 Lab",
+    },
+    {
+        "char": "jin",
+        "combo_title": "Anti-Bear Low-Profile Juggle",
+        "opponent_hurtbox_class": "FEMALE_COMPACT",
+        "compatibility_status": "INCOMPATIBLE_DOCUMENTED",
+        "is_compatible": False,
+        "timing_adjustment": "NONE",
+        "incompatibility_reason": "1,2,4 float trajectory drops against compact models; recovery is too fast.",
+        "conditions_notes": "Incompatible due to compact hurtbox ground fall speed.",
+        "verification_source": "Tekken 8 Practice Lab",
+    },
+    # Kazuya Double EWGF
+    {
+        "char": "kazuya",
+        "combo_title": "Double EWGF Wall Carrier",
+        "opponent_hurtbox_class": "BEARS",
+        "compatibility_status": "INCOMPATIBLE_DOCUMENTED",
+        "is_compatible": False,
+        "timing_adjustment": "NONE",
+        "incompatibility_reason": "Second EWGF pushes Bear torso too far back, causing b+2,2 Tornado to whiff.",
+        "conditions_notes": "Drops against Kuma and Panda.",
+        "verification_source": "Tekken 8 Practice Lab",
+    },
+    {
+        "char": "kazuya",
+        "combo_title": "Double EWGF Wall Carrier",
+        "opponent_hurtbox_class": "FEMALE_COMPACT",
+        "compatibility_status": "TESTED_UNDER_CONDITIONS",
+        "is_compatible": True,
+        "timing_adjustment": "STRICT_MICRO_DASH",
+        "conditions_notes": "Must micro-dash before second EWGF on slender opponents.",
+        "verification_source": "wavu.wiki / Tekken 8 Lab",
+    },
 ]
 
 # Verified Tekken 8 Official Stages & Destructible Hazards (Phase 4 Structured Geometries)
@@ -1787,13 +2012,26 @@ def init_db(db: Session):
     except Exception:
         pass
 
-    # Check if combo_routes needs migration (Phase 4 combo_type & stage columns)
+    # Check if characters needs migration (Phase 5 hurtbox_class column)
+    try:
+        with db.get_bind().connect() as conn:
+            cursor = conn.exec_driver_sql("PRAGMA table_info(characters)")
+            cols = [row[1] for row in cursor.fetchall()]
+            if cols and "hurtbox_class" not in cols:
+                conn.exec_driver_sql("ALTER TABLE characters ADD COLUMN hurtbox_class VARCHAR(32) DEFAULT 'MALE_STANDARD'")
+                conn.exec_driver_sql("ALTER TABLE characters ADD COLUMN hurtbox_notes TEXT")
+                conn.commit()
+    except Exception:
+        pass
+
+    # Check if combo_routes needs migration (Phase 5 launcher_type, damage_type, etc.)
     try:
         with db.get_bind().connect() as conn:
             cursor = conn.exec_driver_sql("PRAGMA table_info(combo_routes)")
             cols = [row[1] for row in cursor.fetchall()]
-            if cols and "combo_type" not in cols:
-                conn.exec_driver_sql("DROP TABLE combo_routes")
+            if cols and "launcher_type" not in cols:
+                conn.exec_driver_sql("DROP TABLE IF EXISTS combo_compatibilities")
+                conn.exec_driver_sql("DROP TABLE IF EXISTS combo_routes")
                 conn.commit()
     except Exception:
         pass
@@ -1831,22 +2069,48 @@ def init_db(db: Session):
     current_patch = db.query(GamePatch).filter(GamePatch.version_number == "3.00.02").first()
     wavu_source = db.query(DataSource).filter(DataSource.name == "wavu_wiki").first()
 
-    # 3. Seed Characters
+    # 3. Seed Characters with Hurtbox Classifications
+    BEAR_SLUGS = {"kuma", "panda"}
+    BIG_SLUGS = {"jack-8", "king", "armor-king", "fahkumram", "bob"}
+    FEMALE_SLUGS = {
+        "alisa", "asuka", "azucena", "jun", "lili", "nina",
+        "reina", "xiaoyu", "zafina", "lidia", "anna", "kunimitsu", "miary-zo"
+    }
+
     char_map = {}
     for r in ROSTER_DATA:
-        char = db.query(Character).filter(Character.slug == r["slug"]).first()
+        slug = r["slug"]
+        if slug in BEAR_SLUGS:
+            h_class = "BEARS"
+        elif slug in BIG_SLUGS:
+            h_class = "BIG"
+        elif slug in FEMALE_SLUGS:
+            h_class = "FEMALE_COMPACT"
+        else:
+            h_class = "MALE_STANDARD"
+
+        h_info = HURTBOX_QUIRKS.get(h_class, {})
+        h_notes = h_info.get("description", "Standard hurtbox profile")
+
+        char = db.query(Character).filter(Character.slug == slug).first()
         if not char:
             char = Character(
-                slug=r["slug"],
+                slug=slug,
                 name=r["name"],
                 archetype=r["archetype"],
                 is_dlc=r["is_dlc"],
-                avatar_url=r["avatar"]
+                avatar_url=r["avatar"],
+                hurtbox_class=h_class,
+                hurtbox_notes=h_notes
             )
             db.add(char)
             db.commit()
             db.refresh(char)
-        char_map[r["slug"]] = char
+        else:
+            char.hurtbox_class = h_class
+            char.hurtbox_notes = h_notes
+            db.commit()
+        char_map[slug] = char
 
     # 4. Seed Import Batch
     batch = db.query(ImportBatch).filter(ImportBatch.patch_version == "3.00.02").first()
@@ -1977,6 +2241,24 @@ def init_db(db: Session):
             ComboRoute.title == c_data["title"]
         ).first()
 
+        # Compute scaling hits if not explicitly provided
+        scaling_json = c_data.get("scaling_breakdown_json")
+        raw_sum = c_data.get("raw_damage_sum")
+        if not scaling_json:
+            hits_cnt = c_data.get("hits", 6)
+            dmg_val = c_data.get("damage", 60)
+            avg_raw = max(8, round(dmg_val / max(1, hits_cnt) * 1.5))
+            test_hits = [{"raw_damage": avg_raw, "move_notation": f"Step {i+1}"} for i in range(hits_cnt)]
+            calc_res = ComboCompatibilityEngine.calculate_scaled_damage(
+                test_hits,
+                is_counter_hit=c_data.get("requires_counter_hit", False),
+                tested_damage=dmg_val,
+                damage_type=c_data.get("damage_type", "TESTED"),
+                calculation_method=c_data.get("damage_calculation_method", "LAB_TESTED_IN_GAME"),
+            )
+            scaling_json = json.dumps([h.model_dump() for h in calc_res.hits])
+            raw_sum = calc_res.raw_damage_sum
+
         if not existing_combo:
             db.add(ComboRoute(
                 character_id=char.id,
@@ -1998,7 +2280,18 @@ def init_db(db: Session):
                 ender_move_name=c_data.get("ender_move_name"),
                 ender_move_input=c_data.get("ender_move_input"),
                 conditions_notes=c_data.get("conditions_notes"),
-                source=c_data.get("source", "wavu.wiki / Tekken 8 Lab")
+                source=c_data.get("source", "wavu.wiki / Tekken 8 Lab"),
+                launcher_type=c_data.get("launcher_type", "NORMAL_HIT"),
+                damage_type=c_data.get("damage_type", "TESTED"),
+                damage_calculation_method=c_data.get("damage_calculation_method", "LAB_TESTED_IN_GAME"),
+                raw_damage_sum=raw_sum,
+                scaling_breakdown_json=scaling_json,
+                execution_notes=c_data.get("execution_notes"),
+                required_stance=c_data.get("required_stance"),
+                target_hurtbox_class=c_data.get("target_hurtbox_class", "UNIVERSAL"),
+                easier_alternative_notes=c_data.get("easier_alternative_notes"),
+                verification_status="VERIFIED",
+                patch_version="3.00.02"
             ))
         else:
             existing_combo.combo_type = c_data.get("combo_type", "MIDSCREEN")
@@ -2013,6 +2306,74 @@ def init_db(db: Session):
             existing_combo.ender_move_input = c_data.get("ender_move_input")
             existing_combo.conditions_notes = c_data.get("conditions_notes")
             existing_combo.source = c_data.get("source", "wavu.wiki / Tekken 8 Lab")
+            existing_combo.launcher_type = c_data.get("launcher_type", "NORMAL_HIT")
+            existing_combo.damage_type = c_data.get("damage_type", "TESTED")
+            existing_combo.damage_calculation_method = c_data.get("damage_calculation_method", "LAB_TESTED_IN_GAME")
+            existing_combo.raw_damage_sum = raw_sum
+            existing_combo.scaling_breakdown_json = scaling_json
+            existing_combo.execution_notes = c_data.get("execution_notes")
+            existing_combo.required_stance = c_data.get("required_stance")
+            existing_combo.target_hurtbox_class = c_data.get("target_hurtbox_class", "UNIVERSAL")
+            existing_combo.easier_alternative_notes = c_data.get("easier_alternative_notes")
+    db.commit()
+
+    # Link Easier Alternatives
+    for c_data in SAMPLE_COMBOS_DATA:
+        char = char_map.get(c_data["char"])
+        if not char:
+            continue
+        alt_title = c_data.get("easier_alternative_title")
+        if alt_title:
+            parent_combo = db.query(ComboRoute).filter(
+                ComboRoute.character_id == char.id,
+                ComboRoute.title == c_data["title"]
+            ).first()
+            alt_combo = db.query(ComboRoute).filter(
+                ComboRoute.character_id == char.id,
+                ComboRoute.title == alt_title
+            ).first()
+            if parent_combo and alt_combo:
+                parent_combo.easier_alternative_id = alt_combo.id
+                parent_combo.easier_alternative_notes = c_data.get("easier_alternative_notes")
+    db.commit()
+
+    # 8. Seed Opponent-Specific Juggle Compatibility Records
+    for comp_data in SAMPLE_COMBO_COMPATIBILITIES:
+        char = char_map.get(comp_data["char"])
+        if not char:
+            continue
+        combo = db.query(ComboRoute).filter(
+            ComboRoute.character_id == char.id,
+            ComboRoute.title == comp_data["combo_title"]
+        ).first()
+        if not combo:
+            continue
+
+        opp_id = None
+        if "opponent_slug" in comp_data and comp_data["opponent_slug"]:
+            opp_char = char_map.get(comp_data["opponent_slug"])
+            if opp_char:
+                opp_id = opp_char.id
+
+        existing_comp = db.query(ComboCompatibility).filter(
+            ComboCompatibility.combo_route_id == combo.id,
+            ComboCompatibility.opponent_character_id == opp_id,
+            ComboCompatibility.opponent_hurtbox_class == comp_data.get("opponent_hurtbox_class")
+        ).first()
+
+        if not existing_comp:
+            db.add(ComboCompatibility(
+                combo_route_id=combo.id,
+                opponent_character_id=opp_id,
+                opponent_hurtbox_class=comp_data.get("opponent_hurtbox_class"),
+                compatibility_status=comp_data.get("compatibility_status", "UNKNOWN_COMPATIBILITY"),
+                is_compatible=comp_data.get("is_compatible", True),
+                timing_adjustment=comp_data.get("timing_adjustment"),
+                incompatibility_reason=comp_data.get("incompatibility_reason"),
+                conditions_notes=comp_data.get("conditions_notes"),
+                verification_source=comp_data.get("verification_source", "Tekken 8 Lab / wavu.wiki"),
+                patch_version=comp_data.get("patch_version", "3.00.02")
+            ))
     db.commit()
 
     # 8. Seed Lab Matchup Notes

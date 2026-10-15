@@ -50,6 +50,23 @@ const state = {
       difficulty: 'ALL'
     }
   },
+  combosPhase5: {
+    recommendations: null,
+    activeCategory: 'ALL',
+    activeDifficulty: 'ALL',
+    activeHurtbox: 'ALL',
+    searchQuery: '',
+    requiresHeat: false,
+    requiresCH: false,
+    currentModalCombo: null,
+    sandboxHits: [
+      { raw: 25, notation: 'Hit 1 (Starter)' },
+      { raw: 18, notation: 'Hit 2' },
+      { raw: 22, notation: 'Hit 3 (Tornado)' },
+      { raw: 15, notation: 'Hit 4' },
+      { raw: 20, notation: 'Hit 5 (Ender)' },
+    ]
+  },
   stages: [
     {
       id: 1,
@@ -843,40 +860,56 @@ function setupMatchupControls() {
     });
   });
 
-  // Stage Combo Filter Toolbar (Phase 4)
+  // Phase 5: Character-Specific Combo & Juggle Compatibility Controls
   const comboTypePills = document.getElementById('comboTypePills');
   if (comboTypePills) {
     comboTypePills.querySelectorAll('.combo-filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         comboTypePills.querySelectorAll('.combo-filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        state.stageStrategy.comboFilter.type = btn.dataset.type;
-        applyStageComboFilter();
+        state.combosPhase5.activeCategory = btn.dataset.cat || 'ALL';
+        renderComboRecommendations();
       });
     });
+  }
+
+  const comboSearch = document.getElementById('comboSearchInput');
+  if (comboSearch) {
+    comboSearch.addEventListener('input', debounce((e) => {
+      state.combosPhase5.searchQuery = e.target.value.toLowerCase().trim();
+      renderComboRecommendations();
+    }, 150));
   }
 
   const checkHeat = document.getElementById('comboCheckHeat');
   if (checkHeat) {
     checkHeat.addEventListener('change', (e) => {
-      state.stageStrategy.comboFilter.requiresHeat = e.target.checked;
-      applyStageComboFilter();
+      state.combosPhase5.requiresHeat = e.target.checked;
+      renderComboRecommendations();
     });
   }
 
   const checkCH = document.getElementById('comboCheckCH');
   if (checkCH) {
     checkCH.addEventListener('change', (e) => {
-      state.stageStrategy.comboFilter.requiresCH = e.target.checked;
-      applyStageComboFilter();
+      state.combosPhase5.requiresCH = e.target.checked;
+      renderComboRecommendations();
     });
   }
 
   const diffSelect = document.getElementById('comboDiffSelect');
   if (diffSelect) {
     diffSelect.addEventListener('change', (e) => {
-      state.stageStrategy.comboFilter.difficulty = e.target.value;
-      applyStageComboFilter();
+      state.combosPhase5.activeDifficulty = e.target.value;
+      renderComboRecommendations();
+    });
+  }
+
+  const hurtboxSelect = document.getElementById('comboHurtboxFilter');
+  if (hurtboxSelect) {
+    hurtboxSelect.addEventListener('change', (e) => {
+      state.combosPhase5.activeHurtbox = e.target.value;
+      renderComboRecommendations();
     });
   }
 }
@@ -1353,8 +1386,9 @@ function renderMatchupDashboard(data) {
   if (oHeat) oHeat.textContent = hm.opponent_heat_threats;
   if (hSmash) hSmash.textContent = `${hm.heat_smash_interaction} • ${hm.stance_and_install_dynamics}`;
 
-  // 9. SECTION 10: Stage-Aware Strategy Engine & Blueprint Analysis
+  // 9. SECTION 10: Stage-Aware Strategy Engine & Character-Specific Juggle Compatibility
   loadStageStrategy(st.id, p1.id, p2.id);
+  loadComboRecommendations(p1.id, p2.id, st.id);
   if (stageAdvantageBox) {
     stageAdvantageBox.innerHTML = `<strong>Stage Win-Condition:</strong> ${sms.character_stage_advantage}`;
   }
@@ -1585,61 +1619,129 @@ function renderStageStrategyUI(report) {
   }
 }
 
-function applyStageComboFilter() {
-  const report = state.stageStrategy.currentReport;
+// ==========================================================================
+// Phase 5: Character-Specific Juggle Compatibility & Damage Scaling Engine
+// ==========================================================================
+
+async function loadComboRecommendations(playerId, opponentId, stageId) {
+  if (!playerId) return;
+
+  const wallPos = state.matchup.conditions.wall_position || 'OPEN';
+  const heatSt = state.matchup.conditions.heat_state || 'AVAILABLE';
+
+  try {
+    let url = `/combos/recommendations?player_id=${playerId}&wall_position=${wallPos}&heat_state=${heatSt}`;
+    if (opponentId) url += `&opponent_id=${opponentId}`;
+    if (stageId) url += `&stage_id=${stageId}`;
+
+    const report = await fetchAPI(url);
+    if (!report) return;
+
+    state.combosPhase5.recommendations = report;
+    renderOpponentHurtboxBanner(report.opponent_hurtbox);
+    renderComboRecommendations();
+  } catch (err) {
+    console.warn('Error loading combo recommendations:', err);
+  }
+}
+
+function renderOpponentHurtboxBanner(hurtbox) {
+  if (!hurtbox) return;
+
+  const badgeEl = document.getElementById('oppHurtboxClassBadge');
+  const targetNameEl = document.getElementById('oppHurtboxTargetName');
+  const descEl = document.getElementById('oppHurtboxDesc');
+  const quirksListEl = document.getElementById('oppHurtboxQuirksList');
+
+  const hClass = (hurtbox.hurtbox_class || 'MALE_STANDARD').toLowerCase();
+
+  if (badgeEl) {
+    badgeEl.textContent = `${hurtbox.hurtbox_class} PROFILE`;
+    badgeEl.className = `hurtbox-badge-tag ${hClass}`;
+  }
+
+  if (targetNameEl) {
+    targetNameEl.textContent = `Target: ${hurtbox.character_name}`;
+  }
+
+  if (descEl) {
+    descEl.textContent = hurtbox.description || 'Standard hurtbox baseline.';
+  }
+
+  if (quirksListEl) {
+    const quirks = hurtbox.known_quirks || [];
+    quirksListEl.innerHTML = quirks.map(q => `
+      <span class="hurtbox-quirk-pill">⚡ ${q}</span>
+    `).join('');
+  }
+}
+
+function renderComboRecommendations() {
+  const report = state.combosPhase5.recommendations;
   const container = document.getElementById('suitableCombosContainer');
   const countPill = document.getElementById('comboCountPill');
   if (!container || !report) return;
 
-  const f = state.stageStrategy.comboFilter;
+  const activeCat = state.combosPhase5.activeCategory;
+  const f = state.combosPhase5;
 
-  // Aggregate all combo sets from report
-  const allCombos = [
-    ...(report.midscreen_combos || []),
-    ...(report.wall_carry_routes || []),
-    ...(report.wall_combo_enders || []),
-    ...(report.wall_break_routes || []),
-    ...(report.floor_break_routes || []),
-    ...(report.balcony_break_routes || [])
-  ];
+  let pool = [];
+  if (activeCat === 'ALL') {
+    // Gather all 10 categories
+    const categories = [
+      'beginner_friendly', 'standard_launch', 'high_damage_optimal',
+      'wall_carry', 'wall_combo', 'heat_dependent', 'counter_hit',
+      'character_specific', 'stage_break', 'alternative_routes'
+    ];
+    const seen = new Set();
+    categories.forEach(cat => {
+      (report[cat] || []).forEach(c => {
+        if (!seen.has(c.id)) {
+          seen.add(c.id);
+          pool.push(c);
+        }
+      });
+    });
+  } else {
+    pool = report[activeCat] || [];
+  }
 
-  // De-duplicate by combo ID
-  const seenIds = new Set();
-  const uniqueCombos = [];
-  allCombos.forEach(c => {
-    if (!seenIds.has(c.id)) {
-      seenIds.add(c.id);
-      uniqueCombos.push(c);
+  // Filter pool
+  const filtered = pool.filter(c => {
+    // Search query
+    if (f.searchQuery) {
+      const q = f.searchQuery;
+      const titleMatch = (c.title || '').toLowerCase().includes(q);
+      const notMatch = (c.notation_sequence || '').toLowerCase().includes(q);
+      const starterMatch = (c.starter_move_name || '').toLowerCase().includes(q) || (c.starter_move_input || '').toLowerCase().includes(q);
+      if (!titleMatch && !notMatch && !starterMatch) return false;
     }
-  });
 
-  // Apply filters
-  const filtered = uniqueCombos.filter(c => {
-    // Type filter
-    if (f.type !== 'ALL' && (c.combo_type || '').toUpperCase() !== f.type.toUpperCase()) {
+    // Heat
+    if (f.requiresHeat && !c.uses_heat) return false;
+
+    // Counter Hit
+    if (f.requiresCH && !c.requires_counter_hit && c.launcher_type !== 'COUNTER_HIT') return false;
+
+    // Difficulty
+    if (f.activeDifficulty !== 'ALL' && (c.difficulty || '').toUpperCase() !== f.activeDifficulty.toUpperCase()) {
       return false;
     }
-    // Heat filter
-    if (f.requiresHeat && !c.uses_heat) {
+
+    // Target Hurtbox
+    if (f.activeHurtbox !== 'ALL' && (c.target_hurtbox_class || '').toUpperCase() !== f.activeHurtbox.toUpperCase()) {
       return false;
     }
-    // Counter-Hit filter
-    if (f.requiresCH && !c.requires_counter_hit) {
-      return false;
-    }
-    // Difficulty filter
-    if (f.difficulty !== 'ALL' && (c.difficulty || '').toUpperCase() !== f.difficulty.toUpperCase()) {
-      return false;
-    }
+
     return true;
   });
 
-  if (countPill) countPill.textContent = `${filtered.length} Verified Routes`;
+  if (countPill) countPill.textContent = `${filtered.length} Recommended Combos`;
 
   if (filtered.length === 0) {
     container.innerHTML = `
-      <div style="text-align:center; padding:2rem; color:var(--text-muted); font-size:0.85rem;">
-        No combo routes match the active filter criteria for this stage configuration.
+      <div style="text-align:center; padding:2.5rem; color:var(--text-muted); font-size:0.85rem;">
+        No combo routes match the active criteria for this target profile and filter combination.
       </div>
     `;
     return;
@@ -1654,16 +1756,45 @@ function applyStageComboFilter() {
     else if (ctype === 'FLOOR_BREAK') typeClass = 'type-floor-break';
     else if (ctype === 'BALCONY_BREAK') typeClass = 'type-balcony-break';
 
+    // 5-Tier dynamic compatibility badge
+    let compatBadgeHtml = '';
+    const status = c.compatibility_status || 'UNKNOWN_COMPATIBILITY';
+    if (status === 'VERIFIED_FOR_OPPONENT') {
+      compatBadgeHtml = `<span class="compat-pill verified" title="Tested directly against this opponent hurtbox profile in Practice Lab">✓ Verified For Opponent</span>`;
+    } else if (status === 'TESTED_UNDER_CONDITIONS') {
+      const cond = c.timing_adjustment || 'Conditions Apply';
+      compatBadgeHtml = `<span class="compat-pill tested" title="${cond}">⚡ Tested: ${cond}</span>`;
+    } else if (status === 'REPORTED_UNTESTED') {
+      compatBadgeHtml = `<span class="compat-pill reported" title="Reported by tournament players; pending lab re-verification">📋 Reported Community Route</span>`;
+    } else if (status === 'INCOMPATIBLE_DOCUMENTED') {
+      compatBadgeHtml = `<span class="compat-pill incompatible" title="${c.incompatibility_reason || 'Drops on this hurtbox'}">⚠️ Incompatible Documented</span>`;
+    } else {
+      compatBadgeHtml = `<span class="compat-pill unknown" title="Untested on this specific character profile - lab verification recommended">❓ Unknown (Default)</span>`;
+    }
+
+    // Damage type tag
+    const isEst = c.is_damage_estimate || c.damage_type === 'ESTIMATED';
+    const dmgTypeClass = isEst ? 'estimated' : 'tested';
+    const dmgTypeLabel = isEst ? 'SCALED ESTIMATE' : 'TESTED IN LAB';
+
     const stageTag = c.is_stage_dependent
-      ? `<span class="combo-tag stage-dep">Stage Specific: ${c.stage_section || report.stage.name}</span>`
-      : `<span class="combo-tag universal">Universal</span>`;
+      ? `<span class="combo-tag stage-dep">Stage Specific: ${c.stage_section || (report.stage ? report.stage.name : 'Hazard')}</span>`
+      : `<span class="combo-tag universal">Universal Stage</span>`;
 
     const heatTag = c.uses_heat
-      ? `<span class="combo-tag" style="background:rgba(255,0,127,0.15); border:1px solid rgba(255,0,127,0.3); color:#ff007f;">Heat</span>`
+      ? `<span class="combo-tag" style="background:rgba(255,0,127,0.15); border:1px solid rgba(255,0,127,0.3); color:#ff007f;">Heat Required</span>`
       : '';
 
-    const chTag = c.requires_counter_hit
-      ? `<span class="combo-tag" style="background:rgba(255,215,0,0.15); border:1px solid rgba(255,215,0,0.3); color:var(--accent-gold);">Counter Hit</span>`
+    const chTag = (c.requires_counter_hit || c.launcher_type === 'COUNTER_HIT')
+      ? `<span class="combo-tag" style="background:rgba(255,215,0,0.15); border:1px solid rgba(255,215,0,0.3); color:var(--accent-gold);">Counter Hit (120%)</span>`
+      : '';
+
+    const stanceTag = (c.required_stance && c.required_stance !== 'NONE')
+      ? `<span class="combo-tag" style="background:rgba(168,85,247,0.15); border:1px solid rgba(168,85,247,0.3); color:#c084fc;">Stance: ${c.required_stance}</span>`
+      : '';
+
+    const targetHurtboxTag = (c.target_hurtbox_class && c.target_hurtbox_class !== 'UNIVERSAL')
+      ? `<span class="combo-tag" style="background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.3); color:#fbbf24;">Target: ${c.target_hurtbox_class} Only</span>`
       : '';
 
     const starterEnder = (c.starter_move_name || c.ender_move_name)
@@ -1671,6 +1802,7 @@ function applyStageComboFilter() {
         <div class="combo-starter-ender-row">
           ${c.starter_move_name ? `<span>Starter: <strong>${c.starter_move_name}</strong> (${c.starter_move_input || ''})</span>` : ''}
           ${c.ender_move_name ? `<span>• Ender: <strong>${c.ender_move_name}</strong> (${c.ender_move_input || ''})</span>` : ''}
+          ${c.launcher_type ? `<span>• Launcher: <strong style="color:var(--accent-gold);">${c.launcher_type}</strong></span>` : ''}
         </div>
       `
       : '';
@@ -1679,20 +1811,50 @@ function applyStageComboFilter() {
       ? `<div class="combo-synergy-note">🎯 ${c.conditions_notes}</div>`
       : '';
 
+    const execNotes = c.execution_notes
+      ? `<div class="combo-synergy-note" style="border-color:#38bdf8;">⚙️ <strong>Execution Tip:</strong> ${c.execution_notes}</div>`
+      : '';
+
+    const dropAlert = (status === 'INCOMPATIBLE_DOCUMENTED' && c.incompatibility_reason)
+      ? `
+        <div class="combo-incompat-warning">
+          <span>⚠️ <strong>Drop Condition:</strong> ${c.incompatibility_reason}</span>
+        </div>
+      `
+      : '';
+
+    const easierAltHtml = (c.easier_alternative_id && c.easier_alternative_title)
+      ? `
+        <div class="combo-easier-callout">
+          <div class="combo-easier-info">
+            🔀 <strong>Easier Alternative Available:</strong> ${c.easier_alternative_title}
+            <div style="font-size:0.68rem; color:#cbd5e1; margin-top:0.15rem;">${c.easier_alternative_notes || 'Consistent tournament execution route'}</div>
+          </div>
+          <button type="button" class="btn-swap-combo-alt" onclick="selectComboById(${c.easier_alternative_id})">
+            Switch to Alternative &rarr;
+          </button>
+        </div>
+      `
+      : '';
+
     return `
-      <div class="combo-card">
+      <div class="combo-card" id="combo_card_${c.id}">
         <div class="combo-card-header">
           <div class="combo-card-title-group">
             <span class="combo-title">${c.title}</span>
             <div class="combo-tags-group">
+              ${compatBadgeHtml}
               <span class="combo-tag ${typeClass}">${c.combo_type}</span>
               ${stageTag}
               ${heatTag}
               ${chTag}
+              ${stanceTag}
+              ${targetHurtboxTag}
             </div>
           </div>
           <div class="combo-metrics-group">
             <span class="combo-dmg-badge">${c.total_damage} DMG (${c.hit_count} Hits)</span>
+            <span class="damage-type-pill ${dmgTypeClass}">${dmgTypeLabel}</span>
             <span class="feat-badge badge-approved" style="font-size:0.65rem;">${c.difficulty}</span>
           </div>
         </div>
@@ -1703,8 +1865,14 @@ function applyStageComboFilter() {
 
         ${starterEnder}
         ${notes}
+        ${execNotes}
+        ${dropAlert}
+        ${easierAltHtml}
 
-        <div style="text-align:right; margin-top:0.25rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.4rem; flex-wrap:wrap; gap:0.4rem;">
+          <button type="button" class="btn-scaling-breakdown" onclick="openDamageScalingModal(${c.id})">
+            📊 View Scaling Breakdown (${c.hit_count} hits) &rarr;
+          </button>
           <button type="button" class="btn-reset-record" style="font-size:0.7rem; padding:0.25rem 0.6rem;" onclick="testNotationString('${(c.notation_sequence || '').replace(/'/g, "\\'")}')">
             ⚡ Test in Notation Engine &rarr;
           </button>
@@ -1712,6 +1880,204 @@ function applyStageComboFilter() {
       </div>
     `;
   }).join('');
+}
+
+function selectComboById(comboId) {
+  const card = document.getElementById(`combo_card_${comboId}`);
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.style.outline = '2px solid var(--accent-gold)';
+    card.style.boxShadow = '0 0 15px rgba(255, 215, 0, 0.4)';
+    setTimeout(() => {
+      card.style.outline = '';
+      card.style.boxShadow = '';
+    }, 2500);
+  } else {
+    state.combosPhase5.activeCategory = 'ALL';
+    document.querySelectorAll('#comboTypePills .combo-filter-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.cat === 'ALL');
+    });
+    renderComboRecommendations();
+    setTimeout(() => {
+      const c = document.getElementById(`combo_card_${comboId}`);
+      if (c) {
+        c.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        c.style.outline = '2px solid var(--accent-gold)';
+        setTimeout(() => { c.style.outline = ''; }, 2500);
+      }
+    }, 100);
+  }
+}
+
+// ==========================================================================
+// Phase 5: Damage Scaling Modal & Interactive Sandbox
+// ==========================================================================
+
+function openDamageScalingModal(comboId) {
+  const report = state.combosPhase5.recommendations;
+  if (!report) return;
+
+  let combo = null;
+  const categories = [
+    'beginner_friendly', 'standard_launch', 'high_damage_optimal',
+    'wall_carry', 'wall_combo', 'heat_dependent', 'counter_hit',
+    'character_specific', 'stage_break', 'alternative_routes'
+  ];
+  for (const cat of categories) {
+    const found = (report[cat] || []).find(c => c.id === comboId);
+    if (found) {
+      combo = found;
+      break;
+    }
+  }
+
+  if (!combo) return;
+  state.combosPhase5.currentModalCombo = combo;
+
+  const modal = document.getElementById('damageScalingModal');
+  const titleEl = document.getElementById('scalingModalComboTitle');
+  const explEl = document.getElementById('scalingModalExplanation');
+  const rawSumEl = document.getElementById('scalingRawSumVal');
+  const scaledValEl = document.getElementById('scalingScaledVal');
+  const testedValEl = document.getElementById('scalingTestedVal');
+  const dmgTypeBadge = document.getElementById('scalingDamageTypeBadge');
+  const overestEl = document.getElementById('scalingOverestimationVal');
+  const tbody = document.getElementById('scalingTableBody');
+
+  if (titleEl) titleEl.textContent = `${combo.title} (${combo.total_damage} DMG)`;
+  if (explEl) explEl.textContent = report.damage_scaling_rules_explanation;
+
+  const hits = combo.scaling_breakdown || [];
+  const rawSum = combo.raw_damage_sum || hits.reduce((acc, h) => acc + (h.raw_damage || 0), 0);
+  const scaledTotal = hits.reduce((acc, h) => acc + (h.scaled_damage || 0), 0) || combo.total_damage;
+  const avoidedOverest = Math.max(0, rawSum - scaledTotal);
+
+  if (rawSumEl) rawSumEl.textContent = `${rawSum} DMG`;
+  if (scaledValEl) scaledValEl.textContent = `${scaledTotal} DMG`;
+  if (testedValEl) testedValEl.textContent = `${combo.total_damage} DMG`;
+  if (dmgTypeBadge) dmgTypeBadge.textContent = combo.damage_type === 'TESTED' ? 'TESTED IN PRACTICE LAB' : 'SCALED ESTIMATE';
+  if (overestEl) overestEl.textContent = `+${avoidedOverest} DMG`;
+
+  if (tbody) {
+    if (hits.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:1rem;">Hit-by-hit scaling details calculated dynamically from Tekken 8 decay curve.</td></tr>`;
+    } else {
+      tbody.innerHTML = hits.map(h => `
+        <tr>
+          <td><strong>Hit ${h.hit_number}</strong></td>
+          <td style="font-family:'Consolas',monospace; color:#38bdf8;">${h.move_notation || '—'}</td>
+          <td>${h.raw_damage} dmg</td>
+          <td><span style="font-weight:700; color:${h.scaling_percent === 100 || h.scaling_percent === 120 ? '#00e676' : (h.scaling_percent === 30 ? '#ef4444' : 'var(--accent-gold)')};">${h.scaling_percent}%</span></td>
+          <td style="font-weight:800; color:#fff;">${h.scaled_damage} dmg</td>
+          <td style="color:var(--text-dim);">${h.notes || (h.hit_number === 1 ? 'Launcher confirm' : (h.scaling_percent === 30 ? 'Scaling floor reached' : 'Aerial decay'))}</td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  // Populate sandbox with combo hits
+  if (hits.length > 0) {
+    state.combosPhase5.sandboxHits = hits.map((h, i) => ({
+      raw: h.raw_damage,
+      notation: h.move_notation || `Hit ${i + 1}`
+    }));
+  }
+  renderSandboxHits();
+  recalculateSandbox();
+
+  if (modal) modal.style.display = 'flex';
+}
+
+function closeDamageScalingModal() {
+  const modal = document.getElementById('damageScalingModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function openDamageCalculatorSandbox() {
+  const modal = document.getElementById('damageScalingModal');
+  const titleEl = document.getElementById('scalingModalComboTitle');
+  if (titleEl) titleEl.textContent = 'INTERACTIVE DAMAGE SCALING SANDBOX';
+  renderSandboxHits();
+  recalculateSandbox();
+  if (modal) modal.style.display = 'flex';
+}
+
+function renderSandboxHits() {
+  const container = document.getElementById('sandboxHitsContainer');
+  if (!container) return;
+
+  const hits = state.combosPhase5.sandboxHits;
+  container.innerHTML = hits.map((h, i) => `
+    <div class="sandbox-hit-chip">
+      <span>Hit ${i + 1}:</span>
+      <input type="number" class="sandbox-hit-input" value="${h.raw}" min="1" max="120"
+             onchange="updateSandboxHit(${i}, this.value)" oninput="updateSandboxHit(${i}, this.value)">
+      <span style="cursor:pointer; color:#ef4444; font-weight:bold; margin-left:2px;" onclick="removeSandboxHit(${i})" title="Remove Hit">&times;</span>
+    </div>
+  `).join('');
+}
+
+function updateSandboxHit(index, value) {
+  const val = parseInt(value) || 0;
+  if (state.combosPhase5.sandboxHits[index]) {
+    state.combosPhase5.sandboxHits[index].raw = val;
+    recalculateSandbox();
+  }
+}
+
+function addSandboxHit() {
+  const cnt = state.combosPhase5.sandboxHits.length + 1;
+  state.combosPhase5.sandboxHits.push({ raw: 15, notation: `Hit ${cnt}` });
+  renderSandboxHits();
+  recalculateSandbox();
+}
+
+function removeSandboxHit(index) {
+  if (state.combosPhase5.sandboxHits.length <= 1) return;
+  state.combosPhase5.sandboxHits.splice(index, 1);
+  renderSandboxHits();
+  recalculateSandbox();
+}
+
+function resetSandboxHits() {
+  state.combosPhase5.sandboxHits = [
+    { raw: 25, notation: 'Hit 1 (Starter)' },
+    { raw: 18, notation: 'Hit 2' },
+    { raw: 22, notation: 'Hit 3 (Tornado)' },
+    { raw: 15, notation: 'Hit 4' },
+    { raw: 20, notation: 'Hit 5 (Ender)' },
+  ];
+  const chBox = document.getElementById('sandboxCheckCH');
+  if (chBox) chBox.checked = false;
+  renderSandboxHits();
+  recalculateSandbox();
+}
+
+function recalculateSandbox() {
+  const hits = state.combosPhase5.sandboxHits;
+  const isCH = document.getElementById('sandboxCheckCH') ? document.getElementById('sandboxCheckCH').checked : false;
+
+  let rawSum = 0;
+  let scaledTotal = 0;
+
+  hits.forEach((h, idx) => {
+    const raw = h.raw || 0;
+    rawSum += raw;
+    let pct = 30;
+    if (idx === 0) pct = isCH ? 120 : 100;
+    else if (idx === 1) pct = 70;
+    else if (idx === 2) pct = 50;
+    else if (idx === 3) pct = 40;
+    else pct = 30;
+
+    scaledTotal += Math.floor(raw * pct / 100.0);
+  });
+
+  const resEl = document.getElementById('sandboxLiveResult');
+  if (resEl) {
+    const avoided = Math.max(0, rawSum - scaledTotal);
+    resEl.innerHTML = `Scaled: <strong>${scaledTotal} DMG</strong> | Raw Sum: <span style="text-decoration:line-through; color:#f87171;">${rawSum} DMG</span> (Avoided Overstatement: +${avoided} DMG)`;
+  }
 }
 
 

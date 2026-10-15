@@ -4615,3 +4615,535 @@ body.has-left-rail {
   }
 }
 
+/* ==========================================================================
+   Phase 5: Character-Specific Juggle Compatibility & Damage Scaling
+   ========================================================================== */
+
+.btn-scaling-calculator-open {
+  background: rgba(0, 230, 118, 0.12);
+  border: 1px solid rgba(0, 230, 118, 0.4);
+  color: #00e676;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-scaling-calculator-open:hover {
+  background: rgba(0, 230, 118, 0.25);
+  box-shadow: 0 0 10px rgba(0, 230, 118, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Opponent Hurtbox Intelligence Banner */
+.opponent-hurtbox-banner {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.6));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 4px solid var(--accent-cyan);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  display: grid;
+  grid-template-columns: 200px 1fr 220px;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.hurtbox-badge-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.hurtbox-badge-tag {
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  padding: 0.3rem 0.65rem;
+  border-radius: 4px;
+  text-align: center;
+  display: inline-block;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+}
+
+.hurtbox-badge-tag.bears {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: rgba(245, 158, 11, 0.5);
+  color: #fbbf24;
+}
+
+.hurtbox-badge-tag.female_compact {
+  background: rgba(236, 72, 153, 0.2);
+  border-color: rgba(236, 72, 153, 0.5);
+  color: #f472b6;
+}
+
+.hurtbox-badge-tag.big {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #f87171;
+}
+
+.hurtbox-badge-tag.male_standard {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+}
+
+.hurtbox-badge-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.hurtbox-details-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.hurtbox-desc {
+  font-size: 0.8rem;
+  color: #e2e8f0;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.hurtbox-quirks-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.hurtbox-quirk-pill {
+  font-size: 0.68rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  line-height: 1.3;
+}
+
+.hurtbox-provenance-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 0.25rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  padding-left: 1rem;
+}
+
+.hurtbox-prov-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+  letter-spacing: 0.06em;
+}
+
+.hurtbox-prov-note {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  line-height: 1.3;
+}
+
+/* Compatibility Legend Bar */
+.combo-compat-legend-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0.85rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+  font-size: 0.72rem;
+}
+
+.compat-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 600;
+}
+
+.compat-legend-item.verified { color: #10b981; }
+.compat-legend-item.tested { color: #38bdf8; }
+.compat-legend-item.reported { color: #fbbf24; }
+.compat-legend-item.unknown { color: #94a3b8; }
+.compat-legend-item.incompatible { color: #ef4444; }
+
+/* Dynamic Compatibility Badge on Combo Card */
+.compat-pill {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.compat-pill.verified {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.compat-pill.tested {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+}
+
+.compat-pill.reported {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+}
+
+.compat-pill.unknown {
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: #94a3b8;
+}
+
+.compat-pill.incompatible {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #f87171;
+  animation: pulseIncompat 2s infinite ease-in-out;
+}
+
+@keyframes pulseIncompat {
+  0%, 100% { border-color: rgba(239, 68, 68, 0.5); }
+  50% { border-color: rgba(239, 68, 68, 0.9); box-shadow: 0 0 8px rgba(239, 68, 68, 0.3); }
+}
+
+/* Damage Scaling Breakdown Pill & Button */
+.btn-scaling-breakdown {
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  color: var(--accent-gold);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.25rem 0.55rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-scaling-breakdown:hover {
+  background: rgba(255, 215, 0, 0.25);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+}
+
+.damage-type-pill {
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.damage-type-pill.tested {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.damage-type-pill.estimated {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Easier Execution Alternative Callout */
+.combo-easier-callout {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.4rem;
+}
+
+.combo-easier-info {
+  font-size: 0.72rem;
+  color: #fbbf24;
+  line-height: 1.35;
+}
+
+.combo-easier-info strong {
+  color: #fff;
+}
+
+.btn-swap-combo-alt {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  color: #fbbf24;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.25rem 0.55rem;
+  border-radius: 3px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.btn-swap-combo-alt:hover {
+  background: rgba(245, 158, 11, 0.35);
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.3);
+}
+
+.combo-incompat-warning {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 4px;
+  padding: 0.4rem 0.65rem;
+  font-size: 0.72rem;
+  color: #fca5a5;
+  margin-top: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Damage Scaling Modal Styles */
+.scaling-modal-card {
+  max-width: 780px !important;
+}
+
+.scaling-formula-banner {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.sfb-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.65rem;
+}
+
+.sfb-steps {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.sfb-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+}
+
+.sfb-step.floor {
+  background: rgba(0, 230, 118, 0.12);
+  border-color: rgba(0, 230, 118, 0.35);
+}
+
+.sfb-step .step-num {
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  font-weight: 700;
+}
+
+.sfb-step .step-pct {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.sfb-arr {
+  color: var(--accent-gold);
+  font-size: 0.8rem;
+}
+
+.sfb-explanation {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.scaling-comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.scaling-comp-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.scaling-comp-card.unscaled {
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.scaling-comp-card.scaled {
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.scaling-comp-card.in-game {
+  border-color: rgba(0, 230, 118, 0.35);
+}
+
+.scaling-comp-card.delta {
+  border-color: rgba(255, 215, 0, 0.35);
+}
+
+.scc-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.scc-val {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #fff;
+}
+
+.scaling-comp-card.unscaled .scc-val { color: #f87171; text-decoration: line-through; }
+.scaling-comp-card.scaled .scc-val { color: #38bdf8; }
+.scaling-comp-card.in-game .scc-val { color: #00e676; }
+.scaling-comp-card.delta .scc-val { color: var(--accent-gold); }
+
+.scc-note {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.scaling-table-wrap {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.scaling-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+.scaling-table th, .scaling-table td {
+  padding: 0.45rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.scaling-table th {
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--text-dim);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+/* Scaling Sandbox Box */
+.scaling-sandbox-box {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+}
+
+.sandbox-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.65rem;
+}
+
+.sandbox-inputs-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.sandbox-hit-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.sandbox-hit-chip span {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+.sandbox-hit-input {
+  width: 45px;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 0.15rem 0.3rem;
+  font-size: 0.75rem;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.sandbox-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  .opponent-hurtbox-banner {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .hurtbox-provenance-col {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-left: 0;
+    padding-top: 0.5rem;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .scaling-comparison-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+

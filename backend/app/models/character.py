@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text
 from sqlalchemy.orm import relationship
 from backend.app.database.session import Base
 
@@ -16,6 +16,10 @@ class Character(Base):
     avatar_url = Column(String(255), nullable=True)
     is_dlc = Column(Boolean, nullable=False, default=False)
     created_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
+
+    # Phase 5: Juggle Hurtbox Archetype & Mechanics Provenance
+    hurtbox_class = Column(String(64), nullable=False, default="MALE_STANDARD", index=True)  # MALE_STANDARD, FEMALE_COMPACT, BIG, BEARS
+    hurtbox_notes = Column(Text, nullable=True)
 
     moves = relationship("Move", back_populates="character", cascade="all, delete-orphan")
     combos = relationship("ComboRoute", back_populates="character", cascade="all, delete-orphan")
