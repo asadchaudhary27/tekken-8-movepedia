@@ -1244,6 +1244,14 @@
         <div id="movesEmptyState" style="display:none; text-align:center; padding:3rem; color:var(--text-dim);">
           No moves recorded yet for this fighter in the initial seed dataset. Select Jin, Kazuya, Feng, Reina, or King for verified moves.
         </div>
+        <div id="movesPaginationBar" class="moves-pagination-bar" style="display:none;">
+          <span id="movesPaginationInfo">Showing 0-0 of 0 moves</span>
+          <div style="display:flex; gap:0.5rem; align-items:center;">
+            <button id="movesPrevBtn" class="pagination-btn" aria-label="Previous page of moves">◀ Prev</button>
+            <span id="movesPageNumber" style="font-weight:700; color:var(--text-primary); padding:0 0.5rem;">Page 1 of 1</span>
+            <button id="movesNextBtn" class="pagination-btn" aria-label="Next page of moves">Next ▶</button>
+          </div>
+        </div>
       </div>
     </section>
 

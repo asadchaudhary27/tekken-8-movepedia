@@ -27,6 +27,11 @@ const state = {
   controllerLayout: 'PLAYSTATION',
   currentNotation: 'df+2',
   moves: [],
+  movesPagination: {
+    currentPage: 1,
+    pageSize: 10,
+    filteredMoves: []
+  },
   sources: [],
   coverage: null,
   sessionToken: getOrCreateSessionToken(),
@@ -206,16 +211,42 @@ const FIGHTING_STYLES = {
   'mokujin': 'Mokujin-Ken (Mimicry)'
 };
 
-// API Helper
-async function fetchAPI(endpoint) {
-  try {
-    const res = await fetch(`/api/v1${endpoint}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  } catch (err) {
-    console.warn(`API call failed for ${endpoint}:`, err);
-    return null;
+// In-Memory API Cache & In-Flight Request Deduplication (Phase 8 Performance)
+const apiCache = new Map();
+const inflightRequests = new Map();
+
+async function fetchAPI(endpoint, useCache = false) {
+  if (useCache && apiCache.has(endpoint)) {
+    return apiCache.get(endpoint);
   }
+
+  if (inflightRequests.has(endpoint)) {
+    return await inflightRequests.get(endpoint);
+  }
+
+  const reqPromise = (async () => {
+    try {
+      const res = await fetch(`/api/v1${endpoint}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (useCache) {
+        apiCache.set(endpoint, data);
+      }
+      return data;
+    } catch (err) {
+      console.warn(`API call failed for ${endpoint}:`, err);
+      return null;
+    } finally {
+      inflightRequests.delete(endpoint);
+    }
+  })();
+
+  inflightRequests.set(endpoint, reqPromise);
+  return await reqPromise;
+}
+
+function invalidateApiCache() {
+  apiCache.clear();
 }
 
 // 1. Initial Load
@@ -308,11 +339,21 @@ function setupEventListeners() {
       filterMovesTable(e.target.value.toLowerCase().trim());
     });
   }
+
+  // Moves Table Pagination Buttons (Phase 8 Performance)
+  const movesPrevBtn = document.getElementById('movesPrevBtn');
+  const movesNextBtn = document.getElementById('movesNextBtn');
+  if (movesPrevBtn) {
+    movesPrevBtn.addEventListener('click', () => changeMovesPage(-1));
+  }
+  if (movesNextBtn) {
+    movesNextBtn.addEventListener('click', () => changeMovesPage(1));
+  }
 }
 
 // 2. Load & Render Characters
 async function loadCharacters() {
-  const data = await fetchAPI('/characters');
+  const data = await fetchAPI('/characters', true);
   if (data && Array.isArray(data)) {
     state.characters = data;
     renderCarousel();
@@ -431,25 +472,69 @@ async function selectCharacter(slug) {
 
 // 3. Load & Render Moves Table
 async function loadMovesForCharacter(characterId) {
-  const data = await fetchAPI(`/moves?character_id=${characterId}`);
+  const data = await fetchAPI(`/moves?character_id=${characterId}`, true);
   state.moves = data || [];
-  renderMovesTable(state.moves);
+  renderMovesTable(state.moves, true);
 }
 
-function renderMovesTable(movesList) {
+function changeMovesPage(delta) {
+  state.movesPagination.currentPage += delta;
+  renderMovesTable(state.movesPagination.filteredMoves, false);
+}
+
+function renderMovesTable(movesList, resetPage = true) {
   const tbody = document.getElementById('movesTableBody');
   const emptyState = document.getElementById('movesEmptyState');
+  const paginationBar = document.getElementById('movesPaginationBar');
+  const paginationInfo = document.getElementById('movesPaginationInfo');
+  const pageNumberEl = document.getElementById('movesPageNumber');
+  const prevBtn = document.getElementById('movesPrevBtn');
+  const nextBtn = document.getElementById('movesNextBtn');
   if (!tbody) return;
 
-  if (!movesList || movesList.length === 0) {
+  if (resetPage) {
+    state.movesPagination.currentPage = 1;
+    state.movesPagination.filteredMoves = movesList || [];
+  }
+
+  const list = state.movesPagination.filteredMoves;
+
+  if (!list || list.length === 0) {
     tbody.innerHTML = '';
     if (emptyState) emptyState.style.display = 'block';
+    if (paginationBar) paginationBar.style.display = 'none';
     return;
   }
 
   if (emptyState) emptyState.style.display = 'none';
+  if (paginationBar) paginationBar.style.display = 'flex';
 
-  tbody.innerHTML = movesList.map(m => {
+  const totalMoves = list.length;
+  const pageSize = state.movesPagination.pageSize;
+  const totalPages = Math.ceil(totalMoves / pageSize) || 1;
+
+  if (state.movesPagination.currentPage > totalPages) {
+    state.movesPagination.currentPage = totalPages;
+  }
+  if (state.movesPagination.currentPage < 1) {
+    state.movesPagination.currentPage = 1;
+  }
+
+  const curPage = state.movesPagination.currentPage;
+  const startIdx = (curPage - 1) * pageSize;
+  const endIdx = Math.min(startIdx + pageSize, totalMoves);
+  const pagedMoves = list.slice(startIdx, endIdx);
+
+  if (paginationInfo) {
+    paginationInfo.textContent = `Showing ${startIdx + 1}–${endIdx} of ${totalMoves} moves`;
+  }
+  if (pageNumberEl) {
+    pageNumberEl.textContent = `Page ${curPage} of ${totalPages}`;
+  }
+  if (prevBtn) prevBtn.disabled = curPage <= 1;
+  if (nextBtn) nextBtn.disabled = curPage >= totalPages;
+
+  tbody.innerHTML = pagedMoves.map(m => {
     const startupStr = m.startup_raw ? m.startup_raw : (m.startup_frames !== null ? `i${m.startup_frames}` : 'N/A');
     
     // Block Advantage styling
@@ -510,7 +595,7 @@ function renderMovesTable(movesList) {
 
 function filterMovesTable(query) {
   if (!query) {
-    renderMovesTable(state.moves);
+    renderMovesTable(state.moves, true);
     return;
   }
   const filtered = state.moves.filter(m => 
@@ -519,12 +604,12 @@ function filterMovesTable(query) {
     (m.hit_level && m.hit_level.toLowerCase().includes(query)) ||
     (m.properties && m.properties.some(p => (typeof p === 'string' ? p : p.property_name).toLowerCase().includes(query)))
   );
-  renderMovesTable(filtered);
+  renderMovesTable(filtered, true);
 }
 
 // 4. Render Stages Showcase
 async function loadStages() {
-  const data = await fetchAPI('/stages');
+  const data = await fetchAPI('/stages', true);
   if (data && Array.isArray(data) && data.length > 0) {
     state.stages = data;
   }
@@ -657,7 +742,7 @@ function filterByMoveText(text) {
 
 // 6. Coverage & Sources Data
 async function loadCoverageData() {
-  const data = await fetchAPI('/coverage/summary');
+  const data = await fetchAPI('/coverage/summary', true);
   if (data) {
     state.coverage = data;
     const rosterEl = document.getElementById('covRosterCount');
@@ -673,7 +758,7 @@ async function loadCoverageData() {
 }
 
 async function loadSourcesData() {
-  const data = await fetchAPI('/sources');
+  const data = await fetchAPI('/sources', true);
   if (data && Array.isArray(data)) {
     state.sources = data;
     const grid = document.getElementById('sourcesGrid');
@@ -1101,6 +1186,7 @@ function saveUserPreferencesLocally(playerId, opponentId, stageId, conditions) {
 }
 
 async function runMatchupAnalysis() {
+  invalidateApiCache();
   const pSelect = document.getElementById('playerSelect');
   const oSelect = document.getElementById('opponentSelect');
   const sSelect = document.getElementById('stageSelect');
@@ -1443,7 +1529,8 @@ async function loadStageStrategy(stageId, playerId, opponentId) {
 
   try {
     const report = await fetchAPI(
-      `/stages/${stageId}/strategy?player_character_id=${playerId}&opponent_character_id=${opponentId || ''}&wall_position=${wallPos}&heat_state=${heatSt}`
+      `/stages/${stageId}/strategy?player_character_id=${playerId}&opponent_character_id=${opponentId || ''}&wall_position=${wallPos}&heat_state=${heatSt}`,
+      true
     );
     if (!report) return;
 
@@ -1642,7 +1729,7 @@ async function loadComboRecommendations(playerId, opponentId, stageId) {
     if (opponentId) url += `&opponent_id=${opponentId}`;
     if (stageId) url += `&stage_id=${stageId}`;
 
-    const report = await fetchAPI(url);
+    const report = await fetchAPI(url, true);
     if (!report) return;
 
     state.combosPhase5.recommendations = report;
@@ -2283,9 +2370,8 @@ async function loadPunishmentOptions() {
   if (f.minDamage > 0) params.append('min_damage', f.minDamage);
 
   try {
-    const res = await fetch(`/api/v1/punishment/options?${params.toString()}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    const data = await fetchAPI(`/punishment/options?${params.toString()}`, true);
+    if (!data) return;
     state.punishment.options = data.options || [];
 
     // Update KPI metrics
