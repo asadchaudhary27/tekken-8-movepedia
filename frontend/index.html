@@ -33,6 +33,15 @@
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
         </svg>
       </a>
+      <a href="#punish-assistant" class="rail-item" title="Smart Punishment &amp; Practice">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="22" y1="12" x2="18" y2="12"/>
+          <line x1="6" y1="12" x2="2" y2="12"/>
+          <line x1="12" y1="6" x2="12" y2="2"/>
+          <line x1="12" y1="22" x2="12" y2="18"/>
+        </svg>
+      </a>
       <a href="#notation" class="rail-item" title="Notation Engine">
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
           <circle cx="12" cy="12" r="3"/>
@@ -67,6 +76,7 @@
     <ul class="nav-links">
       <li><a href="#fighters" class="nav-link active">Fighters</a></li>
       <li><a href="#analyzer" class="nav-link" style="color:var(--accent-red); font-weight:700;">Matchup Analyzer</a></li>
+      <li><a href="#punish-assistant" class="nav-link" style="color:var(--accent-gold); font-weight:700;">Smart Punish</a></li>
       <li><a href="#moves" class="nav-link">Moves &amp; Combos</a></li>
       <li><a href="#moves" class="nav-link">Frame Data</a></li>
       <li><a href="#stages" class="nav-link">Stages</a></li>
@@ -559,6 +569,12 @@
                   </div>
                 </div>
 
+                <div style="margin-top:0.75rem; text-align:right;">
+                  <a href="#punish-assistant" class="btn-hero-secondary" style="display:inline-block; font-size:0.75rem; padding:0.4rem 0.85rem; border-color:var(--accent-gold); color:var(--accent-gold); text-decoration:none; border-radius:6px;">
+                    ⚡ Launch Full Smart Punishment Assistant &amp; Practice Mode &rarr;
+                  </a>
+                </div>
+
                 <!-- Defensive Tactics Box (Fuzzy Guard & Interrupts) -->
                 <div class="tactical-defense-subbox">
                   <div class="td-row">
@@ -815,6 +831,179 @@
 
     </section>
 
+    <!-- ==========================================================================
+         Section: Smart Punishment Assistant & Practice Lab (Phase 3)
+         ========================================================================== -->
+    <section id="punish-assistant" class="section-punish-assistant">
+      <div class="section-header-row">
+        <div>
+          <div class="analyzer-badge-pill" style="border-color:var(--accent-gold); color:var(--accent-gold);">DEFENSIVE MASTERY ENGINE</div>
+          <h2 class="section-title">SMART PUNISHMENT ASSISTANT &amp; PRACTICE LAB</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem;">
+            Real-time frame disadvantage analysis, standing vs crouching recovery state resolution, pushback distance warnings, and interactive execution trainer.
+          </p>
+        </div>
+        <div class="analyzer-status-pill" style="border-color:rgba(255,190,11,0.3); background:rgba(255,190,11,0.08);">
+          <span class="status-indicator-dot" style="background:var(--accent-gold);"></span>
+          <span id="punishStatusLedger">Zero Guessed Frames • Patch 3.00.02</span>
+        </div>
+      </div>
+
+      <!-- Current Matchup Banner & Stats Bar -->
+      <div class="punish-summary-card">
+        <div class="punish-matchup-header">
+          <div class="punish-fighter-tag p1">
+            <img id="punishP1Avatar" src="/assets/avatars/jin-brand-256-C1-oe_x3.webp" alt="P1" class="punish-avatar-sm">
+            <div>
+              <span class="punish-sub-label">DEFENDER (YOUR FIGHTER)</span>
+              <div id="punishP1Name" class="punish-char-name">Jin Kazama</div>
+            </div>
+          </div>
+
+          <div class="punish-vs-center">
+            <span class="punish-vs-badge">VS</span>
+            <button class="btn-swap-punish" id="btnSwapPunish" type="button" title="Swap Fighters">
+              ⇄ Swap
+            </button>
+          </div>
+
+          <div class="punish-fighter-tag p2">
+            <img id="punishP2Avatar" src="/assets/avatars/kazuya-brand-256-BInk9tTm.webp" alt="P2" class="punish-avatar-sm">
+            <div>
+              <span class="punish-sub-label">ATTACKER (RIVAL)</span>
+              <div id="punishP2Name" class="punish-char-name">Kazuya Mishima</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 KPI Metrics Bar -->
+        <div class="punish-metrics-grid">
+          <div class="punish-metric-box">
+            <div class="pm-val" id="pmTotalMoves">0</div>
+            <div class="pm-lbl">Total Moves</div>
+          </div>
+          <div class="punish-metric-box punishable">
+            <div class="pm-val" id="pmPunishable">0</div>
+            <div class="pm-lbl">Punishable (&le; -10)</div>
+          </div>
+          <div class="punish-metric-box launch">
+            <div class="pm-val" id="pmLaunch">0</div>
+            <div class="pm-lbl">Launch Punish (&le; -15)</div>
+          </div>
+          <div class="punish-metric-box safe">
+            <div class="pm-val" id="pmSafe">0</div>
+            <div class="pm-lbl">Safe Attacks (&gt; -10)</div>
+          </div>
+          <div class="punish-metric-box mastery">
+            <div class="pm-val" id="pmAccuracy">0%</div>
+            <div class="pm-lbl">Practice Mastery (<span id="pmAttempts">0</span> Att.)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter & Search Toolbar -->
+      <div class="punish-toolbar-card">
+        <div class="punish-toolbar-grid">
+          
+          <!-- Search Move Input -->
+          <div class="toolbar-field search-field">
+            <label class="tb-label" for="punishSearchInput">SEARCH OPPONENT MOVE</label>
+            <input type="text" id="punishSearchInput" class="tb-input" placeholder="Search move name or notation (e.g. db+3, qcf+2, 1,2)...">
+          </div>
+
+          <!-- Block Advantage Filter -->
+          <div class="toolbar-field">
+            <label class="tb-label" for="punishBlockFilter">BLOCK DISADVANTAGE</label>
+            <select id="punishBlockFilter" class="tb-select">
+              <option value="ALL">All Block Frames</option>
+              <option value="PUNISHABLE">Punishable (&le; -10)</option>
+              <option value="LAUNCH_PUNISHABLE">Launch Punishable (&le; -15)</option>
+              <option value="SAFE">Safe on Block (&gt; -10)</option>
+              <option value="PLUS">Plus on Block (&gt; 0)</option>
+            </select>
+          </div>
+
+          <!-- Hit Level Filter -->
+          <div class="toolbar-field">
+            <label class="tb-label" for="punishHitLevelFilter">ATTACK LEVEL</label>
+            <select id="punishHitLevelFilter" class="tb-select">
+              <option value="ALL">All Levels (H, M, L)</option>
+              <option value="h">High Only (H)</option>
+              <option value="m">Mid Only (M)</option>
+              <option value="l">Low Only (Forces Crouch Guard)</option>
+            </select>
+          </div>
+
+          <!-- Stance Filter -->
+          <div class="toolbar-field">
+            <label class="tb-label" for="punishStanceFilter">STANCE CONTEXT</label>
+            <select id="punishStanceFilter" class="tb-select">
+              <option value="ALL">All Stances</option>
+              <option value="Standing">Standing</option>
+              <option value="Stance">Special Stance Transitions</option>
+            </select>
+          </div>
+
+          <!-- Min Punish Damage Filter -->
+          <div class="toolbar-field damage-field">
+            <label class="tb-label" for="punishMinDamage">MIN PUNISH DAMAGE</label>
+            <input type="number" id="punishMinDamage" class="tb-input" min="0" max="100" placeholder="0">
+          </div>
+
+          <!-- Reset Button -->
+          <div class="toolbar-field actions-field">
+            <button id="btnResetPunishFilters" class="btn-tb-reset" type="button">Reset Filters</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Main Results Table -->
+      <div class="punish-results-card">
+        <div class="punish-results-header">
+          <div class="pr-title">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--accent-gold)" stroke-width="2.5" fill="none">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="22" y1="12" x2="18" y2="12"/>
+              <line x1="6" y1="12" x2="2" y2="12"/>
+              <line x1="12" y1="6" x2="12" y2="2"/>
+              <line x1="12" y1="22" x2="12" y2="18"/>
+            </svg>
+            <span>VERIFIED PUNISHMENT MATRIX</span>
+          </div>
+          <div class="pr-actions">
+            <span class="pr-count-pill" id="punishFilteredCount">0 Moves Listed</span>
+          </div>
+        </div>
+
+        <div class="punish-table-responsive">
+          <table class="punish-table" id="punishTable">
+            <thead>
+              <tr>
+                <th>Opponent Move</th>
+                <th>Startup</th>
+                <th>Block Advantage</th>
+                <th>Defender Recovery</th>
+                <th>Recommended Punish</th>
+                <th>Startup</th>
+                <th>Damage</th>
+                <th>Status &amp; Reach</th>
+                <th>Why It Works</th>
+                <th>Practice</th>
+              </tr>
+            </thead>
+            <tbody id="punishTableBody">
+              <!-- Rendered dynamically via app.js -->
+            </tbody>
+          </table>
+          <div id="punishTableEmpty" class="punish-empty-state" style="display:none;">
+            No moves matched your current filters. Try relaxing search criteria.
+          </div>
+        </div>
+      </div>
+
+    </section>
+
     <!-- Section: Tekken 8 Stages Showcase (New Asset Presentation) -->
     <section id="stages" class="section-stages">
       <div class="section-header-row">
@@ -986,6 +1175,119 @@
         <!-- Rendered dynamically -->
       </div>
     </section>
+
+    <!-- ==========================================================================
+         Interactive Practice Mode Modal (Phase 3)
+         ========================================================================== -->
+    <div id="practiceModal" class="practice-modal-backdrop" style="display:none;">
+      <div class="practice-modal-card">
+        
+        <!-- Modal Top Bar -->
+        <div class="practice-modal-header">
+          <div class="pm-head-left">
+            <span class="pm-head-badge">INTERACTIVE PRACTICE LAB</span>
+            <h3 class="pm-head-title" id="practiceModalTitle">Opponent Move vs Response</h3>
+          </div>
+          <button class="pm-close-btn" id="btnPracticeModalClose" type="button" title="Close Lab">&times;</button>
+        </div>
+
+        <!-- 5-Step Training Checklist -->
+        <div class="practice-checklist-grid">
+          
+          <!-- Step 1: Learn Opponent Move -->
+          <div class="check-step-card" id="step1Card">
+            <div class="step-badge">STEP 1</div>
+            <div class="step-title">Learn Opponent Move</div>
+            <div class="step-body">
+              <div class="step-move-name" id="stepOppName">—</div>
+              <div class="step-notation-box">
+                <span class="step-input-badge" id="stepOppInput">—</span>
+                <span class="step-tag" id="stepOppStartup">i—</span>
+                <span class="step-tag" id="stepOppHitLevel">—</span>
+                <span class="step-tag frame-minus" id="stepOppBlock">— on block</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Recovery State Recognition -->
+          <div class="check-step-card" id="step2Card">
+            <div class="step-badge">STEP 2</div>
+            <div class="step-title">Identify Recovery State</div>
+            <div class="step-body">
+              <div class="recovery-status-display" id="stepRecoveryDisplay">STANDING GUARD</div>
+              <p class="step-note" id="stepRecoveryNote">
+                Opponent attack recovered standing. Use standard standing punishes.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3: Punish Execution -->
+          <div class="check-step-card" id="step3Card">
+            <div class="step-badge">STEP 3</div>
+            <div class="step-title">Practise Punish Input</div>
+            <div class="step-body">
+              <div class="step-move-name" id="stepPunishName">—</div>
+              <div class="step-notation-box">
+                <span class="step-input-badge highlight" id="stepPunishInput">—</span>
+                <span class="step-tag" id="stepPunishStartup">i—</span>
+                <span class="step-tag gold" id="stepPunishDamage">— DMG</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Step 4: Reaction & Execution Drill Trainer -->
+        <div class="reaction-trainer-box">
+          <div class="trainer-header">
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span class="step-badge" style="background:var(--accent-red); color:#fff;">STEP 4</span>
+              <span style="font-weight:700; color:#fff; font-size:0.95rem;">TIMING &amp; REACTION DRILL</span>
+            </div>
+            <span id="trainerStatusIndicator" class="trainer-status ready">READY TO DRILL</span>
+          </div>
+
+          <div class="trainer-display-stage" id="trainerStage">
+            <div class="trainer-prompt" id="trainerPrompt">
+              Press "Start Reaction Drill" when ready to test your punish execution!
+            </div>
+            <div class="trainer-reaction-timer" id="trainerTimer" style="display:none;">0 ms</div>
+          </div>
+
+          <div class="trainer-controls-row">
+            <button class="btn-trainer-start" id="btnStartDrill" type="button">Start Reaction Drill</button>
+            <button class="btn-trainer-punish" id="btnExecutePunish" type="button" disabled>⚡ EXECUTE PUNISH INPUT NOW</button>
+          </div>
+        </div>
+
+        <!-- Step 5: Record & Track Progress -->
+        <div class="practice-progress-box">
+          <div class="progress-box-header">
+            <div>
+              <span class="step-badge" style="background:#00e676; color:#000;">STEP 5</span>
+              <span style="font-weight:700; color:#fff; font-size:0.95rem;">RECORD ATTEMPT &amp; TRACK MASTERY</span>
+            </div>
+            <div class="progress-stats-summary">
+              <span id="modalMasteryPct" style="font-weight:800; color:var(--accent-gold); font-size:1.1rem;">0% Mastery</span>
+              <span style="color:var(--text-muted); font-size:0.8rem;">(<span id="modalSuccessCount">0</span> S / <span id="modalFailCount">0</span> F / <span id="modalTotalAttempts">0</span> Total)</span>
+            </div>
+          </div>
+
+          <div class="mastery-bar-wrap">
+            <div class="mastery-bar-fill" id="modalMasteryBar" style="width: 0%;"></div>
+          </div>
+
+          <div class="progress-action-row">
+            <div class="log-btn-group">
+              <button class="btn-log success" id="btnLogSuccess" type="button">✅ Record SUCCESS (+1)</button>
+              <button class="btn-log fail" id="btnLogFail" type="button">❌ Record FAIL (+1)</button>
+            </div>
+            <button class="btn-reset-record" id="btnResetModalRecord" type="button">🔄 Reset Move Progress</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
   </main>
 

@@ -11,6 +11,7 @@ from backend.app.models.combo_route import ComboRoute
 from backend.app.models.user_preference import UserPreference
 from backend.app.models.stage import Stage
 from backend.app.models.matchup_note import MatchupNote
+from backend.app.models.practice import PracticeRecord
 
 __all__ = [
     "DataSource",
@@ -27,5 +28,7 @@ __all__ = [
     "UserPreference",
     "Stage",
     "MatchupNote",
+    "PracticeRecord",
 ]
+
 

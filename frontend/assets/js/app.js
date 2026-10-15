@@ -194,6 +194,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadSourcesData();
   updateNotationDisplay();
   await initMatchupAnalyzer();
+  initPunishAssistant();
+  await loadPunishmentOptions();
 });
 
 // Event Listeners Setup
@@ -1053,6 +1055,7 @@ async function runMatchupAnalysis() {
 
     const data = await response.json();
     renderMatchupDashboard(data);
+    loadPunishmentOptions();
   } catch (err) {
     console.error('Matchup analysis error:', err);
     if (loadingEl) loadingEl.style.display = 'none';
@@ -1381,3 +1384,613 @@ function renderMatchupDashboard(data) {
 }
 
 
+
+
+// ==========================================================================
+// 8. Phase 3: Smart Punishment Assistant & Interactive Practice Lab
+// ==========================================================================
+
+state.punishment = {
+  options: [],
+  filters: {
+    query: '',
+    blockFilter: 'ALL',
+    hitLevel: 'ALL',
+    stance: 'ALL',
+    minDamage: 0
+  },
+  currentPracticeMove: null,
+  drillTimer: null,
+  drillStartTime: 0,
+  drillWaitingForInput: false
+};
+
+function initPunishAssistant() {
+  setupPunishControls();
+}
+
+function setupPunishControls() {
+  const searchInput = document.getElementById('punishSearchInput');
+  const blockFilter = document.getElementById('punishBlockFilter');
+  const hitLevelFilter = document.getElementById('punishHitLevelFilter');
+  const stanceFilter = document.getElementById('punishStanceFilter');
+  const minDamageInput = document.getElementById('punishMinDamage');
+  const resetBtn = document.getElementById('btnResetPunishFilters');
+  const swapBtn = document.getElementById('btnSwapPunish');
+  const modalCloseBtn = document.getElementById('btnPracticeModalClose');
+  const startDrillBtn = document.getElementById('btnStartDrill');
+  const executePunishBtn = document.getElementById('btnExecutePunish');
+  const logSuccessBtn = document.getElementById('btnLogSuccess');
+  const logFailBtn = document.getElementById('btnLogFail');
+  const resetModalRecordBtn = document.getElementById('btnResetModalRecord');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', debounce(() => {
+      state.punishment.filters.query = searchInput.value.trim();
+      loadPunishmentOptions();
+    }, 200));
+  }
+
+  if (blockFilter) {
+    blockFilter.addEventListener('change', () => {
+      state.punishment.filters.blockFilter = blockFilter.value;
+      loadPunishmentOptions();
+    });
+  }
+
+  if (hitLevelFilter) {
+    hitLevelFilter.addEventListener('change', () => {
+      state.punishment.filters.hitLevel = hitLevelFilter.value;
+      loadPunishmentOptions();
+    });
+  }
+
+  if (stanceFilter) {
+    stanceFilter.addEventListener('change', () => {
+      state.punishment.filters.stance = stanceFilter.value;
+      loadPunishmentOptions();
+    });
+  }
+
+  if (minDamageInput) {
+    minDamageInput.addEventListener('input', debounce(() => {
+      state.punishment.filters.minDamage = parseInt(minDamageInput.value) || 0;
+      loadPunishmentOptions();
+    }, 200));
+  }
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      if (blockFilter) blockFilter.value = 'ALL';
+      if (hitLevelFilter) hitLevelFilter.value = 'ALL';
+      if (stanceFilter) stanceFilter.value = 'ALL';
+      if (minDamageInput) minDamageInput.value = '';
+      state.punishment.filters = {
+        query: '',
+        blockFilter: 'ALL',
+        hitLevel: 'ALL',
+        stance: 'ALL',
+        minDamage: 0
+      };
+      loadPunishmentOptions();
+    });
+  }
+
+  if (swapBtn) {
+    swapBtn.addEventListener('click', () => {
+      swapFighters();
+    });
+  }
+
+  if (modalCloseBtn) {
+    modalCloseBtn.addEventListener('click', closePracticeModal);
+  }
+
+  const modalBackdrop = document.getElementById('practiceModal');
+  if (modalBackdrop) {
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) closePracticeModal();
+    });
+  }
+
+  if (startDrillBtn) {
+    startDrillBtn.addEventListener('click', startReactionDrill);
+  }
+
+  if (executePunishBtn) {
+    executePunishBtn.addEventListener('click', handlePunishExecution);
+  }
+
+  if (logSuccessBtn) {
+    logSuccessBtn.addEventListener('click', () => recordPracticeTrial('SUCCESS'));
+  }
+
+  if (logFailBtn) {
+    logFailBtn.addEventListener('click', () => recordPracticeTrial('FAIL'));
+  }
+
+  if (resetModalRecordBtn) {
+    resetModalRecordBtn.addEventListener('click', resetSessionPracticeProgress);
+  }
+
+  // Keyboard shortcut for reaction drill: pressing Space or Enter triggers punish
+  window.addEventListener('keydown', (e) => {
+    const modal = document.getElementById('practiceModal');
+    if (modal && modal.style.display !== 'none' && state.punishment.drillWaitingForInput) {
+      if (['Space', 'Enter', 'KeyJ', 'Digit1', 'Digit2'].includes(e.code) || e.key === ' ') {
+        e.preventDefault();
+        handlePunishExecution();
+      }
+    }
+  });
+}
+
+async function loadPunishmentOptions() {
+  const pSelect = document.getElementById('playerSelect');
+  const oSelect = document.getElementById('opponentSelect');
+  if (!pSelect || !oSelect) return;
+
+  const playerId = parseInt(pSelect.value);
+  const opponentId = parseInt(oSelect.value);
+  if (isNaN(playerId) || isNaN(opponentId)) return;
+
+  // Update fighter display tags in punishment assistant
+  const pChar = state.characters.find(c => c.id === playerId);
+  const oChar = state.characters.find(c => c.id === opponentId);
+
+  const pAvatar = document.getElementById('punishP1Avatar');
+  const pName = document.getElementById('punishP1Name');
+  const oAvatar = document.getElementById('punishP2Avatar');
+  const oName = document.getElementById('punishP2Name');
+
+  if (pAvatar && pChar) {
+    pAvatar.src = pChar.avatar_url || '/assets/avatars/jin-brand-256-C1-oe_x3.webp';
+    pAvatar.onerror = () => { pAvatar.src = '/assets/avatars/jin-brand-256-C1-oe_x3.webp'; };
+  }
+  if (pName && pChar) pName.textContent = pChar.name;
+
+  if (oAvatar && oChar) {
+    oAvatar.src = oChar.avatar_url || '/assets/avatars/kazuya-brand-256-BInk9tTm.webp';
+    oAvatar.onerror = () => { oAvatar.src = '/assets/avatars/kazuya-brand-256-BInk9tTm.webp'; };
+  }
+  if (oName && oChar) oName.textContent = oChar.name;
+
+  // Build query string
+  const params = new URLSearchParams({
+    player_character_id: playerId,
+    opponent_character_id: opponentId
+  });
+
+  const f = state.punishment.filters;
+  if (f.query) params.append('query', f.query);
+  if (f.blockFilter && f.blockFilter !== 'ALL') params.append('block_filter', f.blockFilter);
+  if (f.hitLevel && f.hitLevel !== 'ALL') params.append('hit_level', f.hitLevel);
+  if (f.stance && f.stance !== 'ALL') params.append('stance', f.stance);
+  if (f.minDamage > 0) params.append('min_damage', f.minDamage);
+
+  try {
+    const res = await fetch(`/api/v1/punishment/options?${params.toString()}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    state.punishment.options = data.options || [];
+
+    // Update KPI metrics
+    const totalEl = document.getElementById('pmTotalMoves');
+    const punEl = document.getElementById('pmPunishable');
+    const launchEl = document.getElementById('pmLaunch');
+    const safeEl = document.getElementById('pmSafe');
+    const countPill = document.getElementById('punishFilteredCount');
+
+    if (totalEl) totalEl.textContent = data.total_opponent_moves;
+    if (punEl) punEl.textContent = data.punishable_moves_count;
+    if (launchEl) launchEl.textContent = data.launch_punishable_count;
+    if (safeEl) safeEl.textContent = data.safe_moves_count;
+    if (countPill) countPill.textContent = `${state.punishment.options.length} Moves Listed`;
+
+    renderPunishTable(state.punishment.options);
+    await loadGlobalPracticeProgress();
+  } catch (err) {
+    console.error('Failed to load punishment options:', err);
+  }
+}
+
+function renderPunishTable(options) {
+  const tbody = document.getElementById('punishTableBody');
+  const emptyBox = document.getElementById('punishTableEmpty');
+  if (!tbody) return;
+
+  if (!options || options.length === 0) {
+    tbody.innerHTML = '';
+    if (emptyBox) emptyBox.style.display = 'block';
+    return;
+  }
+
+  if (emptyBox) emptyBox.style.display = 'none';
+
+  tbody.innerHTML = options.map((opt, idx) => {
+    // Block Advantage Pill
+    const blk = opt.opponent_block_advantage;
+    let blkClass = 'safe';
+    let blkText = 'N/A';
+    if (blk !== null) {
+      if (blk <= -15) {
+        blkClass = 'launch';
+        blkText = `${blk}`;
+      } else if (blk <= -10) {
+        blkClass = 'punishable';
+        blkText = `${blk}`;
+      } else if (blk > 0) {
+        blkClass = 'plus';
+        blkText = `+${blk}`;
+      } else {
+        blkClass = 'safe';
+        blkText = `${blk}`;
+      }
+    }
+
+    // Recovery State Pill (Standing vs Crouching)
+    const recState = opt.opponent_recovery_state || 'STANDING';
+    const recClass = recState.toLowerCase();
+    const recLabel = recState === 'CROUCHING' ? 'CROUCH GUARD (WS Only)' : 'STANDING GUARD';
+
+    // Status Reach Badge
+    const status = opt.punish_status || 'UNVERIFIED';
+    let statusClass = 'unverified';
+    let statusIcon = 'ℹ️';
+    let statusLabel = status;
+    if (status === 'GUARANTEED') {
+      statusClass = 'guaranteed';
+      statusIcon = '✅';
+      statusLabel = 'GUARANTEED';
+    } else if (status === 'CONDITIONAL') {
+      statusClass = 'conditional';
+      statusIcon = '⚠️';
+      statusLabel = 'CONDITIONAL (Pushback)';
+    } else if (status === 'SAFE') {
+      statusClass = 'safe';
+      statusIcon = '🛡️';
+      statusLabel = 'SAFE ATTACK';
+    } else {
+      statusClass = 'unverified';
+      statusIcon = '❓';
+      statusLabel = 'UNVERIFIED';
+    }
+
+    // Recommended Punish details
+    const punName = opt.recommended_punish_name || (opt.is_safe ? 'Neutral Guard' : 'No option found');
+    const punInput = opt.recommended_punish_input ? `<span class="km-input-badge">${opt.recommended_punish_input}</span>` : '—';
+    const punStp = opt.punish_startup ? `i${opt.punish_startup}` : '—';
+    const punDmg = opt.punish_damage ? `<span style="color:var(--accent-gold); font-weight:800;">${opt.punish_damage} DMG</span>` : '—';
+    const punTier = opt.punish_tier ? `<span class="punish-tier-badge ${opt.punish_tier.toLowerCase().includes('launch') ? 'launch' : (opt.punish_tier.toLowerCase().includes('ws') ? 'intermediate' : 'jab')}">${opt.punish_tier}</span>` : '';
+
+    return `
+      <tr>
+        <td>
+          <div style="font-weight:700; color:#fff;">${opt.opponent_move_name}</div>
+          <div style="display:flex; align-items:center; gap:0.4rem; margin-top:0.25rem;">
+            <span class="km-input-badge" style="font-size:0.75rem;">${opt.opponent_move_input}</span>
+            <span class="step-tag">${opt.opponent_hit_level ? opt.opponent_hit_level.toUpperCase() : 'M'}</span>
+          </div>
+        </td>
+        <td>
+          <span class="punish-startup-badge">i${opt.opponent_startup || '—'}</span>
+        </td>
+        <td>
+          <span class="frame-disadvantage-badge ${blkClass}">${blkText}</span>
+        </td>
+        <td>
+          <span class="recovery-badge ${recClass}" title="${recState === 'CROUCHING' ? 'Defending low moves forces crouching recovery; requires While Standing (WS) moves' : 'Normal standing guard'}">${recLabel}</span>
+        </td>
+        <td>
+          <div style="font-weight:700; color:#fff;">${punName}</div>
+          <div style="margin-top:0.25rem; display:flex; align-items:center; gap:0.35rem;">
+            ${punInput}
+            ${punTier}
+          </div>
+        </td>
+        <td>
+          <span class="punish-startup-badge">${punStp}</span>
+        </td>
+        <td>
+          ${punDmg}
+        </td>
+        <td>
+          <span class="status-reach-badge ${statusClass}">
+            <span>${statusIcon}</span>
+            <span>${statusLabel}</span>
+          </span>
+          ${opt.opponent_pushback === 'HIGH' ? '<div style="font-size:0.68rem; color:#ff7043; margin-top:0.2rem;">Pushback warning: jab whiffs</div>' : ''}
+        </td>
+        <td>
+          <div class="punish-explanation-text">${opt.why_it_works}</div>
+        </td>
+        <td>
+          <button class="btn-practice-trigger" type="button" onclick="openPracticeModalByIndex(${idx})">
+            <span>⚡ Practise</span>
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function openPracticeModalByIndex(idx) {
+  const opt = state.punishment.options[idx];
+  if (!opt) return;
+
+  state.punishment.currentPracticeMove = opt;
+
+  const modal = document.getElementById('practiceModal');
+  const title = document.getElementById('practiceModalTitle');
+  if (!modal) return;
+
+  if (title) {
+    title.textContent = `${opt.opponent_move_name} (${opt.opponent_move_input}) vs ${opt.recommended_punish_name || 'Punish Check'}`;
+  }
+
+  // Step 1: Learn Opponent Move
+  document.getElementById('stepOppName').textContent = opt.opponent_move_name;
+  document.getElementById('stepOppInput').textContent = opt.opponent_move_input;
+  document.getElementById('stepOppStartup').textContent = opt.opponent_startup ? `i${opt.opponent_startup}` : 'i—';
+  document.getElementById('stepOppHitLevel').textContent = opt.opponent_hit_level ? opt.opponent_hit_level.toUpperCase() : 'M';
+  const oppBlkEl = document.getElementById('stepOppBlock');
+  if (oppBlkEl) {
+    oppBlkEl.textContent = opt.opponent_block_advantage !== null ? `${opt.opponent_block_advantage} on block` : 'Unknown frames';
+  }
+
+  // Step 2: Recovery State Recognition
+  const recDisplay = document.getElementById('stepRecoveryDisplay');
+  const recNote = document.getElementById('stepRecoveryNote');
+  if (opt.opponent_recovery_state === 'CROUCHING') {
+    recDisplay.textContent = 'CROUCHING GUARD (WS ONLY)';
+    recDisplay.style.color = 'var(--accent-gold)';
+    recDisplay.style.borderColor = 'rgba(255, 190, 11, 0.4)';
+    recDisplay.style.background = 'rgba(255, 190, 11, 0.1)';
+    recNote.textContent = 'Blocking a low attack forces crouching recovery. Standing 1,2 jabs cannot be performed; you must use a While Standing (WS) move!';
+  } else {
+    recDisplay.textContent = 'STANDING GUARD (STANDARD)';
+    recDisplay.style.color = 'var(--accent-cyan)';
+    recDisplay.style.borderColor = 'rgba(0, 229, 255, 0.4)';
+    recDisplay.style.background = 'rgba(0, 229, 255, 0.1)';
+    recNote.textContent = 'Opponent attack recovered standing. You can use standard standing attacks or launchers to punish.';
+  }
+
+  // Step 3: Punish Execution
+  document.getElementById('stepPunishName').textContent = opt.recommended_punish_name || 'Standing 1,2 Jab Check';
+  document.getElementById('stepPunishInput').textContent = opt.recommended_punish_input || '1,2';
+  document.getElementById('stepPunishStartup').textContent = opt.punish_startup ? `i${opt.punish_startup}` : 'i10';
+  document.getElementById('stepPunishDamage').textContent = opt.punish_damage ? `${opt.punish_damage} DMG` : '17 DMG';
+
+  // Step 4: Reset Reaction Trainer
+  resetReactionDrillDisplay();
+
+  // Step 5: Load Move Mastery Progress
+  loadMovePracticeProgress(opt.opponent_move_name);
+
+  modal.style.display = 'flex';
+}
+
+function closePracticeModal() {
+  const modal = document.getElementById('practiceModal');
+  if (modal) modal.style.display = 'none';
+
+  if (state.punishment.drillTimer) {
+    clearTimeout(state.punishment.drillTimer);
+    state.punishment.drillTimer = null;
+  }
+  state.punishment.drillWaitingForInput = false;
+}
+
+function resetReactionDrillDisplay() {
+  const stage = document.getElementById('trainerStage');
+  const prompt = document.getElementById('trainerPrompt');
+  const timer = document.getElementById('trainerTimer');
+  const status = document.getElementById('trainerStatusIndicator');
+  const punishBtn = document.getElementById('btnExecutePunish');
+
+  if (stage) stage.className = 'trainer-display-stage';
+  if (prompt) prompt.textContent = 'Press "Start Reaction Drill" when ready to test your punish execution!';
+  if (timer) {
+    timer.style.display = 'none';
+    timer.textContent = '0 ms';
+  }
+  if (status) {
+    status.className = 'trainer-status ready';
+    status.textContent = 'READY TO DRILL';
+  }
+  if (punishBtn) punishBtn.disabled = true;
+
+  state.punishment.drillWaitingForInput = false;
+  if (state.punishment.drillTimer) {
+    clearTimeout(state.punishment.drillTimer);
+    state.punishment.drillTimer = null;
+  }
+}
+
+function startReactionDrill() {
+  const stage = document.getElementById('trainerStage');
+  const prompt = document.getElementById('trainerPrompt');
+  const timer = document.getElementById('trainerTimer');
+  const status = document.getElementById('trainerStatusIndicator');
+  const punishBtn = document.getElementById('btnExecutePunish');
+
+  resetReactionDrillDisplay();
+
+  if (status) {
+    status.className = 'trainer-status active';
+    status.textContent = 'DRILL IN PROGRESS...';
+  }
+  if (prompt) {
+    prompt.textContent = 'STAND GUARD... WATCH OPPONENT RECOVERY...';
+  }
+
+  // Random delay between 1500ms and 3500ms
+  const delayMs = Math.floor(Math.random() * 2000) + 1500;
+
+  state.punishment.drillTimer = setTimeout(() => {
+    state.punishment.drillStartTime = performance.now();
+    state.punishment.drillWaitingForInput = true;
+
+    if (stage) stage.className = 'trainer-display-stage punish-now';
+    if (prompt) prompt.textContent = '⚡ OPPONENT IN BLOCK STUN! EXECUTE PUNISH INPUT NOW!';
+    if (punishBtn) punishBtn.disabled = false;
+    if (status) {
+      status.className = 'trainer-status active';
+      status.textContent = 'PUNISH WINDOW ACTIVE!';
+    }
+  }, delayMs);
+}
+
+function handlePunishExecution() {
+  if (!state.punishment.drillWaitingForInput) return;
+
+  const elapsed = Math.round(performance.now() - state.punishment.drillStartTime);
+  state.punishment.drillWaitingForInput = false;
+
+  const stage = document.getElementById('trainerStage');
+  const prompt = document.getElementById('trainerPrompt');
+  const timer = document.getElementById('trainerTimer');
+  const status = document.getElementById('trainerStatusIndicator');
+  const punishBtn = document.getElementById('btnExecutePunish');
+
+  if (punishBtn) punishBtn.disabled = true;
+  if (timer) {
+    timer.style.display = 'block';
+    timer.textContent = `${elapsed} ms reaction`;
+  }
+
+  // Human reaction threshold: under 450ms is successful punish confirmation
+  const isSuccess = elapsed <= 450;
+
+  if (isSuccess) {
+    if (stage) stage.className = 'trainer-display-stage';
+    if (prompt) {
+      prompt.innerHTML = `<span style="color:#00e676; font-weight:900;">PERFECT TIMING! Punish Confirmed (${elapsed}ms)!</span>`;
+    }
+    if (status) {
+      status.className = 'trainer-status success';
+      status.textContent = 'EXECUTION SUCCESS (+1)';
+    }
+    recordPracticeTrial('SUCCESS');
+  } else {
+    if (stage) stage.className = 'trainer-display-stage';
+    if (prompt) {
+      prompt.innerHTML = `<span style="color:var(--accent-red); font-weight:900;">TOO SLOW (${elapsed}ms)! Opponent guarded.</span>`;
+    }
+    if (status) {
+      status.className = 'trainer-status failed';
+      status.textContent = 'ATTEMPT FAILED';
+    }
+    recordPracticeTrial('FAIL');
+  }
+}
+
+async function recordPracticeTrial(result) {
+  const opt = state.punishment.currentPracticeMove;
+  if (!opt) return;
+
+  const pSelect = document.getElementById('playerSelect');
+  const oSelect = document.getElementById('opponentSelect');
+  if (!pSelect || !oSelect) return;
+
+  const playerId = parseInt(pSelect.value);
+  const opponentId = parseInt(oSelect.value);
+
+  const payload = {
+    session_token: state.sessionToken,
+    player_character_id: playerId,
+    opponent_character_id: opponentId,
+    opponent_move_id: opt.opponent_move_id,
+    opponent_move_name: opt.opponent_move_name,
+    opponent_move_input: opt.opponent_move_input,
+    punish_move_input: opt.recommended_punish_input || '1,2',
+    result: result
+  };
+
+  try {
+    const res = await fetch('/api/v1/punishment/practice/record', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      const record = await res.json();
+      updateModalMasteryUI(record);
+      await loadGlobalPracticeProgress();
+    }
+  } catch (err) {
+    console.error('Failed to record practice trial:', err);
+  }
+}
+
+function updateModalMasteryUI(record) {
+  const pctEl = document.getElementById('modalMasteryPct');
+  const sCountEl = document.getElementById('modalSuccessCount');
+  const fCountEl = document.getElementById('modalFailCount');
+  const totEl = document.getElementById('modalTotalAttempts');
+  const barEl = document.getElementById('modalMasteryBar');
+
+  if (pctEl) pctEl.textContent = `${record.mastery_score}% Mastery`;
+  if (sCountEl) sCountEl.textContent = record.success_count;
+  if (fCountEl) fCountEl.textContent = record.fail_count;
+  if (totEl) totEl.textContent = record.attempts;
+  if (barEl) barEl.style.width = `${record.mastery_score}%`;
+}
+
+async function loadMovePracticeProgress(moveName) {
+  try {
+    const res = await fetch(`/api/v1/punishment/practice/progress?session_token=${state.sessionToken}`);
+    if (res.ok) {
+      const data = await res.json();
+      const rec = (data.records || []).find(r => r.opponent_move_name === moveName);
+      if (rec) {
+        updateModalMasteryUI(rec);
+      } else {
+        updateModalMasteryUI({
+          mastery_score: 0,
+          success_count: 0,
+          fail_count: 0,
+          attempts: 0
+        });
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load move practice progress:', err);
+  }
+}
+
+async function loadGlobalPracticeProgress() {
+  try {
+    const res = await fetch(`/api/v1/punishment/practice/progress?session_token=${state.sessionToken}`);
+    if (res.ok) {
+      const data = await res.json();
+      const accEl = document.getElementById('pmAccuracy');
+      const attEl = document.getElementById('pmAttempts');
+      if (accEl) accEl.textContent = `${data.overall_accuracy_pct}%`;
+      if (attEl) attEl.textContent = data.total_attempts;
+    }
+  } catch (err) {
+    console.error('Failed to load global practice progress:', err);
+  }
+}
+
+async function resetSessionPracticeProgress() {
+  if (!confirm('Are you sure you want to reset all training progress for this session?')) return;
+  try {
+    const res = await fetch(`/api/v1/punishment/practice/reset?session_token=${state.sessionToken}`, {
+      method: 'POST'
+    });
+    if (res.ok) {
+      updateModalMasteryUI({
+        mastery_score: 0,
+        success_count: 0,
+        fail_count: 0,
+        attempts: 0
+      });
+      await loadGlobalPracticeProgress();
+    }
+  } catch (err) {
+    console.error('Failed to reset practice progress:', err);
+  }
+}

@@ -7,7 +7,8 @@ from backend.app.api.v1.endpoints import (
     coverage,
     sources,
     stages,
-    matchup
+    matchup,
+    punishment
 )
 
 api_router = APIRouter()
@@ -19,3 +20,4 @@ api_router.include_router(coverage.router, prefix="/coverage", tags=["Coverage &
 api_router.include_router(sources.router, prefix="/sources", tags=["Data Sources"])
 api_router.include_router(stages.router, prefix="/stages", tags=["Stages"])
 api_router.include_router(matchup.router, prefix="/matchup", tags=["Matchup Analyzer"])
+api_router.include_router(punishment.router, prefix="/punishment", tags=["Smart Punishment"])

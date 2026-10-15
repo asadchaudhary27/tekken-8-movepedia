@@ -688,7 +688,9 @@
     "level": "m",
     "props": [
       "heat-engager",
-      "wall-crush"
+      "wall-crush",
+      "extreme-pushback",
+      "pushback"
     ],
     "character_slug": "paul",
     "startup_frames": 15,
@@ -696,7 +698,9 @@
     "hit_advantage": 28,
     "properties": [
       "heat-engager",
-      "wall-crush"
+      "wall-crush",
+      "extreme-pushback",
+      "pushback"
     ],
     "hit_level": "m",
     "patch_version": "3.00.02"
@@ -4302,6 +4306,424 @@
     "hit_advantage": 16,
     "properties": [
       "heat-engager"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "jin",
+    "name": "Twin Lancer WS Kick",
+    "input": "ws4",
+    "startup": 11,
+    "startup_raw": "i11",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 16,
+    "level": "m",
+    "props": [],
+    "character_slug": "jin",
+    "startup_frames": 11,
+    "block_advantage": -6,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "jin",
+    "name": "Rising Sun Upper",
+    "input": "ws2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -12,
+    "block_raw": "-12",
+    "hit": 38,
+    "hit_raw": "+38a",
+    "damage": 20,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "jin",
+    "startup_frames": 15,
+    "block_advantage": -12,
+    "hit_advantage": 38,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kazuya",
+    "name": "Rising Sun Front Kick",
+    "input": "ws4",
+    "startup": 11,
+    "startup_raw": "i11",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 16,
+    "level": "m",
+    "props": [],
+    "character_slug": "kazuya",
+    "startup_frames": 11,
+    "block_advantage": -6,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kazuya",
+    "name": "Demon God Fist",
+    "input": "ws2",
+    "startup": 16,
+    "startup_raw": "i16",
+    "block": -18,
+    "block_raw": "-18",
+    "hit": 40,
+    "hit_raw": "+40a",
+    "damage": 25,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "kazuya",
+    "startup_frames": 16,
+    "block_advantage": -18,
+    "hit_advantage": 40,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "kazuya",
+    "name": "Flash Punch Combo",
+    "input": "1,1,2",
+    "startup": 10,
+    "startup_raw": "i10",
+    "block": -17,
+    "block_raw": "-17",
+    "hit": 22,
+    "hit_raw": "+22k",
+    "damage": 25,
+    "level": "h,h,m",
+    "props": [
+      "knockdown"
+    ],
+    "character_slug": "kazuya",
+    "startup_frames": 10,
+    "block_advantage": -17,
+    "hit_advantage": 22,
+    "properties": [
+      "knockdown"
+    ],
+    "hit_level": "h,h,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "feng",
+    "name": "Ascending Knee Kick",
+    "input": "ws4",
+    "startup": 11,
+    "startup_raw": "i11",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 16,
+    "level": "m",
+    "props": [],
+    "character_slug": "feng",
+    "startup_frames": 11,
+    "block_advantage": -6,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "feng",
+    "name": "Silent Thrust Palm",
+    "input": "ws1",
+    "startup": 14,
+    "startup_raw": "i14",
+    "block": -14,
+    "block_raw": "-14",
+    "hit": 4,
+    "hit_raw": "+4",
+    "damage": 20,
+    "level": "m",
+    "props": [
+      "counter-hit-launcher"
+    ],
+    "character_slug": "feng",
+    "startup_frames": 14,
+    "block_advantage": -14,
+    "hit_advantage": 4,
+    "properties": [
+      "counter-hit-launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "feng",
+    "name": "Dragon Upper",
+    "input": "ws3",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -10,
+    "block_raw": "-10",
+    "hit": 35,
+    "hit_raw": "+35a",
+    "damage": 22,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "feng",
+    "startup_frames": 15,
+    "block_advantage": -10,
+    "hit_advantage": 35,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "reina",
+    "name": "Flash WS Kick",
+    "input": "ws4",
+    "startup": 11,
+    "startup_raw": "i11",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 16,
+    "level": "m",
+    "props": [],
+    "character_slug": "reina",
+    "startup_frames": 11,
+    "block_advantage": -6,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "reina",
+    "name": "Rising Thunder Blade",
+    "input": "ws2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -12,
+    "block_raw": "-12",
+    "hit": 38,
+    "hit_raw": "+38a",
+    "damage": 20,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "reina",
+    "startup_frames": 15,
+    "block_advantage": -12,
+    "hit_advantage": 38,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "king",
+    "name": "Crouch Recovery Knee",
+    "input": "ws4",
+    "startup": 11,
+    "startup_raw": "i11",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 16,
+    "level": "m",
+    "props": [],
+    "character_slug": "king",
+    "startup_frames": 11,
+    "block_advantage": -6,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "king",
+    "name": "Double Axe Hook",
+    "input": "ws1+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -12,
+    "block_raw": "-12",
+    "hit": 36,
+    "hit_raw": "+36a",
+    "damage": 24,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "king",
+    "startup_frames": 15,
+    "block_advantage": -12,
+    "hit_advantage": 36,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "king",
+    "name": "Straight Punch Check",
+    "input": "1,2",
+    "startup": 10,
+    "startup_raw": "i10",
+    "block": -1,
+    "block_raw": "-1",
+    "hit": 7,
+    "hit_raw": "+7",
+    "damage": 17,
+    "level": "h,h",
+    "props": [],
+    "character_slug": "king",
+    "startup_frames": 10,
+    "block_advantage": -1,
+    "hit_advantage": 7,
+    "properties": [],
+    "hit_level": "h,h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "king",
+    "name": "Uppercut Launch",
+    "input": "df+2,1",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 35,
+    "hit_raw": "+35a",
+    "damage": 25,
+    "level": "m,m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "king",
+    "startup_frames": 15,
+    "block_advantage": -6,
+    "hit_advantage": 35,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m,m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "paul",
+    "name": "Quick WS Front Kick",
+    "input": "ws4",
+    "startup": 11,
+    "startup_raw": "i11",
+    "block": -6,
+    "block_raw": "-6",
+    "hit": 5,
+    "hit_raw": "+5",
+    "damage": 16,
+    "level": "m",
+    "props": [],
+    "character_slug": "paul",
+    "startup_frames": 11,
+    "block_advantage": -6,
+    "hit_advantage": 5,
+    "properties": [],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "paul",
+    "name": "Stone Splitter",
+    "input": "ws2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -14,
+    "block_raw": "-14",
+    "hit": 38,
+    "hit_raw": "+38a",
+    "damage": 22,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "paul",
+    "startup_frames": 15,
+    "block_advantage": -14,
+    "hit_advantage": 38,
+    "properties": [
+      "launcher"
+    ],
+    "hit_level": "m",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "paul",
+    "name": "Jab Cross",
+    "input": "1,2",
+    "startup": 10,
+    "startup_raw": "i10",
+    "block": -1,
+    "block_raw": "-1",
+    "hit": 7,
+    "hit_raw": "+7",
+    "damage": 17,
+    "level": "h,h",
+    "props": [],
+    "character_slug": "paul",
+    "startup_frames": 10,
+    "block_advantage": -1,
+    "hit_advantage": 7,
+    "properties": [],
+    "hit_level": "h,h",
+    "patch_version": "3.00.02"
+  },
+  {
+    "char": "paul",
+    "name": "Lift Upper",
+    "input": "df+2",
+    "startup": 15,
+    "startup_raw": "i15",
+    "block": -8,
+    "block_raw": "-8",
+    "hit": 35,
+    "hit_raw": "+35a",
+    "damage": 23,
+    "level": "m",
+    "props": [
+      "launcher"
+    ],
+    "character_slug": "paul",
+    "startup_frames": 15,
+    "block_advantage": -8,
+    "hit_advantage": 35,
+    "properties": [
+      "launcher"
     ],
     "hit_level": "m",
     "patch_version": "3.00.02"
