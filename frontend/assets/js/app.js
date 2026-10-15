@@ -545,6 +545,8 @@ function setupEventListeners() {
       e.target.classList.add('active');
       state.activeFilter = e.target.dataset.filter;
       renderCarousel();
+      const track = document.getElementById('carouselTrack');
+      if (track) track.scrollTo({ left: 0, behavior: 'smooth' });
     });
   });
 
@@ -557,29 +559,8 @@ function setupEventListeners() {
     });
   });
 
-  // Carousel Navigation Buttons (< and >) & Side-Scroll Mousewheel
-  const prevBtn = document.getElementById('carouselPrevBtn');
-  const nextBtn = document.getElementById('carouselNextBtn');
-  const track = document.getElementById('carouselTrack');
-  if (prevBtn && track) {
-    prevBtn.addEventListener('click', () => {
-      track.scrollBy({ left: -260, behavior: 'smooth' });
-    });
-  }
-  if (nextBtn && track) {
-    nextBtn.addEventListener('click', () => {
-      track.scrollBy({ left: 260, behavior: 'smooth' });
-    });
-  }
-  if (track) {
-    // Enable effortless horizontal side-scrolling via mouse wheel
-    track.addEventListener('wheel', (e) => {
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault();
-        track.scrollBy({ left: e.deltaY * 1.6, behavior: 'auto' });
-      }
-    }, { passive: false });
-  }
+  // Initialize Robust Carousel Sliding & Touch/Mouse Drag
+  initCarouselNavigation();
 
   // Quick Search Box
   const searchInput = document.getElementById('searchQuickInput');
@@ -617,6 +598,112 @@ function setupEventListeners() {
   }
 }
 
+// Carousel Navigation, Step Scrolling & Touch/Mouse Swipe
+function updateCarouselNavButtons() {
+  const prevBtn = document.getElementById('carouselPrevBtn');
+  const nextBtn = document.getElementById('carouselNextBtn');
+  const track = document.getElementById('carouselTrack');
+  if (!track || !prevBtn || !nextBtn) return;
+  const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth - 4);
+  prevBtn.classList.toggle('is-disabled', track.scrollLeft <= 4);
+  nextBtn.classList.toggle('is-disabled', track.scrollLeft >= maxScroll);
+}
+
+function initCarouselNavigation() {
+  const prevBtn = document.getElementById('carouselPrevBtn');
+  const nextBtn = document.getElementById('carouselNextBtn');
+  const track = document.getElementById('carouselTrack');
+  if (!track) return;
+
+  function stepCarousel(direction) {
+    // Dynamic paging step: ~72% of visible track width (or at least 260px)
+    const step = Math.max(260, Math.floor(track.clientWidth * 0.72));
+    const target = track.scrollLeft + (direction * step);
+    track.scrollTo({
+      left: target,
+      behavior: 'smooth'
+    });
+    setTimeout(updateCarouselNavButtons, 350);
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      stepCarousel(-1);
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      stepCarousel(1);
+    });
+  }
+
+  // Update button states on scroll
+  track.addEventListener('scroll', debounce(updateCarouselNavButtons, 50), { passive: true });
+
+  // Mouse wheel horizontal side-scrolling
+  track.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      e.preventDefault();
+      track.scrollLeft += e.deltaY * 1.5;
+      updateCarouselNavButtons();
+    }
+  }, { passive: false });
+
+  // POINTER DRAG & SWIPE SUPPORT (Mouse, Pen & Touch)
+  let isPointerDown = false;
+  let startX = 0;
+  let initialScrollLeft = 0;
+  let dragDistance = 0;
+
+  track.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
+    isPointerDown = true;
+    dragDistance = 0;
+    startX = e.clientX;
+    initialScrollLeft = track.scrollLeft;
+    track.classList.add('is-dragging');
+    try {
+      track.setPointerCapture(e.pointerId);
+    } catch (_) {}
+  });
+
+  track.addEventListener('pointermove', (e) => {
+    if (!isPointerDown) return;
+    const deltaX = e.clientX - startX;
+    dragDistance = Math.max(dragDistance, Math.abs(deltaX));
+    track.scrollLeft = initialScrollLeft - deltaX;
+  });
+
+  const finishDrag = (e) => {
+    if (!isPointerDown) return;
+    isPointerDown = false;
+    track.classList.remove('is-dragging');
+    try {
+      track.releasePointerCapture(e.pointerId);
+    } catch (_) {}
+    updateCarouselNavButtons();
+  };
+
+  track.addEventListener('pointerup', finishDrag);
+  track.addEventListener('pointercancel', finishDrag);
+
+  // Capture phase click interceptor: if user was dragging/swiping, do NOT trigger character selection
+  track.addEventListener('click', (e) => {
+    if (dragDistance > 6) {
+      e.preventDefault();
+      e.stopPropagation();
+      dragDistance = 0;
+    }
+  }, true);
+
+  // Update button states initially and on window resize
+  window.addEventListener('resize', debounce(updateCarouselNavButtons, 100));
+  setTimeout(updateCarouselNavButtons, 150);
+}
+
 // 2. Load & Render Characters
 async function loadCharacters() {
   const data = await fetchAPI('/characters', true);
@@ -649,6 +736,7 @@ function renderCarousel() {
 
   if (filtered.length === 0) {
     track.innerHTML = '<div style="color:var(--text-muted); padding:1rem;">No fighters in this category.</div>';
+    updateCarouselNavButtons();
     return;
   }
 
@@ -664,12 +752,15 @@ function renderCarousel() {
                src="${c.avatar_url || '/assets/avatars/jin-brand-256-C1-oe_x3.webp'}" 
                alt="${c.name}"
                loading="lazy"
+               draggable="false"
                onerror="this.src='/assets/avatars/jin-brand-256-C1-oe_x3.webp'"/>
         </div>
         <div class="carousel-name">${c.name}</div>
       </div>
     `;
   }).join('');
+
+  setTimeout(updateCarouselNavButtons, 80);
 }
 
 // Render Sidebar Quick Fighters

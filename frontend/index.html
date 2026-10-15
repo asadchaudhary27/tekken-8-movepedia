@@ -119,14 +119,44 @@
       <div class="left-hero-column">
         
         <!-- Hero Section with Jin vs Kazuya Faceoff Artwork -->
-        <section class="hero-banner">
+        <section class="hero-banner" id="heroBannerSection">
           <div class="hero-backdrop"></div>
+          <div class="hero-glow-overlay"></div>
           <div class="hero-content">
-            <h1 class="hero-title">MASTER YOUR FATE</h1>
-            <p class="hero-subtitle">All Characters, Combos, Frame Data &amp; Advanced Strategies for Tekken 8</p>
+            <div class="hero-badge-pill">
+              <span class="hero-badge-pulse"></span>
+              <span>TEKKEN 8 FIGHT INTELLIGENCE &amp; LAB</span>
+            </div>
+            <h1 class="hero-title">
+              MASTER YOUR <span class="hero-title-gradient">FATE</span>
+            </h1>
+            <p class="hero-subtitle">
+              Frame Data, Verified Punish Matrix, Juggle Scalings &amp; Stage Hazard Dynamics across all 35+ Warriors.
+            </p>
+            <div class="hero-meta-stats">
+              <div class="hero-stat-chip">
+                <span class="hero-stat-num">35+</span>
+                <span class="hero-stat-label">Roster Fighters</span>
+              </div>
+              <div class="hero-stat-divider"></div>
+              <div class="hero-stat-chip">
+                <span class="hero-stat-num">16</span>
+                <span class="hero-stat-label">Stages &amp; Hazards</span>
+              </div>
+              <div class="hero-stat-divider"></div>
+              <div class="hero-stat-chip">
+                <span class="hero-stat-num">v3.00</span>
+                <span class="hero-stat-label">Patch Verified</span>
+              </div>
+            </div>
             <div class="hero-btn-group">
-              <a href="#fighters" class="btn-hero-primary">Browse Fighters</a>
-              <a href="#notation" class="btn-hero-secondary">Combos &amp; Guides</a>
+              <a href="#fighters" class="btn-hero-primary">
+                <span>Browse Fighters</span>
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+              <a href="#analyzer" class="btn-hero-secondary">
+                <span>Matchup Combat Lab</span>
+              </a>
             </div>
           </div>
         </section>
@@ -146,12 +176,20 @@
 
           <!-- Carousel with Navigation Buttons -->
           <div class="carousel-container">
-            <button class="carousel-nav-btn prev" id="carouselPrevBtn" title="Previous Fighters">&lt;</button>
-            <div class="carousel-track" id="carouselTrack">
+            <button type="button" class="carousel-nav-btn prev" id="carouselPrevBtn" title="Previous Fighters" aria-label="Previous Fighters">
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <div class="carousel-track" id="carouselTrack" tabindex="0" role="region" aria-label="Fighter Selection Carousel">
               <!-- Rendered dynamically via app.js -->
               <div style="color:var(--text-muted); padding:2rem;">Loading character roster...</div>
             </div>
-            <button class="carousel-nav-btn next" id="carouselNextBtn" title="Next Fighters">&gt;</button>
+            <button type="button" class="carousel-nav-btn next" id="carouselNextBtn" title="Next Fighters" aria-label="Next Fighters">
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
           </div>
         </section>
 
