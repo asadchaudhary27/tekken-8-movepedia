@@ -119,3 +119,14 @@ if os.path.exists(frontend_dir):
         def serve_presentation():
             return FileResponse(presentation_html)
 
+    @app.get("/{full_path:path}", include_in_schema=False)
+    def catch_all_frontend(full_path: str):
+        clean_path = full_path.lstrip("/")
+        if clean_path.startswith("assets/"):
+            fpath = os.path.join(frontend_dir, clean_path)
+            if os.path.exists(fpath):
+                return FileResponse(fpath)
+        elif clean_path == "presentation":
+            return FileResponse(presentation_html)
+        return FileResponse(index_html)
+
