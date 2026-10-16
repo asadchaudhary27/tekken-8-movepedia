@@ -1,0 +1,17 @@
+services:
+  tekken8-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tekken8_fyp_platform
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - API_V1_PREFIX=/api/v1
+      - APP_NAME="Tekken 8 Movepedia & Tournament Assistant"
+      - CURRENT_GAME_PATCH=v3.00.02
+      - ADMIN_SECRET_KEY=tekken8-fyp-admin-secret-2026
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
