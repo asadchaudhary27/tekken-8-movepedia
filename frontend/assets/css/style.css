@@ -9388,77 +9388,349 @@ body {
 /* ==========================================================================
    Character Profile Dashboard Modal (Phase 4 - 17 Sections)
    ========================================================================== */
+.practice-modal-backdrop#characterProfileModal {
+  z-index: 10000;
+}
+
 .profile-modal-card {
-  max-width: 900px;
+  max-width: 1160px;
+  width: 95vw;
   padding: 0;
   overflow: hidden;
-  max-height: 90vh;
+  max-height: 94vh;
   display: flex;
   flex-direction: column;
+  background: #0b0e14;
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 229, 255, 0.15);
 }
 
 .cp-modal-hero {
   position: relative;
-  background: linear-gradient(135deg, rgba(20, 24, 34, 0.95), rgba(11, 14, 22, 0.98));
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1.25rem;
+  background: radial-gradient(circle at 10% 20%, rgba(0, 229, 255, 0.08), transparent 60%),
+              radial-gradient(circle at 90% 80%, rgba(255, 30, 56, 0.06), transparent 50%),
+              linear-gradient(135deg, #121722 0%, #0a0d14 100%);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+  padding: 1.25rem 1.5rem;
 }
 
-.cp-hero-flex {
+.cp-hero-grid {
+  display: grid;
+  grid-template-columns: 190px 1fr 280px;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 992px) {
+  .cp-hero-grid {
+    grid-template-columns: 140px 1fr;
+  }
+  .cp-attributes-card {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .cp-hero-grid {
+    grid-template-columns: 1fr;
+  }
+  .cp-avatar-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.cp-avatar-column {
   display: flex;
-  gap: 1.25rem;
-  align-items: center;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
-.cp-avatar-wrap {
+.cp-avatar-frame {
   position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  max-width: 190px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid var(--accent-cyan);
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.25), inset 0 0 15px rgba(0, 0, 0, 0.8);
+  background: #07090e;
 }
 
 .cp-avatar-img {
-  width: 88px;
-  height: 88px;
-  border-radius: 12px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border: 2px solid var(--accent-cyan);
-  box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+  object-position: top center;
+  transition: transform 0.3s ease;
 }
 
-.cp-badge-row {
+.cp-avatar-frame:hover .cp-avatar-img {
+  transform: scale(1.04);
+}
+
+.cp-avatar-silhouette-fallback {
+  width: 100%;
+  height: 100%;
   display: flex;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.35rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #151b27, #080a0f);
+  color: var(--accent-cyan);
+  font-weight: 900;
+  font-size: 2.5rem;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
 }
 
-.cp-pill {
-  font-size: 0.65rem;
+.cp-avatar-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  max-width: 190px;
+}
+
+.cp-avatar-tag {
+  font-size: 0.68rem;
   font-weight: 800;
-  padding: 0.15rem 0.45rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cp-avatar-tag.archetype {
+  background: rgba(0, 229, 255, 0.15);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+}
+
+.cp-avatar-tag.hurtbox {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+/* Center Details Column */
+.cp-info-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.cp-header-title-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.cp-char-name-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cp-char-name {
+  font-size: 1.85rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #fff;
+  margin: 0;
+  line-height: 1.1;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #ffffff 40%, #c4d4eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cp-char-japanese {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: rgba(0, 229, 255, 0.85);
+  letter-spacing: 0.1em;
+}
+
+.cp-char-alias {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* 2x3 Tactical Telemetry HUD Grid */
+.cp-telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  background: rgba(7, 10, 16, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .cp-telemetry-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.cp-telemetry-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.cp-tel-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.cp-tel-val {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cp-tel-val.weak-side {
+  color: #ff6b7e;
+  font-weight: 900;
+}
+
+.cp-tel-val.difficulty {
+  color: var(--accent-gold);
+}
+
+.cp-lore-summary {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #b0b8c8;
+  margin: 0;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 3px solid var(--accent-cyan);
+  padding: 0.45rem 0.65rem;
+  border-radius: 0 6px 6px 0;
+}
+
+/* Tactical Pros and Cons Badges */
+.cp-tactics-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.cp-pro-chip {
+  font-size: 0.68rem;
+  font-weight: 800;
+  background: rgba(0, 230, 118, 0.12);
+  color: #00e676;
+  border: 1px solid rgba(0, 230, 118, 0.3);
+  padding: 0.18rem 0.5rem;
   border-radius: 4px;
 }
 
-.cp-pill.archetype { background: rgba(0, 229, 255, 0.15); color: var(--accent-cyan); }
-.cp-pill.country { background: rgba(255, 255, 255, 0.1); color: #fff; }
-.cp-pill.difficulty { background: rgba(255, 190, 11, 0.15); color: var(--accent-gold); }
-.cp-pill.hurtbox { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
-
-.cp-char-name {
-  font-size: 1.4rem;
-  font-weight: 900;
-  color: #fff;
-  margin: 0;
+.cp-con-chip {
+  font-size: 0.68rem;
+  font-weight: 800;
+  background: rgba(255, 30, 56, 0.12);
+  color: #ff4d6d;
+  border: 1px solid rgba(255, 30, 56, 0.3);
+  padding: 0.18rem 0.5rem;
+  border-radius: 4px;
 }
 
-.cp-char-style {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  margin-bottom: 0.65rem;
+/* Right Column: Attributes & Quick Actions */
+.cp-attributes-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  background: rgba(9, 12, 19, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+}
+
+.cp-attr-header {
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 0.35rem;
+}
+
+.cp-attr-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.cp-attr-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cp-attr-name {
+  font-size: 0.68rem;
+  font-weight: 800;
+  width: 75px;
+  color: #cad3e0;
+}
+
+.cp-attr-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.cp-attr-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-cyan), #38ef7d);
+  border-radius: 3px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cp-attr-fill.execution {
+  background: linear-gradient(90deg, var(--accent-gold), #ff5722);
+}
+
+.cp-attr-fill.offense {
+  background: linear-gradient(90deg, #ff1e38, #ff9100);
+}
+
+.cp-attr-fill.defense {
+  background: linear-gradient(90deg, #00e5ff, #2979ff);
+}
+
+.cp-attr-score {
+  font-size: 0.68rem;
+  font-weight: 900;
+  color: #fff;
+  width: 25px;
+  text-align: right;
 }
 
 .cp-actions-row {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
   flex-wrap: wrap;
+  margin-top: 0.25rem;
 }
 
 .btn-cp-action {
@@ -11812,3 +12084,299 @@ body {
   color: var(--accent-cyan);
 }
 
+
+
+/* ==========================================================================
+   PRO ESPORTS ARCHITECTURE: 4-View SPA Engine & Theme Upgrades
+   ========================================================================== */
+
+/* 1. SPA Views Engine */
+.app-view {
+  display: none;
+  width: 100%;
+}
+
+.app-view.active {
+  display: block;
+  animation: appViewFade 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes appViewFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 2. Unified SVG Vector Direction Badges */
+.tk-dir-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  border-radius: 4px;
+  margin: 0 1.5px;
+  vertical-align: middle;
+  line-height: 1;
+  user-select: none;
+  box-sizing: border-box;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.tk-dir-badge:hover {
+  transform: translateY(-1px);
+}
+
+.tk-svg-dir,
+.tk-svg-star,
+.tk-svg-ps {
+  width: 13px;
+  height: 13px;
+  display: block;
+}
+
+/* Tap Direction (Crisp Vector Outline / Low Fill) */
+.tk-dir-badge.tk-dir-tap {
+  background: #151824;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #f1f5f9;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Hold Direction (Vibrant Solid Crimson / Amber Glow) */
+.tk-dir-badge.tk-dir-hold {
+  background: linear-gradient(135deg, #ff1a3c 0%, #b30021 100%);
+  border: 1px solid #ff4d6d;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 26, 60, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  font-weight: 900;
+}
+
+/* Neutral Star (Tekken Golden Star) */
+.tk-dir-badge.tk-dir-star {
+  background: rgba(255, 190, 11, 0.14);
+  border: 1px solid rgba(255, 190, 11, 0.45);
+  color: #ffbe0b;
+  box-shadow: 0 0 8px rgba(255, 190, 11, 0.3);
+}
+
+/* 3. Controller Layout Badges (PlayStation & Xbox Vector Shapes) */
+.tk-btn-chip.tk-btn-ps {
+  padding: 0 0.3rem;
+  background: #141722;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.tk-btn-chip.tk-btn-ps-sq {
+  border-color: #ff66cc;
+  color: #ff66cc;
+  box-shadow: 0 0 8px rgba(255, 102, 204, 0.35);
+}
+
+.tk-btn-chip.tk-btn-ps-tri {
+  border-color: #00ff99;
+  color: #00ff99;
+  box-shadow: 0 0 8px rgba(0, 255, 153, 0.35);
+}
+
+.tk-btn-chip.tk-btn-ps-cross {
+  border-color: #3399ff;
+  color: #3399ff;
+  box-shadow: 0 0 8px rgba(51, 153, 255, 0.35);
+}
+
+.tk-btn-chip.tk-btn-ps-circle {
+  border-color: #ff3355;
+  color: #ff3355;
+  box-shadow: 0 0 8px rgba(255, 51, 85, 0.35);
+}
+
+/* Xbox Badges */
+.tk-btn-chip.tk-btn-xb {
+  font-family: var(--font-family-display), system-ui, sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+
+.tk-btn-chip.tk-btn-xb-x {
+  border-color: #00a4ef;
+  color: #00a4ef;
+  background: rgba(0, 164, 239, 0.12);
+  box-shadow: 0 0 8px rgba(0, 164, 239, 0.35);
+}
+
+.tk-btn-chip.tk-btn-xb-y {
+  border-color: #ffb900;
+  color: #ffb900;
+  background: rgba(255, 185, 0, 0.12);
+  box-shadow: 0 0 8px rgba(255, 185, 0, 0.35);
+}
+
+.tk-btn-chip.tk-btn-xb-a {
+  border-color: #7fba00;
+  color: #7fba00;
+  background: rgba(127, 186, 0, 0.12);
+  box-shadow: 0 0 8px rgba(127, 186, 0, 0.35);
+}
+
+.tk-btn-chip.tk-btn-xb-b {
+  border-color: #f25022;
+  color: #f25022;
+  background: rgba(242, 80, 34, 0.12);
+  box-shadow: 0 0 8px rgba(242, 80, 34, 0.35);
+}
+
+/* 4. Mechanics Chips & Tags */
+.tk-tag-tornado {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.25) 0%, rgba(0, 180, 216, 0.15) 100%);
+  border: 1px solid var(--accent-cyan);
+  color: #e0faff;
+  box-shadow: 0 0 8px var(--accent-cyan-glow);
+}
+
+.tk-tag-wall {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  background: linear-gradient(135deg, rgba(255, 190, 11, 0.25) 0%, rgba(217, 119, 6, 0.15) 100%);
+  border: 1px solid var(--accent-gold);
+  color: #fffde7;
+  box-shadow: 0 0 8px rgba(255, 190, 11, 0.35);
+}
+
+.tk-tag-break {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(185, 28, 28, 0.15) 100%);
+  border: 1px solid #ef4444;
+  color: #ffebee;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.35);
+}
+
+.tk-tag-ch {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(217, 119, 6, 0.15) 100%);
+  border: 1px solid #f59e0b;
+  color: #fffbeb;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.35);
+}
+
+.tk-tag-pc {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(126, 34, 206, 0.15) 100%);
+  border: 1px solid #a855f7;
+  color: #f3e8ff;
+  box-shadow: 0 0 8px rgba(168, 85, 247, 0.35);
+}
+
+.tk-tag-heat {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  background: linear-gradient(135deg, #00d4ff 0%, #0077b6 100%);
+  border: 1px solid #00f0ff;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.45);
+}
+
+.tk-sep-chip.tk-slide {
+  font-weight: 900;
+  color: var(--accent-cyan);
+}
+
+/* 5. Pro Esports Frame Data Monospace Typography & Palette */
+.moves-table td:nth-child(4),
+.moves-table td:nth-child(5),
+.moves-table td:nth-child(6),
+.moves-table td:nth-child(7),
+.moves-table td:nth-child(8) {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', 'SF Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Plus Frames: Emerald Green */
+.frame-plus,
+.frame-pos,
+.safety-pill.plus {
+  color: #00ff88 !important;
+  text-shadow: 0 0 6px rgba(0, 255, 136, 0.35);
+}
+
+/* Safe Disadvantage (-1 to -9): Warm Amber */
+.frame-safe,
+.safety-pill.safe {
+  color: #ffbe0b !important;
+  text-shadow: 0 0 6px rgba(255, 190, 11, 0.3);
+}
+
+/* Punishable (-10 to -14): Vivid Orange */
+.frame-unsafe,
+.frame-punish,
+.safety-pill.unsafe {
+  color: #ff7b00 !important;
+  text-shadow: 0 0 6px rgba(255, 123, 0, 0.35);
+}
+
+/* Launch Punishable (-15 and beyond): Vivid Crimson */
+.frame-launch,
+.safety-pill.launch {
+  color: #ff1a3c !important;
+  text-shadow: 0 0 8px rgba(255, 26, 60, 0.45);
+  font-weight: 800 !important;
+}
+
+/* 6. Section Tactics (Fullscreen In-Page Compendium) */
+.section-tactics {
+  padding: 1.5rem 0 3rem;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.section-tactics .tactics-compendium-controls {
+  margin-top: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-tactics .tactics-compendium-body {
+  min-height: 480px;
+}

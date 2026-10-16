@@ -36,23 +36,19 @@
 
     <nav class="nav-links-wrapper" id="navLinksWrapper">
       <ul class="nav-links" id="mainNavLinks">
-        <li><a href="#heroBannerSection" class="nav-link active">Home</a></li>
-        <li><a href="#fighters" class="nav-link">Characters</a></li>
-        <li><a href="#combo-lab" class="nav-link">Combo Lab</a></li>
-        <li><a href="#punish-assistant" class="nav-link">Punishment</a></li>
-        <li><a href="#analyzer" class="nav-link">Matchup Lab</a></li>
-        <li><a href="#moves" class="nav-link">Moves &amp; Frames</a></li>
-        <li><a href="#stages" class="nav-link">Stages</a></li>
-        <li><a href="javascript:void(0)" class="nav-link" onclick="openTacticsHubModal('sidesteps'); return false;">Tactics</a></li>
+        <li><a href="#fighters" class="nav-link active" data-view="fighters" onclick="switchAppView('fighters'); return false;">Fighters &amp; Moves</a></li>
+        <li><a href="#matchup" class="nav-link" data-view="matchup" onclick="switchAppView('matchup'); return false;">Matchup Lab</a></li>
+        <li><a href="#stages" class="nav-link" data-view="stages" onclick="switchAppView('stages'); return false;">Stage Blueprints</a></li>
+        <li><a href="#tactics" class="nav-link" data-view="tactics" onclick="switchAppView('tactics'); return false;">Tactics Compendium</a></li>
       </ul>
     </nav>
 
     <div class="nav-actions">
       <!-- Universal Attack Button Mapping Toggle (Arcade / PlayStation / Xbox) -->
       <div class="nav-controller-toggle" id="navControllerToggle" title="Universal Button Mapping Notation">
-        <button type="button" class="nav-ctl-btn active" data-layout="ARCADE" title="Arcade Notation: 1, 2, 3, 4">🕹️ 1·2·3·4</button>
-        <button type="button" class="nav-ctl-btn" data-layout="PLAYSTATION" title="PlayStation Notation: □, △, ✕, ○">🎮 PS</button>
-        <button type="button" class="nav-ctl-btn" data-layout="XBOX" title="Xbox Notation: X, Y, A, B">🎮 XB</button>
+        <button type="button" class="nav-ctl-btn active" data-layout="ARCADE" onclick="setControllerLayout('ARCADE')" title="Standard Tekken: 1, 2, 3, 4">🕹️ 1·2·3·4</button>
+        <button type="button" class="nav-ctl-btn" data-layout="PLAYSTATION" onclick="setControllerLayout('PLAYSTATION')" title="PlayStation: □, △, ✕, ○">🎮 PS</button>
+        <button type="button" class="nav-ctl-btn" data-layout="XBOX" onclick="setControllerLayout('XBOX')" title="Xbox: X, Y, A, B">🎮 XB</button>
       </div>
 
       <!-- Global Command Palette / Search Trigger Button -->
@@ -99,7 +95,7 @@
         <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
 
-      <a href="/presentation" class="btn-swagger" style="background:rgba(255,26,60,0.18); border-color:#ff1a3c; color:#fff;" title="Open FYP Presentation Slide Deck">📊 Slides</a>
+      <a href="/presentation" class="btn-swagger" style="background:rgba(255,26,60,0.18); border-color:#ff1a3c; color:#fff;" title="Platform Overview &amp; Interactive Guide">📊 Overview</a>
       <a href="/docs" target="_blank" class="btn-swagger" title="OpenAPI Swagger Spec">API Docs</a>
     </div>
   </header>
@@ -108,8 +104,11 @@
   <!-- Main Container -->
   <main class="main-wrapper">
     
-    <!-- Hero Section with Jin vs Kazuya Faceoff Artwork & Combat Triad -->
-    <section class="hero-banner" id="heroBannerSection">
+    <!-- ==========================================================================
+         VIEW 1: FIGHTERS & MOVES (Primary Character Lab & Frame Explorer)
+         ========================================================================== -->
+    <div class="app-view active" id="view-fighters" data-view="fighters">
+      <section class="hero-banner" id="heroBannerSection">
       <div class="hero-backdrop"></div>
       <div class="hero-glow-overlay"></div>
       <div class="hero-content">
@@ -141,22 +140,20 @@
         </div>
 
         <div class="hero-btn-group">
-              <a href="#fighters" class="btn-hero-primary">
-                <span>Browse Roster</span>
-                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </a>
-              <a href="#combo-lab" class="btn-hero-secondary">
-                <span>Combo Lab</span>
-              </a>
-              <a href="#analyzer" class="btn-hero-secondary">
-                <span>Combat Lab</span>
-              </a>
-            </div>
+          <a href="#fighters" class="btn-hero-primary" onclick="switchAppView('fighters', 'fighters'); return false;">
+            <span>Browse Roster</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#combo-lab" class="btn-hero-secondary" onclick="switchAppView('fighters', 'combo-lab'); return false;">
+            <span>Combo Lab</span>
+          </a>
+          <a href="#analyzer" class="btn-hero-secondary" onclick="switchAppView('matchup', 'analyzer'); return false;">
+            <span>Combat Lab</span>
+          </a>
+        </div>
           </div>
         </section>
-
-        <!-- Choose Your Fighter Section: Full Responsive Grid + Quick Ribbon Toggle -->
-        <section id="fighters" class="section-choose-fighter">
+      <section id="fighters" class="section-choose-fighter">
           <div class="choose-header-row">
             <div class="choose-title-wrap">
               <h2 class="choose-title">CHOOSE YOUR FIGHTER</h2>
@@ -259,25 +256,400 @@
                 <span>📖 Deep Dive Profile</span>
                 <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
               </button>
-              <a href="#combo-lab" class="btn-summary-jump combo" onclick="if(state.selectedCharacter) loadComboLabForFighter(state.selectedCharacter);">
+              <a href="#combo-lab" class="btn-summary-jump combo" onclick="switchAppView('fighters', 'combo-lab'); if(state.selectedCharacter) loadComboLabForFighter(state.selectedCharacter); return false;">
                 <span>🥊 Combo Lab</span>
               </a>
-              <a href="#moves" class="btn-summary-jump">
+              <a href="#moves" class="btn-summary-jump" onclick="switchAppView('fighters', 'moves'); return false;">
                 <span>Moves &amp; Frames</span>
                 <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </a>
-              <a href="#analyzer" class="btn-summary-jump primary">
+              <a href="#analyzer" class="btn-summary-jump primary" onclick="switchAppView('matchup', 'analyzer'); return false;">
                 <span>Matchup Combat Lab</span>
                 <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
               </a>
             </div>
           </div>
         </section>
+      <section id="moves" class="section-moves">
+      <div class="move-explorer-header-wrap">
+        <div>
+          <h2 id="currentFighterTitle" class="section-title">TEKKEN 8 MOVE EXPLORER &amp; FRAME DATA</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Official patch-verified frame data with explicit states (Negative = Disadvantage, Positive = Advantage, N/A = Stance / Transition)</p>
+        </div>
+        
+        <!-- Live Fighter Selector in Move Explorer -->
+        <div class="move-explorer-fighter-bar">
+          <img id="moveExplorerFighterAvatar" class="move-explorer-avatar" src="/assets/avatars/jin-brand-256-C1-oe_x3.webp" alt="Fighter Avatar">
+          <select id="moveExplorerFighterSelect" class="move-filter-select" onchange="onMoveExplorerFighterChange(this.value)" title="Choose Fighter to Explore Moves">
+            <!-- Populated dynamically via app.js -->
+          </select>
+          <span id="moveExplorerTotalMovesBadge" class="fighter-meta-chip">11 Moves</span>
+          <span id="moveExplorerVerifiedBadge" class="starter-chip verified">100% VERIFIED</span>
+          <span id="moveExplorerPatchBadge" class="starter-chip version">v3.00.02</span>
+        </div>
+      </div>
+
+      <!-- Quick Safety & Property Filter Pills -->
+      <div class="moves-safety-filters" id="movesSafetyFilters">
+        <span class="safety-filter-label">Quick Safety:</span>
+        <button type="button" class="safety-pill active" data-safety="ALL">ALL MOVES</button>
+        <button type="button" class="safety-pill safe" data-safety="SAFE">SAFE (≥ -9)</button>
+        <button type="button" class="safety-pill unsafe" data-safety="UNSAFE">UNSAFE (-10 to -14)</button>
+        <button type="button" class="safety-pill launch" data-safety="LAUNCH_PUNISH">LAUNCH PUNISHABLE (≤ -15)</button>
+        <button type="button" class="safety-pill plus" data-safety="PLUS">PLUS ON BLOCK (≥ +1)</button>
+        <button type="button" class="safety-pill high" data-safety="HIGH">HIGH (H)</button>
+        <button type="button" class="safety-pill mid" data-safety="MID">MID (M)</button>
+        <button type="button" class="safety-pill low" data-safety="LOW">LOW (L)</button>
+        <button type="button" class="safety-pill heat" data-safety="HEAT">HEAT ENGAGER</button>
+        <button type="button" class="safety-pill pc" data-safety="POWER_CRUSH">POWER CRUSH</button>
+        <button type="button" class="safety-pill homing" data-safety="HOMING">HOMING</button>
+        <button type="button" class="safety-pill tornado" data-safety="TORNADO">TORNADO</button>
+        <button type="button" class="safety-pill stance" data-safety="STANCE">STANCE</button>
+      </div>
+
+      <!-- Advanced Secondary Filters Toolbar -->
+      <div class="moves-secondary-filters" id="movesSecondaryFilters">
+        <!-- Hit Level Filter -->
+        <select id="moveFilterHitLevel" class="move-filter-select" onchange="filterMovesTable()" title="Filter by Hit Level">
+          <option value="ALL">All Hit Levels</option>
+          <option value="HIGH">High (H)</option>
+          <option value="MID">Mid (M)</option>
+          <option value="LOW">Low (L)</option>
+          <option value="SPECIAL_MID">Special Mid (SM)</option>
+          <option value="THROW">Throw (T)</option>
+          <option value="STANCE">Stance Transition</option>
+        </select>
+
+        <!-- Startup Range -->
+        <div style="display:flex; align-items:center; gap:0.25rem;">
+          <input type="number" id="moveFilterStartupMin" class="move-filter-input" style="width:72px;" placeholder="Min i" min="8" max="90" oninput="filterMovesTable()">
+          <span style="color:var(--text-muted); font-size:0.75rem;">–</span>
+          <input type="number" id="moveFilterStartupMax" class="move-filter-input" style="width:72px;" placeholder="Max i" min="8" max="90" oninput="filterMovesTable()">
+        </div>
+
+        <!-- Punishability Filter -->
+        <select id="moveFilterPunish" class="move-filter-select" onchange="filterMovesTable()" title="Filter by Punishability">
+          <option value="ALL">All Punish States</option>
+          <option value="SAFE">Safe on Block (≤ -9)</option>
+          <option value="PUNISHABLE_10">Standing i10 Punishable</option>
+          <option value="PUNISHABLE_12">Standing i12 Punishable</option>
+          <option value="PUNISHABLE_14">Standing i14 Punishable</option>
+          <option value="LAUNCH_PUNISHABLE">Launch Punishable (≤ -15)</option>
+        </select>
+
+        <!-- Stance Context -->
+        <select id="moveFilterStance" class="move-filter-select" onchange="filterMovesTable()" title="Filter by Stance">
+          <option value="ALL">All Stances</option>
+          <option value="NEUTRAL_ONLY">Neutral Moves Only</option>
+          <option value="STANCE_ONLY">Stance Specific Only</option>
+        </select>
+
+        <!-- Verification Status -->
+        <select id="moveFilterVerification" class="move-filter-select" onchange="filterMovesTable()" title="Filter by Verification Status">
+          <option value="ALL">All Statuses</option>
+          <option value="VERIFIED">Verified Lab Data Only</option>
+          <option value="EXPERIMENTAL">Experimental</option>
+          <option value="REPORTED">Reported</option>
+        </select>
+
+        <!-- Live Substring / Command Search -->
+        <input type="text" id="movesTableFilter" class="move-filter-input" style="flex:1; min-width:180px;" placeholder="Search move name, notation, hit level, stance..." oninput="filterMovesTable()">
+
+        <!-- Reset Button -->
+        <button type="button" class="btn btn-secondary" id="btnResetMoveFilters" onclick="resetMovesFilter()" style="padding:0.4rem 0.75rem; font-size:0.75rem; border-radius:6px; cursor:pointer;">
+          Reset Filters
+        </button>
+
+        <span id="moveExplorerCountPill" class="combo-count-badge" style="font-size:0.75rem;">0 Moves</span>
+      </div>
+
+      <div class="moves-table-container">
+        <table class="moves-table">
+          <thead>
+            <tr>
+              <th>Move Name</th>
+              <th>Command</th>
+              <th>Level</th>
+              <th>Startup</th>
+              <th>Block</th>
+              <th>Hit</th>
+              <th>CH</th>
+              <th>Damage</th>
+              <th>Safety &amp; Punish</th>
+              <th>Properties</th>
+              <th style="text-align:center;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="movesTableBody">
+            <!-- Rendered dynamically via renderMovesTable() in app.js -->
+          </tbody>
+        </table>
+        <div id="movesEmptyState" class="empty-state-card" style="display:none;">
+          <div class="empty-icon">📋</div>
+          <h3 class="empty-title">No Moves Found</h3>
+          <p class="empty-desc">No moves match your active filters or search keyword for this fighter. Switch to a primary tournament fighter or reset your filters.</p>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center;">
+            <button type="button" class="btn btn-secondary empty-action" onclick="resetMovesFilter();">Reset Move Filters</button>
+            <button type="button" class="btn btn-secondary empty-action" onclick="selectCharacter('jin');">Switch to Jin Kazama</button>
+          </div>
+        </div>
+        <div id="movesPaginationBar" class="moves-pagination-bar" style="display:none;">
+          <span id="movesPaginationInfo">Showing 0-0 of 0 moves</span>
+          <div style="display:flex; gap:0.5rem; align-items:center;">
+            <button id="movesPrevBtn" class="pagination-btn" aria-label="Previous page of moves" onclick="changeMovesPage(-1)">◀ Prev</button>
+            <span id="movesPageNumber" style="font-weight:700; color:var(--text-primary); padding:0 0.5rem;">Page 1 of 1</span>
+            <button id="movesNextBtn" class="pagination-btn" aria-label="Next page of moves" onclick="changeMovesPage(1)">Next ▶</button>
+          </div>
+        </div>
+      </div>
+    </section>
+      <section id="combo-lab" class="section-combo-lab">
+      <div class="section-header-row">
+        <div>
+          <div class="analyzer-badge-pill" style="border-color:var(--accent-cyan); color:var(--accent-cyan);">JUGGLE LAB &amp; ROUTE OPTIMIZER</div>
+          <h2 class="section-title">TEKKEN 8 ULTIMATE COMBO LAB</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem;">
+            Verified juggle scalings, wall carries, heat conversions, and stage hazard routes across all 43 warriors.
+          </p>
+        </div>
+        <div class="analyzer-status-pill" style="border-color:rgba(0,229,255,0.3); background:rgba(0,229,255,0.08);">
+          <span class="status-indicator-dot" style="background:var(--accent-cyan);"></span>
+          <span id="comboLabStatusLedger">Verified Decay Scaling • Patch 3.00.02</span>
+        </div>
+      </div>
+
+      <!-- Phase 3: P1 / P2 / Dual Comparison Perspective Bar -->
+      <div class="combo-perspective-bar" id="comboPerspectiveBar">
+        <button type="button" class="btn-segmented active p1-active" id="btnComboPerspP1" onclick="setComboPerspective('P1')" title="View Player 1 Combos">
+          <span style="color:var(--btn-lp-cyan);">● P1 Combos (<span id="comboPerspP1Name">Jin</span>)</span> (<span id="comboPerspP1Count">0</span>)
+        </button>
+        <button type="button" class="btn-segmented" id="btnComboPerspP2" onclick="setComboPerspective('P2')" title="View Player 2 Combos">
+          <span style="color:var(--btn-rk-pink);">● P2 Combos (<span id="comboPerspP2Name">Kazuya</span>)</span> (<span id="comboPerspP2Count">0</span>)
+        </button>
+        <button type="button" class="btn-segmented" id="btnComboPerspDual" onclick="setComboPerspective('DUAL')" title="Compare P1 and P2 Combos Side-by-Side">
+          ⚔️ Dual Comparison Grid
+        </button>
+        <button type="button" class="btn-segmented" id="btnSwapComboFighters" onclick="swapComboLabFighters()" title="Swap P1 and P2 Fighters">
+          ⇄ Swap Fighters
+        </button>
+      </div>
+
+      <!-- Combo Lab Controls Card -->
+      <div class="combo-lab-controls-card">
+        <div class="combo-lab-picker-row">
+          
+          <!-- Player 1 (P1) Selection Dropdown -->
+          <div class="cl-picker-col">
+            <label class="cl-label" for="comboLabFighterSelect">PLAYER 1 (P1 FIGHTER)</label>
+            <div class="cl-picker-flex" style="border-left: 3px solid var(--btn-lp-cyan);">
+              <img id="comboLabFighterAvatar" class="cl-avatar-thumb" src="/assets/avatars/jin-brand-256-C1-oe_x3.webp" alt="P1 Fighter">
+              <select id="comboLabFighterSelect" class="cl-select" onchange="onComboLabFighterChange(this.value)">
+                <!-- Populated dynamically via app.js -->
+              </select>
+              <span id="comboLabP1HurtboxBadge" class="cl-hurtbox-badge male_standard">Male Standard</span>
+            </div>
+          </div>
+
+          <!-- Player 2 (P2) Selection Dropdown -->
+          <div class="cl-picker-col">
+            <label class="cl-label" for="comboLabOpponentSelect">PLAYER 2 (P2 RIVAL)</label>
+            <div class="cl-picker-flex" style="border-left: 3px solid var(--btn-rk-pink);">
+              <img id="comboLabOpponentAvatar" class="cl-avatar-thumb" src="/assets/avatars/kazuya-brand-256-BInk9tTm.webp" alt="P2 Rival">
+              <select id="comboLabOpponentSelect" class="cl-select" onchange="onComboLabOpponentChange(this.value)">
+                <!-- Populated dynamically via app.js -->
+              </select>
+              <span id="comboLabHurtboxBadge" class="cl-hurtbox-badge male_standard">Male Standard</span>
+            </div>
+          </div>
+
+          <!-- Arena Stage Selector -->
+          <div class="cl-picker-col">
+            <label class="cl-label" for="comboLabStageSelect">BATTLEGROUND ARENA</label>
+            <div class="cl-picker-flex">
+              <img id="comboLabStageThumb" class="cl-stage-thumb" src="/assets/img/stages/arena.jpg" alt="Stage" onerror="this.src='/assets/img/stages/arena.svg'">
+              <select id="comboLabStageSelect" class="cl-select" onchange="onComboLabStageChange(this.value)">
+                <!-- Populated dynamically via app.js -->
+              </select>
+              <span id="comboLabStageHazards" class="fighter-meta-chip" style="font-size:0.65rem;">Walled</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Filter Pills Bar (10 Categories) -->
+        <div class="combo-lab-filters-row">
+          <div class="combo-category-pills" id="comboLabCategoryPills">
+            <button type="button" class="combo-cat-pill active" data-cat="ALL">ALL (10+ TYPES)</button>
+            <button type="button" class="combo-cat-pill" data-cat="beginner_friendly">🔰 BEGINNER FRIENDLY</button>
+            <button type="button" class="combo-cat-pill" data-cat="standard_launch">⚡ STANDARD LAUNCH</button>
+            <button type="button" class="combo-cat-pill" data-cat="high_damage_optimal">💥 OPTIMAL MAX DMG</button>
+            <button type="button" class="combo-cat-pill" data-cat="wall_carry">🧱 WALL CARRY</button>
+            <button type="button" class="combo-cat-pill" data-cat="wall_combo">🥊 WALL COMBO</button>
+            <button type="button" class="combo-cat-pill" data-cat="heat_dependent">🔥 HEAT DEPENDENT</button>
+            <button type="button" class="combo-cat-pill" data-cat="counter_hit">🎯 COUNTER HIT</button>
+            <button type="button" class="combo-cat-pill" data-cat="stage_break">🏛️ STAGE BREAK</button>
+            <button type="button" class="combo-cat-pill" data-cat="character_specific">🐻 CHARACTER SPECIFIC</button>
+            <button type="button" class="combo-cat-pill" data-cat="alternative_routes">🔀 PRACTICAL ALTERNATIVES</button>
+          </div>
+
+          <!-- Advanced Structured Filters Row -->
+          <div class="combo-secondary-filters">
+            <!-- Starter Type Filter -->
+            <select id="comboLabStarterTypeFilter" class="combo-filter-select" onchange="filterComboLabGrid()" title="Starter Attack Property">
+              <option value="ALL">All Starters</option>
+              <option value="NORMAL_HIT">Normal Hit (NH)</option>
+              <option value="COUNTER_HIT">Counter-Hit (CH)</option>
+              <option value="LAUNCHER">Main Launcher</option>
+              <option value="PUNISH">Punish Starter</option>
+            </select>
+
+            <!-- Difficulty Filter -->
+            <select id="comboLabDifficultyFilter" class="combo-filter-select" onchange="filterComboLabGrid()" title="Execution Difficulty">
+              <option value="ALL">All Difficulties</option>
+              <option value="EASY">Beginner (★☆☆☆☆)</option>
+              <option value="MEDIUM">Intermediate (★★★☆☆)</option>
+              <option value="HARD">Advanced (★★★★☆)</option>
+              <option value="OPTIMAL">Optimal Master (★★★★★)</option>
+            </select>
+
+            <!-- Environment Filter -->
+            <select id="comboLabWallFilter" class="combo-filter-select" onchange="filterComboLabGrid()" title="Wall & Hazard Properties">
+              <option value="ALL">All Environments</option>
+              <option value="WALL_CARRY">Wall Carry Only</option>
+              <option value="WALL_COMBO">Wall Splat Combo</option>
+              <option value="STAGE_BREAK">Stage Break (Wall/Floor)</option>
+            </select>
+
+            <!-- Stance Requirement Filter -->
+            <select id="comboLabStanceFilter" class="combo-filter-select" onchange="filterComboLabGrid()" title="Stance Requirement">
+              <option value="ALL">All Stances</option>
+              <option value="STANCE_REQUIRED">Stance Specific</option>
+              <option value="NONE">Neutral Only</option>
+            </select>
+
+            <!-- Damage Range Filter -->
+            <div style="display:flex; align-items:center; gap:0.3rem;">
+              <input type="number" id="comboLabMinDamage" class="combo-filter-select" style="width:78px; padding:0.45rem 0.5rem;" placeholder="Min Dmg" min="0" max="150" oninput="filterComboLabGrid()">
+              <span style="color:var(--text-muted); font-size:0.75rem;">–</span>
+              <input type="number" id="comboLabMaxDamage" class="combo-filter-select" style="width:78px; padding:0.45rem 0.5rem;" placeholder="Max Dmg" min="0" max="150" oninput="filterComboLabGrid()">
+            </div>
+
+            <!-- Search Starter/Notation -->
+            <input type="text" id="comboLabSearchInput" class="combo-search-input" placeholder="Search starter, notation (e.g. df+2, EWGF, ZEN)..." oninput="filterComboLabGrid()">
+
+            <!-- Reset Filters Action -->
+            <button type="button" class="btn btn-secondary" id="btnResetComboFilters" onclick="resetComboFilters()" style="padding:0.45rem 0.75rem; font-size:0.75rem; border-radius:6px; cursor:pointer;">
+              Reset Filters
+            </button>
+
+            <span id="comboLabCountPill" class="combo-count-badge">0 Combos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Combos Container Grid -->
+      <div class="combo-lab-grid-container">
+        <!-- Single Perspective Grid -->
+        <div id="comboLabGrid" class="combo-lab-grid">
+          <!-- Rendered dynamically via renderComboLab() in app.js -->
+        </div>
+
+        <!-- Dual Side-by-Side Grid (P1 vs P2) -->
+        <div id="comboLabDualGrid" class="combo-dual-grid" style="display:none;">
+          <!-- Rendered dynamically in Dual mode -->
+        </div>
+
+        <div id="comboLabEmpty" class="combo-empty-state" style="display:none;">
+          <div style="font-size:1.5rem; margin-bottom:0.5rem;">🥊</div>
+          <div style="font-weight:700; color:#fff; margin-bottom:0.35rem;">No combos found matching your filters.</div>
+          <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.75rem;">Try selecting a different category, adjusting damage range, or clearing the search query.</div>
+          <button type="button" class="btn btn-secondary" onclick="resetComboFilters()">Reset All Filters</button>
+        </div>
+      </div>
+
+      <!-- Bottom Side-by-Side Combo Comparison Dock -->
+      <div id="comboLabCompareDock" class="combo-compare-dock" style="display:none;">
+        <div class="ccd-header">
+          <div class="ccd-title">
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="var(--accent-gold)" stroke-width="2.5" fill="none"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+            <span>SIDE-BY-SIDE COMBO COMPARISON DOCK</span>
+          </div>
+          <button type="button" class="btn-clear-compare" onclick="clearComboComparison()">Clear Dock (&times;)</button>
+        </div>
+        <div class="ccd-body" id="comboCompareBody">
+          <!-- Populated dynamically with 2 side-by-side cards -->
+        </div>
+      </div>
+
+    </section>
+      <section id="notation" class="section-notation">
+      <div class="section-header-row">
+        <div>
+          <h2 class="section-title">NOTATION ENGINE PROTOTYPE</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Translates raw Tekken notation into 4 standardized display projections in real-time</p>
+        </div>
+        <div class="controller-toggle-group">
+          <button class="ctl-btn active" data-layout="PLAYSTATION">PlayStation (□, △, ✕, ○)</button>
+          <button class="ctl-btn" data-layout="XBOX">Xbox (X, Y, A, B)</button>
+          <button class="ctl-btn" data-layout="ARCADE">Arcade (1, 2, 3, 4)</button>
+        </div>
+      </div>
+
+      <div class="notation-input-bar">
+        <input type="text" id="notationInput" class="notation-input" value="df+2" placeholder="Try df+2, f,n,d,df+2, 1+2, f,f+1+2, b+1+2, or any notation...">
+        <div class="notation-icon-bar" id="notationIconBar">
+          <img src="/assets/icons/df.svg" alt="df" class="notation-bar-icon" onclick="insertNotationToken('df')">
+          <img src="/assets/icons/f.svg" alt="f" class="notation-bar-icon" onclick="insertNotationToken('f')">
+          <img src="/assets/icons/d.svg" alt="d" class="notation-bar-icon" onclick="insertNotationToken('d')">
+          <img src="/assets/icons/b.svg" alt="b" class="notation-bar-icon" onclick="insertNotationToken('b')">
+          <img src="/assets/icons/1.svg" alt="1" class="notation-bar-icon" onclick="insertNotationToken('1')">
+          <img src="/assets/icons/2.svg" alt="2" class="notation-bar-icon" onclick="insertNotationToken('2')">
+          <img src="/assets/icons/3.svg" alt="3" class="notation-bar-icon" onclick="insertNotationToken('3')">
+          <img src="/assets/icons/4.svg" alt="4" class="notation-bar-icon" onclick="insertNotationToken('4')">
+          <img src="/assets/icons/1+2.svg" alt="1+2" class="notation-bar-icon" onclick="insertNotationToken('1+2')">
+          <img src="/assets/icons/heat.svg" alt="heat" class="notation-bar-icon" onclick="insertNotationToken('heat')">
+        </div>
+      </div>
+
+      <div id="unsupportedAlert" style="display:none; background:rgba(255,190,11,0.15); border:1px solid var(--accent-gold); color:var(--accent-gold); padding:0.6rem 1rem; border-radius:4px; font-size:0.8rem; margin-bottom:1rem;"></div>
+
+      <div class="notation-modes-grid">
+        <!-- Mode 1: Arrows -->
+        <div class="notation-mode-card">
+          <span class="mode-badge">Mode 1 • Directional Arrows</span>
+          <div id="modeArrow" class="mode-value">↘ + 2</div>
+          <p style="font-size:0.75rem; color:var(--text-dim);">9 canonical directions (↑, ↖, ↗, ←, •, →, ↙, ↓, ↘)</p>
+        </div>
+
+        <!-- Mode 2: English -->
+        <div class="notation-mode-card">
+          <span class="mode-badge">Mode 2 • English Names</span>
+          <div id="modeEnglish" class="mode-value">Down Forward + Right Punch</div>
+          <p style="font-size:0.75rem; color:var(--text-dim);">Full English terminology for directions &amp; attack limbs</p>
+        </div>
+
+        <!-- Mode 3: Numpad -->
+        <div class="notation-mode-card">
+          <span class="mode-badge">Mode 3 • Numpad Notation</span>
+          <div id="modeNumpad" class="mode-value">3 + 2</div>
+          <p style="font-size:0.75rem; color:var(--text-dim);">Direction (1-9) and attack buttons separated</p>
+        </div>
+
+        <!-- Mode 4: Controller -->
+        <div class="notation-mode-card">
+          <span class="mode-badge">Mode 4 • Physical Controller</span>
+          <div id="modeController" class="mode-value">↘ + △</div>
+          <p style="font-size:0.75rem; color:var(--text-dim);">Configurable console &amp; arcade button labels</p>
+        </div>
+      </div>
+    </section>
+    </div>
 
     <!-- ==========================================================================
-         Section: Tekken 8 Matchup Analyzer & Selection System (Phase 1)
+         VIEW 2: MATCHUP LAB (Relativity Engine, Frame Traps & Punishment Assistant)
          ========================================================================== -->
-    <section id="analyzer" class="section-analyzer">
+    <div class="app-view" id="view-matchup" data-view="matchup">
+      <section id="analyzer" class="section-analyzer">
       <div class="section-header-row">
         <div>
           <div class="analyzer-badge-pill">TACTICAL COMBAT LAB</div>
@@ -1196,194 +1568,7 @@
       </div>
 
     </section>
-
-    <!-- ==========================================================================
-         Section: Dedicated Ultimate Combo Lab & Juggle Scalings (Phase 5)
-         ========================================================================== -->
-    <section id="combo-lab" class="section-combo-lab">
-      <div class="section-header-row">
-        <div>
-          <div class="analyzer-badge-pill" style="border-color:var(--accent-cyan); color:var(--accent-cyan);">JUGGLE LAB &amp; ROUTE OPTIMIZER</div>
-          <h2 class="section-title">TEKKEN 8 ULTIMATE COMBO LAB</h2>
-          <p style="color:var(--text-muted); font-size:0.85rem;">
-            Verified juggle scalings, wall carries, heat conversions, and stage hazard routes across all 43 warriors.
-          </p>
-        </div>
-        <div class="analyzer-status-pill" style="border-color:rgba(0,229,255,0.3); background:rgba(0,229,255,0.08);">
-          <span class="status-indicator-dot" style="background:var(--accent-cyan);"></span>
-          <span id="comboLabStatusLedger">Verified Decay Scaling • Patch 3.00.02</span>
-        </div>
-      </div>
-
-      <!-- Phase 3: P1 / P2 / Dual Comparison Perspective Bar -->
-      <div class="combo-perspective-bar" id="comboPerspectiveBar">
-        <button type="button" class="btn-segmented active p1-active" id="btnComboPerspP1" onclick="setComboPerspective('P1')" title="View Player 1 Combos">
-          <span style="color:var(--btn-lp-cyan);">● P1 Combos (<span id="comboPerspP1Name">Jin</span>)</span> (<span id="comboPerspP1Count">0</span>)
-        </button>
-        <button type="button" class="btn-segmented" id="btnComboPerspP2" onclick="setComboPerspective('P2')" title="View Player 2 Combos">
-          <span style="color:var(--btn-rk-pink);">● P2 Combos (<span id="comboPerspP2Name">Kazuya</span>)</span> (<span id="comboPerspP2Count">0</span>)
-        </button>
-        <button type="button" class="btn-segmented" id="btnComboPerspDual" onclick="setComboPerspective('DUAL')" title="Compare P1 and P2 Combos Side-by-Side">
-          ⚔️ Dual Comparison Grid
-        </button>
-        <button type="button" class="btn-segmented" id="btnSwapComboFighters" onclick="swapComboLabFighters()" title="Swap P1 and P2 Fighters">
-          ⇄ Swap Fighters
-        </button>
-      </div>
-
-      <!-- Combo Lab Controls Card -->
-      <div class="combo-lab-controls-card">
-        <div class="combo-lab-picker-row">
-          
-          <!-- Player 1 (P1) Selection Dropdown -->
-          <div class="cl-picker-col">
-            <label class="cl-label" for="comboLabFighterSelect">PLAYER 1 (P1 FIGHTER)</label>
-            <div class="cl-picker-flex" style="border-left: 3px solid var(--btn-lp-cyan);">
-              <img id="comboLabFighterAvatar" class="cl-avatar-thumb" src="/assets/avatars/jin-brand-256-C1-oe_x3.webp" alt="P1 Fighter">
-              <select id="comboLabFighterSelect" class="cl-select" onchange="onComboLabFighterChange(this.value)">
-                <!-- Populated dynamically via app.js -->
-              </select>
-              <span id="comboLabP1HurtboxBadge" class="cl-hurtbox-badge male_standard">Male Standard</span>
-            </div>
-          </div>
-
-          <!-- Player 2 (P2) Selection Dropdown -->
-          <div class="cl-picker-col">
-            <label class="cl-label" for="comboLabOpponentSelect">PLAYER 2 (P2 RIVAL)</label>
-            <div class="cl-picker-flex" style="border-left: 3px solid var(--btn-rk-pink);">
-              <img id="comboLabOpponentAvatar" class="cl-avatar-thumb" src="/assets/avatars/kazuya-brand-256-BInk9tTm.webp" alt="P2 Rival">
-              <select id="comboLabOpponentSelect" class="cl-select" onchange="onComboLabOpponentChange(this.value)">
-                <!-- Populated dynamically via app.js -->
-              </select>
-              <span id="comboLabHurtboxBadge" class="cl-hurtbox-badge male_standard">Male Standard</span>
-            </div>
-          </div>
-
-          <!-- Arena Stage Selector -->
-          <div class="cl-picker-col">
-            <label class="cl-label" for="comboLabStageSelect">BATTLEGROUND ARENA</label>
-            <div class="cl-picker-flex">
-              <img id="comboLabStageThumb" class="cl-stage-thumb" src="/assets/img/stages/arena.jpg" alt="Stage" onerror="this.src='/assets/img/stages/arena.svg'">
-              <select id="comboLabStageSelect" class="cl-select" onchange="onComboLabStageChange(this.value)">
-                <!-- Populated dynamically via app.js -->
-              </select>
-              <span id="comboLabStageHazards" class="fighter-meta-chip" style="font-size:0.65rem;">Walled</span>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Filter Pills Bar (10 Categories) -->
-        <div class="combo-lab-filters-row">
-          <div class="combo-category-pills" id="comboLabCategoryPills">
-            <button type="button" class="combo-cat-pill active" data-cat="ALL">ALL (10+ TYPES)</button>
-            <button type="button" class="combo-cat-pill" data-cat="beginner_friendly">🔰 BEGINNER FRIENDLY</button>
-            <button type="button" class="combo-cat-pill" data-cat="standard_launch">⚡ STANDARD LAUNCH</button>
-            <button type="button" class="combo-cat-pill" data-cat="high_damage_optimal">💥 OPTIMAL MAX DMG</button>
-            <button type="button" class="combo-cat-pill" data-cat="wall_carry">🧱 WALL CARRY</button>
-            <button type="button" class="combo-cat-pill" data-cat="wall_combo">🥊 WALL COMBO</button>
-            <button type="button" class="combo-cat-pill" data-cat="heat_dependent">🔥 HEAT DEPENDENT</button>
-            <button type="button" class="combo-cat-pill" data-cat="counter_hit">🎯 COUNTER HIT</button>
-            <button type="button" class="combo-cat-pill" data-cat="stage_break">🏛️ STAGE BREAK</button>
-            <button type="button" class="combo-cat-pill" data-cat="character_specific">🐻 CHARACTER SPECIFIC</button>
-            <button type="button" class="combo-cat-pill" data-cat="alternative_routes">🔀 PRACTICAL ALTERNATIVES</button>
-          </div>
-
-          <!-- Advanced Structured Filters Row -->
-          <div class="combo-secondary-filters">
-            <!-- Starter Type Filter -->
-            <select id="comboLabStarterTypeFilter" class="combo-filter-select" onchange="filterComboLabGrid()" title="Starter Attack Property">
-              <option value="ALL">All Starters</option>
-              <option value="NORMAL_HIT">Normal Hit (NH)</option>
-              <option value="COUNTER_HIT">Counter-Hit (CH)</option>
-              <option value="LAUNCHER">Main Launcher</option>
-              <option value="PUNISH">Punish Starter</option>
-            </select>
-
-            <!-- Difficulty Filter -->
-            <select id="comboLabDifficultyFilter" class="combo-filter-select" onchange="filterComboLabGrid()" title="Execution Difficulty">
-              <option value="ALL">All Difficulties</option>
-              <option value="EASY">Beginner (★☆☆☆☆)</option>
-              <option value="MEDIUM">Intermediate (★★★☆☆)</option>
-              <option value="HARD">Advanced (★★★★☆)</option>
-              <option value="OPTIMAL">Optimal Master (★★★★★)</option>
-            </select>
-
-            <!-- Environment Filter -->
-            <select id="comboLabWallFilter" class="combo-filter-select" onchange="filterComboLabGrid()" title="Wall & Hazard Properties">
-              <option value="ALL">All Environments</option>
-              <option value="WALL_CARRY">Wall Carry Only</option>
-              <option value="WALL_COMBO">Wall Splat Combo</option>
-              <option value="STAGE_BREAK">Stage Break (Wall/Floor)</option>
-            </select>
-
-            <!-- Stance Requirement Filter -->
-            <select id="comboLabStanceFilter" class="combo-filter-select" onchange="filterComboLabGrid()" title="Stance Requirement">
-              <option value="ALL">All Stances</option>
-              <option value="STANCE_REQUIRED">Stance Specific</option>
-              <option value="NONE">Neutral Only</option>
-            </select>
-
-            <!-- Damage Range Filter -->
-            <div style="display:flex; align-items:center; gap:0.3rem;">
-              <input type="number" id="comboLabMinDamage" class="combo-filter-select" style="width:78px; padding:0.45rem 0.5rem;" placeholder="Min Dmg" min="0" max="150" oninput="filterComboLabGrid()">
-              <span style="color:var(--text-muted); font-size:0.75rem;">–</span>
-              <input type="number" id="comboLabMaxDamage" class="combo-filter-select" style="width:78px; padding:0.45rem 0.5rem;" placeholder="Max Dmg" min="0" max="150" oninput="filterComboLabGrid()">
-            </div>
-
-            <!-- Search Starter/Notation -->
-            <input type="text" id="comboLabSearchInput" class="combo-search-input" placeholder="Search starter, notation (e.g. df+2, EWGF, ZEN)..." oninput="filterComboLabGrid()">
-
-            <!-- Reset Filters Action -->
-            <button type="button" class="btn btn-secondary" id="btnResetComboFilters" onclick="resetComboFilters()" style="padding:0.45rem 0.75rem; font-size:0.75rem; border-radius:6px; cursor:pointer;">
-              Reset Filters
-            </button>
-
-            <span id="comboLabCountPill" class="combo-count-badge">0 Combos</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Main Combos Container Grid -->
-      <div class="combo-lab-grid-container">
-        <!-- Single Perspective Grid -->
-        <div id="comboLabGrid" class="combo-lab-grid">
-          <!-- Rendered dynamically via renderComboLab() in app.js -->
-        </div>
-
-        <!-- Dual Side-by-Side Grid (P1 vs P2) -->
-        <div id="comboLabDualGrid" class="combo-dual-grid" style="display:none;">
-          <!-- Rendered dynamically in Dual mode -->
-        </div>
-
-        <div id="comboLabEmpty" class="combo-empty-state" style="display:none;">
-          <div style="font-size:1.5rem; margin-bottom:0.5rem;">🥊</div>
-          <div style="font-weight:700; color:#fff; margin-bottom:0.35rem;">No combos found matching your filters.</div>
-          <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.75rem;">Try selecting a different category, adjusting damage range, or clearing the search query.</div>
-          <button type="button" class="btn btn-secondary" onclick="resetComboFilters()">Reset All Filters</button>
-        </div>
-      </div>
-
-      <!-- Bottom Side-by-Side Combo Comparison Dock -->
-      <div id="comboLabCompareDock" class="combo-compare-dock" style="display:none;">
-        <div class="ccd-header">
-          <div class="ccd-title">
-            <svg viewBox="0 0 24 24" width="18" height="18" stroke="var(--accent-gold)" stroke-width="2.5" fill="none"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
-            <span>SIDE-BY-SIDE COMBO COMPARISON DOCK</span>
-          </div>
-          <button type="button" class="btn-clear-compare" onclick="clearComboComparison()">Clear Dock (&times;)</button>
-        </div>
-        <div class="ccd-body" id="comboCompareBody">
-          <!-- Populated dynamically with 2 side-by-side cards -->
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ==========================================================================
-         Section: Smart Punishment Assistant & Practice Lab (Phase 3)
-         ========================================================================== -->
-    <section id="punish-assistant" class="section-punish-assistant">
+      <section id="punish-assistant" class="section-punish-assistant">
       <div class="section-header-row">
         <div>
           <div class="analyzer-badge-pill" style="border-color:var(--accent-gold); color:var(--accent-gold);">DEFENSIVE MASTERY ENGINE</div>
@@ -1626,9 +1811,13 @@
       </div>
 
     </section>
+    </div>
 
-    <!-- Section: Tekken 8 Stages Showcase (New Asset Presentation) -->
-    <section id="stages" class="section-stages">
+    <!-- ==========================================================================
+         VIEW 3: STAGE BLUEPRINTS (16 Arenas, Hazard Matrix & Wall Blast Dynamics)
+         ========================================================================== -->
+    <div class="app-view" id="view-stages" data-view="stages">
+      <section id="stages" class="section-stages">
       <div class="section-header-row">
         <div>
           <h2 class="section-title">TEKKEN 8 BATTLE STAGES</h2>
@@ -1654,635 +1843,60 @@
         <!-- Rendered dynamically with generated photorealistic & vector artwork -->
       </div>
     </section>
-
-    <!-- Section: Notation Engine Prototype (Section 7) -->
-    <section id="notation" class="section-notation">
-      <div class="section-header-row">
-        <div>
-          <h2 class="section-title">NOTATION ENGINE PROTOTYPE</h2>
-          <p style="color:var(--text-muted); font-size:0.85rem;">Translates raw Tekken notation into 4 standardized display projections in real-time</p>
-        </div>
-        <div class="controller-toggle-group">
-          <button class="ctl-btn active" data-layout="PLAYSTATION">PlayStation (□, △, ✕, ○)</button>
-          <button class="ctl-btn" data-layout="XBOX">Xbox (X, Y, A, B)</button>
-          <button class="ctl-btn" data-layout="ARCADE">Arcade (1, 2, 3, 4)</button>
-        </div>
-      </div>
-
-      <div class="notation-input-bar">
-        <input type="text" id="notationInput" class="notation-input" value="df+2" placeholder="Try df+2, f,n,d,df+2, 1+2, f,f+1+2, b+1+2, or any notation...">
-        <div class="notation-icon-bar" id="notationIconBar">
-          <img src="/assets/icons/df.svg" alt="df" class="notation-bar-icon" onclick="insertNotationToken('df')">
-          <img src="/assets/icons/f.svg" alt="f" class="notation-bar-icon" onclick="insertNotationToken('f')">
-          <img src="/assets/icons/d.svg" alt="d" class="notation-bar-icon" onclick="insertNotationToken('d')">
-          <img src="/assets/icons/b.svg" alt="b" class="notation-bar-icon" onclick="insertNotationToken('b')">
-          <img src="/assets/icons/1.svg" alt="1" class="notation-bar-icon" onclick="insertNotationToken('1')">
-          <img src="/assets/icons/2.svg" alt="2" class="notation-bar-icon" onclick="insertNotationToken('2')">
-          <img src="/assets/icons/3.svg" alt="3" class="notation-bar-icon" onclick="insertNotationToken('3')">
-          <img src="/assets/icons/4.svg" alt="4" class="notation-bar-icon" onclick="insertNotationToken('4')">
-          <img src="/assets/icons/1+2.svg" alt="1+2" class="notation-bar-icon" onclick="insertNotationToken('1+2')">
-          <img src="/assets/icons/heat.svg" alt="heat" class="notation-bar-icon" onclick="insertNotationToken('heat')">
-        </div>
-      </div>
-
-      <div id="unsupportedAlert" style="display:none; background:rgba(255,190,11,0.15); border:1px solid var(--accent-gold); color:var(--accent-gold); padding:0.6rem 1rem; border-radius:4px; font-size:0.8rem; margin-bottom:1rem;"></div>
-
-      <div class="notation-modes-grid">
-        <!-- Mode 1: Arrows -->
-        <div class="notation-mode-card">
-          <span class="mode-badge">Mode 1 • Directional Arrows</span>
-          <div id="modeArrow" class="mode-value">↘ + 2</div>
-          <p style="font-size:0.75rem; color:var(--text-dim);">9 canonical directions (↑, ↖, ↗, ←, •, →, ↙, ↓, ↘)</p>
-        </div>
-
-        <!-- Mode 2: English -->
-        <div class="notation-mode-card">
-          <span class="mode-badge">Mode 2 • English Names</span>
-          <div id="modeEnglish" class="mode-value">Down Forward + Right Punch</div>
-          <p style="font-size:0.75rem; color:var(--text-dim);">Full English terminology for directions &amp; attack limbs</p>
-        </div>
-
-        <!-- Mode 3: Numpad -->
-        <div class="notation-mode-card">
-          <span class="mode-badge">Mode 3 • Numpad Notation</span>
-          <div id="modeNumpad" class="mode-value">3 + 2</div>
-          <p style="font-size:0.75rem; color:var(--text-dim);">Direction (1-9) and attack buttons separated</p>
-        </div>
-
-        <!-- Mode 4: Controller -->
-        <div class="notation-mode-card">
-          <span class="mode-badge">Mode 4 • Physical Controller</span>
-          <div id="modeController" class="mode-value">↘ + △</div>
-          <p style="font-size:0.75rem; color:var(--text-dim);">Configurable console &amp; arcade button labels</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section: Live Move Reference & Frame Data Table -->
-    <section id="moves" class="section-moves">
-      <div class="move-explorer-header-wrap">
-        <div>
-          <h2 id="currentFighterTitle" class="section-title">TEKKEN 8 MOVE EXPLORER &amp; FRAME DATA</h2>
-          <p style="color:var(--text-muted); font-size:0.85rem;">Official patch-verified frame data with explicit states (Negative = Disadvantage, Positive = Advantage, N/A = Stance / Transition)</p>
-        </div>
-        
-        <!-- Live Fighter Selector in Move Explorer -->
-        <div class="move-explorer-fighter-bar">
-          <img id="moveExplorerFighterAvatar" class="move-explorer-avatar" src="/assets/avatars/jin-brand-256-C1-oe_x3.webp" alt="Fighter Avatar">
-          <select id="moveExplorerFighterSelect" class="move-filter-select" onchange="onMoveExplorerFighterChange(this.value)" title="Choose Fighter to Explore Moves">
-            <!-- Populated dynamically via app.js -->
-          </select>
-          <span id="moveExplorerTotalMovesBadge" class="fighter-meta-chip">11 Moves</span>
-          <span id="moveExplorerVerifiedBadge" class="starter-chip verified">100% VERIFIED</span>
-          <span id="moveExplorerPatchBadge" class="starter-chip version">v3.00.02</span>
-        </div>
-      </div>
-
-      <!-- Quick Safety & Property Filter Pills -->
-      <div class="moves-safety-filters" id="movesSafetyFilters">
-        <span class="safety-filter-label">Quick Safety:</span>
-        <button type="button" class="safety-pill active" data-safety="ALL">ALL MOVES</button>
-        <button type="button" class="safety-pill safe" data-safety="SAFE">SAFE (≥ -9)</button>
-        <button type="button" class="safety-pill unsafe" data-safety="UNSAFE">UNSAFE (-10 to -14)</button>
-        <button type="button" class="safety-pill launch" data-safety="LAUNCH_PUNISH">LAUNCH PUNISHABLE (≤ -15)</button>
-        <button type="button" class="safety-pill plus" data-safety="PLUS">PLUS ON BLOCK (≥ +1)</button>
-        <button type="button" class="safety-pill high" data-safety="HIGH">HIGH (H)</button>
-        <button type="button" class="safety-pill mid" data-safety="MID">MID (M)</button>
-        <button type="button" class="safety-pill low" data-safety="LOW">LOW (L)</button>
-        <button type="button" class="safety-pill heat" data-safety="HEAT">HEAT ENGAGER</button>
-        <button type="button" class="safety-pill pc" data-safety="POWER_CRUSH">POWER CRUSH</button>
-        <button type="button" class="safety-pill homing" data-safety="HOMING">HOMING</button>
-        <button type="button" class="safety-pill tornado" data-safety="TORNADO">TORNADO</button>
-        <button type="button" class="safety-pill stance" data-safety="STANCE">STANCE</button>
-      </div>
-
-      <!-- Advanced Secondary Filters Toolbar -->
-      <div class="moves-secondary-filters" id="movesSecondaryFilters">
-        <!-- Hit Level Filter -->
-        <select id="moveFilterHitLevel" class="move-filter-select" onchange="filterMovesTable()" title="Filter by Hit Level">
-          <option value="ALL">All Hit Levels</option>
-          <option value="HIGH">High (H)</option>
-          <option value="MID">Mid (M)</option>
-          <option value="LOW">Low (L)</option>
-          <option value="SPECIAL_MID">Special Mid (SM)</option>
-          <option value="THROW">Throw (T)</option>
-          <option value="STANCE">Stance Transition</option>
-        </select>
-
-        <!-- Startup Range -->
-        <div style="display:flex; align-items:center; gap:0.25rem;">
-          <input type="number" id="moveFilterStartupMin" class="move-filter-input" style="width:72px;" placeholder="Min i" min="8" max="90" oninput="filterMovesTable()">
-          <span style="color:var(--text-muted); font-size:0.75rem;">–</span>
-          <input type="number" id="moveFilterStartupMax" class="move-filter-input" style="width:72px;" placeholder="Max i" min="8" max="90" oninput="filterMovesTable()">
-        </div>
-
-        <!-- Punishability Filter -->
-        <select id="moveFilterPunish" class="move-filter-select" onchange="filterMovesTable()" title="Filter by Punishability">
-          <option value="ALL">All Punish States</option>
-          <option value="SAFE">Safe on Block (≤ -9)</option>
-          <option value="PUNISHABLE_10">Standing i10 Punishable</option>
-          <option value="PUNISHABLE_12">Standing i12 Punishable</option>
-          <option value="PUNISHABLE_14">Standing i14 Punishable</option>
-          <option value="LAUNCH_PUNISHABLE">Launch Punishable (≤ -15)</option>
-        </select>
-
-        <!-- Stance Context -->
-        <select id="moveFilterStance" class="move-filter-select" onchange="filterMovesTable()" title="Filter by Stance">
-          <option value="ALL">All Stances</option>
-          <option value="NEUTRAL_ONLY">Neutral Moves Only</option>
-          <option value="STANCE_ONLY">Stance Specific Only</option>
-        </select>
-
-        <!-- Verification Status -->
-        <select id="moveFilterVerification" class="move-filter-select" onchange="filterMovesTable()" title="Filter by Verification Status">
-          <option value="ALL">All Statuses</option>
-          <option value="VERIFIED">Verified Lab Data Only</option>
-          <option value="EXPERIMENTAL">Experimental</option>
-          <option value="REPORTED">Reported</option>
-        </select>
-
-        <!-- Live Substring / Command Search -->
-        <input type="text" id="movesTableFilter" class="move-filter-input" style="flex:1; min-width:180px;" placeholder="Search move name, notation, hit level, stance..." oninput="filterMovesTable()">
-
-        <!-- Reset Button -->
-        <button type="button" class="btn btn-secondary" id="btnResetMoveFilters" onclick="resetMovesFilter()" style="padding:0.4rem 0.75rem; font-size:0.75rem; border-radius:6px; cursor:pointer;">
-          Reset Filters
-        </button>
-
-        <span id="moveExplorerCountPill" class="combo-count-badge" style="font-size:0.75rem;">0 Moves</span>
-      </div>
-
-      <div class="moves-table-container">
-        <table class="moves-table">
-          <thead>
-            <tr>
-              <th>Move Name</th>
-              <th>Command</th>
-              <th>Level</th>
-              <th>Startup</th>
-              <th>Block</th>
-              <th>Hit</th>
-              <th>CH</th>
-              <th>Damage</th>
-              <th>Safety &amp; Punish</th>
-              <th>Properties</th>
-              <th style="text-align:center;">Action</th>
-            </tr>
-          </thead>
-          <tbody id="movesTableBody">
-            <!-- Rendered dynamically via renderMovesTable() in app.js -->
-          </tbody>
-        </table>
-        <div id="movesEmptyState" class="empty-state-card" style="display:none;">
-          <div class="empty-icon">📋</div>
-          <h3 class="empty-title">No Moves Found</h3>
-          <p class="empty-desc">No moves match your active filters or search keyword for this fighter. Switch to a primary tournament fighter or reset your filters.</p>
-          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center;">
-            <button type="button" class="btn btn-secondary empty-action" onclick="resetMovesFilter();">Reset Move Filters</button>
-            <button type="button" class="btn btn-secondary empty-action" onclick="selectCharacter('jin');">Switch to Jin Kazama</button>
-          </div>
-        </div>
-        <div id="movesPaginationBar" class="moves-pagination-bar" style="display:none;">
-          <span id="movesPaginationInfo">Showing 0-0 of 0 moves</span>
-          <div style="display:flex; gap:0.5rem; align-items:center;">
-            <button id="movesPrevBtn" class="pagination-btn" aria-label="Previous page of moves" onclick="changeMovesPage(-1)">◀ Prev</button>
-            <span id="movesPageNumber" style="font-weight:700; color:var(--text-primary); padding:0 0.5rem;">Page 1 of 1</span>
-            <button id="movesNextBtn" class="pagination-btn" aria-label="Next page of moves" onclick="changeMovesPage(1)">Next ▶</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section: Coverage Report Summary (Section 8) -->
-    <section id="coverage" class="section-moves">
-      <div class="section-header-row">
-        <div>
-          <h2 class="section-title">DATA COMPLETENESS &amp; QUALITY QA</h2>
-          <p style="color:var(--text-muted); font-size:0.85rem;">Mathematical field completeness metrics separating missing, unknown, and inapplicable attributes</p>
-        </div>
-        <div style="display:flex; gap:0.5rem;">
-          <a href="/api/v1/coverage/export/json" target="_blank" class="btn-secondary" style="text-decoration:none; font-size:0.75rem; padding:0.4rem 0.8rem;">Export JSON</a>
-          <a href="/api/v1/coverage/export/csv" target="_blank" class="btn-secondary" style="text-decoration:none; font-size:0.75rem; padding:0.4rem 0.8rem;">Export CSV</a>
-        </div>
-      </div>
-
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem; margin-top:1rem;">
-        <div class="source-card">
-          <span style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase;">Roster Coverage</span>
-          <div id="covRosterCount" style="font-size:1.5rem; font-weight:800; color:#fff;">43 / 43</div>
-          <span id="covRosterPct" style="font-size:0.75rem; color:#00e676; font-weight:700;">100% Ingested</span>
-        </div>
-        <div class="source-card">
-          <span style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase;">Total Moves Cataloged</span>
-          <div id="covTotalMoves" style="font-size:1.5rem; font-weight:800; color:#fff;">—</div>
-          <span style="font-size:0.75rem; color:var(--accent-cyan); font-weight:700;">Verified Seeds</span>
-        </div>
-        <div class="source-card">
-          <span style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase;">Field Completeness</span>
-          <div id="covOverallPct" style="font-size:1.5rem; font-weight:800; color:#fff;">—</div>
-          <span style="font-size:0.75rem; color:var(--accent-gold); font-weight:700;">Applicable Fields Only</span>
-        </div>
-        <div class="source-card">
-          <span style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase;">Duplicate Records</span>
-          <div id="covDuplicates" style="font-size:1.5rem; font-weight:800; color:#fff;">0</div>
-          <span style="font-size:0.75rem; color:#00e676; font-weight:700;">Zero Redundancy</span>
-        </div>
-        <div class="source-card">
-          <span style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase;">Unverified Moves</span>
-          <div id="covUnverified" style="font-size:1.5rem; font-weight:800; color:#fff;">0</div>
-          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Strict Provenance</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section: Audited Data Sources (Section 4) -->
-    <section id="sources" class="section-moves">
-      <div class="section-header-row">
-        <div>
-          <h2 class="section-title">AUDITED DATA SOURCES &amp; LEGAL STATUS</h2>
-          <p style="color:var(--text-muted); font-size:0.85rem;">Compliance audit of 11 external sources detailing licensing, permissions, and rate limits</p>
-        </div>
-      </div>
-
-      <div id="sourcesGrid" class="status-grid">
-        <!-- Rendered dynamically -->
-      </div>
-    </section>
+    </div>
 
     <!-- ==========================================================================
-         Section: Matchup Data Management, Imports & Verification (Phase 7)
+         VIEW 4: TACTICS COMPENDIUM (10-Part Master Competitive Encyclopedia)
          ========================================================================== -->
-    <section id="admin-hub" class="section-admin" style="margin-top: 3.5rem; border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 12px; background: rgba(15, 23, 42, 0.45); padding: 1.25rem 1.75rem;">
-      <div class="section-header-row" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleAdminHub()">
-        <div>
-          <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
-            <span class="feat-badge badge-approved" style="background:rgba(56,189,248,0.2); border-color:var(--accent-cyan); color:var(--accent-cyan);">ADMIN &amp; DATA MANAGEMENT</span>
-            <span class="feat-badge badge-review" style="font-size:0.65rem;">PHASE 7 VERIFICATION ENGINE</span>
+    <div class="app-view" id="view-tactics" data-view="tactics">
+      <section id="tactics" class="section-tactics">
+        <div class="section-header-row">
+          <div>
+            <div class="analyzer-badge-pill" style="border-color:var(--accent-purple); color:var(--accent-purple);">PRO STRATEGY COMPENDIUM</div>
+            <h2 class="section-title">MASTER COMPETITIVE COMPENDIUM</h2>
+            <p style="color:var(--text-muted); font-size:0.85rem;">
+              26-Part Authoritative Encyclopedia: Universal Sidesteps, Throws, Anti-Cheese, Installs, Wall Enders, Movement Bible &amp; Hardware
+            </p>
           </div>
-          <h2 class="section-title" style="margin-bottom:0.25rem; font-size:1.35rem;">MATCHUP DATA MANAGEMENT &amp; QUALITY HUB</h2>
-          <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">
-            FYP Evaluation Suite: Verification telemetry, non-destructive audit trail, conflict studio, and batch import/export.
-          </p>
-        </div>
-        <div>
-          <button type="button" id="btnToggleAdminHub" class="btn-tb-reset" style="padding:0.6rem 1.25rem; font-weight:700; border-color:var(--accent-cyan); color:var(--accent-cyan); background:rgba(56,189,248,0.1); display:flex; align-items:center; gap:0.5rem; border-radius:6px; cursor:pointer; font-size:0.85rem;">
-            <span id="adminToggleIcon">▶</span> <span id="adminToggleText">Expand Admin / Evaluator Studio</span>
-          </button>
-        </div>
-      </div>
-
-      <div id="adminHubContent" style="display: none; margin-top: 1.5rem;">
-
-      <!-- Admin Auth Credentials Bar -->
-      <div class="admin-auth-bar">
-        <div class="admin-input-group">
-          <label for="adminSecretKeyInput">Admin Key:</label>
-          <input type="password" id="adminSecretKeyInput" class="admin-text-input" value="tekken8-fyp-admin-secret-2026" placeholder="Enter Admin Secret...">
-        </div>
-        <div class="admin-input-group">
-          <label for="adminUsernameInput">Admin Identity:</label>
-          <input type="text" id="adminUsernameInput" class="admin-text-input" value="Lead Lab Architect" style="width:160px;">
-        </div>
-        <button type="button" class="admin-btn-auth" onclick="refreshAdminDashboard()">
-          ⚡ Authenticate &amp; Refresh
-        </button>
-        <div class="admin-auth-badge authorized" id="adminAuthBadge">
-          <span>●</span> <span>ADMIN SESSION ACTIVE</span>
-        </div>
-      </div>
-
-      <!-- Quality Dashboard KPI Metrics (8 Core Quality Indicators) -->
-      <div class="quality-kpi-grid">
-        <div class="quality-kpi-card alert-high">
-          <div class="qk-label">Missing Frame Data</div>
-          <div class="qk-val" id="adminMissingFramesVal">0</div>
-          <div class="qk-sub">Unrecorded startup/block/hit</div>
-        </div>
-        <div class="quality-kpi-card alert-med">
-          <div class="qk-label">Missing Stage Mechanics</div>
-          <div class="qk-val" id="adminMissingStagesVal">0</div>
-          <div class="qk-sub">Incomplete hazards/layout</div>
-        </div>
-        <div class="quality-kpi-card alert-low">
-          <div class="qk-label">Combos Missing Compat</div>
-          <div class="qk-val" id="adminCombosNoCompatVal">0</div>
-          <div class="qk-sub">Untested on rival profiles</div>
-        </div>
-        <div class="quality-kpi-card alert-high">
-          <div class="qk-label">Unverified Punishes</div>
-          <div class="qk-val" id="adminUnverifiedPunishesVal">0</div>
-          <div class="qk-sub">Punishable moves awaiting lab test</div>
-        </div>
-        <div class="quality-kpi-card alert-high">
-          <div class="qk-label">Active Conflicts</div>
-          <div class="qk-val" id="adminConflictsVal">0</div>
-          <div class="qk-sub">Disputed cross-source values</div>
-        </div>
-        <div class="quality-kpi-card alert-med">
-          <div class="qk-label">Outdated Patch Records</div>
-          <div class="qk-val" id="adminOutdatedPatchVal">0</div>
-          <div class="qk-sub">Prior to current patch (3.00.02)</div>
-        </div>
-        <div class="quality-kpi-card alert-low">
-          <div class="qk-label">Incomplete Attribution</div>
-          <div class="qk-val" id="adminIncompleteSourcesVal">0</div>
-          <div class="qk-sub">Missing license / legal URLs</div>
-        </div>
-        <div class="quality-kpi-card alert-med">
-          <div class="qk-label">Awaiting Review</div>
-          <div class="qk-val" id="adminAwaitingReviewVal">0</div>
-          <div class="qk-sub">Pending verification queue</div>
-        </div>
-      </div>
-
-      <!-- Data States Differentiation Legend Banner -->
-      <div class="data-states-banner">
-        <span class="dsb-title">Data Status Model:</span>
-        <span class="state-chip verified" id="chipVerified">VERIFIED (0)</span>
-        <span class="state-chip unverified" id="chipUnverified">UNVERIFIED (0)</span>
-        <span class="state-chip conflicting" id="chipConflicting">CONFLICTING (0)</span>
-        <span class="state-chip unavailable" id="chipUnavailable">UNAVAILABLE (0)</span>
-        <span class="state-chip confirmed-absent" id="chipConfirmedAbsent">CONFIRMED ABSENT (0)</span>
-        <span class="state-chip unknown" id="chipUnknown">UNKNOWN (0)</span>
-        <span class="state-chip not-provided" id="chipNotProvided">NOT PROVIDED (0)</span>
-        <span style="font-size:0.68rem; color:var(--text-muted); margin-left:auto;">
-          * Missing information is never converted to false, zero, or "incompatible".
-        </span>
-      </div>
-
-      <!-- Admin Sub-Tabs Navigation -->
-      <div class="admin-tabs-nav">
-        <button type="button" class="admin-tab-btn active" data-tab="tabIssues" onclick="switchAdminTab('tabIssues')">
-          ⚠️ Quality Issues &amp; Alerts (<span id="adminIssuesCountTab">0</span>)
-        </button>
-        <button type="button" class="admin-tab-btn" data-tab="tabImport" onclick="switchAdminTab('tabImport')">
-          📥 CSV / JSON Import Studio
-        </button>
-        <button type="button" class="admin-tab-btn" data-tab="tabEditor" onclick="switchAdminTab('tabEditor')">
-          ✏️ Add / Edit Records
-        </button>
-        <button type="button" class="admin-tab-btn" data-tab="tabHistory" onclick="switchAdminTab('tabHistory')">
-          📜 Non-Destructive Audit Trail
-        </button>
-        <button type="button" class="admin-tab-btn" data-tab="tabAttribution" onclick="switchAdminTab('tabAttribution')">
-          ⚖️ Sources &amp; Attribution Licenses
-        </button>
-      </div>
-
-      <!-- Tab 1: Quality Issues & Alerts -->
-      <div id="tabIssues" class="admin-tab-pane active">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-          <h4 style="color:#fff; font-size:0.85rem; text-transform:uppercase; font-weight:800;">
-            Active Discrepancies &amp; Incomplete Data
-          </h4>
-          <span style="font-size:0.72rem; color:var(--text-muted);">
-            Items prioritized by data integrity severity
-          </span>
-        </div>
-        <div style="overflow-x:auto;">
-          <table class="admin-issue-table">
-            <thead>
-              <tr>
-                <th>Severity</th>
-                <th>Entity Type</th>
-                <th>Item / Notation</th>
-                <th>Issue Type</th>
-                <th>Status Classification</th>
-                <th>Audit Details</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="adminIssuesTableBody">
-              <!-- Rendered dynamically -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Tab 2: CSV / JSON Import Studio -->
-      <div id="tabImport" class="admin-tab-pane">
-        <div class="import-studio-grid">
-          
-          <!-- Left: Input & Configuration -->
-          <div class="import-editor-box">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-weight:700; color:#fff; font-size:0.85rem;">Payload Specification</span>
-              <div style="display:flex; gap:0.5rem;">
-                <select id="importEntityTypeSelect" class="form-input-admin" style="padding:0.25rem 0.5rem;">
-                  <option value="MOVES">Moves</option>
-                  <option value="COMBOS">Combos</option>
-                  <option value="STAGES">Stages</option>
-                </select>
-                <select id="importFormatSelect" class="form-input-admin" style="padding:0.25rem 0.5rem;">
-                  <option value="JSON">JSON</option>
-                  <option value="CSV">CSV</option>
-                </select>
-              </div>
-            </div>
-
-            <textarea id="importPayloadTextarea" class="import-textarea" placeholder="Paste JSON array or CSV text here... e.g.:
-[
-  {
-    &quot;character_slug&quot;: &quot;jin&quot;,
-    &quot;name&quot;: &quot;Left Right Axe&quot;,
-    &quot;normalized_notation&quot;: &quot;1,2,3&quot;,
-    &quot;startup_frames&quot;: 10,
-    &quot;block_advantage&quot;: -8,
-    &quot;damage&quot;: 28,
-    &quot;hit_level&quot;: &quot;h,h,m&quot;,
-    &quot;verification_status&quot;: &quot;UNVERIFIED&quot;
-  }
-]"></textarea>
-
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-              <div style="display:flex; gap:0.5rem; align-items:center;">
-                <input type="file" id="importFileInput" accept=".json,.csv" style="display:none;" onchange="handleImportFileSelect(event)">
-                <button type="button" class="btn-tb-reset" onclick="document.getElementById('importFileInput').click()">
-                  📂 Load File
-                </button>
-                <button type="button" class="btn-tb-reset" onclick="loadSampleImportJson()">
-                  Load Sample Move
-                </button>
-              </div>
-              <button type="button" class="admin-btn-auth" onclick="previewImportPayload()">
-                🔍 Validate &amp; Preview Import
-              </button>
-            </div>
-          </div>
-
-          <!-- Right: Validation, Duplicate & Conflict Detector -->
-          <div class="import-preview-box">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-weight:700; color:#fff; font-size:0.85rem;">Validation &amp; Integrity Report</span>
-              <span id="importPreviewStatusPill" class="feat-badge badge-pending">AWAITING PREVIEW</span>
-            </div>
-
-            <div id="importPreviewMetrics" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.5rem; text-align:center;">
-              <div style="background:rgba(0,0,0,0.3); padding:0.4rem; border-radius:4px;">
-                <div style="font-size:0.65rem; color:var(--text-dim);">VALID</div>
-                <div id="ipmValid" style="font-weight:800; color:#00e676;">0</div>
-              </div>
-              <div style="background:rgba(0,0,0,0.3); padding:0.4rem; border-radius:4px;">
-                <div style="font-size:0.65rem; color:var(--text-dim);">ERRORS</div>
-                <div id="ipmErrors" style="font-weight:800; color:#ff4d6d;">0</div>
-              </div>
-              <div style="background:rgba(0,0,0,0.3); padding:0.4rem; border-radius:4px;">
-                <div style="font-size:0.65rem; color:var(--text-dim);">DUPLICATES</div>
-                <div id="ipmDuplicates" style="font-weight:800; color:#fbbf24;">0</div>
-              </div>
-              <div style="background:rgba(0,0,0,0.3); padding:0.4rem; border-radius:4px;">
-                <div style="font-size:0.65rem; color:var(--text-dim);">PROTECTED</div>
-                <div id="ipmProtected" style="font-weight:800; color:#c084fc;">0</div>
-              </div>
-            </div>
-
-            <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">Row Diagnostics &amp; Protection Warnings:</div>
-            <div class="preview-issues-list" id="importIssuesList">
-              <div style="color:var(--text-dim); text-align:center; padding:1.5rem;">Click "Validate &amp; Preview Import" to run integrity checks.</div>
-            </div>
-
-            <div style="background:rgba(0,0,0,0.4); padding:0.6rem; border-radius:4px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
-              <label class="combo-check-label" style="font-size:0.72rem;">
-                <input type="checkbox" id="checkAllowVerifiedOverride">
-                <span style="color:#fbbf24;">Allow explicit override of VERIFIED records (logged in audit history)</span>
-              </label>
-              <button type="button" class="btn-admin-submit" id="btnCommitImport" disabled onclick="executeCommittedImport()">
-                ⚡ Commit Transaction Safe Import
-              </button>
-            </div>
-            <div id="importResultFeedback" style="font-size:0.72rem; font-weight:700; margin-top:0.25rem;"></div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Tab 3: Record Editor (Moves / Combos / Stages) -->
-      <div id="tabEditor" class="admin-tab-pane">
-        <div style="background:rgba(15,23,42,0.6); padding:1rem; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-            <h4 style="color:#fff; font-size:0.85rem; text-transform:uppercase; font-weight:800;">
-              Non-Destructive Record Editor
-            </h4>
-            <span style="font-size:0.72rem; color:var(--text-muted);">
-              Every edit appends to the verification audit trail with documented rationale.
-            </span>
-          </div>
-
-          <form id="adminEditMoveForm" onsubmit="handleAdminSaveMove(event)">
-            <div class="admin-form-grid">
-              <div class="form-group-admin">
-                <label>Target Fighter:</label>
-                <select id="editMoveCharSelect" class="form-input-admin" required>
-                  <!-- Populated dynamically -->
-                </select>
-              </div>
-              <div class="form-group-admin">
-                <label>Move Name:</label>
-                <input type="text" id="editMoveName" class="form-input-admin" placeholder="e.g. Electric Wind Hook Fist" required>
-              </div>
-              <div class="form-group-admin">
-                <label>Normalized Notation:</label>
-                <input type="text" id="editMoveNotation" class="form-input-admin" placeholder="e.g. f,n,d,df+2" required>
-              </div>
-              <div class="form-group-admin">
-                <label>Startup Frames (i):</label>
-                <input type="number" id="editMoveStartup" class="form-input-admin" placeholder="e.g. 14">
-              </div>
-              <div class="form-group-admin">
-                <label>Block Disadvantage:</label>
-                <input type="number" id="editMoveBlock" class="form-input-admin" placeholder="e.g. -12 or +5">
-              </div>
-              <div class="form-group-admin">
-                <label>Damage:</label>
-                <input type="number" id="editMoveDamage" class="form-input-admin" placeholder="e.g. 23">
-              </div>
-              <div class="form-group-admin">
-                <label>Hit Level:</label>
-                <input type="text" id="editMoveHitLevel" class="form-input-admin" placeholder="e.g. h, m, l, sm, tc">
-              </div>
-              <div class="form-group-admin">
-                <label>Verification Status:</label>
-                <select id="editMoveStatus" class="form-input-admin">
-                  <option value="VERIFIED">VERIFIED</option>
-                  <option value="UNVERIFIED">UNVERIFIED</option>
-                  <option value="CONFLICTING">CONFLICTING</option>
-                  <option value="UNAVAILABLE">UNAVAILABLE</option>
-                  <option value="CONFIRMED_ABSENT">CONFIRMED ABSENT</option>
-                </select>
-              </div>
-            </div>
-
-            <div style="margin-top:0.85rem;" class="form-group-admin">
-              <label>Reason for Edit / Lab Evidence Note (Required for Audit Trail):</label>
-              <input type="text" id="editMoveReason" class="form-input-admin" placeholder="Document source, frame counter footage, or patch notes justification..." required>
-            </div>
-
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem;">
-              <span id="adminEditorFeedback" style="font-size:0.75rem; font-weight:700;"></span>
-              <button type="submit" class="btn-admin-submit">
-                💾 Save Record &amp; Write Audit Log
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- Tab 4: Non-Destructive Audit Trail -->
-      <div id="tabHistory" class="admin-tab-pane">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-          <h4 style="color:#fff; font-size:0.85rem; text-transform:uppercase; font-weight:800;">
-            Provenance History &amp; Change Audit Trail
-          </h4>
-          <button type="button" class="btn-tb-reset" onclick="loadVerificationHistory()">
-            🔄 Refresh Audit History
-          </button>
-        </div>
-        <div style="overflow-x:auto;">
-          <table class="admin-issue-table">
-            <thead>
-              <tr>
-                <th>Timestamp</th>
-                <th>Entity</th>
-                <th>Field Changed</th>
-                <th>Previous Value</th>
-                <th>New Value</th>
-                <th>Verified By</th>
-                <th>Method</th>
-                <th>Result</th>
-                <th>Patch</th>
-                <th>Evidence Notes</th>
-              </tr>
-            </thead>
-            <tbody id="adminHistoryTableBody">
-              <!-- Rendered dynamically -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Tab 5: Data Sources & Attribution Licenses -->
-      <div id="tabAttribution" class="admin-tab-pane">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-          <h4 style="color:#fff; font-size:0.85rem; text-transform:uppercase; font-weight:800;">
-            Audited External Data Providers &amp; Licensing Compliance
-          </h4>
-          <div style="display:flex; gap:0.5rem;">
-            <a href="/api/v1/admin/export/moves?format=JSON" target="_blank" class="btn-tb-reset" style="text-decoration:none;">Export Moves (JSON)</a>
-            <a href="/api/v1/admin/export/moves?format=CSV" target="_blank" class="btn-tb-reset" style="text-decoration:none;">Export Moves (CSV)</a>
-            <a href="/api/v1/admin/export/combos?format=JSON" target="_blank" class="btn-tb-reset" style="text-decoration:none;">Export Combos (JSON)</a>
+          <div class="analyzer-status-pill">
+            <span class="status-indicator-dot"></span>
+            <span>Patch 3.00.02 Active</span>
           </div>
         </div>
-        <div id="adminSourcesList" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:0.85rem;">
-          <!-- Rendered dynamically -->
+
+        <div class="tactics-compendium-controls">
+          <div class="tactics-search-wrap">
+            <span class="t-search-icon">🔍</span>
+            <input type="text" id="tacticsCompendiumSearch" class="tactics-search-input" placeholder="Search by character, move input, property, side (SSL/SSR), or technique..." oninput="filterTacticsCompendium()">
+            <button type="button" class="btn-clear-search" id="btnTacticsClearSearch" onclick="clearTacticsSearch()">✕</button>
+          </div>
+          <div class="tactics-tab-scroll-wrap">
+            <div class="tactics-nav-tabs" id="tacticsNavTabs">
+              <button type="button" class="tactics-tab-btn active" data-tab="sidesteps" onclick="switchTacticsTab('sidesteps')">↔️ Sidestep Table</button>
+              <button type="button" class="tactics-tab-btn" data-tab="throw-breaks" onclick="switchTacticsTab('throw-breaks')">🤼 Throw Breaks</button>
+              <button type="button" class="tactics-tab-btn" data-tab="anti-cheese" onclick="switchTacticsTab('anti-cheese')">🧀 Anti-Cheese</button>
+              <button type="button" class="tactics-tab-btn" data-tab="installs" onclick="switchTacticsTab('installs')">⚡ Installs &amp; Meters</button>
+              <button type="button" class="tactics-tab-btn" data-tab="wall-combos" onclick="switchTacticsTab('wall-combos')">🧱 Wall Enders</button>
+              <button type="button" class="tactics-tab-btn" data-tab="ten-hit" onclick="switchTacticsTab('ten-hit')">🔟 10-Hit Counters</button>
+              <button type="button" class="tactics-tab-btn" data-tab="heat-smashes" onclick="switchTacticsTab('heat-smashes')">💥 Heat Smashes</button>
+              <button type="button" class="tactics-tab-btn" data-tab="movement" onclick="switchTacticsTab('movement')">🏃 Movement Bible</button>
+              <button type="button" class="tactics-tab-btn" data-tab="hardware" onclick="switchTacticsTab('hardware')">🕹️ Hardware &amp; Zero-Lag</button>
+              <button type="button" class="tactics-tab-btn" data-tab="emergency" onclick="switchTacticsTab('emergency')">🚨 Blender Protocol</button>
+            </div>
+          </div>
         </div>
-      </div>
 
-      </div><!-- End of #adminHubContent -->
-    </section>
+        <div class="tactics-compendium-body" id="tacticsCompendiumContent">
+          <!-- Dynamic cards or tables rendered via switchTacticsTab() in app.js -->
+        </div>
 
-    <!-- ==========================================================================
-         Interactive Practice Mode Modal (Phase 3)
-         ========================================================================== -->
+        <div class="tactics-page-footer" style="display:flex; justify-content:space-between; align-items:center; margin-top:1.25rem; padding-top:1rem; border-top:1px solid rgba(255,255,255,0.08);">
+          <span style="font-size:0.8rem; color:var(--text-dim);" id="tacticsEntryCountLabel">Showing 43 character tactical entries</span>
+          <span style="font-size:0.75rem; color:var(--text-muted);">Verified for Patch v3.00.02 • Pro-Tier Matchup Intelligence</span>
+        </div>
+      </section>
+    </div>
+
     <div id="practiceModal" class="practice-modal-backdrop" style="display:none;">
       <div class="practice-modal-card">
         
@@ -2499,38 +2113,123 @@
          ========================================================================== -->
     <div id="characterProfileModal" class="practice-modal-backdrop" style="display:none;">
       <div class="practice-modal-card profile-modal-card">
-        <!-- Modal Top Banner -->
+        <!-- Modal Top Banner (Esports Command Center 3-Column Layout) -->
         <div class="cp-modal-hero">
           <button class="btn-modal-close" id="btnCloseProfileModal" type="button" onclick="closeCharacterProfile()">&times;</button>
-          <div class="cp-hero-flex">
-            <div class="cp-avatar-wrap">
-              <img id="cpAvatarImg" class="cp-avatar-img" src="/assets/avatars/jin-brand-256-C1-oe_x3.webp" alt="Character">
-            </div>
-            <div class="cp-hero-meta">
-              <div class="cp-badge-row">
-                <span id="cpArchetypeBadge" class="cp-pill archetype">Mishima / Allies</span>
-                <span id="cpCountryBadge" class="cp-pill country">🇯🇵 Japan</span>
-                <span id="cpDifficultyBadge" class="cp-pill difficulty">★★★★☆ Advanced Execution</span>
-                <span id="cpHurtboxBadge" class="cp-pill hurtbox">Male Standard</span>
+          
+          <div class="cp-hero-grid">
+            <!-- Col 1: Fighter Portrait Frame & Badges -->
+            <div class="cp-avatar-column">
+              <div class="cp-avatar-frame">
+                <img id="cpAvatarImg" class="cp-avatar-img" src="/assets/avatars/jin.jpg" alt="Fighter Portrait" onerror="handleDossierAvatarFallback(this)">
+                <div id="cpAvatarFallback" class="cp-avatar-silhouette-fallback" style="display:none;">
+                  <span id="cpFallbackMonogram">JK</span>
+                </div>
               </div>
-              <h2 id="cpCharName" class="cp-char-name">Jin Kazama</h2>
-              <div id="cpStyleName" class="cp-char-style">Traditional Karate • Kazama Style Self-Defense</div>
+              <div class="cp-avatar-tags">
+                <span id="cpArchetypeBadge" class="cp-avatar-tag archetype">Mishima / Allies</span>
+                <span id="cpHurtboxBadge" class="cp-avatar-tag hurtbox">Male Standard</span>
+              </div>
+            </div>
+
+            <!-- Col 2: Identity, Telemetry Grid & Lore -->
+            <div class="cp-info-column">
+              <div class="cp-header-title-row">
+                <div class="cp-char-name-wrap">
+                  <h2 id="cpCharName" class="cp-char-name">Jin Kazama</h2>
+                  <span id="cpJapaneseName" class="cp-char-japanese">風間 仁</span>
+                </div>
+                <div id="cpTitleAlias" class="cp-char-alias">"The Lightning of Fate"</div>
+              </div>
+
+              <!-- 2x3 Tactical Telemetry HUD Grid -->
+              <div class="cp-telemetry-grid">
+                <div class="cp-telemetry-item">
+                  <span class="cp-tel-label">HEIGHT</span>
+                  <span class="cp-tel-val" id="cpHeightVal">180 cm (5'11")</span>
+                </div>
+                <div class="cp-telemetry-item">
+                  <span class="cp-tel-label">WEIGHT</span>
+                  <span class="cp-tel-val" id="cpWeightVal">75 kg (165 lbs)</span>
+                </div>
+                <div class="cp-telemetry-item">
+                  <span class="cp-tel-label">ORIGIN</span>
+                  <span class="cp-tel-val" id="cpCountryVal">🇯🇵 Japan</span>
+                </div>
+                <div class="cp-telemetry-item">
+                  <span class="cp-tel-label">FIGHTING STYLE</span>
+                  <span class="cp-tel-val" id="cpStyleVal">Traditional Karate</span>
+                </div>
+                <div class="cp-telemetry-item">
+                  <span class="cp-tel-label">WEAK SIDE</span>
+                  <span class="cp-tel-val weak-side" id="cpWeakSideVal">⚠️ SSL (Step Left)</span>
+                </div>
+                <div class="cp-telemetry-item">
+                  <span class="cp-tel-label">DIFFICULTY</span>
+                  <span class="cp-tel-val difficulty" id="cpDifficultyVal">Hard ★★★★☆</span>
+                </div>
+              </div>
+
+              <!-- Canonical Lore Summary -->
+              <p id="cpBioTextShort" class="cp-lore-summary">Loading canonical combat dossier...</p>
+
+              <!-- Tactical Pros & Cons Chips -->
+              <div id="cpProsConsRow" class="cp-tactics-chips-row"></div>
+            </div>
+
+            <!-- Col 3: Combat Attributes Radar/Bar Matrix & Actions -->
+            <div class="cp-attributes-card">
+              <div class="cp-attr-header">COMBAT ATTRIBUTES // v3.00.02</div>
+              <div class="cp-attr-list">
+                <div class="cp-attr-row">
+                  <span class="cp-attr-name">OFFENSE</span>
+                  <div class="cp-attr-track"><div id="cpAttrOffense" class="cp-attr-fill offense" style="width:92%;"></div></div>
+                  <span id="cpAttrScoreOffense" class="cp-attr-score">92</span>
+                </div>
+                <div class="cp-attr-row">
+                  <span class="cp-attr-name">DEFENSE</span>
+                  <div class="cp-attr-track"><div id="cpAttrDefense" class="cp-attr-fill defense" style="width:90%;"></div></div>
+                  <span id="cpAttrScoreDefense" class="cp-attr-score">90</span>
+                </div>
+                <div class="cp-attr-row">
+                  <span class="cp-attr-name">RANGE</span>
+                  <div class="cp-attr-track"><div id="cpAttrRange" class="cp-attr-fill" style="width:88%;"></div></div>
+                  <span id="cpAttrScoreRange" class="cp-attr-score">88</span>
+                </div>
+                <div class="cp-attr-row">
+                  <span class="cp-attr-name">EXECUTION</span>
+                  <div class="cp-attr-track"><div id="cpAttrExecution" class="cp-attr-fill execution" style="width:86%;"></div></div>
+                  <span id="cpAttrScoreExecution" class="cp-attr-score">86</span>
+                </div>
+                <div class="cp-attr-row">
+                  <span class="cp-attr-name">MOVEMENT</span>
+                  <div class="cp-attr-track"><div id="cpAttrMovement" class="cp-attr-fill" style="width:88%;"></div></div>
+                  <span id="cpAttrScoreMovement" class="cp-attr-score">88</span>
+                </div>
+                <div class="cp-attr-row">
+                  <span class="cp-attr-name">THROW</span>
+                  <div class="cp-attr-track"><div id="cpAttrThrow" class="cp-attr-fill" style="width:78%;"></div></div>
+                  <span id="cpAttrScoreThrow" class="cp-attr-score">78</span>
+                </div>
+              </div>
+
+              <!-- Quick Command Center Actions -->
               <div class="cp-actions-row">
+                <button type="button" class="btn-cp-action primary" onclick="setFighterFromProfile('P1')">⚔️ Set P1</button>
+                <button type="button" class="btn-cp-action" onclick="setFighterFromProfile('P2')">🛡️ Set P2</button>
+                <button type="button" class="btn-cp-action combo" onclick="openComboLabFromProfile()">🥊 Combos</button>
                 <button type="button" class="btn-cp-action" id="btnCpFav" onclick="toggleCharacterFavorite(state.selectedCharacter)">
-                  <span id="cpFavIcon">⭐</span> <span id="cpFavText">Favorite Fighter</span>
+                  <span id="cpFavIcon">⭐</span> <span id="cpFavText">Fav</span>
                 </button>
-                <button type="button" class="btn-cp-action primary" onclick="setFighterFromProfile('P1')">⚔️ Set as Player 1</button>
-                <button type="button" class="btn-cp-action" onclick="setFighterFromProfile('P2')">🛡️ Set as Opponent</button>
-                <button type="button" class="btn-cp-action combo" onclick="openComboLabFromProfile()">🥊 View Combos</button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 6 Navigation Tabs Grouping the 17 Sections -->
+        <!-- 6 Navigation Tabs Grouping the Sections -->
         <div class="cp-tabs-bar" id="cpTabsBar">
           <button type="button" class="cp-tab-btn active" data-cptab="cp-tab-overview">1. Overview &amp; Basics</button>
-          <button type="button" class="cp-tab-btn" data-cptab="cp-tab-neutral">2. Neutral &amp; Moves</button>
+          <button type="button" class="cp-tab-btn" data-cptab="cp-tab-neutral">2. Neutral &amp; Frame Data</button>
           <button type="button" class="cp-tab-btn" data-cptab="cp-tab-punish">3. Punishment &amp; Defense</button>
           <button type="button" class="cp-tab-btn" data-cptab="cp-tab-combos">4. Combos &amp; Walls</button>
           <button type="button" class="cp-tab-btn" data-cptab="cp-tab-heat">5. Heat, Rage &amp; Stances</button>
@@ -2571,8 +2270,39 @@
           </div>
         </div>
 
-        <!-- Tab 2: Neutral & Moves -->
+        <!-- Tab 2: Neutral & Moves / Full Frame Data -->
         <div class="cp-tab-panel" id="cp-tab-neutral">
+          <!-- Live Verified Frame Data Table for This Fighter -->
+          <div class="cp-section-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
+              <h4 class="cp-sec-title" style="margin:0;">COMPLETE VERIFIED FRAME DATA TABLE</h4>
+              <div style="display:flex; gap:0.5rem; align-items:center;">
+                <input type="text" id="cpMoveFilterInput" placeholder="Filter command, level, property..." 
+                       style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; color:#fff; font-size:0.75rem; padding:0.3rem 0.6rem; width:200px;"
+                       oninput="filterProfileMoves(this.value)">
+                <span id="cpMoveCountBadge" style="font-size:0.7rem; font-weight:800; background:rgba(0,229,255,0.15); color:var(--accent-cyan); padding:0.25rem 0.5rem; border-radius:4px;">0 Moves</span>
+              </div>
+            </div>
+            <div class="cp-table-responsive" style="max-height:360px; overflow-y:auto;">
+              <table class="cp-mini-table">
+                <thead>
+                  <tr>
+                    <th>Command</th>
+                    <th>Name</th>
+                    <th>Level</th>
+                    <th>Startup</th>
+                    <th>Block</th>
+                    <th>Hit</th>
+                    <th>CH</th>
+                    <th>Damage</th>
+                    <th>Properties</th>
+                  </tr>
+                </thead>
+                <tbody id="cpLiveMovesTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
           <!-- Section 4: Essential Neutral Moves -->
           <div class="cp-section-card">
             <h4 class="cp-sec-title">SECTION 4: ESSENTIAL NEUTRAL MOVES (POKES, KEEPOUT &amp; APPROACH)</h4>
@@ -3186,39 +2916,7 @@
       </div>
     </div>
 
-    <!-- Master Tactics Hub Compendium Modal -->
-    <div id="tacticsHubModal" class="practice-modal-backdrop" style="display:none; z-index:9998;" onclick="if(event.target===this) closeTacticsHubModal()">
-      <div class="practice-modal-card tactics-compendium-modal-card">
-        <div class="practice-modal-header">
-          <div class="settings-header-wrap">
-            <span class="user-practice-note-badge" style="background:rgba(187,134,252,0.15); color:var(--accent-purple); border-color:var(--accent-purple);">🛡️ PRO STRATEGY COMPENDIUM</span>
-            <h3 class="pm-title">MASTER COMPETITIVE COMPENDIUM</h3>
-            <p class="tactics-compendium-subtitle">26-Part Authoritative Encyclopedia: Universal Sidesteps, Throws, Anti-Cheese, Installs, Wall Enders, Movement Bible &amp; Hardware</p>
-          </div>
-          <button class="btn-modal-close" type="button" onclick="closeTacticsHubModal()">&times;</button>
-        </div>
-
-        <div class="tactics-compendium-controls">
-          <div class="tactics-search-wrap">
-            <span class="t-search-icon">🔍</span>
-            <input type="text" id="tacticsCompendiumSearch" class="tactics-search-input" placeholder="Search by character, move input, property, side (SSL/SSR), or technique..." oninput="filterTacticsCompendium()">
-            <button type="button" class="btn-clear-search" id="btnTacticsClearSearch" onclick="clearTacticsSearch()">✕</button>
-          </div>
-          <div class="tactics-tab-scroll-wrap">
-            <div class="tactics-nav-tabs" id="tacticsNavTabs">
-              <button type="button" class="tactics-tab-btn active" data-tab="sidesteps" onclick="switchTacticsTab('sidesteps')">↔️ Sidestep Table</button>
-              <button type="button" class="tactics-tab-btn" data-tab="throw-breaks" onclick="switchTacticsTab('throw-breaks')">🤼 Throw Breaks</button>
-              <button type="button" class="tactics-tab-btn" data-tab="anti-cheese" onclick="switchTacticsTab('anti-cheese')">🧀 Anti-Cheese</button>
-              <button type="button" class="tactics-tab-btn" data-tab="installs" onclick="switchTacticsTab('installs')">⚡ Installs &amp; Meters</button>
-              <button type="button" class="tactics-tab-btn" data-tab="wall-combos" onclick="switchTacticsTab('wall-combos')">🧱 Wall Enders</button>
-              <button type="button" class="tactics-tab-btn" data-tab="ten-hit" onclick="switchTacticsTab('ten-hit')">🔟 10-Hit Counters</button>
-              <button type="button" class="tactics-tab-btn" data-tab="heat-smashes" onclick="switchTacticsTab('heat-smashes')">💥 Heat Smashes</button>
-              <button type="button" class="tactics-tab-btn" data-tab="movement" onclick="switchTacticsTab('movement')">🏃 Movement Bible</button>
-              <button type="button" class="tactics-tab-btn" data-tab="hardware" onclick="switchTacticsTab('hardware')">🕹️ Hardware &amp; Zero-Lag</button>
-              <button type="button" class="tactics-tab-btn" data-tab="emergency" onclick="switchTacticsTab('emergency')">🚨 Blender Protocol</button>
-            </div>
-          </div>
-        </div>
+    <!-- Tactics Compendium is now primary SPA view #view-tactics -->
 
         <div class="tactics-compendium-body" id="tacticsCompendiumContent">
           <!-- Dynamic cards or tables rendered via switchTacticsTab() -->
@@ -3243,15 +2941,13 @@
       <img src="/assets/img/tekken8-logo.svg" alt="Tekken 8" style="height:28px; opacity:0.8;">
       <span style="color:var(--accent-cyan); font-weight:800; letter-spacing:0.1em;">MOVEPEDIA</span>
     </div>
-    <p>Tekken 8 Frame Data, Move Reference, Notation Visualization and Training Assistant Website</p>
-    <p style="margin-top:0.4rem; color:var(--text-dim);">
-      Computer Science Final Year Project (FYP) — Architectural Foundation &amp; Phase 1 Implementation.
-    </p>
+    <p>Professional Tekken 8 Frame Data, Matchup Intelligence, Move Reference &amp; Combat Analysis</p>
     <p style="margin-top:0.4rem; font-size:0.75rem; color:var(--text-dim);">
-      Data sources curated with credit to <a href="https://wavu.wiki/" target="_blank" style="color:var(--text-muted);">wavu.wiki</a> (CC0 1.0) and community researchers. TEKKEN™8 is a registered trademark of Bandai Namco Entertainment Inc.
+      Commercial-grade competitive companion platform for TEKKEN 8. Frame data and move properties curated from authoritative community research and patch v3.00.02. TEKKEN™ 8 is a registered trademark of Bandai Namco Entertainment Inc.
     </p>
   </footer>
 
+  <script src="/assets/js/dossiers.js"></script>
   <script src="/assets/js/app.js"></script>
 </body>
 </html>

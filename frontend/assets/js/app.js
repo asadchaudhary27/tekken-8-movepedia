@@ -347,63 +347,118 @@ function invalidateApiCache() {
 }
 
 /**
- * Tekken 8 Notation Breakdown & Arcade Button Mapping Engine
- * Transforms raw string commands into authentic arcade/gamepad visual button chips:
- * Directions (➡ ↘ ⬇ ↙ ⬅ ↗ ↖ ⬆ ★), Buttons (1=Cyan, 2=Yellow, 3=Green, 4=Pink),
- * Stances/States (WS, FC, WR, SS, BT, HEAT, RAGE), Connectors (›, +, ~).
+ * ==========================================================================
+ * UNIFIED SVG COMMAND NOTATION & CONTROLLER ICON ENGINE (Esports Grade)
+ * ==========================================================================
+ * Real-time switching between Standard Tekken (1, 2, 3, 4), PlayStation (□, △, ✕, ○),
+ * Xbox (X, Y, A, B), and Arcade Stick.
+ * Crisp SVG directional badges (tap outline vs hold solid glow, neutral star),
+ * multi-button combinations, and mechanics tags.
  */
-function formatTekkenNotation(raw) {
+
+const COMMAND_DIR_SVGS = {
+  f: { deg: 0, title: 'Forward' },
+  df: { deg: 45, title: 'Down-Forward' },
+  'd/f': { deg: 45, title: 'Down-Forward' },
+  d: { deg: 90, title: 'Down' },
+  db: { deg: 135, title: 'Down-Back' },
+  'd/b': { deg: 135, title: 'Down-Back' },
+  b: { deg: 180, title: 'Back' },
+  ub: { deg: 225, title: 'Up-Back' },
+  'u/b': { deg: 225, title: 'Up-Back' },
+  u: { deg: 270, title: 'Up' },
+  uf: { deg: 315, title: 'Up-Forward' },
+  'u/f': { deg: 315, title: 'Up-Forward' }
+};
+
+function renderDirSvg(deg, isHold = false) {
+  if (isHold) {
+    return `<svg viewBox="0 0 20 20" class="tk-svg-dir" style="transform: rotate(${deg}deg);" aria-hidden="true"><polygon points="5.5,4.5 15.5,10 5.5,15.5" fill="currentColor"/></svg>`;
+  }
+  return `<svg viewBox="0 0 20 20" class="tk-svg-dir" style="transform: rotate(${deg}deg);" aria-hidden="true"><polygon points="5.5,4.5 15.5,10 5.5,15.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>`;
+}
+
+function renderStarSvg() {
+  return `<svg viewBox="0 0 20 20" class="tk-svg-star" aria-hidden="true"><polygon points="10,2.5 12.3,7.5 17.8,8.2 13.7,12.1 14.8,17.5 10,14.8 5.2,17.5 6.3,12.1 2.2,8.2 7.7,7.5" fill="currentColor"/></svg>`;
+}
+
+function renderPsBtnSvg(type) {
+  switch (type) {
+    case 'sq': // 1: Square
+      return `<svg viewBox="0 0 20 20" class="tk-svg-ps" aria-hidden="true"><rect x="4.5" y="4.5" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" rx="1.5"/></svg>`;
+    case 'tri': // 2: Triangle
+      return `<svg viewBox="0 0 20 20" class="tk-svg-ps" aria-hidden="true"><polygon points="10,3.5 16.5,15.5 3.5,15.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/></svg>`;
+    case 'cross': // 3: Cross
+      return `<svg viewBox="0 0 20 20" class="tk-svg-ps" aria-hidden="true"><line x1="4.5" y1="4.5" x2="15.5" y2="15.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="15.5" y1="4.5" x2="4.5" y2="15.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+    case 'circle': // 4: Circle
+      return `<svg viewBox="0 0 20 20" class="tk-svg-ps" aria-hidden="true"><circle cx="10" cy="10" r="5.5" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>`;
+    default:
+      return '';
+  }
+}
+
+function renderCommandNotation(raw, controllerType) {
   if (!raw || typeof raw !== 'string') return '';
   const trimmed = raw.trim();
   if (!trimmed) return '';
   if (trimmed.startsWith('<div class="tk-') || trimmed.startsWith('<span class="tk-')) return trimmed;
 
+  const layout = controllerType || state.controllerLayout || 'ARCADE';
+
   // Split sequence by major combo step separators (">", "->", "=>", "→")
-  if (trimmed.includes('>') || trimmed.includes('→') || trimmed.includes('->')) {
+  if (trimmed.includes('>') || trimmed.includes('→') || trimmed.includes('->') || trimmed.includes('=>')) {
     const steps = trimmed.split(/\s*(?:>|->|=>|→)\s*/);
-    return `<div class="tk-combo-sequence">${steps.map(s => formatSingleStep(s)).join('<span class="tk-next-arrow tk-break-btn" title="Combo Link Step">➔</span>')}</div>`;
+    return `<div class="tk-combo-sequence">${steps.map(s => formatSingleStep(s, layout)).join('<span class="tk-next-arrow tk-break-btn" title="Combo Link Step">➔</span>')}</div>`;
   }
 
-  return formatSingleStep(trimmed);
+  return formatSingleStep(trimmed, layout);
 }
 
-function formatSingleStep(step) {
+const formatTekkenNotation = renderCommandNotation;
+window.renderCommandNotation = renderCommandNotation;
+window.formatTekkenNotation = renderCommandNotation;
+
+function formatSingleStep(step, layout) {
   step = step.trim();
   if (!step) return '';
 
-  // Separate space-delimited annotations (like "(T!)", "(W!)", "dash", etc.)
   const words = step.split(/\s+/);
-  return `<span class="tk-step-wrapper">${words.map(w => formatWord(w)).join(' ')}</span>`;
+  return `<span class="tk-step-wrapper">${words.map(w => formatWord(w, layout)).join(' ')}</span>`;
 }
 
-function formatWord(w) {
+function formatWord(w, layout) {
   w = w.trim();
   if (!w) return '';
 
-  // Special tags in parentheses
-  if (w.startsWith('(') && w.endsWith(')')) {
+  // Special tags in parentheses or brackets
+  if ((w.startsWith('(') && w.endsWith(')')) || (w.startsWith('[') && w.endsWith(']'))) {
     const tag = w.slice(1, -1).trim();
-    if (tag.toUpperCase() === 'T!') return '<span class="tk-tag-tornado">TORNADO</span>';
-    if (tag.toUpperCase() === 'W!') return '<span class="tk-tag-wall">WALL SPLAT</span>';
-    if (tag.toUpperCase() === 'FB!') return '<span class="tk-tag-break">FLOOR BREAK</span>';
-    if (tag.toUpperCase() === 'WB!') return '<span class="tk-tag-break">WALL BREAK</span>';
-    if (tag.toLowerCase() === 'heat') return '<span class="tk-tag-heat">HEAT</span>';
+    const upper = tag.toUpperCase();
+    if (upper === 'T!') return '<span class="tk-tag-tornado" title="Tornado Spin Bound">TORNADO</span>';
+    if (upper === 'W!') return '<span class="tk-tag-wall" title="Wall Splat">WALL SPLAT</span>';
+    if (upper === 'FB!') return '<span class="tk-tag-break" title="Floor Break">FLOOR BREAK</span>';
+    if (upper === 'WB!') return '<span class="tk-tag-break" title="Wall Break">WALL BREAK</span>';
+    if (upper === 'BB!') return '<span class="tk-tag-break" title="Balcony Break">BALCONY BREAK</span>';
+    if (upper === 'CH') return '<span class="tk-tag-ch" title="Counter Hit">CH</span>';
+    if (upper === 'PC') return '<span class="tk-tag-pc" title="Power Crush">PC</span>';
+    if (upper === 'HEAT' || tag.toLowerCase() === 'heat') return '<span class="tk-tag-heat" title="Heat Engager / State">HEAT</span>';
     return `<span class="tk-tag-generic">${tag}</span>`;
   }
 
   // Common movement words
   const lower = w.toLowerCase();
   if (lower === 'dash') return '<span class="tk-move-action">DASH</span>';
-  if (lower === 'microdash') return '<span class="tk-move-action">MICRODASH</span>';
+  if (lower === 'microdash' || lower === 'micro-dash') return '<span class="tk-move-action">MICRODASH</span>';
   if (lower === 'run') return '<span class="tk-move-action">RUN</span>';
+  if (lower === 'kbd') return '<span class="tk-move-action">KBD</span>';
 
   // Check prefixes like R. or H.
   let prefixHtml = '';
   if (w.startsWith('R.') || w.startsWith('r.')) {
-    prefixHtml = '<span class="tk-state-chip tk-rage-badge">RAGE</span> ';
+    prefixHtml = '<span class="tk-state-chip tk-rage-badge" title="Rage State">RAGE</span> ';
     w = w.slice(2);
   } else if (w.startsWith('H.') || w.startsWith('h.')) {
-    prefixHtml = '<span class="tk-state-chip tk-heat-badge">HEAT</span> ';
+    prefixHtml = '<span class="tk-state-chip tk-heat-badge" title="Heat State">HEAT</span> ';
     w = w.slice(2);
   }
 
@@ -423,9 +478,9 @@ function formatWord(w) {
     if (t === ',') {
       bodyHtml += '<span class="tk-sep-chip tk-break-btn" title="Sequence Break (,)">,</span>';
     } else if (t === '~') {
-      bodyHtml += '<span class="tk-sep-chip tk-break-btn" title="Slide Input (~)">~</span>';
+      bodyHtml += '<span class="tk-sep-chip tk-break-btn tk-slide" title="Slide Input (~)">~</span>';
     } else if (t.trim()) {
-      bodyHtml += formatAtom(t.trim());
+      bodyHtml += formatAtom(t.trim(), layout);
     }
   }
   bodyHtml += '</span>';
@@ -433,9 +488,11 @@ function formatWord(w) {
   return `${prefixHtml}${stateHtml}${bodyHtml}`;
 }
 
-function formatAtom(atom) {
+function formatAtom(atom, layout) {
+  const currentLayout = layout || state.controllerLayout || 'ARCADE';
+
   // Check if atom is pure button expression (e.g. "1", "2", "1+2", "3+4", "2+3")
-  const btnOnly = formatButtons(atom);
+  const btnOnly = formatButtons(atom, currentLayout);
   if (btnOnly) return btnOnly;
 
   // If atom has '+', split into direction and buttons
@@ -445,7 +502,7 @@ function formatAtom(atom) {
     const btnPart = parts.slice(1).join('+').trim();
 
     const dirHtml = dirPart ? formatDirection(dirPart) : '';
-    const btnHtml = btnPart ? (formatButtons(btnPart) || `<span class="tk-btn-chip tk-btn-multi">${btnPart}</span>`) : '';
+    const btnHtml = btnPart ? (formatButtons(btnPart, currentLayout) || `<span class="tk-btn-chip tk-btn-multi">${btnPart}</span>`) : '';
 
     if (dirHtml && btnHtml) {
       return `${dirHtml}<span class="tk-plus-chip">+</span>${btnHtml}`;
@@ -464,93 +521,109 @@ function formatAtom(atom) {
 }
 
 function formatDirection(dirStr, strict = false) {
-  const map = {
-    'f': '➡', 'b': '⬅', 'u': '⬆', 'd': '⬇',
-    'df': '↘', 'd/f': '↘', 'db': '↙', 'd/b': '↙',
-    'uf': '↗', 'u/f': '↗', 'ub': '↖', 'u/b': '↖',
-    'n': '★', '★': '★'
-  };
-
+  if (!dirStr) return strict ? null : '';
   const lower = dirStr.toLowerCase();
-  if (map[lower]) {
+
+  // Neutral star
+  if (lower === 'n' || lower === '★') {
+    return `<span class="tk-dir-badge tk-dir-star" title="Neutral (Stick in center)">${renderStarSvg()}</span>`;
+  }
+
+  // Direction arrows
+  if (COMMAND_DIR_SVGS[lower]) {
     const isHold = (dirStr === dirStr.toUpperCase()) && dirStr !== 'N' && dirStr !== '★';
-    const isStar = lower === 'n' || lower === '★';
-    return `<span class="tk-dir-chip ${isHold ? 'tk-hold' : ''} ${isStar ? 'tk-dir-star' : ''}">${map[lower]}</span>`;
+    const info = COMMAND_DIR_SVGS[lower];
+    return `<span class="tk-dir-badge ${isHold ? 'tk-dir-hold' : 'tk-dir-tap'}" title="${isHold ? 'HOLD ' : ''}${info.title}">${renderDirSvg(info.deg, isHold)}</span>`;
+  }
+
+  // Double tap forward / back
+  if (lower === 'ff') {
+    return `<span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span>`;
+  }
+  if (lower === 'bb') {
+    return `<span class="tk-dir-badge tk-dir-tap" title="Back">${renderDirSvg(180, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Back">${renderDirSvg(180, false)}</span>`;
+  }
+  if (lower === 'fff') {
+    return `<span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span>`;
   }
 
   // Quarter / Half circle motions
-  if (lower === 'qcf') return '<span class="tk-dir-chip">⬇</span><span class="tk-dir-chip">↘</span><span class="tk-dir-chip">➡</span>';
-  if (lower === 'qcb') return '<span class="tk-dir-chip">⬇</span><span class="tk-dir-chip">↙</span><span class="tk-dir-chip">⬅</span>';
-  if (lower === 'hcf') return '<span class="tk-dir-chip">⬅</span><span class="tk-dir-chip">↙</span><span class="tk-dir-chip">⬇</span><span class="tk-dir-chip">↘</span><span class="tk-dir-chip">➡</span>';
-  if (lower === 'hcb') return '<span class="tk-dir-chip">➡</span><span class="tk-dir-chip">↘</span><span class="tk-dir-chip">⬇</span><span class="tk-dir-chip">↙</span><span class="tk-dir-chip">⬅</span>';
+  if (lower === 'qcf') {
+    return `<span class="tk-dir-badge tk-dir-tap" title="Down">${renderDirSvg(90, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down-Forward">${renderDirSvg(45, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span>`;
+  }
+  if (lower === 'qcb') {
+    return `<span class="tk-dir-badge tk-dir-tap" title="Down">${renderDirSvg(90, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down-Back">${renderDirSvg(135, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Back">${renderDirSvg(180, false)}</span>`;
+  }
+  if (lower === 'hcf') {
+    return `<span class="tk-dir-badge tk-dir-tap" title="Back">${renderDirSvg(180, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down-Back">${renderDirSvg(135, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down">${renderDirSvg(90, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down-Forward">${renderDirSvg(45, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span>`;
+  }
+  if (lower === 'hcb') {
+    return `<span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down-Forward">${renderDirSvg(45, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down">${renderDirSvg(90, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down-Back">${renderDirSvg(135, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Back">${renderDirSvg(180, false)}</span>`;
+  }
 
   if (strict) return null;
   return `<span class="tk-raw-text">${dirStr}</span>`;
 }
 
-function formatButtons(btnStr) {
+function formatButtons(btnStr, layout) {
   const norm = btnStr.replace(/\s+/g, '');
-  const layout = state.controllerLayout || 'ARCADE';
+  const activeLayout = layout || state.controllerLayout || 'ARCADE';
 
-  // Authentic Tekken button mappings with tactile arcade styling
-  const mapping = {
-    ARCADE: {
-      '1': { text: '1', title: '1 (Left Punch)', cls: 'tk-btn-1' },
-      '2': { text: '2', title: '2 (Right Punch)', cls: 'tk-btn-2' },
-      '3': { text: '3', title: '3 (Left Kick)', cls: 'tk-btn-3' },
-      '4': { text: '4', title: '4 (Right Kick)', cls: 'tk-btn-4' },
-      '1+2': { text: '1+2', title: '1+2 (LP+RP)', cls: 'tk-btn-1-2' },
-      '3+4': { text: '3+4', title: '3+4 (LK+RK)', cls: 'tk-btn-3-4' },
-      '1+3': { text: '1+3', title: '1+3 (Throw)', cls: 'tk-btn-1-2' },
-      '2+4': { text: '2+4', title: '2+4 (Throw)', cls: 'tk-btn-3-4' },
-      '1+4': { text: '1+4', title: '1+4 (LP+RK)', cls: 'tk-btn-multi' },
-      '2+3': { text: '2+3', title: '2+3 (RP+LK)', cls: 'tk-btn-multi' },
-      '1+2+3': { text: '1+2+3', title: '1+2+3', cls: 'tk-btn-multi' },
-      '1+2+4': { text: '1+2+4', title: '1+2+4', cls: 'tk-btn-multi' },
-      '1+2+3+4': { text: 'Ki', title: 'Ki Charge (1+2+3+4)', cls: 'tk-btn-ki' },
-    },
-    PLAYSTATION: {
-      '1': { text: '□', title: 'Square (Left Punch)', cls: 'tk-btn-1 tk-btn-ps' },
-      '2': { text: '△', title: 'Triangle (Right Punch)', cls: 'tk-btn-2 tk-btn-ps' },
-      '3': { text: '✕', title: 'Cross (Left Kick)', cls: 'tk-btn-3 tk-btn-ps' },
-      '4': { text: '○', title: 'Circle (Right Kick)', cls: 'tk-btn-4 tk-btn-ps' },
-      '1+2': { text: '□+△', title: 'Square + Triangle (LP+RP)', cls: 'tk-btn-1-2 tk-btn-ps' },
-      '3+4': { text: '✕+○', title: 'Cross + Circle (LK+RK)', cls: 'tk-btn-3-4 tk-btn-ps' },
-      '1+3': { text: '□+✕', title: 'Throw (Square + Cross)', cls: 'tk-btn-1-2 tk-btn-ps' },
-      '2+4': { text: '△+○', title: 'Throw (Triangle + Circle)', cls: 'tk-btn-3-4 tk-btn-ps' },
-      '1+4': { text: '□+○', title: 'Square + Circle', cls: 'tk-btn-multi tk-btn-ps' },
-      '2+3': { text: '△+✕', title: 'Triangle + Cross', cls: 'tk-btn-multi tk-btn-ps' },
-      '1+2+3+4': { text: 'Ki', title: 'Ki Charge', cls: 'tk-btn-ki tk-btn-ps' },
-    },
-    XBOX: {
-      '1': { text: 'X', title: 'X Button (Left Punch)', cls: 'tk-btn-1 tk-btn-xb' },
-      '2': { text: 'Y', title: 'Y Button (Right Punch)', cls: 'tk-btn-2 tk-btn-xb' },
-      '3': { text: 'A', title: 'A Button (Left Kick)', cls: 'tk-btn-3 tk-btn-xb' },
-      '4': { text: 'B', title: 'B Button (Right Kick)', cls: 'tk-btn-4 tk-btn-xb' },
-      '1+2': { text: 'X+Y', title: 'X + Y Buttons (LP+RP)', cls: 'tk-btn-1-2 tk-btn-xb' },
-      '3+4': { text: 'A+B', title: 'A + B Buttons (LK+RK)', cls: 'tk-btn-3-4 tk-btn-xb' },
-      '1+3': { text: 'X+A', title: 'Throw (X + A)', cls: 'tk-btn-1-2 tk-btn-xb' },
-      '2+4': { text: 'Y+B', title: 'Throw (Y + B)', cls: 'tk-btn-3-4 tk-btn-xb' },
-      '1+4': { text: 'X+B', title: 'X + B Buttons', cls: 'tk-btn-multi tk-btn-xb' },
-      '2+3': { text: 'Y+A', title: 'Y + A Buttons', cls: 'tk-btn-multi tk-btn-xb' },
-      '1+2+3+4': { text: 'Ki', title: 'Ki Charge', cls: 'tk-btn-ki tk-btn-xb' },
-    }
-  };
-
-  const currentMap = mapping[layout] || mapping.ARCADE;
-  if (currentMap[norm]) {
-    const item = currentMap[norm];
-    return `<span class="tk-btn-chip ${item.cls}" title="${item.title}">${item.text}</span>`;
+  if (activeLayout === 'PLAYSTATION') {
+    const psMap = {
+      '1': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-sq" title="Square (Left Punch)">${renderPsBtnSvg('sq')}</span>`,
+      '2': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-tri" title="Triangle (Right Punch)">${renderPsBtnSvg('tri')}</span>`,
+      '3': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-cross" title="Cross (Left Kick)">${renderPsBtnSvg('cross')}</span>`,
+      '4': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-circle" title="Circle (Right Kick)">${renderPsBtnSvg('circle')}</span>`,
+      '1+2': `<span class="tk-btn-chip tk-btn-ps tk-btn-1-2" title="Square + Triangle">${renderPsBtnSvg('sq')}+${renderPsBtnSvg('tri')}</span>`,
+      '3+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-3-4" title="Cross + Circle">${renderPsBtnSvg('cross')}+${renderPsBtnSvg('circle')}</span>`,
+      '1+3': `<span class="tk-btn-chip tk-btn-ps tk-btn-1-2" title="Throw (Square + Cross)">${renderPsBtnSvg('sq')}+${renderPsBtnSvg('cross')}</span>`,
+      '2+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-3-4" title="Throw (Triangle + Circle)">${renderPsBtnSvg('tri')}+${renderPsBtnSvg('circle')}</span>`,
+      '1+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi" title="Square + Circle">${renderPsBtnSvg('sq')}+${renderPsBtnSvg('circle')}</span>`,
+      '2+3': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi" title="Triangle + Cross">${renderPsBtnSvg('tri')}+${renderPsBtnSvg('cross')}</span>`,
+      '1+2+3': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi">${renderPsBtnSvg('sq')}+${renderPsBtnSvg('tri')}+${renderPsBtnSvg('cross')}</span>`,
+      '1+2+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi">${renderPsBtnSvg('sq')}+${renderPsBtnSvg('tri')}+${renderPsBtnSvg('circle')}</span>`,
+      '1+2+3+4': `<span class="tk-btn-chip tk-btn-ki tk-btn-ps" title="Ki Charge">Ki</span>`,
+    };
+    if (psMap[norm]) return psMap[norm];
+  } else if (activeLayout === 'XBOX') {
+    const xbMap = {
+      '1': '<span class="tk-btn-chip tk-btn-xb tk-btn-xb-x" title="X Button (Left Punch)">X</span>',
+      '2': '<span class="tk-btn-chip tk-btn-xb tk-btn-xb-y" title="Y Button (Right Punch)">Y</span>',
+      '3': '<span class="tk-btn-chip tk-btn-xb tk-btn-xb-a" title="A Button (Left Kick)">A</span>',
+      '4': '<span class="tk-btn-chip tk-btn-xb tk-btn-xb-b" title="B Button (Right Kick)">B</span>',
+      '1+2': '<span class="tk-btn-chip tk-btn-xb tk-btn-1-2" title="X + Y Buttons">X+Y</span>',
+      '3+4': '<span class="tk-btn-chip tk-btn-xb tk-btn-3-4" title="A + B Buttons">A+B</span>',
+      '1+3': '<span class="tk-btn-chip tk-btn-xb tk-btn-1-2" title="Throw (X + A)">X+A</span>',
+      '2+4': '<span class="tk-btn-chip tk-btn-xb tk-btn-3-4" title="Throw (Y + B)">Y+B</span>',
+      '1+4': '<span class="tk-btn-chip tk-btn-xb tk-btn-multi" title="X + B Buttons">X+B</span>',
+      '2+3': '<span class="tk-btn-chip tk-btn-xb tk-btn-multi" title="Y + A Buttons">Y+A</span>',
+      '1+2+3': '<span class="tk-btn-chip tk-btn-xb tk-btn-multi">X+Y+A</span>',
+      '1+2+4': '<span class="tk-btn-chip tk-btn-xb tk-btn-multi">X+Y+B</span>',
+      '1+2+3+4': '<span class="tk-btn-chip tk-btn-ki tk-btn-xb" title="Ki Charge">Ki</span>',
+    };
+    if (xbMap[norm]) return xbMap[norm];
+  } else {
+    // ARCADE
+    const arcMap = {
+      '1': '<span class="tk-btn-chip tk-btn-1" title="1 (Left Punch)">1</span>',
+      '2': '<span class="tk-btn-chip tk-btn-2" title="2 (Right Punch)">2</span>',
+      '3': '<span class="tk-btn-chip tk-btn-3" title="3 (Left Kick)">3</span>',
+      '4': '<span class="tk-btn-chip tk-btn-4" title="4 (Right Kick)">4</span>',
+      '1+2': '<span class="tk-btn-chip tk-btn-1-2" title="1+2 (LP+RP)">1+2</span>',
+      '3+4': '<span class="tk-btn-chip tk-btn-3-4" title="3+4 (LK+RK)">3+4</span>',
+      '1+3': '<span class="tk-btn-chip tk-btn-1-2" title="1+3 (Throw)">1+3</span>',
+      '2+4': '<span class="tk-btn-chip tk-btn-3-4" title="2+4 (Throw)">2+4</span>',
+      '1+4': '<span class="tk-btn-chip tk-btn-multi" title="1+4">1+4</span>',
+      '2+3': '<span class="tk-btn-chip tk-btn-multi" title="2+3">2+3</span>',
+      '1+2+3': '<span class="tk-btn-chip tk-btn-multi">1+2+3</span>',
+      '1+2+4': '<span class="tk-btn-chip tk-btn-multi">1+2+4</span>',
+      '1+2+3+4': '<span class="tk-btn-chip tk-btn-ki" title="Ki Charge (1+2+3+4)">Ki</span>',
+    };
+    if (arcMap[norm]) return arcMap[norm];
   }
 
   if (/^[1-4\+]+$/.test(norm)) {
-    if (layout === 'PLAYSTATION') {
-      const psCustom = norm.replace(/1/g, '□').replace(/2/g, '△').replace(/3/g, '✕').replace(/4/g, '○');
-      return `<span class="tk-btn-chip tk-btn-multi tk-btn-ps">${psCustom}</span>`;
-    } else if (layout === 'XBOX') {
-      const xbCustom = norm.replace(/1/g, 'X').replace(/2/g, 'Y').replace(/3/g, 'A').replace(/4/g, 'B');
-      return `<span class="tk-btn-chip tk-btn-multi tk-btn-xb">${xbCustom}</span>`;
-    }
     return `<span class="tk-btn-chip tk-btn-multi">${norm}</span>`;
   }
   return null;
@@ -576,9 +649,96 @@ function setControllerLayout(layout) {
   if (state.lastMatchupData) {
     renderMatchupDashboard(state.lastMatchupData);
   }
+  if (typeof renderPunishMatrix === 'function') {
+    renderPunishMatrix();
+  }
   renderComboRecommendations();
   updateNotationDisplay();
+  if (window.tacticsState && window.tacticsState.currentTab && typeof switchTacticsTab === 'function') {
+    switchTacticsTab(window.tacticsState.currentTab);
+  }
 }
+window.setControllerLayout = setControllerLayout;
+
+// ==========================================================================
+// 4-View SPA Routing Engine (Fighters, Matchup, Stages, Tactics)
+// ==========================================================================
+function switchAppView(viewName, scrollTarget) {
+  const validViews = ['fighters', 'matchup', 'stages', 'tactics'];
+  if (!validViews.includes(viewName)) viewName = 'fighters';
+
+  // 1. Toggle visibility of all views
+  document.querySelectorAll('.app-view').forEach(view => {
+    const isTarget = view.getAttribute('data-view') === viewName || view.id === `view-${viewName}`;
+    view.classList.toggle('active', isTarget);
+  });
+
+  // 2. Synchronize navigation links
+  document.querySelectorAll('#mainNavLinks .nav-link').forEach(link => {
+    link.classList.toggle('active', link.getAttribute('data-view') === viewName);
+  });
+
+  // 3. Update URL hash cleanly
+  const currentHash = window.location.hash.replace('#', '');
+  if (currentHash !== viewName && !scrollTarget) {
+    try {
+      history.pushState(null, '', `#${viewName}`);
+    } catch (e) {
+      window.location.hash = viewName;
+    }
+  }
+
+  // 4. View-specific activations
+  if (viewName === 'tactics') {
+    if (typeof switchTacticsTab === 'function') {
+      const activeTab = (window.tacticsState && window.tacticsState.currentTab) || 'sidesteps';
+      switchTacticsTab(activeTab);
+    }
+  } else if (viewName === 'matchup') {
+    if (state.lastMatchupData) {
+      renderMatchupDashboard(state.lastMatchupData);
+    }
+  } else if (viewName === 'stages') {
+    if (typeof filterStagesGrid === 'function') {
+      filterStagesGrid('ALL');
+    }
+  }
+
+  // 5. Scroll smoothly
+  if (scrollTarget) {
+    setTimeout(() => {
+      const targetEl = document.getElementById(scrollTarget);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 60);
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+window.switchAppView = switchAppView;
+
+// Global Hash Route Dispatcher
+window.addEventListener('hashchange', () => {
+  const rawHash = window.location.hash.replace('#', '').toLowerCase();
+  if (rawHash.includes('fighters/')) {
+    const slug = rawHash.split('fighters/')[1]?.replace('/', '');
+    if (slug) {
+      switchAppView('fighters');
+      openCharacterProfile(slug);
+      return;
+    }
+  }
+  if (['fighters', 'matchup', 'stages', 'tactics'].includes(rawHash)) {
+    switchAppView(rawHash);
+  } else if (['hero', 'roster', 'moves', 'combo-lab', 'notation'].includes(rawHash)) {
+    switchAppView('fighters', rawHash === 'hero' ? 'heroBannerSection' : (rawHash === 'roster' ? 'fighters' : rawHash));
+  } else if (['analyzer', 'punish-assistant'].includes(rawHash)) {
+    switchAppView('matchup', rawHash);
+  } else if (rawHash === 'stages') {
+    switchAppView('stages', 'stages');
+  }
+});
 
 // 1. Initial Load
 document.addEventListener('DOMContentLoaded', async () => {
@@ -604,6 +764,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   initGlobalSearch();
   updateNotesCountBadge();
   restoreStateFromUrl();
+
+  // Initialize active SPA view from window hash
+  const initHash = window.location.hash.replace('#', '').toLowerCase();
+  if (initHash.includes('fighters/')) {
+    const slug = initHash.split('fighters/')[1]?.replace('/', '');
+    switchAppView('fighters');
+    if (slug) setTimeout(() => openCharacterProfile(slug), 150);
+  } else if (['matchup', 'stages', 'tactics'].includes(initHash)) {
+    switchAppView(initHash);
+  } else if (['analyzer', 'punish-assistant'].includes(initHash)) {
+    switchAppView('matchup', initHash);
+  } else if (['moves', 'combo-lab', 'notation'].includes(initHash)) {
+    switchAppView('fighters', initHash);
+  } else {
+    switchAppView('fighters');
+  }
 });
 
 
@@ -722,6 +898,7 @@ function setupEventListeners() {
       if (typeof closeDamageScalingModal === 'function') closeDamageScalingModal();
       if (typeof closePracticeModal === 'function') closePracticeModal();
       if (typeof closeStageDetailModal === 'function') closeStageDetailModal();
+      if (typeof closeCharacterProfile === 'function') closeCharacterProfile();
     }
   });
 
@@ -1016,13 +1193,14 @@ function renderRosterGrid() {
            aria-pressed="${isSelected}"
            aria-label="Select ${c.name}"
            onclick="selectCharacter('${c.slug}')"
+           ondblclick="openCharacterProfile('${c.slug}')"
            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectCharacter('${c.slug}');}">
         <div class="roster-avatar-wrap">
           <img class="roster-avatar"
-               src="${c.avatar_url || '/assets/avatars/jin-brand-256-C1-oe_x3.webp'}"
+               src="${c.avatar_url || '/assets/avatars/' + c.slug + '.jpg'}"
                alt="${c.name}"
                loading="lazy"
-               onerror="this.src='/assets/avatars/jin-brand-256-C1-oe_x3.webp'"/>
+               onerror="this.src='/assets/avatars/${c.slug}.jpg'; this.onerror=()=>this.src='/assets/avatars/jin-brand-256-C1-oe_x3.webp'"/>
           ${c.is_dlc ? '<span class="roster-dlc-tag">DLC</span>' : ''}
           ${isSelected ? '<span class="roster-active-indicator">SELECTED</span>' : ''}
           <button type="button" class="btn-roster-fav ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleCharacterFavorite('${c.slug}')" title="Favorite ${c.name}">
@@ -1034,8 +1212,8 @@ function renderRosterGrid() {
           <div class="roster-card-style">${style}</div>
           <div class="roster-card-chips">
             <span class="roster-chip ${hb.badgeClass}">${hb.label}</span>
-            <button type="button" class="btn-roster-profile-link" onclick="event.stopPropagation(); openCharacterProfile('${c.slug}')" title="View 17-Section Deep Dive Profile">
-              📖 Profile
+            <button type="button" class="btn-roster-profile-link" onclick="event.stopPropagation(); openCharacterProfile('${c.slug}')" title="View ${c.name} Fighter Dossier &amp; Canonical Metrics">
+              👤 Dossier
             </button>
           </div>
         </div>
@@ -3007,7 +3185,11 @@ function renderMatchupDashboard(data) {
 
   const reasoningPara = document.getElementById('matchupReasoningText');
   if (reasoningPara) {
-    reasoningPara.textContent = oa.reasoning;
+    let reasoning = oa.reasoning || '';
+    if (reasoning.includes('not cataloged yet') || (data.matchup_notes && data.matchup_notes.includes('not cataloged yet'))) {
+      reasoning = `⚡ DYNAMIC MATCHUP ASSESSMENT: Mathematical tactical relativity active for ${p1.name} vs ${p2.name}. While pair-specific high-rank replay notes are undergoing ongoing tournament validation, full frame-data punish thresholds, tracking vulnerabilities, and stage hazard synergies are computed and active below.`;
+    }
+    reasoningPara.textContent = reasoning;
   }
 
   const evidenceList = document.getElementById('matchupEvidenceList');
@@ -7317,55 +7499,143 @@ function updateMoveComparison() {
 // ==========================================================================
 // 9. Character Profile Dashboard Modal (Phase 4 - 17 Sections)
 // ==========================================================================
-function openCharacterProfile(slugOrObj) {
+// ==========================================================================
+// 9. Character Profile Dashboard Modal (Phase 4 - 17 Sections & Live Dossiers)
+// ==========================================================================
+let profileCharacterMoves = [];
+
+function setProfileStatBar(attr, val) {
+  const scoreEl = document.getElementById(`cpAttrScore${attr}`);
+  const fillEl = document.getElementById(`cpAttr${attr}`);
+  if (scoreEl) scoreEl.textContent = val;
+  if (fillEl) fillEl.style.width = `${val}%`;
+}
+
+function handleDossierAvatarFallback(imgEl) {
+  if (!imgEl) return;
+  const currentSrc = imgEl.src || '';
+  if (currentSrc.endsWith('.jpg')) {
+    const slug = state.selectedCharacter?.slug || 'jin';
+    imgEl.src = state.selectedCharacter?.avatar_url || `/assets/avatars/${slug}.webp`;
+  } else {
+    imgEl.style.display = 'none';
+    const fallback = document.getElementById('cpAvatarFallback');
+    const monogram = document.getElementById('cpFallbackMonogram');
+    if (fallback) {
+      fallback.style.display = 'flex';
+      const name = state.selectedCharacter?.name || 'Fighter';
+      if (monogram) monogram.textContent = name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+    }
+  }
+}
+
+async function openCharacterProfile(slugOrObj) {
   playSfx('click');
   const slug = typeof slugOrObj === 'string' ? slugOrObj : (slugOrObj?.slug || 'jin');
-  const char = state.characters.find(c => c.slug === slug) || state.characters[0];
+  const cleanSlug = String(slug).toLowerCase().trim();
+  const char = (state.characters || []).find(c => c.slug === cleanSlug) || state.characters[0];
   if (!char) return;
+
+  state.selectedCharacter = char;
 
   const modal = document.getElementById('characterProfileModal');
   if (!modal) return;
 
-  const avatar = document.getElementById('cpAvatarImg');
-  const name = document.getElementById('cpCharName');
-  const arch = document.getElementById('cpArchetypeBadge');
-  const country = document.getElementById('cpCountryBadge');
-  const diff = document.getElementById('cpDifficultyBadge');
-  const hurtbox = document.getElementById('cpHurtboxBadge');
-  const style = document.getElementById('cpStyleName');
+  // Update deep-linking URL hash
+  try {
+    history.pushState(null, '', `#/fighters/${cleanSlug}`);
+  } catch (e) {
+    try { window.location.hash = `/fighters/${cleanSlug}`; } catch (err) {}
+  }
 
-  const hb = getCharacterHurtboxProfile(char.slug);
-  const fStyle = FIGHTING_STYLES[char.slug] || char.archetype || 'Traditional Martial Arts';
-
-  if (avatar) avatar.src = char.avatar_url || '/assets/avatars/jin-brand-256-C1-oe_x3.webp';
-  if (name) name.textContent = char.name;
-  if (arch) arch.textContent = `${char.archetype || 'Fighter'}${char.is_dlc ? ' • DLC' : ''}`;
-  if (country) country.textContent = char.slug === 'jin' || char.slug === 'kazuya' ? '🇯🇵 Japan' : (char.slug === 'king' ? '🇲🇽 Mexico' : (char.slug === 'nina' ? '🇮🇪 Ireland' : '🌍 World'));
-  if (diff) diff.textContent = char.slug === 'kazuya' ? '★★★★★ Master Execution' : (char.slug === 'jin' ? '★★★★☆ Advanced Execution' : '★★★☆☆ Intermediate Execution');
-  if (hurtbox) hurtbox.textContent = hb.label;
-  if (style) style.textContent = fStyle;
+  // Populate hero banner, telemetry grid, attributes, and all sub-tabs
+  populateProfileSections(char);
 
   updateProfileFavState(char.slug);
 
+  // Wire navigation tabs inside modal
   document.querySelectorAll('#cpTabsBar .cp-tab-btn').forEach(btn => {
     btn.onclick = (e) => {
       document.querySelectorAll('#cpTabsBar .cp-tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.cp-tab-panel').forEach(p => p.classList.remove('active'));
-      e.target.classList.add('active');
-      const targetPanel = document.getElementById(e.target.dataset.cptab);
+      btn.classList.add('active');
+      const targetPanel = document.getElementById(btn.dataset.cptab);
       if (targetPanel) targetPanel.classList.add('active');
       playSfx('click');
     };
   });
 
-  populateProfileSections(char);
+  // Modal backdrop click-outside to close
+  modal.onclick = (e) => {
+    if (e.target === modal) closeCharacterProfile();
+  };
+
   modal.style.display = 'flex';
+
+  // Asynchronously fetch moves for this character and populate live frame data table
+  try {
+    const movesData = await fetchAPI(`/moves?character_id=${char.id}&limit=500`, true);
+    if (movesData && Array.isArray(movesData)) {
+      profileCharacterMoves = movesData;
+      renderProfileMovesTable(movesData);
+    }
+  } catch (err) {
+    console.warn('Could not fetch profile moves from API:', err);
+  }
 }
 
 function closeCharacterProfile() {
   playSfx('click');
   const modal = document.getElementById('characterProfileModal');
   if (modal) modal.style.display = 'none';
+  try {
+    if (window.location.hash.includes('fighters/')) {
+      history.pushState(null, '', '#fighters');
+    }
+  } catch (e) {}
+}
+
+function renderProfileMovesTable(moves) {
+  const tbody = document.getElementById('cpLiveMovesTableBody');
+  const countBadge = document.getElementById('cpMoveCountBadge');
+  if (!tbody) return;
+  if (countBadge) countBadge.textContent = `${moves.length} Moves`;
+  tbody.innerHTML = moves.map(m => {
+    const blk = m.block_advantage;
+    const blkClass = blk === null || blk === undefined ? 'neutral' : (blk > 0 ? 'plus' : (blk <= -10 ? 'unsafe' : 'safe'));
+    const blkText = blk === null || blk === undefined ? 'N/A' : (blk > 0 ? `+${blk}` : blk);
+    const hitText = m.hit_advantage === null || m.hit_advantage === undefined ? '-' : (m.hit_advantage > 0 ? `+${m.hit_advantage}` : m.hit_advantage);
+    const chText = m.ch_advantage === null || m.ch_advantage === undefined ? '-' : (m.ch_advantage > 0 ? `+${m.ch_advantage}` : m.ch_advantage);
+    return `
+      <tr>
+        <td><strong>${formatTekkenNotation(m.command)}</strong></td>
+        <td>${m.name || '-'}</td>
+        <td><span class="badge-level ${(m.hit_level || 'm').toLowerCase()}">${m.hit_level || 'm'}</span></td>
+        <td><span class="badge-frame neutral">${m.startup_frames ? 'i' + m.startup_frames : '-'}</span></td>
+        <td><span class="badge-frame ${blkClass}">${blkText}</span></td>
+        <td>${hitText}</td>
+        <td>${chText}</td>
+        <td>${m.damage || '-'}</td>
+        <td style="font-size:0.7rem; color:var(--text-muted);">${m.is_heat_engager ? '🔥 Heat Engager' : (m.is_homing ? '🌀 Homing' : (m.is_power_crush ? '🛡️ Power Crush' : '-'))}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function filterProfileMoves(query) {
+  if (!profileCharacterMoves) return;
+  const q = (query || '').toLowerCase().trim();
+  if (!q) {
+    renderProfileMovesTable(profileCharacterMoves);
+    return;
+  }
+  const filtered = profileCharacterMoves.filter(m => 
+    (m.command && m.command.toLowerCase().includes(q)) ||
+    (m.name && m.name.toLowerCase().includes(q)) ||
+    (m.hit_level && m.hit_level.toLowerCase().includes(q)) ||
+    (m.notes && m.notes.toLowerCase().includes(q))
+  );
+  renderProfileMovesTable(filtered);
 }
 
 function updateProfileFavState(slug) {
@@ -7374,7 +7644,7 @@ function updateProfileFavState(slug) {
   const icon = document.getElementById('cpFavIcon');
   const text = document.getElementById('cpFavText');
   if (icon) icon.textContent = isFav ? '★' : '☆';
-  if (text) text.textContent = isFav ? 'Favorited' : 'Favorite Fighter';
+  if (text) text.textContent = isFav ? 'Fav' : 'Fav';
 }
 
 function setFighterFromProfile(role) {
@@ -7406,41 +7676,117 @@ function openComboLabFromProfile() {
 }
 
 function populateProfileSections(char) {
-  const bio = document.getElementById('cpBioText');
-  if (bio) {
-    bio.textContent = `${char.name} is a premier ${char.archetype || 'Tekken 8'} combatant characterized by formidable neutral control, oppressive block advantage frames, and devastating wall conversions under the Tekken 8 Heat Engine. Built for tournament pressure, this fighter excels when dictating combat pace at Range 2.`;
+  const dossier = (window.getFighterDossier ? window.getFighterDossier(char.slug) : null) || {};
+  const hb = getCharacterHurtboxProfile(char.slug);
+
+  // 1. Hero Identity Banner
+  const avatar = document.getElementById('cpAvatarImg');
+  const fallback = document.getElementById('cpAvatarFallback');
+  const monogram = document.getElementById('cpFallbackMonogram');
+  if (avatar) {
+    avatar.style.display = 'block';
+    if (fallback) fallback.style.display = 'none';
+    avatar.src = `/assets/avatars/${char.slug}.jpg`;
+    avatar.onerror = () => {
+      avatar.src = char.avatar_url || `/assets/avatars/${char.slug}.webp`;
+      avatar.onerror = () => {
+        avatar.style.display = 'none';
+        if (fallback) {
+          fallback.style.display = 'flex';
+          if (monogram) monogram.textContent = char.name.split(' ').map(n=>n[0]).join('').slice(0, 2).toUpperCase();
+        }
+      };
+    };
   }
 
+  const nameEl = document.getElementById('cpCharName');
+  if (nameEl) nameEl.textContent = char.name;
+
+  const japEl = document.getElementById('cpJapaneseName');
+  if (japEl) japEl.textContent = dossier.japanese_name || char.japanese_name || '';
+
+  const aliasEl = document.getElementById('cpTitleAlias');
+  if (aliasEl) aliasEl.textContent = `"${dossier.title || 'The Iron Fist Challenger'}"`;
+
+  const archEl = document.getElementById('cpArchetypeBadge');
+  if (archEl) archEl.textContent = `${char.archetype || dossier.archetype || 'Fighter'}${char.is_dlc ? ' • DLC' : ' • Base Roster'}`;
+
+  const hurtboxEl = document.getElementById('cpHurtboxBadge');
+  if (hurtboxEl) hurtboxEl.textContent = `Hurtbox: ${hb.label}`;
+
+  // 2. 2x3 Telemetry HUD Grid
+  const heightEl = document.getElementById('cpHeightVal');
+  if (heightEl) heightEl.textContent = dossier.height || '180 cm (5\'11")';
+
+  const weightEl = document.getElementById('cpWeightVal');
+  if (weightEl) weightEl.textContent = dossier.weight || '75 kg (165 lbs)';
+
+  const countryEl = document.getElementById('cpCountryVal');
+  if (countryEl) countryEl.textContent = `${dossier.country_flag || '🌍'} ${dossier.country || 'World'}`;
+
+  const styleEl = document.getElementById('cpStyleVal');
+  if (styleEl) styleEl.textContent = dossier.style || FIGHTING_STYLES[char.slug] || 'Martial Arts';
+
+  const weakSideEl = document.getElementById('cpWeakSideVal');
+  if (weakSideEl) weakSideEl.textContent = `⚠️ ${dossier.weak_side || 'SSL'}`;
+
+  const diffEl = document.getElementById('cpDifficultyVal');
+  if (diffEl) diffEl.textContent = dossier.difficulty || 'Intermediate ★★★☆☆';
+
+  // 3. Lore Summary
+  const loreShort = document.getElementById('cpBioTextShort');
+  if (loreShort) loreShort.textContent = dossier.lore || `${char.name} is an elite Tekken 8 combatant with formidable neutral command and crushing Heat dynamics.`;
+
+  const loreFull = document.getElementById('cpBioText');
+  if (loreFull) loreFull.textContent = dossier.lore || `${char.name} commands authoritative presence in the Tekken 8 roster.`;
+
+  // 4. Tactical Pros & Cons Chips
+  const prosConsRow = document.getElementById('cpProsConsRow');
+  if (prosConsRow) {
+    const pros = (dossier.pros || ['Strong neutral pokes', 'High damage juggles']).map(p => `<span class="cp-pro-chip">+ ${p}</span>`).join('');
+    const cons = (dossier.cons || ['Weak to sidestepping']).map(c => `<span class="cp-con-chip">- ${c}</span>`).join('');
+    prosConsRow.innerHTML = pros + cons;
+  }
+
+  // 5. Combat Attributes
+  const ratings = dossier.ratings || { offense: 90, defense: 90, range: 85, execution: 85, movement: 85, throw: 80 };
+  setProfileStatBar('Offense', ratings.offense);
+  setProfileStatBar('Defense', ratings.defense);
+  setProfileStatBar('Range', ratings.range);
+  setProfileStatBar('Execution', ratings.execution);
+  setProfileStatBar('Movement', ratings.movement);
+  setProfileStatBar('Throw', ratings.throw);
+
+  // 6. Tab 1: Section 2 - Quick Start Guide
   const top5List = document.getElementById('cpTop5MovesList');
-  if (top5List) {
-    top5List.innerHTML = `
-      <div class="cp-move-chip"><strong>1</strong> — 10f Standard Flash Poke (+1 OB)</div>
-      <div class="cp-move-chip"><strong>df+1</strong> — 13f Mid Check Poke (-3 OB, safe check)</div>
-      <div class="cp-move-chip"><strong>f+4</strong> — Long-range mid keepout & counter-hit starter</div>
-      <div class="cp-move-chip"><strong>df+2</strong> — 15f Normal Hit Mid Launcher</div>
-      <div class="cp-move-chip"><strong>db+4</strong> — High-crushing low poke with frame advantage</div>
-    `;
+  if (top5List && dossier.top5) {
+    top5List.innerHTML = dossier.top5.map(m => `
+      <div class="cp-move-chip">
+        <strong>${formatTekkenNotation(m.cmd)}</strong> (${m.role}) — ${m.startup}, ${m.block} OB. ${m.desc}
+      </div>
+    `).join('');
   }
 
   const gameplan = document.getElementById('cpCoreGameplan');
   if (gameplan) {
-    gameplan.textContent = `Control mid-range with df+1 and f+4. When opponent hesitates, enforce low pokes. Bait whiffs with fluid backdashing and retaliate instantly with your 15f launcher into full air juggle.`;
+    gameplan.textContent = dossier.gameplan || 'Control mid-range spacing with safe mid checks and punish whiffed opponent strikes.';
   }
 
   const basicLauncher = document.getElementById('cpBasicLauncherBox');
   if (basicLauncher) {
-    basicLauncher.innerHTML = `<strong>df+2 (Mid Launcher)</strong> ➔ Startup: i15 ➔ Launches on Normal Hit ➔ Follow up with standard juggle route for 65+ DMG`;
+    basicLauncher.innerHTML = `<strong>${formatTekkenNotation(dossier.launcher || 'df+2')}</strong>`;
   }
 
+  // Section 3: Stat Radar Matrix in Tab 1
   const statsGrid = document.getElementById('cpStatsRadarGrid');
   if (statsGrid) {
     const stats = [
-      { name: 'Offensive Pressure', val: 90 },
-      { name: 'Defensive Punishment', val: 88 },
-      { name: 'Neutral Range', val: 85 },
-      { name: 'Execution Demand', val: 82 },
-      { name: 'Mixup Potential', val: 86 },
-      { name: 'Wall Carry Efficiency', val: 92 }
+      { name: 'Offensive Pressure', val: ratings.offense },
+      { name: 'Defensive Punishment', val: ratings.defense },
+      { name: 'Neutral Reach', val: ratings.range },
+      { name: 'Execution Demand', val: ratings.execution },
+      { name: 'Lateral Mobility', val: ratings.movement },
+      { name: 'Throw Game / Break Tech', val: ratings.throw }
     ];
     statsGrid.innerHTML = stats.map(s => `
       <div class="cp-stat-row">
@@ -7453,74 +7799,110 @@ function populateProfileSections(char) {
     `).join('');
   }
 
+  // 7. Tab 2: Section 4 - Essential Neutral Moves
   const neutralBody = document.getElementById('cpNeutralMovesBody');
-  if (neutralBody) {
-    neutralBody.innerHTML = `
-      <tr><td>Fast Poke</td><td><strong>1, 2</strong></td><td>h, h</td><td>i10</td><td>-1</td><td>17</td><td>Universal safe interrupt and turn-stealer</td></tr>
-      <tr><td>Mid Check</td><td><strong>df+1</strong></td><td>m</td><td>i13</td><td>-3</td><td>11</td><td>Dominant mid check; beats ducking attempts</td></tr>
-      <tr><td>Keepout</td><td><strong>f+4</strong></td><td>m</td><td>i16</td><td>-7</td><td>21</td><td>Longest range neutral poke; counter-hit launcher</td></tr>
-      <tr><td>Gap Closer</td><td><strong>f,f+2</strong></td><td>m</td><td>i15</td><td>-9</td><td>24</td><td>Demon paw; massive pushback makes it safe</td></tr>
-      <tr><td>Low Harass</td><td><strong>db+4</strong></td><td>l</td><td>i20</td><td>-13</td><td>18</td><td>High crushes; +3 on hit to enforce mixup</td></tr>
-    `;
+  if (neutralBody && dossier.top5) {
+    neutralBody.innerHTML = dossier.top5.map(m => {
+      const isPlus = parseInt(m.block) > 0;
+      const isUnsafe = parseInt(m.block) <= -10;
+      const blkClass = isPlus ? 'plus' : (isUnsafe ? 'unsafe' : 'safe');
+      return `
+        <tr>
+          <td><span style="font-weight:800; color:var(--accent-cyan); font-size:0.75rem;">${m.role}</span></td>
+          <td><strong>${formatTekkenNotation(m.cmd)}</strong></td>
+          <td>m</td>
+          <td><span class="badge-frame neutral">${m.startup}</span></td>
+          <td><span class="badge-frame ${blkClass}">${m.block}</span></td>
+          <td>${m.dmg}</td>
+          <td>${m.desc}</td>
+        </tr>
+      `;
+    }).join('');
   }
 
+  // Section 5: Launchers
   const launchersBody = document.getElementById('cpLaunchersBody');
   if (launchersBody) {
-    launchersBody.innerHTML = `
-      <tr><td>Normal Hit</td><td><strong>df+2</strong></td><td>i15</td><td>-12</td><td>Standard Juggle</td><td>Primary standing whiff and block punisher</td></tr>
-      <tr><td>Hopkick</td><td><strong>uf+4</strong></td><td>i15</td><td>-13</td><td>Full Aerial Launch</td><td>Low crushes on frame 9; great panic launcher</td></tr>
-      <tr><td>Counter Hit</td><td><strong>4 (Magic 4)</strong></td><td>i11</td><td>-9</td><td>CH Screw / Tornado</td><td>Fastest CH launcher in the game</td></tr>
-      <tr><td>While Standing</td><td><strong>WS+2</strong></td><td>i15</td><td>-12</td><td>Full Juggle</td><td>Crouching block punish against heavy lows</td></tr>
-    `;
+    const launchList = dossier.launcher ? [
+      { type: 'Primary Mid Launcher', cmd: dossier.launcher.split('(')[0].trim() || 'df+2', start: 'i15', blk: '-12', jug: 'Standard Juggle', note: 'Primary standing whiff and block punisher' },
+      { type: 'Hopkick / Low Crush', cmd: 'uf+4', start: 'i15', blk: '-13', jug: 'Full Aerial Launch', note: 'Low crushes on frame 9' },
+      { type: 'Counter-Hit Starter', cmd: 'Magic 4 or b+1', start: 'i11-i14', blk: '-7', jug: 'Tornado / Screw', note: 'Fastest counter-hit launcher' },
+      { type: 'While Standing WS', cmd: 'WS+2', start: 'i15', blk: '-12', jug: 'Full Juggle', note: 'Crouch punish against heavy low strikes' }
+    ] : [];
+    launchersBody.innerHTML = launchList.map(l => `
+      <tr>
+        <td>${l.type}</td>
+        <td><strong>${formatTekkenNotation(l.cmd)}</strong></td>
+        <td><span class="badge-frame neutral">${l.start}</span></td>
+        <td><span class="badge-frame unsafe">${l.blk}</span></td>
+        <td>${l.jug}</td>
+        <td>${l.note}</td>
+      </tr>
+    `).join('');
   }
 
+  // Section 6: Throws
   const throwsBody = document.getElementById('cpThrowsBody');
   if (throwsBody) {
-    throwsBody.innerHTML = `
-      <tr><td><strong>1+3 or f+1+3</strong></td><td>Shoulder Throw</td><td>1 or 2</td><td>35</td><td>Side-swaps opponent towards your back</td></tr>
-      <tr><td><strong>2+4 or f+2+4</strong></td><td>Leg Sweep Takedown</td><td>1 or 2</td><td>35</td><td>Pushes opponent away towards wall</td></tr>
-      <tr><td><strong>uf+1+2</strong></td><td>Command Overhead Slam</td><td>1+2 Break</td><td>40</td><td>Leaves opponent face-up grounded for oki mixup</td></tr>
+    const isKing = char.slug === 'king';
+    throwsBody.innerHTML = isKing ? `
+      <tr><td><strong>${formatTekkenNotation('f,b,db,d,df,f+1')}</strong></td><td>Giant Swing</td><td>1 Break</td><td>70</td><td>Wall splats for massive damage</td></tr>
+      <tr><td><strong>${formatTekkenNotation('f,f,f+2+4')}</strong></td><td>Shining Wizard</td><td>1+2 Break</td><td>45</td><td>Running grab into oki</td></tr>
+      <tr><td><strong>${formatTekkenNotation('qcb+1+2')}</strong></td><td>Muscle Buster</td><td>1+2 Break</td><td>45</td><td>High damage slam</td></tr>
+    ` : `
+      <tr><td><strong>${formatTekkenNotation('1+3 or f+1+3')}</strong></td><td>Standard Left Throw</td><td>1 or 2</td><td>35</td><td>Side-swaps opponent towards back</td></tr>
+      <tr><td><strong>${formatTekkenNotation('2+4 or f+2+4')}</strong></td><td>Standard Right Throw</td><td>1 or 2</td><td>35</td><td>Pushes opponent away towards wall</td></tr>
+      <tr><td><strong>${formatTekkenNotation('uf+1+2')}</strong></td><td>Command Overhead Slam</td><td>1+2 Break</td><td>40</td><td>Leaves opponent grounded for oki</td></tr>
     `;
   }
 
+  // 8. Tab 3: Punishment Guide
   const standingBody = document.getElementById('cpStandingPunishBody');
-  if (standingBody) {
-    standingBody.innerHTML = `
-      <tr><td>i10 (-10 OB)</td><td><strong>1, 1, 2</strong> or <strong>2, 4</strong></td><td>25</td><td>Knockdown</td><td>Guaranteed knockdown and wall travel</td></tr>
-      <tr><td>i12 (-12 OB)</td><td><strong>2, 4</strong> or <strong>f+1+2</strong></td><td>28</td><td>+4 OB / Splat</td><td>Wall splats if opponent backs to corner</td></tr>
-      <tr><td>i14 (-14 OB)</td><td><strong>f+2, 4</strong> or <strong>b+1, 2</strong></td><td>34</td><td>Knockdown</td><td>Heavy damage punish on staggering mids</td></tr>
-      <tr><td>i15+ (-15 OB)</td><td><strong>df+2</strong> or <strong>uf+4</strong></td><td>68+</td><td>Launch</td><td>FULL LAUNCH! Execute BnB combo for 68+ DMG</td></tr>
-    `;
+  if (standingBody && dossier.standing_punish) {
+    standingBody.innerHTML = dossier.standing_punish.map(p => `
+      <tr>
+        <td><span style="font-weight:900; color:var(--accent-gold);">${p.frame}</span></td>
+        <td><strong>${formatTekkenNotation(p.move)}</strong></td>
+        <td>${p.dmg} DMG</td>
+        <td><span class="badge-frame plus">${p.adv}</span></td>
+        <td>Guaranteed ${p.frame} block punish</td>
+      </tr>
+    `).join('');
   }
 
   const crouchBody = document.getElementById('cpCrouchingPunishBody');
-  if (crouchBody) {
-    crouchBody.innerHTML = `
-      <tr><td>i11 (-11 OB)</td><td><strong>WS+4</strong></td><td>16</td><td>+5 On Hit</td><td>Universal toe kick; maintains turn</td></tr>
-      <tr><td>i13 (-13 OB)</td><td><strong>WS+1, 2</strong></td><td>28</td><td>Knockdown</td><td>Strong punish on intermediate blocked lows</td></tr>
-      <tr><td>i15+ (-15 OB)</td><td><strong>WS+2</strong></td><td>70+</td><td>Full Launch</td><td>Full standing juggle on blocked hellsweeps / stagger lows</td></tr>
-    `;
+  if (crouchBody && dossier.ws_punish) {
+    crouchBody.innerHTML = dossier.ws_punish.map(p => `
+      <tr>
+        <td><span style="font-weight:900; color:var(--accent-cyan);">${p.frame}</span></td>
+        <td><strong>${formatTekkenNotation(p.move)}</strong></td>
+        <td>${p.dmg} DMG</td>
+        <td><span class="badge-frame plus">${p.adv}</span></td>
+        <td>Crouch block punish against low strikes</td>
+      </tr>
+    `).join('');
   }
 
   const whiffBody = document.getElementById('cpWhiffPunishBody');
-  if (whiffBody) {
-    whiffBody.innerHTML = `
-      <tr><td><strong>df+2</strong></td><td>i15</td><td>Range 1.5</td><td>68 DMG (Launch)</td><td>Close to mid-range whiffs</td></tr>
-      <tr><td><strong>f,f+2 (Demon Paw)</strong></td><td>i15</td><td>Range 2.8</td><td>24 DMG (Knockdown)</td><td>Long-range whiff retaliation across the screen</td></tr>
-      <tr><td><strong>b+2, 1</strong></td><td>i14</td><td>Range 2.0</td><td>32 DMG</td><td>Consistent hit-confirm whiff punisher</td></tr>
-    `;
+  if (whiffBody && dossier.whiff_punish) {
+    whiffBody.innerHTML = dossier.whiff_punish.map(w => `
+      <tr>
+        <td><strong>${formatTekkenNotation(w.move)}</strong></td>
+        <td><span class="badge-frame neutral">${w.startup}</span></td>
+        <td>${w.reach} Reach</td>
+        <td>${w.dmg} DMG</td>
+        <td>${w.note}</td>
+      </tr>
+    `).join('');
   }
 
+  // 9. Tab 4: Combos & Walls
   const bnbCombos = document.getElementById('cpBnbCombosList');
   if (bnbCombos) {
     bnbCombos.innerHTML = `
       <div class="cp-combo-row">
-        <div class="cpr-header"><strong>Hopkick Bread &amp; Butter (68 DMG • 7 Hits)</strong></div>
-        <div class="cpr-notation">${formatTekkenNotation('df+2 > f+1 > b+3~f > 1 > b+3~f > 2 > f,f,f+3')}</div>
-      </div>
-      <div class="cp-combo-row">
-        <div class="cpr-header"><strong>Counter-Hit Magic 4 Route (62 DMG • 6 Hits)</strong></div>
-        <div class="cpr-notation">${formatTekkenNotation('4 (CH) > dash > b+3~f > 1 > b+3~f > 2 > f,f+2')}</div>
+        <div class="cpr-header"><strong>Standard Bread &amp; Butter (65-70 DMG • 7-8 Hits)</strong></div>
+        <div class="cpr-notation">${formatTekkenNotation((dossier.launcher ? dossier.launcher.split('(')[0].trim() : 'df+2') + ' > df+1 > 4 > Tornado > dash > Heat Dash')}</div>
       </div>
     `;
   }
@@ -7529,8 +7911,8 @@ function populateProfileSections(char) {
   if (optimalCombos) {
     optimalCombos.innerHTML = `
       <div class="cp-combo-row">
-        <div class="cpr-header"><strong>Max Damage Micro-Dash Route (76 DMG • 9 Hits)</strong></div>
-        <div class="cpr-notation">${formatTekkenNotation('df+2 > micro-dash > 1+2 > b+3~f > 1 > dash > b+3~f > 2 > Heat Burst > Heat Dash f,f+2')}</div>
+        <div class="cpr-header"><strong>Max Damage Heat Route (76-85 DMG • 9+ Hits)</strong></div>
+        <div class="cpr-notation">${formatTekkenNotation((dossier.launcher ? dossier.launcher.split('(')[0].trim() : 'df+2') + ' > micro-dash > Heat Burst > Tornado > Wall Splat > Heat Smash')}</div>
       </div>
     `;
   }
@@ -7539,30 +7921,27 @@ function populateProfileSections(char) {
   if (wallCombos) {
     wallCombos.innerHTML = `
       <div class="cp-combo-row">
-        <div class="cpr-header"><strong>Standard Wall Splat Ender (+26 DMG)</strong></div>
-        <div class="cpr-notation">${formatTekkenNotation('Wall Splat > df+1 > 4 > db+2,2,3')}</div>
-      </div>
-      <div class="cp-combo-row">
-        <div class="cpr-header"><strong>Tornado at Wall + Floor Blast Extension (+34 DMG)</strong></div>
-        <div class="cpr-notation">${formatTekkenNotation('Wall Splat > b+1+2 (Tornado) > Floor Blast > uf+2,2')}</div>
+        <div class="cpr-header"><strong>Wall Splat Ender (+26 DMG)</strong></div>
+        <div class="cpr-notation">${formatTekkenNotation('Wall Splat > df+1 > 4 > Ground Stomp')}</div>
       </div>
     `;
   }
 
+  // 10. Tab 5: Heat, Rage & Stances
   const heatGrid = document.getElementById('cpHeatBreakdownGrid');
   if (heatGrid) {
     heatGrid.innerHTML = `
       <div class="cp-heat-box">
-        <div class="cph-title">HEAT ENGAGERS (5 TOOLS)</div>
-        <p class="cph-desc">f,f+2, 1+2, cd+1, df+1+2, and ws+1+2 instantly ignite Heat with +17 frame advantage on hit.</p>
+        <div class="cph-title">HEAT IDENTITY &amp; PASSIVES</div>
+        <p class="cph-desc">${dossier.heat_breakdown || 'Enters awakened Heat state with plus frames, guard breaks, and chip damage.'}</p>
       </div>
       <div class="cp-heat-box">
-        <div class="cph-title">HEAT SMASH</div>
-        <p class="cph-desc">Input: 2+3 during Heat. Deals 52 raw damage with immense chip damage and +8 on block.</p>
+        <div class="cph-title">HEAT SMASH (2+3)</div>
+        <p class="cph-desc">Deals 50+ raw damage, causes massive block pushback, and wall splats from across the ring.</p>
       </div>
       <div class="cp-heat-box">
         <div class="cph-title">HEAT DASH</div>
-        <p class="cph-desc">Cancel Heat Engager into forward sprint. Grants +5 on block for free mixup or full combo extension.</p>
+        <p class="cph-desc">Cancel Heat Engagers with forward sprint for +5 frame advantage or extended juggles.</p>
       </div>
     `;
   }
@@ -7571,59 +7950,52 @@ function populateProfileSections(char) {
   if (rageBox) {
     rageBox.innerHTML = `
       <div class="cpr-title">RAGE ART (df+1+2) • 55 DAMAGE</div>
-      <p class="cpr-desc">Armored on frame 8. Absorbs highs, mids, and lows while below 25% health. Safe against hasty enemy offense.</p>
+      <p class="cpr-desc">Armored on frame 8. Absorbs highs, mids, and lows while below 25% health. Safe comeback weapon.</p>
     `;
   }
 
   const stancesGrid = document.getElementById('cpStancesGrid');
-  if (stancesGrid) {
-    stancesGrid.innerHTML = `
-      <div class="cp-stance-card">
-        <div class="cps-title">ZEN / Crouching Demon Stance (CDS)</div>
-        <p class="cps-desc">Input: d+1+2 or transition from b+3~f. High crushes with unblockable sweeps (ZEN 3) or mid launch (ZEN 1+2).</p>
+  if (stancesGrid && dossier.stances) {
+    stancesGrid.innerHTML = dossier.stances.map(s => `
+      <div class="cp-sub-box" style="margin-bottom:0.45rem;">
+        <div class="cp-sub-header">${s}</div>
+        <p class="cp-text-block mini">Unique transition stance that modifies hitboxes, evades incoming attacks, and unlocks low/mid mixup routes.</p>
       </div>
-    `;
+    `).join('');
   }
 
+  // 11. Tab 6: Matchup, Drills & Stage
   const strengthsList = document.getElementById('cpKeyStrengthsList');
-  if (strengthsList) {
-    strengthsList.innerHTML = `
-      <li>Dominant range 2 keepout with f+4 and Demon Paw</li>
-      <li>One of the best i10 block punishers in the game</li>
-      <li>Strong safe mid checks prevent ducking</li>
-    `;
+  if (strengthsList && dossier.pros) {
+    strengthsList.innerHTML = dossier.pros.map(p => `<li>${p}</li>`).join('');
   }
 
   const weaknessesList = document.getElementById('cpKeyWeaknessesList');
-  if (weaknessesList) {
-    weaknessesList.innerHTML = `
-      <li>Weak to linear sidestepping towards opponent's left</li>
-      <li>High execution required for optimal electric inputs</li>
-      <li>Stance transitions can be interrupted by fast jabs</li>
-    `;
+  if (weaknessesList && dossier.cons) {
+    weaknessesList.innerHTML = dossier.cons.map(c => `<li>${c}</li>`).join('');
   }
 
   const counterplayList = document.getElementById('cpCounterplayList');
   if (counterplayList) {
     counterplayList.innerHTML = `
-      <li>Sidestep Walk Left (SSL) at medium distance to avoid f+4 and f,f+2</li>
-      <li>Duck the second hit of strings that end in high</li>
-      <li>Block low and punish with your 15f While Standing launcher</li>
+      <li><strong>Sidestep Priority:</strong> Sidestep ${dossier.weak_side || 'SSL'} at neutral Range 2 to evade primary straight pokes.</li>
+      <li><strong>Duck High Enders:</strong> Duck under the high hits of standard string flowcharts.</li>
+      <li><strong>Punish Unsafe Blocks:</strong> Retaliate immediately with 10f jab or 15f While Standing launch when blocking heavy moves.</li>
     `;
   }
 
   const drillsList = document.getElementById('cpDrillsList');
   if (drillsList) {
     drillsList.innerHTML = `
-      <div class="cp-drill-item"><strong>Drill 1: 10f Block Punishment</strong> — Set training dummy to perform -10 moves and punish 20 times consecutively with 1,1,2.</div>
-      <div class="cp-drill-item"><strong>Drill 2: Whiff Baiting & Launch</strong> — Backdash out of enemy jab range, then immediately execute df+2 into full juggle.</div>
-      <div class="cp-drill-item"><strong>Drill 3: Wall Splat Conversion</strong> — Carry dummy from center stage to wall and perform wall combo without dropping.</div>
+      <div class="cp-drill-item"><strong>Drill 1: 10f & 15f Block Punishment</strong> — Set training dummy to perform unsafe moves and punish 20 times consecutively.</div>
+      <div class="cp-drill-item"><strong>Drill 2: Whiff Baiting & Launch</strong> — Backdash out of enemy jab range, then immediately execute ${dossier.launcher ? dossier.launcher.split('(')[0].trim() : 'df+2'} into full juggle.</div>
+      <div class="cp-drill-item"><strong>Drill 3: Wall Splat Conversion</strong> — Carry dummy from center stage to wall and complete wall combo without dropping.</div>
     `;
   }
 
   const stageSyn = document.getElementById('cpStageSynergyText');
   if (stageSyn) {
-    stageSyn.textContent = `Thrives on medium walled stages such as The Arena and Urban Square where wall carry enders convert into additional 25+ damage splat setups. On hazard stages like Sanctum and Rebel Hangar, floor blasts grant supplementary extensions.`;
+    stageSyn.textContent = dossier.stage_synergy || `${char.name} performs consistently across all stage formats.`;
   }
 }
 
@@ -8374,8 +8746,7 @@ if (!window.tacticsState) {
 
 async function openTacticsHubModal(defaultTab = 'sidesteps') {
   playSfx('click');
-  const modal = document.getElementById('tacticsHubModal');
-  if (modal) modal.style.display = 'flex';
+  switchAppView('tactics');
   await switchTacticsTab(defaultTab);
 }
 
