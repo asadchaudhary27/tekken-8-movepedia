@@ -17,11 +17,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend, frontend, data, and scripts
+# Copy backend, frontend, data, scripts, and root entrypoints
 COPY backend/ ./backend/
 COPY frontend/ ./frontend/
 COPY data/ ./data/
 COPY scripts/ ./scripts/
+COPY main.py app.py ./
 COPY .env.example .env
 
 # Expose FastAPI port
@@ -32,4 +33,5 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:8000/api/v1/health || exit 1
 
 # Launch production server via Uvicorn
-CMD ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
