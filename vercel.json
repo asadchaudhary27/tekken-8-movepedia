@@ -2,13 +2,25 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "functions": {
     "api/index.py": {
-      "includeFiles": "{frontend/**,data/**,backend/**,tekken8_fyp.db}",
+      "includeFiles": "tekken8_fyp.db",
       "maxDuration": 15
     }
   },
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/assets/(.*)",
+      "destination": "/frontend/assets/$1"
+    },
+    {
+      "source": "/presentation",
+      "destination": "/frontend/presentation.html"
+    },
+    {
+      "source": "/",
+      "destination": "/frontend/index.html"
+    },
+    {
+      "source": "/api/(.*)",
       "destination": "/api/index.py"
     }
   ]

@@ -71,15 +71,13 @@ class VercelPathMiddleware:
             if matched_path:
                 try:
                     decoded = matched_path.decode("latin1")
-                    if not decoded.startswith("/api/index"):
+                    if decoded.startswith("/api/v1") or decoded.startswith("/v1") or decoded.startswith("/assets"):
                         scope["path"] = decoded
                 except Exception:
                     pass
 
             path = scope.get("path", "/")
-            if path in ("/api/index.py", "/api/index", "/api", "/api/"):
-                scope["path"] = "/"
-            elif path.startswith("/api/index.py/"):
+            if path.startswith("/api/index.py/"):
                 scope["path"] = path[len("/api/index.py"):]
             elif path.startswith("/api/index/"):
                 scope["path"] = path[len("/api/index"):]
@@ -92,8 +90,9 @@ app.add_middleware(VercelPathMiddleware)
 # Exception Handlers
 app.add_exception_handler(DomainException, domain_exception_handler)
 
-# Include API Routers
+# Include API Routers (both /api/v1 and /v1 for Vercel rewrite compatibility)
 app.include_router(api_router, prefix=settings.API_V1_PREFIX)
+app.include_router(api_router, prefix="/v1")
 
 # Static Frontend Mounts
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -111,10 +110,7 @@ if os.path.exists(frontend_dir):
 
     if os.path.exists(index_html):
         @app.get("/", include_in_schema=False)
-        @app.get("/api/index.py", include_in_schema=False)
-        @app.get("/api/index", include_in_schema=False)
-        @app.get("/api", include_in_schema=False)
-        @app.get("/api/", include_in_schema=False)
+        @app.get("/index.html", include_in_schema=False)
         def serve_index():
             return FileResponse(index_html)
 
