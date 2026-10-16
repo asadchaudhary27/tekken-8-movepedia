@@ -20,11 +20,15 @@ from backend.app.api.v1 import api_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Initializes database schema and seed data on startup."""
-    db = SessionLocal()
     try:
-        init_db(db)
-    finally:
-        db.close()
+        db = SessionLocal()
+        try:
+            init_db(db)
+        finally:
+            db.close()
+    except Exception as e:
+        import logging
+        logging.getLogger("uvicorn.error").warning(f"Database lifespan startup warning: {e}")
     yield
 
 
@@ -57,13 +61,25 @@ app.add_exception_handler(DomainException, domain_exception_handler)
 app.include_router(api_router, prefix=settings.API_V1_PREFIX)
 
 # Static Frontend Mounts
-if os.path.exists("frontend"):
-    app.mount("/assets", StaticFiles(directory="frontend/assets"), name="assets")
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+frontend_dir = os.path.join(ROOT_DIR, "frontend")
+if not os.path.exists(frontend_dir) and os.path.exists("frontend"):
+    frontend_dir = os.path.abspath("frontend")
 
-    @app.get("/", include_in_schema=False)
-    def serve_index():
-        return FileResponse("frontend/index.html")
+if os.path.exists(frontend_dir):
+    assets_dir = os.path.join(frontend_dir, "assets")
+    index_html = os.path.join(frontend_dir, "index.html")
+    presentation_html = os.path.join(frontend_dir, "presentation.html")
 
-    @app.get("/presentation", include_in_schema=False)
-    def serve_presentation():
-        return FileResponse("frontend/presentation.html")
+    if os.path.exists(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+    if os.path.exists(index_html):
+        @app.get("/", include_in_schema=False)
+        def serve_index():
+            return FileResponse(index_html)
+
+    if os.path.exists(presentation_html):
+        @app.get("/presentation", include_in_schema=False)
+        def serve_presentation():
+            return FileResponse(presentation_html)
