@@ -54,6 +54,41 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# Vercel Serverless Path Normalization Middleware
+class VercelPathMiddleware:
+    """
+    Normalizes request paths when deployed on Vercel or Serverless environments.
+    Resolves x-matched-path headers and strips internal /api/index.py rewrite prefixes.
+    """
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] == "http":
+            headers = dict(scope.get("headers", []))
+            matched_path = headers.get(b"x-matched-path")
+            if matched_path:
+                try:
+                    decoded = matched_path.decode("latin1")
+                    if not decoded.startswith("/api/index"):
+                        scope["path"] = decoded
+                except Exception:
+                    pass
+
+            path = scope.get("path", "/")
+            if path in ("/api/index.py", "/api/index", "/api", "/api/"):
+                scope["path"] = "/"
+            elif path.startswith("/api/index.py/"):
+                scope["path"] = path[len("/api/index.py"):]
+            elif path.startswith("/api/index/"):
+                scope["path"] = path[len("/api/index"):]
+
+        await self.app(scope, receive, send)
+
+
+app.add_middleware(VercelPathMiddleware)
+
 # Exception Handlers
 app.add_exception_handler(DomainException, domain_exception_handler)
 
@@ -76,6 +111,10 @@ if os.path.exists(frontend_dir):
 
     if os.path.exists(index_html):
         @app.get("/", include_in_schema=False)
+        @app.get("/api/index.py", include_in_schema=False)
+        @app.get("/api/index", include_in_schema=False)
+        @app.get("/api", include_in_schema=False)
+        @app.get("/api/", include_in_schema=False)
         def serve_index():
             return FileResponse(index_html)
 
@@ -83,3 +122,4 @@ if os.path.exists(frontend_dir):
         @app.get("/presentation", include_in_schema=False)
         def serve_presentation():
             return FileResponse(presentation_html)
+
