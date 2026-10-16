@@ -63,3 +63,7 @@ if os.path.exists("frontend"):
     @app.get("/", include_in_schema=False)
     def serve_index():
         return FileResponse("frontend/index.html")
+
+    @app.get("/presentation", include_in_schema=False)
+    def serve_presentation():
+        return FileResponse("frontend/presentation.html")
