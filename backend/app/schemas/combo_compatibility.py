@@ -94,6 +94,15 @@ class ComboDetailedRead(BaseModel):
     timing_adjustment: Optional[str] = None
     incompatibility_reason: Optional[str] = None
 
+    # Computed dynamic stage compatibility for currently selected battleground
+    is_stage_compatible: bool = True
+    stage_compatibility_status: str = "SUPPORTED"  # SUPPORTED, UNAVAILABLE_ON_STAGE, ALTERNATIVE_AVAILABLE, UNKNOWN
+    stage_incompatibility_reason: Optional[str] = None
+    alternative_route_id: Optional[int] = None
+    alternative_route_title: Optional[str] = None
+    alternative_route_notation: Optional[str] = None
+    alternative_route_damage: Optional[int] = None
+
     conditions_notes: Optional[str] = None
     source: str = "TekkenDocs / Community Verified Lab"
     verification_status: str = "VERIFIED"
@@ -115,6 +124,14 @@ class ComboRecommendationReport(BaseModel):
     opponent_character: CharacterRead
     opponent_hurtbox: OpponentHurtboxInfo
     stage: Optional[StageRead] = None
+    stage_name: Optional[str] = None
+    stage_has_walls: Optional[bool] = None
+    stage_wall_break_supported: Optional[bool] = None
+    stage_floor_break_supported: Optional[bool] = None
+    stage_balcony_break_supported: Optional[bool] = None
+    stage_warnings: List[str] = Field(default_factory=list)
+    stage_supported_combos_count: int = 0
+    stage_unmet_combos_count: int = 0
     wall_position: str = "OPEN"
     heat_state: str = "AVAILABLE"
 

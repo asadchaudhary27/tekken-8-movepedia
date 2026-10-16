@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <radialGradient id="temple_glow" cx="50%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#dc2626" stop-opacity="0.35"/>
+      <stop offset="40%" stop-color="#7f1d1d" stop-opacity="0.6"/>
+      <stop offset="80%" stop-color="#0f172a" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#020617" stop-opacity="1"/>
+    </radialGradient>
+    <linearGradient id="temple_stone" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1f2937"/>
+      <stop offset="40%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#030712"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="720" fill="#020617"/>
+  <rect width="1280" height="720" fill="url(#temple_glow)"/>
+
+  <!-- Pagoda Silhouette in Background -->
+  <g fill="#111827" opacity="0.85">
+    <polygon points="640,60 590,110 690,110"/>
+    <polygon points="640,100 560,170 720,170"/>
+    <polygon points="640,160 520,240 760,240"/>
+    <polygon points="640,230 470,330 810,330"/>
+    <rect x="520" y="330" width="240" height="150"/>
+  </g>
+
+  <!-- Torii Gate Accents -->
+  <g stroke="#b91c1c" stroke-width="8" opacity="0.7">
+    <line x1="200" y1="260" x2="380" y2="260"/>
+    <line x1="220" y1="260" x2="220" y2="480"/>
+    <line x1="360" y1="260" x2="360" y2="480"/>
+
+    <line x1="900" y1="260" x2="1080" y2="260"/>
+    <line x1="920" y1="260" x2="920" y2="480"/>
+    <line x1="1060" y1="260" x2="1060" y2="480"/>
+  </g>
+
+  <!-- Autumn Leaves Drift Effect -->
+  <circle cx="340" cy="380" r="6" fill="#ef4444" opacity="0.6"/>
+  <circle cx="480" cy="290" r="5" fill="#f97316" opacity="0.7"/>
+  <circle cx="780" cy="340" r="7" fill="#ef4444" opacity="0.7"/>
+  <circle cx="920" cy="420" r="5" fill="#f59e0b" opacity="0.8"/>
+  <circle cx="610" cy="410" r="6" fill="#b91c1c" opacity="0.75"/>
+
+  <!-- Courtyard Stone Floor -->
+  <polygon points="0,480 1280,480 1280,720 0,720" fill="url(#temple_stone)"/>
+  <line x1="0" y1="480" x2="1280" y2="480" stroke="#ef4444" stroke-width="3" opacity="0.8"/>
+
+  <!-- Sacred Battle Ring -->
+  <ellipse cx="640" cy="590" rx="390" ry="90" fill="none" stroke="#ef4444" stroke-width="3" opacity="0.7"/>
+  <ellipse cx="640" cy="590" rx="250" ry="58" fill="none" stroke="#fca5a5" stroke-width="1.5" stroke-dasharray="12 10" opacity="0.5"/>
+  <circle cx="640" cy="590" r="7" fill="#ef4444" filter="drop-shadow(0 0 12px #ef4444)"/>
+</svg>

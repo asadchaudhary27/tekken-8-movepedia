@@ -269,9 +269,102 @@ class ComboCompatibilityEngine:
 
     @classmethod
     def combo_to_detailed_read(
-        cls, combo: ComboRoute, opponent: Character
+        cls,
+        combo: ComboRoute,
+        opponent: Character,
+        stage: Optional[Stage] = None,
+        all_character_combos: Optional[List[ComboRoute]] = None,
     ) -> ComboDetailedRead:
         status, badge, timing_adj, incomp_reason = cls.resolve_compatibility(combo, opponent)
+
+        # Stage compatibility evaluation
+        is_stage_compatible = True
+        stage_compatibility_status = "SUPPORTED"
+        stage_incomp_reason = None
+        alt_route_id = None
+        alt_route_title = None
+        alt_route_notation = None
+        alt_route_damage = None
+
+        if stage is not None:
+            ctype = (combo.combo_type or "").upper()
+            cnotes = (combo.conditions_notes or "").lower()
+            reasons = []
+
+            # 1. Wall requirement
+            if not stage.has_walls:
+                if combo.uses_wall or ctype in ["WALL_COMBO", "WALL_CARRY"]:
+                    reasons.append(
+                        f"Perimeter walls are absent on '{stage.name}' (Infinite Arena). "
+                        "Wall carries, wall splats, and wall enders cannot be executed."
+                    )
+
+            # 2. Wall break hazard
+            if ctype == "WALL_BREAK" or "wall-break" in cnotes:
+                if not stage.wall_break and not stage.wall_blast:
+                    reasons.append(
+                        f"Wall Break hazard is unavailable on '{stage.name}' (reinforced boundary structure)."
+                    )
+
+            # 3. Floor break hazard
+            if ctype == "FLOOR_BREAK" or "floor-break" in cnotes:
+                if not stage.floor_break and not stage.floor_blast:
+                    reasons.append(
+                        f"Floor Break/Blast hazard is unavailable on '{stage.name}' (solid foundation floor)."
+                    )
+
+            # 4. Balcony break hazard
+            if ctype == "BALCONY_BREAK" or "balcony-break" in cnotes:
+                if not stage.balcony_break:
+                    reasons.append(
+                        f"Balcony Break hazard is unavailable on '{stage.name}' (single-tier arena)."
+                    )
+
+            # 5. Specific stage calibration
+            if combo.is_stage_dependent:
+                if combo.stage_id is not None and combo.stage_id != stage.id:
+                    reasons.append(
+                        f"Route is calibrated for a specific arena (Stage ID {combo.stage_id}) "
+                        f"and cannot be executed on '{stage.name}'."
+                    )
+
+            if reasons:
+                is_stage_compatible = False
+                stage_compatibility_status = "UNAVAILABLE_ON_STAGE"
+                stage_incomp_reason = " | ".join(reasons)
+
+            # 6. Alternative route recommendation when incompatible on this stage
+            if not is_stage_compatible and all_character_combos:
+                for alt in all_character_combos:
+                    if alt.id == combo.id:
+                        continue
+                    # Check if alt is stage compatible
+                    alt_ok = True
+                    alt_type = (alt.combo_type or "").upper()
+                    if not stage.has_walls and (alt.uses_wall or alt_type in ["WALL_COMBO", "WALL_CARRY"]):
+                        alt_ok = False
+                    if alt_type == "WALL_BREAK" and not stage.wall_break and not stage.wall_blast:
+                        alt_ok = False
+                    if alt_type == "FLOOR_BREAK" and not stage.floor_break and not stage.floor_blast:
+                        alt_ok = False
+                    if alt_type == "BALCONY_BREAK" and not stage.balcony_break:
+                        alt_ok = False
+                    if alt.is_stage_dependent and alt.stage_id is not None and alt.stage_id != stage.id:
+                        alt_ok = False
+
+                    if alt_ok:
+                        # Prioritize routes matching starter or universal midscreen
+                        same_starter = (
+                            (alt.starter_move_name and alt.starter_move_name == combo.starter_move_name)
+                            or (alt.starter_move_input and alt.starter_move_input == combo.starter_move_input)
+                        )
+                        if same_starter or alt_type in ["MIDSCREEN", "UNIVERSAL"]:
+                            stage_compatibility_status = "ALTERNATIVE_AVAILABLE"
+                            alt_route_id = alt.id
+                            alt_route_title = alt.title
+                            alt_route_notation = alt.notation_sequence
+                            alt_route_damage = alt.total_damage
+                            break
 
         # Parse scaling breakdown
         scaling_hits: List[ComboScalingHit] = []
@@ -341,6 +434,13 @@ class ComboCompatibilityEngine:
             compatibility_badge_class=badge,
             timing_adjustment=timing_adj,
             incompatibility_reason=incomp_reason,
+            is_stage_compatible=is_stage_compatible,
+            stage_compatibility_status=stage_compatibility_status,
+            stage_incompatibility_reason=stage_incomp_reason,
+            alternative_route_id=alt_route_id,
+            alternative_route_title=alt_route_title,
+            alternative_route_notation=alt_route_notation,
+            alternative_route_damage=alt_route_damage,
             conditions_notes=combo.conditions_notes,
             source=combo.source or "TekkenDocs / Community Verified Lab",
             verification_status=combo.verification_status or "VERIFIED",
@@ -358,7 +458,8 @@ class ComboCompatibilityEngine:
         heat_state: str = "AVAILABLE",
     ) -> ComboRecommendationReport:
         """
-        Assembles all 10 analytical combo categories for the selected player vs opponent pair.
+        Assembles all 10 analytical combo categories for the selected player vs opponent pair,
+        conditioned on stage properties and environmental hazards.
         """
         # Fetch all combo routes for this player character
         combos = (
@@ -368,7 +469,13 @@ class ComboCompatibilityEngine:
         )
 
         detailed_combos: List[ComboDetailedRead] = [
-            cls.combo_to_detailed_read(c, opponent_character) for c in combos
+            cls.combo_to_detailed_read(
+                c,
+                opponent_character,
+                stage=stage,
+                all_character_combos=combos
+            )
+            for c in combos
         ]
 
         # Compatibility breakdown counts
@@ -383,6 +490,33 @@ class ComboCompatibilityEngine:
             status_counts[dc.compatibility_status] = (
                 status_counts.get(dc.compatibility_status, 0) + 1
             )
+
+        # Stage warnings and counts
+        stage_warnings: List[str] = []
+        stage_supported_count = 0
+        stage_unmet_count = 0
+
+        if stage is not None:
+            if not stage.has_walls:
+                stage_warnings.append(
+                    f"{stage.name} is an infinite battleground with no perimeter walls. "
+                    "Wall carries, wall splats, and wall enders cannot be executed."
+                )
+            if not stage.wall_break and not stage.wall_blast:
+                stage_warnings.append(f"Wall Break hazard is unavailable on {stage.name}.")
+            if not stage.floor_break and not stage.floor_blast:
+                stage_warnings.append(f"Floor Break/Blast hazard is unavailable on {stage.name}.")
+            if not stage.balcony_break:
+                stage_warnings.append(f"Balcony Break hazard is unavailable on {stage.name}.")
+
+            for dc in detailed_combos:
+                if dc.is_stage_compatible:
+                    stage_supported_count += 1
+                else:
+                    stage_unmet_count += 1
+        else:
+            stage_supported_count = len(detailed_combos)
+            stage_unmet_count = 0
 
         # 10 Recommendation Buckets:
         beginner_friendly: List[ComboDetailedRead] = []
@@ -437,8 +571,12 @@ class ComboCompatibilityEngine:
             if dc.combo_type in ["WALL_BREAK", "FLOOR_BREAK", "BALCONY_BREAK"] or dc.is_stage_dependent:
                 stage_break.append(dc)
 
-            # Easier alternatives
-            if dc.easier_alternative_id is not None or dc.easier_alternative_title is not None:
+            # Easier alternatives or stage-driven alternatives
+            if (
+                dc.easier_alternative_id is not None
+                or dc.easier_alternative_title is not None
+                or dc.alternative_route_id is not None
+            ):
                 alternative_routes.append(dc)
 
         # Sort optimal combos by highest damage descending
@@ -451,9 +589,10 @@ class ComboCompatibilityEngine:
             "Damage values labelled 'ESTIMATED' are computed with this exact formula and explicitly marked."
         )
 
+        stage_desc = f" on {stage.name}" if stage else ""
         provenance = (
             f"Compatibility engine evaluated {len(detailed_combos)} combos for {player_character.name} "
-            f"against {opponent_character.name} ({opponent_character.hurtbox_class} profile). "
+            f"against {opponent_character.name} ({opponent_character.hurtbox_class} profile){stage_desc}. "
             "All compatibility records follow verified lab data from wavu.wiki and TekkenDocs. "
             "Unrecorded interactions strictly default to UNKNOWN_COMPATIBILITY rather than false negatives."
         )
@@ -463,6 +602,14 @@ class ComboCompatibilityEngine:
             opponent_character=CharacterRead.model_validate(opponent_character),
             opponent_hurtbox=cls.get_opponent_hurtbox_info(opponent_character),
             stage=StageRead.model_validate(stage) if stage else None,
+            stage_name=stage.name if stage else None,
+            stage_has_walls=stage.has_walls if stage else None,
+            stage_wall_break_supported=bool(stage.wall_break or stage.wall_blast) if stage else None,
+            stage_floor_break_supported=bool(stage.floor_break or stage.floor_blast) if stage else None,
+            stage_balcony_break_supported=bool(stage.balcony_break) if stage else None,
+            stage_warnings=stage_warnings,
+            stage_supported_combos_count=stage_supported_count,
+            stage_unmet_combos_count=stage_unmet_count,
             wall_position=wall_position,
             heat_state=heat_state,
             total_combos_analyzed=len(detailed_combos),

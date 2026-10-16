@@ -29,6 +29,11 @@ class PunishOption(BaseModel):
     damage: Optional[int] = None
     punish_tier: str
     punish_type: str
+    stance_requirement: str = Field(default="STANDING", description="STANDING, WHILE_STANDING, or CROUCHING")
+    verification_status: str = Field(default="GUARANTEED", description="GUARANTEED, CONDITIONAL, or UNVERIFIED")
+    conditions_note: Optional[str] = Field(default=None, description="Tactical explanation or spacing limitation")
+    hit_level: Optional[str] = Field(default=None, description="Opponent move hit level")
+    pushback_risk: str = Field(default="NORMAL", description="MINIMAL, NORMAL, or HIGH")
 
 
 class KeyMoveInfo(BaseModel):
@@ -172,6 +177,21 @@ class MatchupOverviewResponse(BaseModel):
     heat_and_mechanics: HeatMechanicsInfo
     stage_matchup_synergy: StageMatchupInfo
     directional_provenance: DirectionalProvenance
+
+    # Phase 2 Complete Two-Player Matchup Additions
+    p1_punish_matrix: List[PunishOption] = Field(default_factory=list, description="P1 punish options against P2 moves")
+    p2_punish_matrix: List[PunishOption] = Field(default_factory=list, description="P2 punish options against P1 moves")
+    opponent_key_moves: List[KeyMoveInfo] = Field(default_factory=list, description="P2 Key signature moves")
+    opponent_suitable_combos: List[ComboRecommendation] = Field(default_factory=list, description="P2 Recommended combos")
+
+    # Master Compendium Pro Tactics & Relativity (Parts 5, 8, 14, 19, 22, 23)
+    opponent_sidestep_guide: Optional[Dict[str, Any]] = Field(default=None, description="Opponent weak sidestep and linear moves to step (Part 5)")
+    opponent_throw_break_guide: Optional[Dict[str, Any]] = Field(default=None, description="Opponent command throw break cues and break buttons (Part 8)")
+    opponent_anti_cheese_guide: Optional[Dict[str, Any]] = Field(default=None, description="Opponent spammed cheese strings and guaranteed counter (Part 14)")
+    opponent_install_guide: Optional[Dict[str, Any]] = Field(default=None, description="Opponent unique install/buff meters & critical threat windows (Part 23)")
+    opponent_ten_hit_guide: Optional[Dict[str, Any]] = Field(default=None, description="Opponent 10-hit combo string interrupt/parry timing (Part 19)")
+    player_wall_combo_guide: Optional[Dict[str, Any]] = Field(default=None, description="Player optimal wall combo ender and tornado utilization (Part 22)")
+
 
 
 class PreferencePayload(BaseModel):

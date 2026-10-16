@@ -385,3 +385,114 @@ def test_combo_patch_differences_and_source_provenance(test_db: Session):
     test_db.delete(legacy_combo)
     test_db.commit()
 
+
+def test_phase3_advanced_combo_filters_and_benchmark(client: TestClient, test_db: Session):
+    """
+    Phase 3 Verification:
+    - Independent character ownership (P1 vs P2: Jin combos never contain Kazuya combos).
+    - Advanced filters: min_damage, max_damage, launcher_type, uses_wall, uses_tornado, verification_status, search query q.
+    - Single combo route retrieval by ID.
+    - Side-by-side benchmark comparison endpoint (/api/v1/combos/benchmark/compare).
+    - Rich fields serialization (character_name, launcher_type, execution_notes, etc.).
+    """
+    jin = test_db.query(Character).filter_by(slug="jin").first()
+    kazuya = test_db.query(Character).filter_by(slug="kazuya").first()
+    assert jin is not None and kazuya is not None
+
+    # 1. Independent Character Ownership
+    res_jin = client.get(f"/api/v1/combos?character_id={jin.id}")
+    assert res_jin.status_code == 200
+    jin_combos = res_jin.json()
+    assert len(jin_combos) > 0
+    assert all(c["character_id"] == jin.id for c in jin_combos)
+    assert all(c["character_name"] == "Jin Kazama" for c in jin_combos)
+
+    res_kazuya = client.get(f"/api/v1/combos?character_id={kazuya.id}")
+    assert res_kazuya.status_code == 200
+    kazuya_combos = res_kazuya.json()
+    assert len(kazuya_combos) > 0
+    assert all(c["character_id"] == kazuya.id for c in kazuya_combos)
+    assert all(c["character_name"] == "Kazuya Mishima" for c in kazuya_combos)
+
+    # Cross-check: No Jin combo ID is in Kazuya's combos
+    jin_ids = {c["id"] for c in jin_combos}
+    kazuya_ids = {c["id"] for c in kazuya_combos}
+    assert jin_ids.isdisjoint(kazuya_ids)
+
+    # 2. Damage Range Filter (min_damage and max_damage)
+    res_high_dmg = client.get("/api/v1/combos?min_damage=70")
+    assert res_high_dmg.status_code == 200
+    high_dmg_combos = res_high_dmg.json()
+    assert len(high_dmg_combos) > 0
+    assert all(c["total_damage"] >= 70 for c in high_dmg_combos)
+
+    res_low_dmg = client.get("/api/v1/combos?max_damage=65")
+    assert res_low_dmg.status_code == 200
+    low_dmg_combos = res_low_dmg.json()
+    assert len(low_dmg_combos) > 0
+    assert all(c["total_damage"] <= 65 for c in low_dmg_combos)
+
+    # 3. Launcher Type Filter (e.g. NORMAL_HIT vs COUNTER_HIT)
+    res_ch = client.get("/api/v1/combos?launcher_type=COUNTER_HIT")
+    assert res_ch.status_code == 200
+    ch_combos = res_ch.json()
+    assert len(ch_combos) > 0
+    assert all(c["requires_counter_hit"] is True or c["launcher_type"] == "COUNTER_HIT" for c in ch_combos)
+
+    # 4. Wall & Tornado Filters
+    res_wall = client.get("/api/v1/combos?uses_wall=true")
+    assert res_wall.status_code == 200
+    wall_combos = res_wall.json()
+    assert len(wall_combos) > 0
+    assert all(c["uses_wall"] is True for c in wall_combos)
+
+    res_tornado = client.get("/api/v1/combos?uses_tornado=true")
+    assert res_tornado.status_code == 200
+    tornado_combos = res_tornado.json()
+    assert len(tornado_combos) > 0
+    assert all(c["uses_tornado"] is True for c in tornado_combos)
+
+    # 5. Search Query Filter (q)
+    res_search = client.get("/api/v1/combos?q=ZEN")
+    assert res_search.status_code == 200
+    search_combos = res_search.json()
+    assert len(search_combos) > 0
+    for sc in search_combos:
+        found_in_text = (
+            "zen" in sc["title"].lower() or
+            "zen" in sc["notation_sequence"].lower() or
+            ("zen" in (sc.get("starter_move_name") or "").lower()) or
+            ("zen" in (sc.get("starter_move_input") or "").lower())
+        )
+        assert found_in_text
+
+    # 6. Single Combo Retrieval by ID
+    c1 = jin_combos[0]
+    res_single = client.get(f"/api/v1/combos/{c1['id']}")
+    assert res_single.status_code == 200
+    single_data = res_single.json()
+    assert single_data["id"] == c1["id"]
+    assert single_data["title"] == c1["title"]
+    assert single_data["character_name"] == "Jin Kazama"
+
+    # 404 for non-existent combo
+    res_404 = client.get("/api/v1/combos/999999")
+    assert res_404.status_code == 404
+
+    # 7. Side-by-Side Benchmark Comparison Endpoint
+    c2 = kazuya_combos[0]
+    res_bench = client.get(f"/api/v1/combos/benchmark/compare?combo_a_id={c1['id']}&combo_b_id={c2['id']}")
+    assert res_bench.status_code == 200
+    bench = res_bench.json()
+    assert "combo_a" in bench and "combo_b" in bench
+    assert bench["combo_a"]["id"] == c1["id"]
+    assert bench["combo_b"]["id"] == c2["id"]
+    assert "damage_difference" in bench
+    assert "hit_difference" in bench
+    assert "damage_per_hit_a" in bench
+    assert "damage_per_hit_b" in bench
+    assert "is_directly_comparable" in bench
+    assert "comparability_notes" in bench
+    assert "practicality_comparison" in bench
+
+

@@ -1,0 +1,2120 @@
+{
+  "sidesteps": [
+    {
+      "character": "Alisa",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "Chainsaw transitions (DES) aur linear flying dash moves (WR2) tracking lose kar jate hain."
+    },
+    {
+      "character": "Anna Williams",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "Chaos Judgment (CJM) low/mid mixups aur rocket launcher approach linear hain."
+    },
+    {
+      "character": "Armor King",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "Dark Upper (f,n,d,df+2) aur shoulder charges left side par asani se dodge hote hain."
+    },
+    {
+      "character": "Asuka Kazama",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "b+3 (Parry/Cancels) aur wr3 approach SSR par whiff hoti hain."
+    },
+    {
+      "character": "Azucena",
+      "weak_side": "SSL / Duck 2nd Hit",
+      "whiff_notes": "wr3,2 ka pehla hit SSR par jata hai lekin doosra hit duck karna padta hai."
+    },
+    {
+      "character": "Bob Richards",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "Spinner Ball roll aur cd+1 momentum seedha chalta hai; SSL se side-swish hota hai."
+    },
+    {
+      "character": "Bryan Fury",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "qcb+3 (Hatchet Kick), 3+4, aur f,b+2 (Jet Upper) dono SSR par clean whiff dete hain."
+    },
+    {
+      "character": "Claudio Serafino",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "Starburst (STB) enhanced running moves (wr2) aur b+1 linear hain."
+    },
+    {
+      "character": "Clive Rosfield",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "Phoenix Shift (PHX) sword lunges aur Eikonic magic dashes SSL par side-step hote hain."
+    },
+    {
+      "character": "Devil Jin",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "EWGF, Hell Sweep (CD.4), aur flying lasers sab SSL par asani se dodge hote hain."
+    },
+    {
+      "character": "Dragunov",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "wr2 (Running 2), d+2, aur Sneak (SNK) entries SSL par cut ho jati hain."
+    },
+    {
+      "character": "Eddy Gordo",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "Mandinga (MND) aur Handstand (HSP) circular spins SSR par catch hote hain."
+    },
+    {
+      "character": "Fahkumram",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "Garuda kicks aur bf+4 Jet Kick linear hain; SSL se spacing break hoti hai."
+    },
+    {
+      "character": "Feng Wei",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "b+1, db+3 (Low sweep), aur df+3 shoulder bashes SSR par easily dodge hote hain."
+    },
+    {
+      "character": "Heihachi Mishima",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "Electric Wind God Fist, Demon God Sword, aur b+4 homing move ke ilawa sab SSL par safe hain."
+    },
+    {
+      "character": "Hwoarang",
+      "weak_side": "Step Belly-Side",
+      "whiff_notes": "Hwoarang ki jis taraf pait ho (RFS/LFS stance ke mutabiq), us taraf step karein."
+    },
+    {
+      "character": "Jack-8",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "Gamma Howl (GMH) dash punches aur photonic beams linear hain."
+    },
+    {
+      "character": "Jin Kazama",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "f+4 (Eldritch/Knee), d+2, aur ff+2 Demon Paw SSR par whiff hote hain."
+    },
+    {
+      "character": "Jun Kazama",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "Izumo (IZU) stance pokes aur mists SSL par side-step ho jate hain."
+    },
+    {
+      "character": "Kazuya Mishima",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "EWGF, Hellsweep, aur ff+2 Demon Paw teeno left side par weak hain."
+    },
+    {
+      "character": "King",
+      "weak_side": "SSR / Duck Throws",
+      "whiff_notes": "Jaguar Sprint (JGS) aur running approaches SSR par avoid hoti hain."
+    },
+    {
+      "character": "Kuma / Panda",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "Bear hitboxes bade hain lekin rolling attacks aur salmon slaps SSL par cut hote hain."
+    },
+    {
+      "character": "Kunimitsu II",
+      "weak_side": "SSL / Duck",
+      "whiff_notes": "Setsuna (SET) teleports aur kunai throws linear hain."
+    },
+    {
+      "character": "Lars Alexandersson",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "Dynamic (DEN) entry dashes aur f,b+2,1 SSL par completely whiff dete hain."
+    },
+    {
+      "character": "Marshall Law",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "Dragon Charge (DSS) mixups aur slide (fc df+3) SSR par dodge hote hain."
+    },
+    {
+      "character": "Lee Chaolan",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "Silver Tail aur Mist Step (MS) loops left side par asani se break hote hain."
+    },
+    {
+      "character": "Leo Kliesen",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "KNK stance transitions aur b+1,4 strings SSL par cut ho jati hain."
+    },
+    {
+      "character": "Leroy Smith",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "Hermit (HRM) parry stances aur cane attacks SSR par bypass hote hain."
+    },
+    {
+      "character": "Lidia Sobieska",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "Heaven & Earth (HAE) stances aur horse lunges SSL par side-step hote hain."
+    },
+    {
+      "character": "Lili De Rochefort",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "Dew Glide (qcf) approaches aur Matterhorn (d+3+4) SSR par dodge hoti hain."
+    },
+    {
+      "character": "Miary Zo",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "Mora (MOR) aur Baobab (BAO) wall climbs SSR par cut ho jati hain."
+    },
+    {
+      "character": "Nina Williams",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "df+1, ss1 pressure, aur butterfly loops SSR par break hote hain."
+    },
+    {
+      "character": "Paul Phoenix",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "Deathfist (qcf+2) aur Demoman (d+4:2:1+2) SSR par completely whiff dete hain."
+    },
+    {
+      "character": "Raven",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "Soulzone (SZ) clones aur teleport shadows SSL par catch hote hain."
+    },
+    {
+      "character": "Reina",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "Sentai (SEN) entries, ff+2, aur lightning pokes SSR par weak hain."
+    },
+    {
+      "character": "Roger Jr.",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "Animal Stance (ANM) leaps aur kangaroo punches linear hain."
+    },
+    {
+      "character": "Shaheen",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "Sneak (SNK) slide aur f,b+2 neck snap SSR par avoid hote hain."
+    },
+    {
+      "character": "Steve Fox",
+      "weak_side": "SSL / Duck",
+      "whiff_notes": "Ducking (DCK) punches aur flicker (FLK) jabs SSL par dodge hote hain."
+    },
+    {
+      "character": "Victor Chevalier",
+      "weak_side": "SSL (Sidestep Left)",
+      "whiff_notes": "Iai (IAI) sword dashes aur Perfumer (PRF) teleports SSL par cut hote hain."
+    },
+    {
+      "character": "Xiaoyu",
+      "weak_side": "SSR (Down-Away)",
+      "whiff_notes": "Art of Phoenix (AoP) ke dauran SSR aur low tracking active rakhni padti hai."
+    },
+    {
+      "character": "Yoshimitsu",
+      "weak_side": "SSR (against Flash)",
+      "whiff_notes": "Flash (1+4) ke khilaf SSR, jabke b+2,2 ke khilaf SSL use karein."
+    },
+    {
+      "character": "Zafina",
+      "weak_side": "SSR (Sidestep Right)",
+      "whiff_notes": "Mantis (MNT) aur Scarecrow (SCR) low profiles SSR par catch hote hain."
+    }
+  ],
+  "throw_breaks": [
+    {
+      "character": "Alisa",
+      "throw_name": "Dual Boot Grab",
+      "input_notation": "qcf+1+2",
+      "break_guide": "Both hands forward ➔ Break 1+2"
+    },
+    {
+      "character": "Anna Williams",
+      "throw_name": "Bazooka Execution",
+      "input_notation": "qcb+1+2 or CJM throws",
+      "break_guide": "Right hand lead ➔ Break 2"
+    },
+    {
+      "character": "Armor King",
+      "throw_name": "Dark Nightmare / Tombstone",
+      "input_notation": "db,f+2+4 / qcb+1+2",
+      "break_guide": "Both hands grab ➔ Break 2 (Tombstone) or 1+2"
+    },
+    {
+      "character": "Asuka Kazama",
+      "throw_name": "Sacred Spin / Reversal Throw",
+      "input_notation": "qcf+2 or b+1+3 (Parry)",
+      "break_guide": "Left hand grab ➔ Break 1"
+    },
+    {
+      "character": "Azucena",
+      "throw_name": "LIB Coffee Break",
+      "input_notation": "LIB.1+2",
+      "break_guide": "Both hands push ➔ Break 1+2"
+    },
+    {
+      "character": "Bryan Fury",
+      "throw_name": "Soccer Kick / Fisherman Slam",
+      "input_notation": "db+1+2 or qcf+2",
+      "break_guide": "Left hand pull ➔ Break 1"
+    },
+    {
+      "character": "Claudio",
+      "throw_name": "Starburst Sealer",
+      "input_notation": "qcf+1+2",
+      "break_guide": "Both hands glow ➔ Break 1+2"
+    },
+    {
+      "character": "Clive Rosfield",
+      "throw_name": "Eikonic Slam",
+      "input_notation": "f+1+2 (Grab follow-up)",
+      "break_guide": "Sword pommel grab ➔ Break 2"
+    },
+    {
+      "character": "Devil Jin",
+      "throw_name": "Hell's Gate Drop",
+      "input_notation": "qcb+2 or f,f+1+2",
+      "break_guide": "Right hand grab ➔ Break 2"
+    },
+    {
+      "character": "Dragunov",
+      "throw_name": "Cradle / Chain Throws",
+      "input_notation": "qcf+1 or f,f+1+2",
+      "break_guide": "Multi-part chain throw: Starts with 1 or 2 depending on limb."
+    },
+    {
+      "character": "Eddy Gordo",
+      "throw_name": "Mandinga Takeover",
+      "input_notation": "HSP.1+2 or RLX.1",
+      "break_guide": "Both hands sweep ➔ Break 1+2"
+    },
+    {
+      "character": "Fahkumram",
+      "throw_name": "Clinch Knee Smash",
+      "input_notation": "df+1+2",
+      "break_guide": "Thai clinch grab ➔ Break 1+2"
+    },
+    {
+      "character": "Feng Wei",
+      "throw_name": "Shoulder Slam Throw",
+      "input_notation": "f,f+1+2 or db+1+2",
+      "break_guide": "Left hand grab ➔ Break 1"
+    },
+    {
+      "character": "Heihachi Mishima",
+      "throw_name": "Demon's Blood / Stonehead",
+      "input_notation": "f,f+2 or qcb+2",
+      "break_guide": "Headbutt grab ➔ Break 1 or 2"
+    },
+    {
+      "character": "Hwoarang",
+      "throw_name": "Flamingo Suplex",
+      "input_notation": "LFS.1+2 or RFS.1+2",
+      "break_guide": "Right leg/hand lock ➔ Break 2"
+    },
+    {
+      "character": "Jack-8",
+      "throw_name": "Piledriver / Megaaton Throw",
+      "input_notation": "qcb+1+2 or f,f+1+2",
+      "break_guide": "Both hands heavy slam ➔ Break 2"
+    },
+    {
+      "character": "Jin Kazama",
+      "throw_name": "Ultimate Tackle / Throw",
+      "input_notation": "db+1+2 or f,f+1+2",
+      "break_guide": "Left arm thrust ➔ Break 1"
+    },
+    {
+      "character": "Jun Kazama",
+      "throw_name": "Izumo Reversal Grab",
+      "input_notation": "IZU.1+2",
+      "break_guide": "Soft flow grab ➔ Break 1+2"
+    },
+    {
+      "character": "Kazuya Mishima",
+      "throw_name": "Gates of Hell",
+      "input_notation": "f,f+1+2",
+      "break_guide": "Both hands slam into ground ➔ Break 1+2"
+    },
+    {
+      "character": "King",
+      "throw_name": "Giant Swing (f,hcf+1)",
+      "input_notation": "f,hcf+1",
+      "break_guide": "Visual trick: Looks like 1+2, but is 1 Break! (70 Dmg)."
+    },
+    {
+      "character": "King",
+      "throw_name": "Shining Wizard (fff+2+4)",
+      "input_notation": "fff+2+4",
+      "break_guide": "Running knee/grab ➔ Break 1+2."
+    },
+    {
+      "character": "King",
+      "throw_name": "Muscle Buster (qcb+1+2)",
+      "input_notation": "qcb+1+2",
+      "break_guide": "Back-suplex to floor break ➔ Break 1+2."
+    },
+    {
+      "character": "Kuma / Panda",
+      "throw_name": "Salmon Roll / Bear Hug",
+      "input_notation": "db+1+2 or qcf+1+2",
+      "break_guide": "Massive bear arms ➔ Break 1+2."
+    },
+    {
+      "character": "Kunimitsu II",
+      "throw_name": "Teleport Kunai Grab",
+      "input_notation": "SET.1+2",
+      "break_guide": "Shadow grab ➔ Break 1+2"
+    },
+    {
+      "character": "Lars Alexandersson",
+      "throw_name": "Silent Entry Throw",
+      "input_notation": "DEN.1+2",
+      "break_guide": "Electric rush grab ➔ Break 1+2"
+    },
+    {
+      "character": "Marshall Law",
+      "throw_name": "Dragon Bomb",
+      "input_notation": "qcb+1+2",
+      "break_guide": "Flip piledriver ➔ Break 2"
+    },
+    {
+      "character": "Lee Chaolan",
+      "throw_name": "Silver Viper Throw",
+      "input_notation": "qcf+1+2",
+      "break_guide": "Elegant spin grab ➔ Break 1+2"
+    },
+    {
+      "character": "Leo Kliesen",
+      "throw_name": "Baji Quan Slam",
+      "input_notation": "db+1+2",
+      "break_guide": "Palm strike grab ➔ Break 1"
+    },
+    {
+      "character": "Leroy Smith",
+      "throw_name": "Wing Chun Trapping Throw",
+      "input_notation": "qcf+1+2",
+      "break_guide": "Cane/arm trap ➔ Break 1+2"
+    },
+    {
+      "character": "Lili De Rochefort",
+      "throw_name": "Dew Glide Grab",
+      "input_notation": "qcf+1+2",
+      "break_guide": "Graceful spin throw ➔ Break 1+2"
+    },
+    {
+      "character": "Miary Zo",
+      "throw_name": "Mora Acrobat Grab",
+      "input_notation": "MOR.1+2",
+      "break_guide": "Stance flip throw ➔ Break 1+2"
+    },
+    {
+      "character": "Nina Williams",
+      "throw_name": "Spider Knee / Chain Throws",
+      "input_notation": "qcf+1 or f,f+1+2",
+      "break_guide": "Multi-part chain throws: Can branch into 1, 2, or 1+2 enders."
+    },
+    {
+      "character": "Paul Phoenix",
+      "throw_name": "Demoman Grab / Shoulder Throw",
+      "input_notation": "qcf+1+2 or b+1+2",
+      "break_guide": "Heavy shoulder lock ➔ Break 1+2"
+    },
+    {
+      "character": "Raven",
+      "throw_name": "Shadow Clone Grab",
+      "input_notation": "SZ.1+2",
+      "break_guide": "Clone illusion grab ➔ Break 1+2"
+    },
+    {
+      "character": "Reina",
+      "throw_name": "Sentai Grab",
+      "input_notation": "SEN.1+2",
+      "break_guide": "Lightning dash grab ➔ Break 1+2"
+    },
+    {
+      "character": "Roger Jr.",
+      "throw_name": "Kangaroo Punch Throw",
+      "input_notation": "f,f+1+2",
+      "break_guide": "Pouch grab ➔ Break 1+2"
+    },
+    {
+      "character": "Shaheen",
+      "throw_name": "Sneak Slide Grab",
+      "input_notation": "SNK.1+2",
+      "break_guide": "Sliding tackle grab ➔ Break 1+2"
+    },
+    {
+      "character": "Steve Fox",
+      "throw_name": "Peekaboo / Lionheart Throws",
+      "input_notation": "PKB.1+2 or LNH.1+2",
+      "break_guide": "Boxing clinch ➔ Break 1+2"
+    },
+    {
+      "character": "Victor Chevalier",
+      "throw_name": "Blade Grasp Throw",
+      "input_notation": "PRF.1+2",
+      "break_guide": "Sword handle grab ➔ Break 1+2"
+    },
+    {
+      "character": "Xiaoyu",
+      "throw_name": "AoP Roll Throw",
+      "input_notation": "AoP.1+2",
+      "break_guide": "Ground roll grab ➔ Break 1+2"
+    },
+    {
+      "character": "Yoshimitsu",
+      "throw_name": "Indian Sit / Manji Toss",
+      "input_notation": "KIN.1+2 or d+1+3",
+      "break_guide": "Sword impalement / Toss ➔ Break 1+2"
+    },
+    {
+      "character": "Zafina",
+      "throw_name": "Mantis Crawl Grab",
+      "input_notation": "MNT.1+2",
+      "break_guide": "Creeping spider grab ➔ Break 1+2"
+    }
+  ],
+  "anti_cheese": [
+    {
+      "character": "Alisa",
+      "cheese_move": "f,f+1+2 / Chainsaw (DES) spam",
+      "why_players_lose": "Chainsaws block par chip damage aur plus frames dete hain.",
+      "pro_counter": "Chainsaw stance transition ke waqt df+1 ya Dickjab (db+1) maarein—yeh Alisa ke chainsaws ko foran band (shut down) kar deta hai!"
+    },
+    {
+      "character": "Asuka",
+      "cheese_move": "b+3 (Backflip Kick) & d+3+4 (Can-Can)",
+      "why_players_lose": "Log whiff samajh kar run karte hain aur second hit kha jate hain.",
+      "pro_counter": "b+3 block par -19 hai—long range f,f+2 ya EWGF se launch karein!"
+    },
+    {
+      "character": "Azucena",
+      "cheese_move": "wr3,2 (Running Knee to High Punch)",
+      "why_players_lose": "Bahut tezi se aata hai aur block par +2 hai.",
+      "pro_counter": "Pehla hit (wr3) block karke SSL + Duck karein ➔ ws2 se full launch!"
+    },
+    {
+      "character": "Bryan Fury",
+      "cheese_move": "Snake Edge (df+3) & 1+2,2",
+      "why_players_lose": "Slow launching low aur safe-looking mid-mid string.",
+      "pro_counter": "df+3 (i29) ko reaction par crouch block (-26) karein. 1+2,2 block par -14 hai!"
+    },
+    {
+      "character": "Clive",
+      "cheese_move": "f+1+2 (Prominence) & PHX Teleport",
+      "why_players_lose": "Fullscreen se mid sword lunge maarta hai.",
+      "pro_counter": "f+1+2 ka 2nd hit block par -13 se -14 hai. PHX dash ko SSL ya df+1 se float karein."
+    },
+    {
+      "character": "Eddy Gordo",
+      "cheese_move": "3,3,3,3... (One-Button Capoeira Mash)",
+      "why_players_lose": "Beginner Eddy players sirf 3 button mash karte rehte hain.",
+      "pro_counter": "Doosri kick ke baad string Low jati hai ➔ Low Parry (df) ya RLX transition mein low-hitting mid (df+4 / d+2) maarein."
+    },
+    {
+      "character": "Hwoarang",
+      "cheese_move": "d+3,4 (Low into High Flamingo Kick)",
+      "why_players_lose": "Hwoarang ka sabse bada pressure starter (+8 on hit).",
+      "pro_counter": "Agar aap d+3 hit bhi kha jayein, tab bhi 2nd hit (4) High hai—agar aap pehle se crouch mein hain toh woh whiff hoga, warna block par RFS mein Dickjab (db+1) maarein!"
+    },
+    {
+      "character": "Jin Kazama",
+      "cheese_move": "2,1,4 & 1,3,4 / d+2 (Scourge)",
+      "why_players_lose": "2,1,4 safe mid-high-mid poke hai.",
+      "pro_counter": "2,1,4 ke 3rd hit ko delay hone par SSR karein. d+2 (i22 High-Crush Low) ki red flash dekh kar crouch block karein (-14 WS punish!)."
+    },
+    {
+      "character": "Kazuya",
+      "cheese_move": "1,2,4,3 & db+1,2",
+      "why_players_lose": "1,2,4 low kick hai jis ke baad 3 mid aata hai.",
+      "pro_counter": "1,2 dekhte hi df (Low Parry) hold kar lein—3rd hit (4) auto low-parry ho jayega!"
+    },
+    {
+      "character": "King",
+      "cheese_move": "d+3+4,4,4 (Ali Kicks) & f,f,n,2",
+      "why_players_lose": "Low kicks ki series jo counter-hit par combo deti hai.",
+      "pro_counter": "Pehli kick khane ke foran baad df (Low Parry) hold karein ya block karke ws Launch (-15 to -25) karein!"
+    },
+    {
+      "character": "Law",
+      "cheese_move": "b+2,3,4 (Junkyard Kick) & d+2,3",
+      "why_players_lose": "Mid-Low-Mid string jo launcher deti hai.",
+      "pro_counter": "b+2 (Mid palm) dekhte hi df (Low Parry) hold karein—2nd hit (3 low) har baar parry hoga! d+2,3 block par -15 Launch hai!"
+    },
+    {
+      "character": "Lili",
+      "cheese_move": "d+3+4 (Matterhorn) & BT.d+3+4",
+      "why_players_lose": "High aur mid تک ko crush karke launch kar deti hai.",
+      "pro_counter": "Matterhorn block par -21 hai! Hamesha sabse bada launcher maarein."
+    },
+    {
+      "character": "Miary Zo",
+      "cheese_move": "BAO (Wall Climb) & 1,2,2",
+      "why_players_lose": "Deewar par chadh kar diving mixup lagati hai.",
+      "pro_counter": "1,2,2 ka 3rd hit block par -12 hai. BAO wall hang ke khilaf Sidestep Right (SSR) karein!"
+    },
+    {
+      "character": "Nina",
+      "cheese_move": "d+4,1 & uf+4,3,4 (Can Opener)",
+      "why_players_lose": "Low-High poke aur High-Low-High string.",
+      "pro_counter": "d+4,1 aur uf+4,3,4 ka 2nd hit low aur last hit High hai—crouch hold rakhein aur ws Launch karein!"
+    },
+    {
+      "character": "Paul",
+      "cheese_move": "d+4,2:1+2 (Demoman) & df+1~b, 4",
+      "why_players_lose": "Close range knockdown low aur backsway high kick.",
+      "pro_counter": "Demoman sirf point-blank range (0.5) par clean hit karta hai—backdash (KBD) rakhein. df+1~b, 4 High hai—duck & launch!"
+    },
+    {
+      "character": "Reina",
+      "cheese_move": "ff+2~F (Sentai SEN Mixup)",
+      "why_players_lose": "Reina ff+2 block par bhi SEN stance mein chali jati hai.",
+      "pro_counter": "Agar Reina ff+2 Block par SEN mein jaye, toh aap df+1 ya Jab (1) se uske har option (SEN.3 ke ilawa) ko interrupt/float kar sakte hain!"
+    },
+    {
+      "character": "Steve Fox",
+      "cheese_move": "b+1 (CH Hook) & d+2,1,2",
+      "why_players_lose": "b+1 mashers ko launch karta hai; d+2,1,2 safe lagta hai.",
+      "pro_counter": "Steve ke saamne high attacks mat mash karein (High Crush moves use karein). d+2,1 ke baad Steve duck cancel karta hai—wahan df+1 se check karein."
+    },
+    {
+      "character": "Victor",
+      "cheese_move": "2,2,2 (Gun String) & u+1+2 (Expulsion)",
+      "why_players_lose": "2,2,2 teleport karke mixup deta hai; u+1+2 fullscreen explosion hai.",
+      "pro_counter": "2,2,2 mein Gun Shot (3rd hit) High hai ➔ Duck the Gun Shot & Launch! u+1+2 (Expulsion) block par -20 (Launch Punishable) hai!"
+    },
+    {
+      "character": "Xiaoyu",
+      "cheese_move": "AoP (Phoenix Stance) & California Roll",
+      "why_players_lose": "Mids tak ke neeche se nikal jati hai.",
+      "pro_counter": "Apne character ka Low-Hitting Mid (jaise Kazuya df+2 / ff+4, Jin d+4 / df+1, Bryan qcb+3 / d+2) yaad rakhein jo AoP ko hit karta hai!"
+    },
+    {
+      "character": "Yoshimitsu",
+      "cheese_move": "1+4 (Flash i6) & d+2,2,2",
+      "why_players_lose": "Aapke plus frames mein bhi Flash maar kar combo le jata hai.",
+      "pro_counter": "Plus frames lene ke baad 1 second rukein (Bait the Flash!)—Flash whiff hone par -15 से -20 Launch Punishable hai!"
+    }
+  ],
+  "installs": [
+    {
+      "character": "Bryan Fury",
+      "install_name": "Snake Eyes (SNK) (Green Eye Glow)",
+      "activation": "Combo ender (uf+2,2,2,3), 1+2,2, ya Active Heat (Heat mein unlimited rehta hai!).",
+      "unlocks_danger": "Unlocks f,f+1+2 (i13 Mid Parry + Wall Splat!), 3+4,2 (Charged Unblockable), & uf+2,2,2,2,2,3 Gatling Rush!"
+    },
+    {
+      "character": "Claudio",
+      "install_name": "Starburst (STB) (Blue Hand Glow)",
+      "activation": "Hit wr2, b+1, f+2,2, combo ender, ya Active Heat.",
+      "unlocks_danger": "Unlocks STB.db+1+2 (Mid-Unblockable Launcher!), STB.f+1+2,1+2 (i16 Safe Mid Launcher!), & STB.d+2,2 (Low Launcher!)."
+    },
+    {
+      "character": "Asuka",
+      "install_name": "Naniwa Gusto (NWG) (Blue Aura)",
+      "activation": "Hit f,f+1+2, ws1,4, throw, ya Active Heat.",
+      "unlocks_danger": "Unlocks NWG.f,f+1+2 (+5 on Block Mid!) aur wr1+2 chip/damage boost!"
+    },
+    {
+      "character": "Lidia",
+      "install_name": "Heaven & Earth (HAE) Stacks (Lvl 1, 2, 3)",
+      "activation": "Har baar jab Lidia HAE stance mein jati hai (via Heat ya HRS.u), uska Stack Level permanently badhta hai (Round ke end tak rehta hai!).",
+      "unlocks_danger": "Lvl 3 par Lidia ke HAE.2 aur Blossom enders Massive Bonus Damage & Chip dete hain!"
+    },
+    {
+      "character": "Eddy Gordo",
+      "install_name": "Mandinga (MND) (Lvl 1 & Lvl 2)",
+      "activation": "Hit RLX.3+4, qcf+3 (Wall ender), ya Heat Smash.",
+      "unlocks_danger": "Unlocks RLX.3,3 (Low-Mid Hell Sweep Knockdown!) aur b+1,4,3+4 extensions!"
+    },
+    {
+      "character": "Heihachi",
+      "install_name": "Warrior Instinct (WI) (3 Token Symbols)",
+      "activation": "3 Rounds mein Heat Activate karne ke baad (Round 3, 4, ya 5 mein) 2+3 dabane se activate hota hai!",
+      "unlocks_danger": "BOSS MODE: EWGF braucht no just-frame, f,f+1+2 Headbutt becomes UNBREAKABLE, and all combos deal 110+ damage!"
+    },
+    {
+      "character": "Clive Rosfield",
+      "install_name": "Zantetsuken Meter (Lvl 1 to Lvl 5)",
+      "activation": "Specific Odin/Sword moves (df+1,2~PHX.1+2, b+2, parries) hit ya block karwane se meter bharta hai (Rounds ke beech carry-over hota hai!).",
+      "unlocks_danger": "Lvl 5 Zantetsuken (1+4) = i15 Mid 80-Damage Screen-Wiping Slash!"
+    },
+    {
+      "character": "Leo Kliesen",
+      "install_name": "Lightning Glare (LTG) (Golden Aura)",
+      "activation": "d+1+2~1+2 charge, KNK.1+2, ya Active Heat.",
+      "unlocks_danger": "Unlocks b+1+2, 1+2, qcf+2 (Mid Launcher!) aur ws1,4,1 extensions."
+    },
+    {
+      "character": "Fahkumram",
+      "install_name": "Garuda Force (Lightning Scar Glow)",
+      "activation": "Combo ender, 3,4 charge, ya Active Heat.",
+      "unlocks_danger": "Unlocks Unblockable Guard-Crush Throws at the Wall & enhanced df+1,2 extensions!"
+    },
+    {
+      "character": "Devil Jin / Kazuya",
+      "install_name": "Devil / Azazel / Samsara Awakening",
+      "activation": "Active Heat ke dauran automatically milta hai.",
+      "unlocks_danger": "Kazuya: ff+2, db+1,2, 1+4 patricide fist + Auto-EWGF. Devil Jin: Psyche Lasers & Double Fly extensions."
+    },
+    {
+      "character": "Paul / Law / Feng",
+      "install_name": "Permanent Heat Property Upgrades",
+      "activation": "Active Heat ke dauran.",
+      "unlocks_danger": "Paul: Deathfist (qcf+2) does massive chip & guard break on charge. Law: Auto-Parry in DSS stance! Feng: b+1+2 & 3+4 enhancements."
+    }
+  ],
+  "wall_combos": [
+    {
+      "character": "Alisa",
+      "tornado_move": "db+1+2 / f+2,1",
+      "wall_ender": "1 ➔ f+4,1,4 (or DES.f+1+2 ➔ 1+2)",
+      "tactical_notes": "f+4,1,4 ka last hit delay karein for 60% spike!"
+    },
+    {
+      "character": "Anna",
+      "tornado_move": "CJM.2,1 / db+1,4",
+      "wall_ender": "df+1,2 ➔ qcf+2,1 (or f+3,2~CJM.1+2)",
+      "tactical_notes": "Wall par db+3 / fc df+2 vortex lagayein."
+    },
+    {
+      "character": "Armor King",
+      "tornado_move": "db+2,4",
+      "wall_ender": "df+1 ➔ f+1+2 (or 1 ➔ d+2,4,3)",
+      "tactical_notes": "Grounded opponent par d+4,4,3 stomp guaranteed!"
+    },
+    {
+      "character": "Asuka",
+      "tornado_move": "f+4 / ws1,4",
+      "wall_ender": "1+2 ➔ df+1,2 ➔ f,f+1+2 (or d+1+2)",
+      "tactical_notes": "Naniwa Gusto active ho toh ff+1+2 wall blast karta hai!"
+    },
+    {
+      "character": "Azucena",
+      "tornado_move": "LIB.d+4,4 / df+3",
+      "wall_ender": "df+1,4,1 ➔ (delay) 2",
+      "tactical_notes": "Last hit (2) delay karne se huge damage milta hai."
+    },
+    {
+      "character": "Bob",
+      "tornado_move": "b+2,2,4,4",
+      "wall_ender": "df+1 ➔ b+1,2~BAL.1+2",
+      "tactical_notes": "Wall par db+3+4 hellsweep mixup lagayein."
+    },
+    {
+      "character": "Bryan Fury",
+      "tornado_move": "b+2,1~f+2,4 / ws3,4",
+      "wall_ender": "b+3~f+2,1 (or uf+2,2,2,2,2,3 in Snake Eyes!)",
+      "tactical_notes": "b+3~f+3,4 ke baad opponent ke uthne par b+4 (Taunt / Knee)!"
+    },
+    {
+      "character": "Claudio",
+      "tornado_move": "f+3 / df+3,1",
+      "wall_ender": "b+3 ➔ 1 ➔ df+3,2 (or STB.d+1,2!)",
+      "tactical_notes": "Starburst (STB) mein d+1,2 wall break/blast karta hai."
+    },
+    {
+      "character": "Clive",
+      "tornado_move": "PHX.2,1 / df+3,1",
+      "wall_ender": "f+2,2~PHX.1+2 (or Zantetsuken)",
+      "tactical_notes": "Wall par b+2 guard-crush trap lagayein."
+    },
+    {
+      "character": "Devil Jin",
+      "tornado_move": "ff+4 / ws2",
+      "wall_ender": "b+2,1 (Hold 1 for Laser/Fly unscaled hit!)",
+      "tactical_notes": "b+2,1 ka 1 hold rakhne se Devil Jin udd kar zameen par maarta hai!"
+    },
+    {
+      "character": "Dragunov",
+      "tornado_move": "df+3+4 / b+4,2",
+      "wall_ender": "f+3,2 ➔ db+3+4 (Grounded Low Stamp!)",
+      "tactical_notes": "f+3,2 ke baad db+3+4 opponent ko uthte hue bhi lagta hai!"
+    },
+    {
+      "character": "Eddy Gordo",
+      "tornado_move": "RLX.2,4 / b+3,3",
+      "wall_ender": "2,3 ➔ RLX.3+4 (or qcf+3 Mandinga charge!)",
+      "tactical_notes": "Wall par qcf+3 karne se free Mandinga level mil jata hai!"
+    },
+    {
+      "character": "Fahkumram",
+      "tornado_move": "df+1,4,1",
+      "wall_ender": "df+1 ➔ b+1 ➔ 3,4~4",
+      "tactical_notes": "Wall ke paas 3,4~4 (Charge Kick) Wall Splat on Block deti hai!"
+    },
+    {
+      "character": "Feng Wei",
+      "tornado_move": "f+1+2 / df+4,3",
+      "wall_ender": "f+3,4 ➔ b+1+2 (Iron Mountain Shoulder!)",
+      "tactical_notes": "Shoulder (b+1+2) ko thoda sa delay karein for 60% damage."
+    },
+    {
+      "character": "Heihachi",
+      "tornado_move": "bf+2,3 / ws1,qcf+2",
+      "wall_ender": "1 ➔ df+1,1 ➔ d+1,2 (Ground Spike)",
+      "tactical_notes": "d+1,2 ka 2nd hit delay karein!"
+    },
+    {
+      "character": "Hwoarang",
+      "tornado_move": "uf+3,4,3 / RFS.b+4",
+      "wall_ender": "f+3~LFS.3,f+4 (or df+3,4 Power Crush)",
+      "tactical_notes": "Wall par d+3,4 se infinite pressure start karein."
+    },
+    {
+      "character": "Jack-8",
+      "tornado_move": "df+1,2,1 / b+3,2",
+      "wall_ender": "b+3,2~D (GMH) ➔ GMH.f+1 (or db+1+2)",
+      "tactical_notes": "GMH stance at wall gives +11 Guard Break on block!"
+    },
+    {
+      "character": "Jin Kazama",
+      "tornado_move": "ZEN.1,2 / ZEN.u+1",
+      "wall_ender": "bf+2,1,df+2 (or 1 ➔ d+2 / db+2,2,3)",
+      "tactical_notes": "bf+2,1,df+2 ke 3rd hit (df+2) ko delay karein!"
+    },
+    {
+      "character": "Jun Kazama",
+      "tornado_move": "IZU.1,1 / uf+3",
+      "wall_ender": "1 ➔ b+2,1,4 (or f+3,2~IZU.1+2)",
+      "tactical_notes": "f+2,1+2 heals Jun's health at the wall!"
+    },
+    {
+      "character": "Kazuya",
+      "tornado_move": "df+1,df+2 / cd+4,1",
+      "wall_ender": "b+2,2,1+2 (or df+3,2,1 delayed / 1+2)",
+      "tactical_notes": "df+3,2,1 ka 1 delay karein, phir ff+4 (Steel Pedal) maarein!"
+    },
+    {
+      "character": "King",
+      "tornado_move": "b+1,2 / df+2,1",
+      "wall_ender": "1 ➔ df+4,3,4 (Hold 4 for Dropkick) OR qcb+1+2 (Air Throw!)",
+      "tactical_notes": "Wall par Air Shining Wizard (fff+2+4) unbreakable damage deta hai!"
+    },
+    {
+      "character": "Kuma / Panda",
+      "tornado_move": "HBS.df+1,1 / df+1,2",
+      "wall_ender": "b+2,1~1+2 (HBS) ➔ HBS.1+2 (or d+1+2 Butt Slam!)",
+      "tactical_notes": "Bears ka wall damage poore game mein sabse zyada hai!"
+    },
+    {
+      "character": "Kunimitsu II",
+      "tornado_move": "1,1,4 / SET.3+4",
+      "wall_ender": "1 ➔ f+2,1,4 (or uf+3,4)",
+      "tactical_notes": "Wall par b+2 flame unblockable trap lagayein."
+    },
+    {
+      "character": "Lars",
+      "tornado_move": "DEN.1,2 / b+2,1",
+      "wall_ender": "df+1 ➔ db+2,1 ➔ f+1+4 (Shoulder!)",
+      "tactical_notes": "db+2,1 ke baad f+1+4 guaranteed ground hit deta hai!"
+    },
+    {
+      "character": "Law",
+      "tornado_move": "b+2,1 / uf+3",
+      "wall_ender": "1 ➔ 4,3~f (DSS) ➔ DSS.f+3 (or 1+2 Nunchuck)",
+      "tactical_notes": "Wall splat ke baad 1+2 (Nunchuck) guaranteed ground hit hai."
+    },
+    {
+      "character": "Lee Chaolan",
+      "tornado_move": "ws2,3 / f+4,1",
+      "wall_ender": "df+1 ➔ f+4,3 ➔ d+3 (Grounded Hit)",
+      "tactical_notes": "f+4,3 ke baad d+3 low hit 100% guaranteed hota hai!"
+    },
+    {
+      "character": "Leo",
+      "tornado_move": "KNK.3,4 / f+1+2",
+      "wall_ender": "df+1 ➔ f+4 (KNK) ➔ KNK.1+2 (or d+2 -> ws1,4,1)",
+      "tactical_notes": "Wall par b+1,4 pressure se opponent nikal nahi sakta."
+    },
+    {
+      "character": "Leroy",
+      "tornado_move": "HRM.4,1+2 / df+3,1",
+      "wall_ender": "1 ➔ df+4,3 ➔ uf+3+4,1+2",
+      "tactical_notes": "uf+3+4,1+2 ke punches rapid chip/wall damage dete hain."
+    },
+    {
+      "character": "Lidia",
+      "tornado_move": "CAT.1 / b+3,4,1+2",
+      "wall_ender": "df+2 ➔ f+1+2,3,2,1 (or qcf+1+2)",
+      "tactical_notes": "Wall combo se Lidia ko Heaven & Earth stack milta hai!"
+    },
+    {
+      "character": "Lili",
+      "tornado_move": "BT.3,4 / df+3",
+      "wall_ender": "df+3+4 ➔ BT.1,2 ➔ f,f+4~b (Stomp into BT!)",
+      "tactical_notes": "f,f+4~b ke baad Lili Back-Turned 50/50 mein rehti hai!"
+    },
+    {
+      "character": "Miary Zo",
+      "tornado_move": "1,2,2 / MOR.2",
+      "wall_ender": "1+2 (BAO Wall Climb) ➔ BAO.1+2",
+      "tactical_notes": "Deewar par BAO stance se unblockable grab mixup!"
+    },
+    {
+      "character": "Nina",
+      "tornado_move": "qcf+4,2,3 / d+2,3",
+      "wall_ender": "df+3,2 ➔ 1+2 (or ss+1~b ➔ uf+3,1,2)",
+      "tactical_notes": "df+1,2,1+2 (Pistols) in Heat deals massive wall damage!"
+    },
+    {
+      "character": "Paul",
+      "tornado_move": "3,2~b, 1+2 / qcf+3+4",
+      "wall_ender": "3,2~b ➔ (Delay) SWY.2 (or qcf+2 Deathfist!)",
+      "tactical_notes": "3,2~b, 2 ka 2 delay karein—opponent zameen par 40 dmg khayega!"
+    },
+    {
+      "character": "Raven",
+      "tornado_move": "b+2,4,2 / SZ.1,4",
+      "wall_ender": "1 ➔ df+1,4 ➔ qcf+1+2 (or BT.f+3+4)",
+      "tactical_notes": "Wall par clone oki (qcf+2 / db+3) lagayein."
+    },
+    {
+      "character": "Reina",
+      "tornado_move": "df+4,2,3 / SEN.2",
+      "wall_ender": "df+1,1 ➔ df+4,2,3 (Delay 3rd hit!) (or 1+2)",
+      "tactical_notes": "df+4,2,3 ka last stomp delay karein + Reina WRA stance mein jayegi!"
+    },
+    {
+      "character": "Roger Jr.",
+      "tornado_move": "db+4,3",
+      "wall_ender": "1,2 ➔ f+4,3,2 (or ANM.1+2)",
+      "tactical_notes": "Wall par Giant Swing (f,hcf+1) 75 damage deta hai!"
+    },
+    {
+      "character": "Shaheen",
+      "tornado_move": "SNK.4,1 / f+3+4",
+      "wall_ender": "2,3 (SNK) ➔ SNK.3 (or df+4,1,3)",
+      "tactical_notes": "SNK.3 ke baad Slide (fc df,d,df+3) mixup!"
+    },
+    {
+      "character": "Steve Fox",
+      "tornado_move": "FLK.1,d+1 / PKB.2",
+      "wall_ender": "f+2,1~b (DCK) ➔ DCK.f+2 (or 1,2,1,2~sway Into Wall Push!)",
+      "tactical_notes": "Steve ka qcb+2+4 (Wall Push) opponent ko free b+1,2 deta hai!"
+    },
+    {
+      "character": "Victor",
+      "tornado_move": "IAI.2 / df+3,4",
+      "wall_ender": "df+4,2 (IAI) ➔ IAI.1,2,2 (Delay last hit!)",
+      "tactical_notes": "IAI.1,2,2 ka 3rd sword slash zameen par 60% hit karta hai!"
+    },
+    {
+      "character": "Xiaoyu",
+      "tornado_move": "RDS.1,4 / b+3",
+      "wall_ender": "f+2,1,4 (Delay 4) OR ub+4 ➔ AoP.1+2",
+      "tactical_notes": "f+2,1,4 ka last hit delay karein!"
+    },
+    {
+      "character": "Yoshimitsu",
+      "tornado_move": "d+2,2,2 / ws2,1",
+      "wall_ender": "b+2,1 (Unscaled Sword Hit!) OR 3~4~u (DGF.2,4)",
+      "tactical_notes": "b+2,1 ka 2nd hit sword se chip + unscaled damage deta hai."
+    },
+    {
+      "character": "Zafina",
+      "tornado_move": "SCR.4 / df+1,2,1",
+      "wall_ender": "df+1,2,1 (or f+2,3~SCR.df+4)",
+      "tactical_notes": "Wall par SCR stance mein 1+2 / df+4 mixup."
+    }
+  ],
+  "stages": [
+    {
+      "stage_name": "Arena",
+      "shape_and_size": "Octagon (28m x 28m)",
+      "wall_break": "No",
+      "floor_break": "No",
+      "balcony_break": "No",
+      "wall_blast": "No",
+      "best_characters": "Standard honest stage (Kazuya, Jin, Dragunov)"
+    },
+    {
+      "stage_name": "Arena (Underground)",
+      "shape_and_size": "Octagon (24m x 24m)",
+      "wall_break": "No",
+      "floor_break": "No",
+      "balcony_break": "No",
+      "wall_blast": "Yes (Wall Blast x4)",
+      "best_characters": "Bryan, Paul, Heihachi, Nina (Small stage + explosive walls)"
+    },
+    {
+      "stage_name": "Urban Square",
+      "shape_and_size": "Rectangle (24m x 36m)",
+      "wall_break": "No",
+      "floor_break": "No",
+      "balcony_break": "Yes (Upper -> Lower)",
+      "wall_blast": "No",
+      "best_characters": "Wall-carry rushdown (Nina, Law, Hwoarang)"
+    },
+    {
+      "stage_name": "Yakushima",
+      "shape_and_size": "Huge Open (80m x 120m)",
+      "wall_break": "No",
+      "floor_break": "No",
+      "balcony_break": "No",
+      "wall_blast": "No",
+      "best_characters": "Alisa, Lili, Zafina, Xiaoyu, Victor (Infinite KBD space)"
+    },
+    {
+      "stage_name": "Coliseum of Fate",
+      "shape_and_size": "Huge Octagon (44m x 44m)",
+      "wall_break": "No",
+      "floor_break": "No",
+      "balcony_break": "No",
+      "wall_blast": "No",
+      "best_characters": "Keepout & Whiff Punishers (Bryan, Kazuya, Clive)"
+    },
+    {
+      "stage_name": "Rebel Hangar",
+      "shape_and_size": "Irregular Octagon",
+      "wall_break": "No",
+      "floor_break": "No",
+      "balcony_break": "Yes (Side Ledge)",
+      "wall_blast": "Yes (3x Wall Blasts)",
+      "best_characters": "Jin, Bryan, King, Dragunov (115+ dmg wall blast setups)"
+    },
+    {
+      "stage_name": "Fallen Destiny",
+      "shape_and_size": "Octagon (28m x 28m)",
+      "wall_break": "No",
+      "floor_break": "No",
+      "balcony_break": "No",
+      "wall_blast": "No",
+      "best_characters": "Mishimas (Wave dash realignment stage)"
+    },
+    {
+      "stage_name": "Descent into Subconscious",
+      "shape_and_size": "Multi-Tier Octagon",
+      "wall_break": "No",
+      "floor_break": "Yes (2x Floor Breaks!)",
+      "balcony_break": "No",
+      "wall_blast": "No",
+      "best_characters": "King, Dragunov, Jun, Xiaoyu (Spike & Throw Floor Breaks)"
+    },
+    {
+      "stage_name": "Sanctum",
+      "shape_and_size": "Narrow (22m x 32m)",
+      "wall_break": "Yes (2 Walls)",
+      "floor_break": "Hard Floor Break",
+      "balcony_break": "No",
+      "wall_blast": "No",
+      "best_characters": "Bryan, Paul, Kazuya, Reina (Immediate wall access)"
+    },
+    {
+      "stage_name": "Into the Stratosphere",
+      "shape_and_size": "Octagon -> Narrow",
+      "wall_break": "No",
+      "floor_break": "Hard Floor Break + Floor Blast",
+      "balcony_break": "No",
+      "wall_blast": "No",
+      "best_characters": "Devil Jin, Jin, Heihachi, King (Floor Blast relaunch abuse)"
+    },
+    {
+      "stage_name": "Ortiz Farm",
+      "shape_and_size": "3-Tier Compound",
+      "wall_break": "Yes (Lvl 1->2)",
+      "floor_break": "Yes (Lvl 2->3)",
+      "balcony_break": "Yes (Fence)",
+      "wall_blast": "Yes (Lvl 3 Statues)",
+      "best_characters": "All High-Damage Combo Monsters (Highest potential damage stage)"
+    },
+    {
+      "stage_name": "Celebration on the Seine",
+      "shape_and_size": "Narrow Bridge (20m x 34m)",
+      "wall_break": "No",
+      "floor_break": "No",
+      "balcony_break": "No",
+      "wall_blast": "No",
+      "best_characters": "Bryan, Nina, Reina, Steve (Side-walls are only 2 steps away!)"
+    },
+    {
+      "stage_name": "Secluded Training Ground",
+      "shape_and_size": "Long Hallway (18m x 40m)",
+      "wall_break": "Yes (3x Walls!)",
+      "floor_break": "No",
+      "balcony_break": "No",
+      "wall_blast": "No",
+      "best_characters": "Paul, Fahkumram, Lidia, Lars (Triple wall break carry!)"
+    },
+    {
+      "stage_name": "Elegant Palace",
+      "shape_and_size": "Large Room (30m x 32m)",
+      "wall_break": "Yes (2x Walls)",
+      "floor_break": "No",
+      "balcony_break": "Yes (Center Balcony)",
+      "wall_blast": "Yes (Statues)",
+      "best_characters": "Lee, Nina, Victor, Clive (Long carry into Balcony + Wall Blast)"
+    },
+    {
+      "stage_name": "Midnight Siege",
+      "shape_and_size": "Asymmetric Ruin",
+      "wall_break": "Yes ( APC Truck)",
+      "floor_break": "No",
+      "balcony_break": "No",
+      "wall_blast": "Yes (Explosive Wall)",
+      "best_characters": "Law,Shaheen, Dragunov"
+    },
+    {
+      "stage_name": "Seaside Resort",
+      "shape_and_size": "Medium Octagon",
+      "wall_break": "No",
+      "floor_break": "No",
+      "balcony_break": "No",
+      "wall_blast": "No",
+      "best_characters": "Neutral Pokers (Feng, Jin, Shaheen)"
+    },
+    {
+      "stage_name": "Genmaji Temple",
+      "shape_and_size": "Temple Courtyard",
+      "wall_break": "Yes (Gate)",
+      "floor_break": "Yes (Underground)",
+      "balcony_break": "No",
+      "wall_blast": "No",
+      "best_characters": "Heihachi, Kazuya, Jin, Armor King"
+    },
+    {
+      "stage_name": "Phoenix Gate",
+      "shape_and_size": "Boss Arena (Clive DLC)",
+      "wall_break": "Yes (Stage Shift)",
+      "floor_break": "Floor Blast (Phase 2)",
+      "balcony_break": "No",
+      "wall_blast": "Yes",
+      "best_characters": "Clive, Devil Jin, Bryan"
+    }
+  ],
+  "roster_punish": [
+    {
+      "character": "Alisa",
+      "i10_punish": "1,1 (+3)",
+      "i12_punish": "2,4 (KND)",
+      "i13_i14_punish": "f+1+2 (i14 Heat)",
+      "i15_launch_punish": "uf+4,4 / hopkick",
+      "ws_launch": "ws2 (i17) / uf+4,4",
+      "best_mid_poke": "df+1 (-6)",
+      "best_low_poke": "db+3 (-13)",
+      "homing_keepout": "b+3 / f+2"
+    },
+    {
+      "character": "Asuka",
+      "i10_punish": "1 (i10)",
+      "i12_punish": "2,3 (i12 KND)",
+      "i13_i14_punish": "df+1,2 / uf+2 (i14)",
+      "i15_launch_punish": "df+2 (i15)",
+      "ws_launch": "ws1,4 (i14) / uf+4",
+      "best_mid_poke": "df+1 / 1+2",
+      "best_low_poke": "d+1+2 / db+3",
+      "homing_keepout": "b+4 / f+2"
+    },
+    {
+      "character": "Azucena",
+      "i10_punish": "1,1 (LIB)",
+      "i12_punish": "2,1 / 4,1 (i12)",
+      "i13_i14_punish": "f+2,1,4 (i14)",
+      "i15_launch_punish": "df+2 / uf+4 (i15)",
+      "ws_launch": "ws2 (i15)",
+      "best_mid_poke": "df+1,4",
+      "best_low_poke": "db+3 (LIB)",
+      "homing_keepout": "ff+3+4 / wr3,2"
+    },
+    {
+      "character": "Bryan Fury",
+      "i10_punish": "1,4 / 2,3",
+      "i12_punish": "4,1 (i12)",
+      "i13_i14_punish": "f,b+2 (i14 Launch!)",
+      "i15_launch_punish": "f,b+2 (Jet Upper)",
+      "ws_launch": "ws1 (i15) / ws2",
+      "best_mid_poke": "df+2,1 / 3+4",
+      "best_low_poke": "qcb+3 (+5)",
+      "homing_keepout": "1+2 / ff+4"
+    },
+    {
+      "character": "Claudio",
+      "i10_punish": "1,2",
+      "i12_punish": "f+2,2 (STB)",
+      "i13_i14_punish": "4,3 / b+3,3",
+      "i15_launch_punish": "uf+4 (Hopkick i15)",
+      "ws_launch": "ws2 (i15 STB)",
+      "best_mid_poke": "b+3 / df+1",
+      "best_low_poke": "ss+4 (+4)",
+      "homing_keepout": "b+1 (-5 wall splat)"
+    },
+    {
+      "character": "Devil Jin",
+      "i10_punish": "1,1,2 (KND)",
+      "i12_punish": "2,2 / b+1,2",
+      "i13_i14_punish": "f,n,d,df+2 (i14)",
+      "i15_launch_punish": "d+3+4 (i15 Can-cans)",
+      "ws_launch": "ws2 (i15 Tornado)",
+      "best_mid_poke": "df+1,2 / bf+2,1",
+      "best_low_poke": "db+2 / CD.4",
+      "homing_keepout": "b+4 / uf+4"
+    },
+    {
+      "character": "Dragunov",
+      "i10_punish": "1,3 / 2,1",
+      "i12_punish": "4,1",
+      "i13_i14_punish": "b+4,3 (i14 Heat)",
+      "i15_launch_punish": "df+2 (i15)",
+      "ws_launch": "ws2 (i15) / H.ws1+2 (i12)",
+      "best_mid_poke": "df+1 / b+4,2",
+      "best_low_poke": "d+2 / db+3+4",
+      "homing_keepout": "b+3 / wr2"
+    },
+    {
+      "character": "Feng Wei",
+      "i10_punish": "1,2,2 / 1,3",
+      "i12_punish": "2,4",
+      "i13_i14_punish": "b+1+2 (i13 Shoulder!)",
+      "i15_launch_punish": "uf+4 (i15)",
+      "ws_launch": "ws3 (i15)",
+      "best_mid_poke": "df+1 (0 block!)",
+      "best_low_poke": "db+3 / d+2",
+      "homing_keepout": "df+3 / b+4"
+    },
+    {
+      "character": "Hwoarang",
+      "i10_punish": "1,2 (+4 FLA)",
+      "i12_punish": "4,3",
+      "i13_i14_punish": "uf+3+4 / b+4 (i13)",
+      "i15_launch_punish": "b+3 (i16) / uf+3,4",
+      "ws_launch": "ws2,3 (i15 Launch!)",
+      "best_mid_poke": "df+1 / d+3,4",
+      "best_low_poke": "d+3,4",
+      "homing_keepout": "df+4 / b+3"
+    },
+    {
+      "character": "Jack-8",
+      "i10_punish": "f+2 (i10 KND)",
+      "i12_punish": "df+4 / 2,3",
+      "i13_i14_punish": "b+1+2 (i14 Heat)",
+      "i15_launch_punish": "df+2 (i15)",
+      "ws_launch": "ws1 (i15)",
+      "best_mid_poke": "df+1 / f,f+1",
+      "best_low_poke": "db+1 (i12!)",
+      "homing_keepout": "1+2 / b+2"
+    },
+    {
+      "character": "Jin Kazama",
+      "i10_punish": "2,4 (KND/ZEN)",
+      "i12_punish": "1+2 (i12 Heat)",
+      "i13_i14_punish": "f+1+2 (i14) / EWGF",
+      "i15_launch_punish": "d+3+4 / uf+4 (i15)",
+      "ws_launch": "ws2 (i14 Launch!)",
+      "best_mid_poke": "df+1 / f+4",
+      "best_low_poke": "d+4 / db+4",
+      "homing_keepout": "b+4 / ff+2"
+    },
+    {
+      "character": "Jun Kazama",
+      "i10_punish": "1,2 / f+1",
+      "i12_punish": "b+4,2 (i12)",
+      "i13_i14_punish": "df+1,1 / f+2",
+      "i15_launch_punish": "uf+4,3 (i15) / f+2 (i16)",
+      "ws_launch": "ws3 (i14) / ws2",
+      "best_mid_poke": "df+1 / b+2,1",
+      "best_low_poke": "db+3 (+2)",
+      "homing_keepout": "1+2 / b+3"
+    },
+    {
+      "character": "Kazuya",
+      "i10_punish": "1,1,2 (KND)",
+      "i12_punish": "b+1,2 (i11!)",
+      "i13_i14_punish": "f,n,df+2 (i13 PEWGF)",
+      "i15_launch_punish": "EWGF / df+1,2",
+      "ws_launch": "ws1,2 (i13 Launch!)",
+      "best_mid_poke": "df+1 / ff+2",
+      "best_low_poke": "db+4 (+4)",
+      "homing_keepout": "b+4 / ws2"
+    },
+    {
+      "character": "King",
+      "i10_punish": "2,1 / 1,2",
+      "i12_punish": "b+1,2 (i12)",
+      "i13_i14_punish": "f+2,1 (i15)",
+      "i15_launch_punish": "uf+4 (i15 Hopkick)",
+      "ws_launch": "ws2,2 (i14) / fc df+2 (i15)",
+      "best_mid_poke": "df+1,2 / f,f,n,1+2",
+      "best_low_poke": "f,f,n,2 (+7)",
+      "homing_keepout": "f+4 / df+3+4"
+    },
+    {
+      "character": "Kuma / Panda",
+      "i10_punish": "2,1 / 1,1,1",
+      "i12_punish": "f+2,1 (i12)",
+      "i13_i14_punish": "df+1,2 / b,f+2",
+      "i15_launch_punish": "df+2,1 (i15 Mega Launch)",
+      "ws_launch": "ws2 (i15)",
+      "best_mid_poke": "df+1 / b+1",
+      "best_low_poke": "db+2 / db+4",
+      "homing_keepout": "1+2 / wr1+2"
+    },
+    {
+      "character": "Lars",
+      "i10_punish": "2,1",
+      "i12_punish": "f+2,4 (i12 KND)",
+      "i13_i14_punish": "f,b+2,1 (i14 Launch!)",
+      "i15_launch_punish": "f+1+2 (i15) / uf+4",
+      "ws_launch": "ws1 (i15)",
+      "best_mid_poke": "df+1 / DEN.1",
+      "best_low_poke": "db+4 / fc df+1+2",
+      "homing_keepout": "b+1 / df+3,3"
+    },
+    {
+      "character": "Law",
+      "i10_punish": "1,1,2",
+      "i12_punish": "3,4 / 4,3",
+      "i13_i14_punish": "3+4,4 (i14 Launch!)",
+      "i15_launch_punish": "df+2 / uf+4 (i15)",
+      "ws_launch": "ws2 (i15)",
+      "best_mid_poke": "df+1 / f+1+2",
+      "best_low_poke": "db+3 / Slide",
+      "homing_keepout": "b+4 / 1+2"
+    },
+    {
+      "character": "Lee Chaolan",
+      "i10_punish": "1,3:3:3 (i10!)",
+      "i12_punish": "2,1 / f+2,1",
+      "i13_i14_punish": "f+3,3,3,3,3,4 (i14 Launch)",
+      "i15_launch_punish": "df+2 / uf+4 (i15)",
+      "ws_launch": "ws2,3 (i14 into Heat!)",
+      "best_mid_poke": "df+1 / b+4",
+      "best_low_poke": "d+3 / db+3+4",
+      "homing_keepout": "1+2 / b,b+4"
+    },
+    {
+      "character": "Leo",
+      "i10_punish": "1,4",
+      "i12_punish": "2,2",
+      "i13_i14_punish": "uf+2,1 / b+1+4",
+      "i15_launch_punish": "df+2 / uf+4 (i15)",
+      "ws_launch": "ws2 (i16) / uf+4 (i15)",
+      "best_mid_poke": "df+1 / b+1,4",
+      "best_low_poke": "d+4 / qcf+1",
+      "homing_keepout": "df+3 / b+1+2"
+    },
+    {
+      "character": "Leroy Smith",
+      "i10_punish": "1,2,4 (HRM)",
+      "i12_punish": "2,2",
+      "i13_i14_punish": "b+1+2 (i12 CH) / f+4,4",
+      "i15_launch_punish": "df+2,1+2 / uf+4 (i15)",
+      "ws_launch": "ws2 (i15)",
+      "best_mid_poke": "df+1 / d+1+2",
+      "best_low_poke": "d+3,2 (+8 HRM)",
+      "homing_keepout": "b+4 / 1+2"
+    },
+    {
+      "character": "Lili",
+      "i10_punish": "2,4 (KND)",
+      "i12_punish": "f+2,3",
+      "i13_i14_punish": "df+4,4 / f,b+2 (i14)",
+      "i15_launch_punish": "df+2 / uf+3 (i15)",
+      "ws_launch": "ws2 (i16) / uf+3 (i15)",
+      "best_mid_poke": "df+1 / f+4",
+      "best_low_poke": "d+3 / feisty rabbit",
+      "homing_keepout": "df+3+4 / qcf+3+4"
+    },
+    {
+      "character": "Nina Williams",
+      "i10_punish": "1,2 (+1 hit)",
+      "i12_punish": "b+2,2 / f+1+2 (i12)",
+      "i13_i14_punish": "df+3,4 / b+1,4 (i14)",
+      "i15_launch_punish": "df+2 / uf+2,1 (i15)",
+      "ws_launch": "ws2 (i15) / ws1,1+2",
+      "best_mid_poke": "df+1,2 / ss1",
+      "best_low_poke": "d+3,4,3 / db+3",
+      "homing_keepout": "df+1+2 / f+3"
+    },
+    {
+      "character": "Paul Phoenix",
+      "i10_punish": "1,2",
+      "i12_punish": "b+1,2 (i12 KND!)",
+      "i13_i14_punish": "b+3 (i14 Launch!)",
+      "i15_launch_punish": "df+2 / uf+4 (i15)",
+      "ws_launch": "ws2 (i15)",
+      "best_mid_poke": "df+1 (+3 backsway)",
+      "best_low_poke": "qcb+3 / Demo Man",
+      "homing_keepout": "qcb+4 / df+4"
+    },
+    {
+      "character": "Raven",
+      "i10_punish": "2,4 (KND)",
+      "i12_punish": "4,1 (BT)",
+      "i13_i14_punish": "b+2,4,2 / f+2,3 (i14)",
+      "i15_launch_punish": "df+2 (i16) / uf+4",
+      "ws_launch": "ws1 (i14 Launch!)",
+      "best_mid_poke": "df+1 / qcf+4",
+      "best_low_poke": "db+4 / fc df+3+4",
+      "homing_keepout": "df+3 / b,b+2"
+    },
+    {
+      "character": "Reina",
+      "i10_punish": "1,1,2 (KND/SEN)",
+      "i12_punish": "2,2,1 (i12!)",
+      "i13_i14_punish": "f,n,df+2 (i13/14 EWGF)",
+      "i15_launch_punish": "df+2 / uf+4 (i15)",
+      "ws_launch": "ws1 (i13 SEN) / ws2 (i15)",
+      "best_mid_poke": "ff+2 / df+1",
+      "best_low_poke": "db+4 / ss+4",
+      "homing_keepout": "b+2 / fn,d,df+3"
+    },
+    {
+      "character": "Shaheen",
+      "i10_punish": "1,2 / 2,3 (SNK)",
+      "i12_punish": "f+2,3 (i12)",
+      "i13_i14_punish": "f,b+2 (i14 Neck Snap!)",
+      "i15_launch_punish": "df+2 / uf+4 (i15)",
+      "ws_launch": "ws2 (i16) / uf+4 (i15)",
+      "best_mid_poke": "df+1 / f+4",
+      "best_low_poke": "d+3 (SNK) / Slide",
+      "homing_keepout": "df+4,1 / b+1"
+    },
+    {
+      "character": "Steve Fox",
+      "i10_punish": "1,1,2 (+3 PKB)",
+      "i12_punish": "2,2",
+      "i13_i14_punish": "b+1,2 (i13) / uf+1",
+      "i15_launch_punish": "H.2,2 (i14 Launch) / uf+2 (i17)",
+      "ws_launch": "ws1,2 (i11) / fc df+2 (i16)",
+      "best_mid_poke": "df+1 / b+1 (CH)",
+      "best_low_poke": "d+2,1~DCK / db+3,2",
+      "homing_keepout": "df+2 / PKB.2"
+    },
+    {
+      "character": "Victor",
+      "i10_punish": "1,1,2 (PRF)",
+      "i12_punish": "2,2,2 / f+4,1",
+      "i13_i14_punish": "df+4,2 (i13) / uf+1,1",
+      "i15_launch_punish": "df+2 / uf+4 (i15)",
+      "ws_launch": "ws1 (i15 Launch)",
+      "best_mid_poke": "df+1 / wr2",
+      "best_low_poke": "db+4 (CH Launch)",
+      "homing_keepout": "1+2 (i15 CH) / b+1+2"
+    },
+    {
+      "character": "Xiaoyu",
+      "i10_punish": "1,d+2 (RDS)",
+      "i12_punish": "f+1+2 (i12 KND)",
+      "i13_i14_punish": "b+1+2 (i14 Launch!)",
+      "i15_launch_punish": "df+2,3 (i15 Launch)",
+      "ws_launch": "ws2 (i13 CH/Hold Launch)",
+      "best_mid_poke": "df+1 (RDS) / ff+3",
+      "best_low_poke": "db+4 / AoP.4~3",
+      "homing_keepout": "b+4 / RDS.4"
+    },
+    {
+      "character": "Yoshimitsu",
+      "i10_punish": "1+4 (i6 Flash!)",
+      "i12_punish": "2,2 / b+2,2",
+      "i13_i14_punish": "df+1,4 / f+1+2 (i14)",
+      "i15_launch_punish": "df+2 / uf+3 (i15)",
+      "ws_launch": "ws2,1 (i15 Tornado)",
+      "best_mid_poke": "df+1 / b+2,2",
+      "best_low_poke": "db+3,3 / fc df+4",
+      "homing_keepout": "df+4 / 3~4"
+    },
+    {
+      "character": "Zafina",
+      "i10_punish": "1,3 (SCR)",
+      "i12_punish": "2,2,1+2",
+      "i13_i14_punish": "df+1,4 / uf+1",
+      "i15_launch_punish": "df+2 (i16) / uf+4",
+      "ws_launch": "ws1,2 (i15 Launch)",
+      "best_mid_poke": "df+1 / ff+4",
+      "best_low_poke": "d+3 (MNT) / db+4",
+      "homing_keepout": "ff+3 / 1+2"
+    }
+  ],
+  "combos_p13": [
+    {
+      "character": "Alisa",
+      "starter": "uf+4,4 / ws2",
+      "combo_route": "ws2 -> f+2 -> df+1,1 -> f+1+2 (DES) -> DES.f+1+2 (T!) -> DES.uf+1+2",
+      "avg_damage": "72"
+    },
+    {
+      "character": "Anna",
+      "starter": "df+2 / uf+4",
+      "combo_route": "df+2 -> qcf+1 -> f+3,2 (CJM) -> CJM.2,1 (T!) -> dash -> qcf+2,1",
+      "avg_damage": "75"
+    },
+    {
+      "character": "Armor King",
+      "starter": "Dark Upper (cd+2)",
+      "combo_route": "cd+2 -> cd+1 -> df+1 -> 1,2 -> db+2,4 (T!) -> dash -> f,f,f+2+4 (Shining Wizard)",
+      "avg_damage": "78"
+    },
+    {
+      "character": "Asuka",
+      "starter": "df+2 / uf+4",
+      "combo_route": "df+2 -> f+4 (T!) -> dash -> ff+2,3 -> df+1,4 -> f,f+1+2 (Naniwa Gusto)",
+      "avg_damage": "71"
+    },
+    {
+      "character": "Azucena",
+      "starter": "df+2 / uf+4",
+      "combo_route": "df+2 -> df+4,1 (LIB) -> LIB.d+4,4 (T!) -> dash -> df+1,4,1~2",
+      "avg_damage": "70"
+    },
+    {
+      "character": "Bob",
+      "starter": "cd+1 / uf+4,4",
+      "combo_route": "cd+1 -> uf+1+2,1 -> b+2,2,4,4 (T!) -> dash -> b+1,2~BAL.1+2",
+      "avg_damage": "74"
+    },
+    {
+      "character": "Claudio",
+      "starter": "uf+4 / ws2",
+      "combo_route": "uf+4 -> f+3 (T!) -> ff+4 -> b+3 -> 1 -> wr2 (Grants Starburst!)",
+      "avg_damage": "69"
+    },
+    {
+      "character": "Clive",
+      "starter": "df+2 / uf+4",
+      "combo_route": "df+2 -> f+2,2 (PHX) -> PHX.2,1 (T!) -> dash -> df+1,2~PHX.1+2 (Builds Zantetsuken)",
+      "avg_damage": "76"
+    },
+    {
+      "character": "Devil Jin",
+      "starter": "EWGF / ws2",
+      "combo_route": "EWGF -> EWGF -> ff+4 (T!) -> dash -> b+2,3 -> CD.1~uf",
+      "avg_damage": "75"
+    },
+    {
+      "character": "Eddy",
+      "starter": "df+3 / ws1,3",
+      "combo_route": "df+3 -> RLX.2 -> 1 -> b+3,3 (RLX) -> RLX.2,4 (T!) -> dash -> qcf+3 (MND charge!)",
+      "avg_damage": "72"
+    },
+    {
+      "character": "Fahkumram",
+      "starter": "df+2,3 / uf+4",
+      "combo_route": "df+2,3 -> 3,1 -> df+1,4,1 (T!) -> dash -> b+1 -> 3,4~4",
+      "avg_damage": "77"
+    },
+    {
+      "character": "Feng Wei",
+      "starter": "uf+4 / ws3",
+      "combo_route": "uf+4 -> f+1+2 (T!) -> dash -> f+3,4 -> 1 -> f+3,4 -> b+1+2 (Shoulder)",
+      "avg_damage": "71"
+    },
+    {
+      "character": "Hwoarang",
+      "starter": "b+3 / ws2,3",
+      "combo_route": "b+3 -> ff+4 -> RFS.3~4 -> uf+3,4,3 (T!) -> dash -> uf+3+4~f -> uf+3+4",
+      "avg_damage": "76"
+    },
+    {
+      "character": "Jack-8",
+      "starter": "df+2 / ws1",
+      "combo_route": "df+2 -> f+4 -> b+1 -> df+1,2,1 (T!) -> dash -> b+3,2~D (GMH) -> GMH.2",
+      "avg_damage": "75"
+    },
+    {
+      "character": "Jun Kazama",
+      "starter": "uf+4,3 / f+2",
+      "combo_route": "uf+4,3 -> b+4,2 -> f+3,2 (IZU) -> IZU.1,1 (T!) -> dash -> b+2,1,4",
+      "avg_damage": "74"
+    },
+    {
+      "character": "Kuma/Panda",
+      "starter": "df+2,1 / ws2",
+      "combo_route": "df+2,1 -> b+2,1~1+2 (HBS) -> HBS.df+1,1 (T!) -> dash -> b,f+2 -> wr1+2",
+      "avg_damage": "82"
+    },
+    {
+      "character": "Kunimitsu II",
+      "starter": "df+2 / SET.2",
+      "combo_route": "df+2 -> f+3~SET.2 -> 4,2 -> 1,1,4 (T!) -> SET.1+2 -> f+2,1,4",
+      "avg_damage": "73"
+    },
+    {
+      "character": "Lars",
+      "starter": "f,b+2,1 / uf+4",
+      "combo_route": "f,b+2,1 -> db+2~f (SEN.1) -> df+2 (DEN.2) -> df+3~D (DEN.1,2 T!) -> f+2,1~SEN.1",
+      "avg_damage": "76"
+    },
+    {
+      "character": "Law",
+      "starter": "df+2 / 3+4,4",
+      "combo_route": "df+2 -> 4,u+3 -> b+2,1 (T!) -> dash -> 4,3~f (DSS) -> DSS.f+4 (Legend Kick)",
+      "avg_damage": "73"
+    },
+    {
+      "character": "Lee",
+      "starter": "df+2 / uf+4",
+      "combo_route": "df+2 -> 4,u+3 -> b+2~f (MS x2) -> ws2,3 (T!) -> dash -> b+2~f -> f+2,1",
+      "avg_damage": "72"
+    },
+    {
+      "character": "Leo",
+      "starter": "df+2 / uf+4",
+      "combo_route": "df+2 -> f+2 -> b+1,4 (KNK) -> KNK.3,4 (T!) -> dash -> f+4 (KNK) -> KNK.1+2",
+      "avg_damage": "74"
+    },
+    {
+      "character": "Leroy",
+      "starter": "df+2,1+2 / uf+4",
+      "combo_route": "df+2,1+2 -> ff+4~HRM.4,1+2 (T!) -> dash -> uf+3+4,1+2",
+      "avg_damage": "75"
+    },
+    {
+      "character": "Lidia",
+      "starter": "df+2 / ws2",
+      "combo_route": "df+2 -> f+2,4 (CAT) -> CAT.1 (T!) -> dash -> b+3,4,qcf+1+2 (Blossom Ender)",
+      "avg_damage": "74"
+    },
+    {
+      "character": "Lili",
+      "starter": "df+2 / uf+3",
+      "combo_route": "df+2 -> b+1~f -> 2 -> df+2,4 (BT) -> BT.3,4 (T!) -> dash -> ff+3~f -> 1,2",
+      "avg_damage": "73"
+    },
+    {
+      "character": "Raven",
+      "starter": "df+2 / ws1",
+      "combo_route": "ws1 -> ff+3 -> 1 -> b+2,4,2 (T!) -> dash -> qcf+4 (BT) -> BT.f+3+4",
+      "avg_damage": "75"
+    },
+    {
+      "character": "Reina",
+      "starter": "EWGF / df+2",
+      "combo_route": "df+2 -> f+2,3~F (SEN.3) -> df+1 -> df+4,2,3 (T!) -> dash -> df+1,1 -> ff+2~F -> SEN.3",
+      "avg_damage": "76"
+    },
+    {
+      "character": "Roger Jr.",
+      "starter": "df+2 / uf+4",
+      "combo_route": "df+2 -> f+4,3,2 -> 1,2 -> db+4,3 (T!) -> dash -> f,f,f+1+2",
+      "avg_damage": "74"
+    },
+    {
+      "character": "Shaheen",
+      "starter": "df+2 / uf+4",
+      "combo_route": "uf+4 -> 3~df (SNK) -> SNK.2 -> f+2,4~df (SNK) -> SNK.4,1 (T!) -> dash -> df+4,1,3",
+      "avg_damage": "74"
+    },
+    {
+      "character": "Steve Fox",
+      "starter": "b+1 (CH) / uf+2",
+      "combo_route": "CH b+1~b (FLK) -> DCK.1 -> df+1,2~1~b (FLK) -> FLK.1,d+1 (T!) -> dash -> f+2,1~b -> DCK.f+2",
+      "avg_damage": "73"
+    },
+    {
+      "character": "Victor",
+      "starter": "df+2 / ws1",
+      "combo_route": "df+2 -> d+1+2 (IAI) -> IAI.2 (T!) -> dash -> df+4,2 (IAI) -> IAI.1,2,2",
+      "avg_damage": "72"
+    },
+    {
+      "character": "Xiaoyu",
+      "starter": "df+2,3 / b+1+2",
+      "combo_route": "df+2,3 -> f+3,1 (RDS) -> RDS.2 -> RDS.1,4 (T!) -> dash -> f+2,1,4",
+      "avg_damage": "70"
+    },
+    {
+      "character": "Yoshimitsu",
+      "starter": "df+2 / uf+3",
+      "combo_route": "df+2 -> f+3 -> d+2,2,2 (T!) -> dash -> 3~4~u (DGF) -> DGF.2 -> DGF.4",
+      "avg_damage": "71"
+    },
+    {
+      "character": "Zafina",
+      "starter": "df+2 / uf+4",
+      "combo_route": "df+2 -> uf+1 -> df+1 -> f+2,3 (SCR) -> SCR.4 (T!) -> dash -> wr3 (MNT.df+1)",
+      "avg_damage": "71"
+    }
+  ],
+  "ten_hit_counters": [
+    {
+      "character": "King",
+      "combo_input": "1,2,1,1,2,4,4,4,1,3",
+      "where_to_duck_parry": "Hit 6, 7, & 8 (4,4,4) lagatar 3 Low Kicks hain!",
+      "optimal_punish": "Pehle 5 punches (1,2,1,1,2) block karein (ya kha bhi jayein) ➔ Foran df (Low Parry) hold kar lein!"
+    },
+    {
+      "character": "Hwoarang",
+      "combo_input": "RFS/LFS 1,2,3,4,3,4,4,4,4,3",
+      "where_to_duck_parry": "Hit 4 (4) aur Hit 6 (4) Low kicks hain.",
+      "optimal_punish": "Pehle 3 hits ke baad df (Low Parry) hold karein ya Hit 2 (2 High) ko duck karke launch karein."
+    },
+    {
+      "character": "Paul Phoenix",
+      "combo_input": "1,2,3,2,1,2,1,4,2,1",
+      "where_to_duck_parry": "Hit 5 (1) High hai aur Hit 8 (4) Low hai.",
+      "optimal_punish": "1,2,3 ke baad df+1 se interrupt karein, ya Hit 8 (4) par df (Low Parry) hold karein!"
+    },
+    {
+      "character": "Marshall Law",
+      "combo_input": "df+1,2,2,1,3,3,3,4,3,4",
+      "where_to_duck_parry": "Hit 5 (3) aur Hit 9 (3) Low kicks hain!",
+      "optimal_punish": "Pehle 4 punches (df+1,2,2,1) dekhte hi df (Low Parry) hold rakhein—5th hit auto-parry hoga!"
+    },
+    {
+      "character": "Bryan Fury",
+      "combo_input": "b+3,4,1,2,1,4,2,1,4,2",
+      "where_to_duck_parry": "Hit 2 (4) High hai; Hit 6 (4) Low hai.",
+      "optimal_punish": "b+3 block karte hi Duck karein (2nd hit whiff hoga ➔ ws1 Launch!), ya Hit 6 ko Low Parry karein."
+    },
+    {
+      "character": "Nina Williams",
+      "combo_input": "1,2,1,2,3,3,2,1,2,4",
+      "where_to_duck_parry": "Hit 5 (3) aur Hit 6 (3) Low kicks hain!",
+      "optimal_punish": "Jab Nina tezi se 4 punches (1,2,1,2) maare, toh foran df (Low Parry) daba kar rakhein!"
+    },
+    {
+      "character": "Kazuya / Devil Jin",
+      "combo_input": "f,f+2,1,2,2,3,4,4,1,2,1",
+      "where_to_duck_parry": "Hit 6 (4) aur Hit 7 (4) Low Hell-Sweeps hain!",
+      "optimal_punish": "Pehle 5 hits (ff+2,1,2,2,3) ke foran baad df (Low Parry) ya Crouch Block (-15 Launch) karein!"
+    },
+    {
+      "character": "Jin Kazama",
+      "combo_input": "f,f+2,1,2,2,3,4,4,3,2,1",
+      "where_to_duck_parry": "Hit 6 (4) aur Hit 7 (4) Low kicks hain.",
+      "optimal_punish": "5th hit (3 mid kick) block karte hi df (Low Parry) hold kar lein!"
+    },
+    {
+      "character": "Heihachi",
+      "combo_input": "f,f+2,1,2,2,3,4,4,1,2,1",
+      "where_to_duck_parry": "Hit 6 & 7 (4,4) Low kicks hain.",
+      "optimal_punish": "5th hit ke baad df (Low Parry) hold karein."
+    },
+    {
+      "character": "Yoshimitsu",
+      "combo_input": "1,2,1,4,4,4,1,1,1,1",
+      "where_to_duck_parry": "Hit 6 (4) Low hai aur aakhri hits Unblockable Sword hain!",
+      "optimal_punish": "Hit 6 par Low Parry karein, ya jab woh hawa mein ghoom kar talwar maare toh Sidestep / Jab kar dein."
+    },
+    {
+      "character": "Xiaoyu",
+      "combo_input": "uf+4,1,2,1+2,1,3,4,4,4,1",
+      "where_to_duck_parry": "Hit 7 (4) aur Hit 8 (4) Low sweeps hain.",
+      "optimal_punish": "1+2,1,3 ke baad df (Low Parry) hold rakhein!"
+    },
+    {
+      "character": "Eddy Gordo",
+      "combo_input": "4~3,4,2,4,4,3+4,4,4,3+4",
+      "where_to_duck_parry": "Hit 5 (4) aur Hit 8 (4) Low sweeps hain.",
+      "optimal_punish": "Capoeira spin ke beech mein df (Low Parry) ya Power Crush maarein."
+    },
+    {
+      "character": "Asuka / Jun",
+      "combo_input": "ws+2,1,1,1,2,1,4,3,3+4",
+      "where_to_duck_parry": "Hit 7 (4) Low kick hai (1+2 punches ke foran baad).",
+      "optimal_punish": "Jab woh lagatar punches maar rahi ho, toh df (Low Parry) hold rakhein—7th hit parry ho jayega!"
+    },
+    {
+      "character": "Lili",
+      "combo_input": "4,1,3,4,4,3,4,4,3,4",
+      "where_to_duck_parry": "Hit 4 (4) aur Hit 8 (4) Low kicks hain.",
+      "optimal_punish": "Pehle 3 hits (4,1,3) ke foran baad df (Low Parry) hold karein!"
+    },
+    {
+      "character": "Jack-8",
+      "combo_input": "d+2,1,1,1,2,1,2,1,1+2,1+2",
+      "where_to_duck_parry": "Hit 1 (d+2) aur Hit 2 (1) Low punches hain; 9th hit Unblockable hai!",
+      "optimal_punish": "Beech mein Power Crush ya Dickjab (db+1) maarein, ya 9th hit se pehle df+2 se launch kar dein."
+    },
+    {
+      "character": "Steve Fox",
+      "combo_input": "1,2,1,2,d+1,4,1,1,2,1+2",
+      "where_to_duck_parry": "Hit 5 (d+1) Low hai aur Hit 6 (4) Steve ki taraf se Kick/Stomp hai!",
+      "optimal_punish": "4 punches (1,2,1,2) ke baad df (Low Parry) hold kar lein!"
+    },
+    {
+      "character": "Alisa",
+      "combo_input": "f+1,2,3,1,4,2,1,4,2,3",
+      "where_to_duck_parry": "Hit 4 (1) aur Hit 8 (4) Low hits hain.",
+      "optimal_punish": "3rd hit (3 kick) ke baad df (Low Parry) ya Heat Burst (2+3) maarein."
+    },
+    {
+      "character": "Lee Chaolan",
+      "combo_input": "df+1,2,2,1,3,3,3,4,3,4",
+      "where_to_duck_parry": "Hit 5 (3) Low kick hai (Same as Law's rhythm).",
+      "optimal_punish": "4th punch ke baad df (Low Parry) hold karein!"
+    }
+  ],
+  "dlc_punish": [
+    {
+      "character": "Eddy Gordo",
+      "season_status": "S1 DLC 1",
+      "i10_i12_punish": "1,2 / 2,3 (i12)",
+      "launch_punish": "df+3 (i15) / ws1,3 (i13 Launch!)",
+      "unique_stance_mechanic": "Mandinga (MND) (2 Levels) + Handstand (HSP) / Negativa (RLX)",
+      "signature_move": "RLX.3,3 (Low-Mid Hell Sweep in Mandinga) & ff+3"
+    },
+    {
+      "character": "Lidia Sobieska",
+      "season_status": "S1 DLC 2",
+      "i10_i12_punish": "1,2,2 (CAT) / 2,4",
+      "launch_punish": "df+2 (i15) / ws2 (i15)",
+      "unique_stance_mechanic": "Heaven & Earth (HAE) (Stacks up to Level 3 permanent round buff!)",
+      "signature_move": "ff+2 (+5 on block into Horse Stance) & db+3 (Homing CH Low)"
+    },
+    {
+      "character": "Heihachi Mishima",
+      "season_status": "S1 DLC 3",
+      "i10_i12_punish": "1,1,2 (WDS) / f+2,3",
+      "launch_punish": "EWGF (i13/14) / df+2 / ws1,qcf+2",
+      "unique_stance_mechanic": "Warrior Instinct (WI): 3 Heat Activations = Boss Mode (Unblockable/Plus upgrades)",
+      "signature_move": "b+4 (CH Launch Homing) & f,f+1+2 (Unbreakable Headbutt in WI)"
+    },
+    {
+      "character": "Clive Rosfield",
+      "season_status": "S1 DLC 4",
+      "i10_i12_punish": "1,2 / 2,1",
+      "launch_punish": "df+2 (i15) / uf+4 (Phoenix Shift)",
+      "unique_stance_mechanic": "Zantetsuken Meter (Lvl 1–5): Builds meter via Eikonic moves for Lvl 5 80-dmg slash",
+      "signature_move": "f+1+2 (Prominence long-range sword mid) & b+1+2 (Titan Block Parry)"
+    },
+    {
+      "character": "Anna Williams",
+      "season_status": "S2 DLC 5",
+      "i10_i12_punish": "1,2 / 2,3 (CJM)",
+      "launch_punish": "df+2 (i15) / uf+4 / fc df+2 (Crouch Launch)",
+      "unique_stance_mechanic": "Chaos Judgment (CJM) + Rocket Launcher (Bazooka) weapon attacks",
+      "signature_move": "qcf+1 (+4 on block, CH Launcher) & FC.df+2 / db+3 (50/50 Crouch Vortex)"
+    },
+    {
+      "character": "Fahkumram",
+      "season_status": "S2 DLC 6",
+      "i10_i12_punish": "1,4 / 2,1",
+      "launch_punish": "df+2,3 (i15) / uf+4 / ws1,2",
+      "unique_stance_mechanic": "Garuda Force install + Guard Crush Charge kicks (bf+4 & 3,4~4 at wall)",
+      "signature_move": "bf+4 (Jet Kick +6 on block) & d+4 (Fastest long-range low poke)"
+    },
+    {
+      "character": "Armor King",
+      "season_status": "S2 DLC 7",
+      "i10_i12_punish": "2,1 (+7 hit)",
+      "launch_punish": "f,n,d,df+2 (Dark Upper i14!) / ws1",
+      "unique_stance_mechanic": "Shadow Step (SHS) + Poison Mist (f,n,d,df+1+2 unblockable stun)",
+      "signature_move": "cd+1 (Lariat plus on block) & d+3 / Giant Swing / Tombstone 3-way throw mixup"
+    },
+    {
+      "character": "Miary Zo",
+      "season_status": "S2 DLC 8",
+      "i10_i12_punish": "1,2 / 2,2 (i12)",
+      "launch_punish": "df+2 (i15) / uf+4 / ws2 (i15)",
+      "unique_stance_mechanic": "Mora (MOR), Baobab (BAO) (Wall Hang/Climb), & Wallaby (WAL)",
+      "signature_move": "H.2+3 (Heat Smash +6 into BAO stance) & CH 1,2,2 / CH 2,2 (Instant Tornado!)"
+    },
+    {
+      "character": "Kunimitsu II",
+      "season_status": "S3 DLC 9 (2026)",
+      "i10_i12_punish": "1,2 / 2,4",
+      "launch_punish": "df+2 (i15) / SET.2 (i14 Dash)",
+      "unique_stance_mechanic": "Setsuna (SET) fullscreen dash + Musasabi air-teleport kunai mechanics",
+      "signature_move": "qcf+1 (Fullscreen kunai engage) & SET.2 / SET.3 (Mid/Low fullscreen 50/50)"
+    },
+    {
+      "character": "Bob Richards",
+      "season_status": "S3 DLC 10 (2026)",
+      "i10_i12_punish": "1,1,2 / 2,1,4",
+      "launch_punish": "cd+1 / uf+4,4 / ws2,1 (i14!)",
+      "unique_stance_mechanic": "Spinner Ball (BAL) roll mixup + Mishima Wave Dash speed & weight momentum",
+      "signature_move": "cd+1 (Spiral Uppercut) & db+3+4 (Hellsweep low) / uf+1+2,4"
+    },
+    {
+      "character": "Roger Jr.",
+      "season_status": "S3 DLC 11 (2026)",
+      "i10_i12_punish": "1,2 / f+1+2",
+      "launch_punish": "df+2 / uf+4 / Giant Swing",
+      "unique_stance_mechanic": "Animal Stance (ANM) + Boxing / Wrestling hybrid throws (Giant Swing + Rolling)",
+      "signature_move": "f,f+2 (Kangaroo Megaton Punch) & db+3 (Tail Sweep)"
+    },
+    {
+      "character": "DLC 12 (TBA)",
+      "season_status": "Winter 2026/27",
+      "i10_i12_punish": "Mystery Slot",
+      "launch_punish": "Expected S3 Finale",
+      "unique_stance_mechanic": "Rumored Guest / Classic Boss (Ogre / Miguel / Lei archetype in data mines)",
+      "signature_move": "—"
+    }
+  ],
+  "master_combos_p3": [
+    {
+      "character_header": "1. Bryan Fury (The Wall Executioner)",
+      "raw_text": "Midscreen Staple (78 Dmg): f,b+2 (Jet Upper) -> dash -> qcf+3,4 -> b+2,1~f+2,4 (T!) -> dash -> b+3~f+2,1"
+    },
+    {
+      "character_header": "1. Bryan Fury (The Wall Executioner)",
+      "raw_text": "Counter-Hit 3+4 Max Carry (88 Dmg): CH 3+4 -> dash -> db+2 -> 1 -> b+2,4 (T!) -> dash -> b+3~f+4,1,2 (Travels 75% of any stage!)"
+    },
+    {
+      "character_header": "1. Bryan Fury (The Wall Executioner)",
+      "raw_text": "Viral 122 Damage Wall-Blast Delete (With Snake Eyes & Heat): CH f+3 -> SSR -> iWS3,4 -> b+2,1~f+2,4 (T!) -> Wall Splat -> 2+3 (Heat Burst) -> Wall Blast -> b+3~f+2,1 -> Re-Splat -> 1+2,2~F (Heat Dash) -> uf+2,2,2,2,2,3 (Gatling Rush)."
+    },
+    {
+      "character_header": "2. Nina Williams (The Butterfly Loop Queen)",
+      "raw_text": "Standard Staple (74 Dmg): df+2 -> df+3,2~f -> ws1 -> df+1,2,f -> qcf+4,2,3 (T!) -> dash -> uf+4,3,4"
+    },
+    {
+      "character_header": "2. Nina Williams (The Butterfly Loop Queen)",
+      "raw_text": "Pro iWS1 Butterfly Max Carry (86 Dmg + Wall): uf+2,1 -> ss+1~b~u -> df+1 -> d+2,3 (T!) -> qcf,n,1 (iWS1 x4) -> 1,2~f -> qcf+4,2,3 -> Wall Splat -> df+3,2 -> 1+2 (or ss+1~b -> uf+3,1,2)."
+    },
+    {
+      "character_header": "2. Nina Williams (The Butterfly Loop Queen)",
+      "raw_text": "Heat Pistol Delete (105+ Dmg): CH db+3+4 -> qcf+1 -> qcf+1 -> db+2 (T!) -> 2+3 (Heat Burst) -> qcf+1 -> f+1+2~F (Heat Dash) -> Wall Splat -> df+1,2,1+2 (Dual Pistols)."
+    },
+    {
+      "character_header": "3. Miary Zo (The Acrobatic Stance Specialist)",
+      "raw_text": "Standard df+2 / uf+4 Staple (68 Dmg): uf+4 -> 3,1~F (MOR Stance) -> MOR.1 -> 1,2,2 (T!) -> dash -> 3,1~F -> MOR.1+2"
+    },
+    {
+      "character_header": "3. Miary Zo (The Acrobatic Stance Specialist)",
+      "raw_text": "Counter-Hit 2,2 Instant Tornado (89 Dmg with Heat): CH 2,2 (T!) -> dash -> 3,1~F (MOR.2) -> 1,1,2~F (MOR.1) -> 2+3 (Heat Burst) -> 3,2~F (Heat Dash) -> Wall Splat -> 1+2 (BAO Wall Climb Crush) -> BAO.1+2."
+    },
+    {
+      "character_header": "4. Jin Kazama (The Complete Hybrid)",
+      "raw_text": "Standard d+3+4 / uf+4 Staple (72 Dmg): uf+4 -> b+3~F ZEN.1 -> 4 -> b+3~F ZEN.1,2 (T!) -> dash -> b+3~F ZEN.1,3"
+    },
+    {
+      "character_header": "4. Jin Kazama (The Complete Hybrid)",
+      "raw_text": "Max Damage CH f+4 + Heat (104 Dmg): CH f+4 -> dash -> b+3~F ZEN.1 -> bf+2,3~F ZEN.u+1 (T!) -> 2+3 (Heat Burst) -> b+3~F ZEN.1 -> ff+2~F (Heat Dash into Wall) -> bf+2,1,df+2 (Delay last hit for grounded 60% bonus!)."
+    },
+    {
+      "character_header": "5. Kazuya Mishima (Execution God)",
+      "raw_text": "Standard Double Electric (75 Dmg): EWGF -> EWGF -> b+2,2 -> df+1,df+2 (T!) -> dash -> 3,1~df -> CD.1+2 -> CD.4,1"
+    },
+    {
+      "character_header": "5. Kazuya Mishima (Execution God)",
+      "raw_text": "Viral 3,1 Cancel Triple Electric + Heat (114 Dmg): EWGF -> EWGF -> EWGF -> b+2,2 -> df+1,df+2 (T!) -> 2+3 (Heat Burst) -> 3,1~df -> CD.1+2~F (Heat Dash) -> Wall Splat -> b+2,2,1+2 (or df+3,2,1 delayed)."
+    },
+    {
+      "character_header": "6. Dragunov (Relentless Wall Carrier)",
+      "raw_text": "Standard df+2 / ws2 Staple (75 Dmg): df+2 -> 4,4 (into SNK) -> SNK.1 -> df+3+4 (T!) -> dash -> 3,1~df (SNK) -> SNK.4 -> df+1,4"
+    },
+    {
+      "character_header": "6. Dragunov (Relentless Wall Carrier)",
+      "raw_text": "Wall Ender (Highest Damage): After Wall Splat -> f+3,2 -> db+3+4 (Guaranteed low ground hit on tech-catch or stay down!)."
+    },
+    {
+      "character_header": "7. King (Grappler + Combo Hybrid)",
+      "raw_text": "Standard uf+4 Staple (73 Dmg): uf+4 -> df+4,3 -> f+1,2~f,f+1 (2 Jab -> b+1,2 T!) -> dash -> f,f,f+2+4 (Shining Wizard Air Grab!)."
+    },
+    {
+      "character_header": "7. King (Grappler + Combo Hybrid)",
+      "raw_text": "Floor Break Stage Delete (110 Dmg): uf+4 -> Combo to Tornado -> qcb+1+2 (Air Muscle Buster -> Breaks Floor!) -> 2+3 (Heat Burst) -> f+2,1~F (Heat Dash) -> f,f,f+2+4 (Shining Wizard)."
+    },
+    {
+      "character_header": "8. Paul Phoenix & Heihachi Mishima (Two-Touch Killers)",
+      "raw_text": "Paul Deathfist Wall Delete (115+ Dmg): CH qcb+4 -> dash -> qcf+1 -> 3,2~b (SWY.1+2 T!) -> Wall Splat -> 2+3 (Heat Burst) -> qcf+2~F (Heat Dash Deathfist) -> d+1+2 (Shoulder!)."
+    },
+    {
+      "character_header": "8. Paul Phoenix & Heihachi Mishima (Two-Touch Killers)",
+      "raw_text": "Heihachi Warrior Instinct Delete (120+ Dmg): EWGF -> EWGF -> f+3 -> bf+2,3 (T!) -> 2+3 (Heat Burst) -> qcf+2~F (Heat Dash) -> Wall Splat -> 1 -> d+1,2 (Guaranteed ground spike!)."
+    }
+  ],
+  "stances_dictionary": [
+    {
+      "character": "ANM",
+      "stance_abbr": "Animal Stance (Roger Jr.)",
+      "full_name": "LFS / RFS",
+      "input_entry": "Left / Right Flamingo (Hwoarang)"
+    },
+    {
+      "character": "AoP",
+      "stance_abbr": "Art of Phoenix (Xiaoyu)",
+      "full_name": "LIB",
+      "input_entry": "Libertador (Azucena)"
+    },
+    {
+      "character": "BAL",
+      "stance_abbr": "Spinner Ball (Bob)",
+      "full_name": "LNH",
+      "input_entry": "Lionheart (Steve Fox)"
+    },
+    {
+      "character": "BAO",
+      "stance_abbr": "Baobab Wall Climb (Miary Zo)",
+      "full_name": "MND",
+      "input_entry": "Mandinga (Eddy Gordo)"
+    },
+    {
+      "character": "CAT",
+      "stance_abbr": "Cat Stance (Lidia)",
+      "full_name": "MNT",
+      "input_entry": "Mantis (Zafina)"
+    },
+    {
+      "character": "CJM",
+      "stance_abbr": "Chaos Judgment (Anna)",
+      "full_name": "MOR",
+      "input_entry": "Mora Stance (Miary Zo)"
+    },
+    {
+      "character": "DBT / DES",
+      "stance_abbr": "Dual Boot / Destructive Form (Alisa)",
+      "full_name": "NSS / KIN",
+      "input_entry": "No Sword / Kincho (Yoshimitsu)"
+    },
+    {
+      "character": "DCK / SWY",
+      "stance_abbr": "Ducking / Sway (Steve / Paul / Bryan)",
+      "full_name": "PHX",
+      "input_entry": "Phoenix Shift (Clive)"
+    },
+    {
+      "character": "DEN / SEN",
+      "stance_abbr": "Dynamic / Silent Entry (Lars)",
+      "full_name": "PKB / FLK",
+      "input_entry": "Peekaboo / Flicker (Steve Fox)"
+    },
+    {
+      "character": "DSS",
+      "stance_abbr": "Dragon Sign Stance (Law)",
+      "full_name": "PRF / IAI",
+      "input_entry": "Perfumer / Iai Stance (Victor)"
+    },
+    {
+      "character": "GMH",
+      "stance_abbr": "Gamma Howl (Jack-8)",
+      "full_name": "RDS",
+      "input_entry": "Rain Dance / Back Turned (Xiaoyu)"
+    },
+    {
+      "character": "HAE",
+      "stance_abbr": "Heaven & Earth (Lidia)",
+      "full_name": "RLX / HSP",
+      "input_entry": "Negativa / Handstand (Eddy)"
+    },
+    {
+      "character": "HRM",
+      "stance_abbr": "Hermit Stance (Leroy)",
+      "full_name": "SCR / TRT",
+      "input_entry": "Scarecrow / Tarantula (Zafina)"
+    },
+    {
+      "character": "IZU / GEN",
+      "stance_abbr": "Izumo / Genjitsu (Jun Kazama)",
+      "full_name": "SEN / WRA",
+      "input_entry": "Sentai / Heaven's Wrath (Reina)"
+    },
+    {
+      "character": "JGS",
+      "stance_abbr": "Jaguar Sprint (King)",
+      "full_name": "SET",
+      "input_entry": "Setsuna Dash (Kunimitsu II)"
+    },
+    {
+      "character": "KNK / BOK",
+      "stance_abbr": "Jin Ji Du Li / Bokuho (Leo)",
+      "full_name": "SNK",
+      "input_entry": "Sneak Stance (Dragunov / Shaheen)"
+    },
+    {
+      "character": "ZEN",
+      "stance_abbr": "Zanshin (Jin Kazama)",
+      "full_name": "WDS / WI",
+      "input_entry": "Wind God / Warrior Instinct (Heihachi)"
+    }
+  ],
+  "heat_smashes": [
+    {
+      "category": "Fastest Heat Smash (i10–i12)",
+      "characters": "Jack-8 (i10!), Steve (i12), Lee (i12)",
+      "danger_and_counter": "Jack-8 ka Heat Smash i10 punisher hai! Jack Heat mein ho toh -10 move kabhi na karein. Block par Jack ka Heat Smash -9 (Safe) hai."
+    },
+    {
+      "category": "Low-Hit Heat Smashes (Must Duck!)",
+      "characters": "Kazuya, Eddy, Paul, Lee, Claudio, Jin (ZEN.2+3)",
+      "danger_and_counter": "Yeh Heat Smashes Low hain! Agar aap stand block karenge toh hit ho jayenge. Inke khilaf crouch block karein—block hone par yeh -14 se -15 (Launch Punishable) hote hain!"
+    },
+    {
+      "category": "Long-Range / Projectile Heat Smashes",
+      "characters": "Jun (i13 Fullscreen Beam), Victor, Clive, Devil Jin (Psyche Laser), Alisa",
+      "danger_and_counter": "Fullscreen par whiff karne ki ghalti na karein! Jun aur Clive ka Heat Smash screen ke doosre kone se whiff punish karta hai aur Jun ki Health bhi heal karta hai."
+    },
+    {
+      "category": "Massive Plus-on-Block Into Stance Mixup",
+      "characters": "Reina (HW), Miary Zo (+6 BAO), Lidia (HAE), Law (DSS), Lars (DEN), Azucena (LIB), Hwoarang (RFS)",
+      "danger_and_counter": "Inka Heat Smash block karne ke baad kabhi button na dabayein! Yeh block par +6 se +10 hote hain aur automatic Stance 50/50 mein chale jate hain."
+    },
+    {
+      "category": "Throw / Unblockable Floor Break Heat Smashes",
+      "characters": "King (+10 into Jaguar Sprint), Dragunov, Heihachi (Wall Splat)",
+      "danger_and_counter": "King ka Heat Smash sabse zyada raw damage deta hai aur block hone par woh सीधा Jaguar Sprint (JGS) mein aata hai jahan se Unbreakable Throw lag sakta hai—us waqt Sidestep Right (SSR) ya jab float karein!"
+    }
+  ],
+  "movement_bible": [
+    {
+      "technique": "Korean Backdash (KBD)",
+      "why": "Cancels normal backdash recovery pause using d/b (crouch cancel) to maintain safe guard while retreating across the stage.",
+      "input": "b, B -> slide to db -> release to b -> n -> b -> slide to db -> b... (Rhythm: b, b, [db, b, n, b])",
+      "warning": "Backsway characters (Bryan, Paul, Nina, Steve, Lee) must use clean b ~ db ~ b inputs. Never use qcb method or backsway will trigger and get you launched!"
+    },
+    {
+      "technique": "Mishima Wavedash (CD Cancel Loop)",
+      "why": "Rapidly close distance, realign tracking against opponent sidesteps, and impose lethal 50/50 mixups (Hell Sweep vs Mid launcher).",
+      "input": "f, n, d, df -> slide to f (cancels Crouch Dash into forward dash) -> n, d, df, f...",
+      "trick": "Wavedash into Block (CD~B): Suddenly hold Back during wavedash to bait nervous keepout whiffs and launch them."
+    },
+    {
+      "technique": "Crouch Cancel (cc)",
+      "why": "Stand up from crouching in 1 frame to perform powerful standing launchers (like EWGF or f,b+2) after blocking low attacks.",
+      "input": "Tap Up (u, n) or tap Forward (f, n) from crouch -> execute standing launcher."
+    },
+    {
+      "technique": "Instant While Running (iWR)",
+      "why": "Perform point-blank (0 range) running attacks (e.g. Dragunov wr2, Claudio wr2, Azucena wr3,2, King Shining Wizard fff+2+4).",
+      "input": "f, n, f, F + Button (rapid forward triple tap)."
+    },
+    {
+      "technique": "Defensive Option-Select: Sidestep to Guard (SS ~ B / SS ~ db)",
+      "why": "Evade linear attacks while preventing homing attacks or delayed strings from catching you during step recovery.",
+      "input": "Tap Up or Down to Sidestep -> immediately hold Back (B) or Down-Back (db) after 6 frames."
+    }
+  ],
+  "hardware_settings": {
+    "controllers": [
+      {
+        "type": "PS5 DualSense / PS4 Pad",
+        "pros": "Arslan Ash, Atif Butt, Farzeen, Lil Majin, Anakin",
+        "technique": "Claw Grip (index and middle fingers over 1,2,3,4 face buttons) enables instantaneous 1+4, 2+3, and multi-throw breaks."
+      },
+      {
+        "type": "Arcade Stick (Korean Lever)",
+        "pros": "Knee, LowHigh, Ulsan, Nobi, Rangchu",
+        "technique": "Korean Lever (Crown 309MJ / Knee Lever) rubber grommet snaps lever back to Neutral in 1ms for effortless KBD and Wavedash."
+      },
+      {
+        "type": "Leverless / Hitbox",
+        "pros": "Super Akouma, Chikurin, Mulgold, Yagami",
+        "technique": "SOCD Cleaning allows holding Back while tapping Down-Forward for lightning-fast 1-button KBD and consistent 13f PEWGF."
+      }
+    ],
+    "zero_lag_settings": [
+      {
+        "setting": "Rollback Netcode Setting",
+        "recommended": "Prioritize Response (Standard)",
+        "reason": "Reduces network input delay. Do not use 'Prioritize Smoothness' as it introduces 2-3 frames of artificial lag."
+      },
+      {
+        "setting": "V-Sync (PC Players)",
+        "recommended": "OFF",
+        "reason": "V-Sync ON adds ~35ms (2+ frames) of display lag, making 20f throw breaks and low reactions nearly impossible."
+      },
+      {
+        "setting": "Upscaling (DLSS / FSR)",
+        "recommended": "Balanced or Quality",
+        "reason": "Ensures rock-solid 60.0 FPS locks on heavy particle stages like Yakushima and Ortiz Farm."
+      },
+      {
+        "setting": "Hit Sparks / Effect Saturation",
+        "recommended": "Low or Medium",
+        "reason": "Default sparks obscure opponent arm/shoulder startup animations, preventing accurate visual throw breaks."
+      }
+    ]
+  },
+  "blender_emergency_protocol": [
+    {
+      "rule": "1. The 'Mid-Block = My Turn' Golden Rule",
+      "detail": "90% of strings in Tekken 8 that end in a mid attack are minus on block (-3 to -14). Once you block a mid, stop defending and take your turn with a 10f jab or 13f mid poke!"
+    },
+    {
+      "rule": "2. The Universal 'Dickjab' (db+1 or FC.1)",
+      "detail": "i10 Special Mid that crushes all high attacks and interrupts string transitions. The ultimate panic button against oppressive stance mashers."
+    },
+    {
+      "rule": "3. Generic d+4 High-Crush Low",
+      "detail": "Fast unreactable low kick that ducks under highs and checks opponents standing up."
+    },
+    {
+      "rule": "4. Raw Heat Burst (2+3)",
+      "detail": "i16 Power Crush armor active on frame 7. Absorbs all incoming mids and highs to instantly reclaim offensive momentum."
+    }
+  ]
+}

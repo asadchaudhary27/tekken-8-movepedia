@@ -11,6 +11,8 @@ class CharacterBase(BaseModel):
     default_stance: Optional[str] = None
     avatar_url: Optional[str] = None
     is_dlc: bool = False
+    hurtbox_class: Optional[str] = "MALE_STANDARD"
+    hurtbox_notes: Optional[str] = None
 
 
 class CharacterCreate(CharacterBase):

@@ -397,3 +397,70 @@ def test_insufficient_data_rating_for_unlabbed_pair(client: TestClient, test_db:
     assert "% win" not in oa["reasoning"].lower()
     assert "win rate" not in oa["reasoning"].lower()
 
+
+def test_phase2_bidirectional_matchup_and_punish_logic(client: TestClient, test_db: Session):
+    """
+    Phase 2 Verification:
+    - Bidirectional punish matrices: P1 punishing P2, P2 punishing P1.
+    - Low attack punishes enforce While-Standing (WHILE_STANDING) stance requirement.
+    - High-pushback attacks are tagged with HIGH pushback risk and CONDITIONAL verification status.
+    - Opponent key moves and combo recommendations are properly provided.
+    - Characters include hurtbox_class metadata for juggle and hitbox considerations.
+    """
+    jin = test_db.query(Character).filter(Character.slug == "jin").first()
+    kazuya = test_db.query(Character).filter(Character.slug == "kazuya").first()
+    arena = test_db.query(Stage).filter(Stage.slug == "the-arena").first()
+
+    assert jin is not None and kazuya is not None and arena is not None
+
+    payload = {
+        "player_character_id": jin.id,
+        "opponent_character_id": kazuya.id,
+        "stage_id": arena.id,
+        "conditions": {
+            "wall_position": "OPEN",
+            "heat_state": "AVAILABLE",
+            "starting_distance": "MID",
+            "player_side": "P1"
+        }
+    }
+    response = client.post("/api/v1/matchup/analyze", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+
+    # 1. Bidirectional matrices present
+    assert "p1_punish_matrix" in data
+    assert "p2_punish_matrix" in data
+    assert len(data["p1_punish_matrix"]) > 0
+    assert len(data["p2_punish_matrix"]) > 0
+
+    # P1 punishes Kazuya's attacks
+    p1_p = data["p1_punish_matrix"][0]
+    assert "stance_requirement" in p1_p
+    assert "verification_status" in p1_p
+    assert "pushback_risk" in p1_p
+    assert p1_p["stance_requirement"] in ["STANDING", "WHILE_STANDING"]
+
+    # 2. Low moves require While-Standing (ws) punishes
+    low_punishes = [p for p in data["p1_punish_matrix"] if p.get("hit_level") and "l" in p["hit_level"].lower()]
+    if low_punishes:
+        for lp in low_punishes:
+            assert lp["stance_requirement"] == "WHILE_STANDING"
+            assert "ws" in lp["recommended_punish_input"].lower() or "crouch" in lp["conditions_note"].lower()
+
+    # 3. High pushback move evaluation
+    pushback_moves = [p for p in data["p2_punish_matrix"] if p["pushback_risk"] == "HIGH"]
+    for pb in pushback_moves:
+        assert pb["verification_status"] == "CONDITIONAL"
+        assert "pushback" in pb["conditions_note"].lower()
+
+    # 4. Opponent key moves and combos populated
+    assert "opponent_key_moves" in data and len(data["opponent_key_moves"]) > 0
+    assert "opponent_suitable_combos" in data and len(data["opponent_suitable_combos"]) > 0
+
+    # 5. Hurtbox class serialized
+    assert "hurtbox_class" in data["player_character"]
+    assert "hurtbox_class" in data["opponent_character"]
+    assert data["player_character"]["hurtbox_class"] in ["MALE_STANDARD", "FEMALE_COMPACT", "BIG", "BEARS"]
+
+

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <radialGradient id="ep_glow" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.35"/>
+      <stop offset="45%" stop-color="#4c1d95" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#090b10" stop-opacity="1"/>
+    </radialGradient>
+    <linearGradient id="ep_floor" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b" stop-opacity="0.8"/>
+      <stop offset="30%" stop-color="#0f172a" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#020617" stop-opacity="1"/>
+    </linearGradient>
+    <linearGradient id="ep_gold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d97706"/>
+      <stop offset="50%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+  </defs>
+  <!-- Background Chamber -->
+  <rect width="1280" height="720" fill="#090b10"/>
+  <rect width="1280" height="720" fill="url(#ep_glow)"/>
+
+  <!-- Baroque Arches and Windows -->
+  <g opacity="0.35">
+    <path d="M 140 100 Q 240 20 340 100 L 340 500 L 140 500 Z" fill="none" stroke="url(#ep_gold)" stroke-width="4"/>
+    <path d="M 440 90 Q 640 -10 840 90 L 840 500 L 440 500 Z" fill="none" stroke="url(#ep_gold)" stroke-width="5"/>
+    <path d="M 940 100 Q 1040 20 1140 100 L 1140 500 L 940 500 Z" fill="none" stroke="url(#ep_gold)" stroke-width="4"/>
+    <line x1="100" y1="360" x2="1180" y2="360" stroke="#f59e0b" stroke-width="2" opacity="0.4"/>
+  </g>
+
+  <!-- Chandelier Light Shafts -->
+  <polygon points="640,0 520,520 760,520" fill="#fef08a" opacity="0.12"/>
+  <circle cx="640" cy="120" r="14" fill="#fff" filter="drop-shadow(0 0 16px #fbbf24)"/>
+  <circle cx="640" cy="120" r="80" fill="#f59e0b" opacity="0.25"/>
+
+  <!-- Polished Marble Floor with Reflection -->
+  <polygon points="0,480 1280,480 1280,720 0,720" fill="url(#ep_floor)"/>
+  <line x1="0" y1="480" x2="1280" y2="480" stroke="url(#ep_gold)" stroke-width="3" opacity="0.75"/>
+
+  <!-- Arena Combat Ring Floor Markings -->
+  <ellipse cx="640" cy="590" rx="380" ry="90" fill="none" stroke="#fbbf24" stroke-width="3" stroke-dasharray="14 10" opacity="0.6"/>
+  <ellipse cx="640" cy="590" rx="260" ry="60" fill="none" stroke="#fef08a" stroke-width="1.5" opacity="0.4"/>
+  <circle cx="640" cy="590" r="6" fill="#fbbf24" filter="drop-shadow(0 0 10px #fbbf24)"/>
+
+  <!-- Balcony Balustrade Silhouette -->
+  <g opacity="0.5" fill="#1e1136">
+    <rect x="0" y="440" width="1280" height="40"/>
+    <line x1="0" y1="440" x2="1280" y2="440" stroke="#fbbf24" stroke-width="2"/>
+  </g>
+</svg>

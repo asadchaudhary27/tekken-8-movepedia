@@ -225,3 +225,71 @@ class ImportSummaryResponse(BaseModel):
     rollback_occurred: bool
     message: str
     error_details: Optional[str] = None
+
+
+class DataValidationIssue(BaseModel):
+    entity_type: str  # MOVE, COMBO, STAGE, MATCHUP_NOTE, CHARACTER
+    entity_id: Optional[int] = None
+    field: Optional[str] = None
+    severity: str  # CRITICAL, ERROR, WARNING, INFO
+    rule: str
+    message: str
+    suggested_action: Optional[str] = None
+    context: Dict[str, Any] = Field(default_factory=dict)
+
+
+class ValidationResult(BaseModel):
+    is_valid: bool
+    errors_count: int
+    warnings_count: int
+    issues: List[DataValidationIssue] = Field(default_factory=list)
+
+
+class DatabaseAuditReport(BaseModel):
+    timestamp: datetime
+    total_characters: int
+    total_moves: int
+    total_combos: int
+    total_stages: int
+    health_score: float
+    is_healthy: bool
+    critical_issues_count: int
+    error_issues_count: int
+    warning_issues_count: int
+    info_issues_count: int
+    issues: List[DataValidationIssue] = Field(default_factory=list)
+    missing_value_summary: Dict[str, Any] = Field(default_factory=dict)
+    recommendations: List[str] = Field(default_factory=list)
+
+
+class MoveValidationRequest(BaseModel):
+    character_id: Optional[int] = None
+    character_slug: Optional[str] = None
+    normalized_notation: str
+    original_notation: Optional[str] = None
+    startup_frames: Optional[int] = None
+    startup_raw: Optional[str] = None
+    block_advantage: Optional[int] = None
+    block_advantage_raw: Optional[str] = None
+    hit_advantage: Optional[int] = None
+    damage: Optional[int] = None
+    hit_level: Optional[str] = None
+    stance_context: Optional[str] = None
+    verification_status: Optional[str] = "VERIFIED"
+
+
+class ComboValidationRequest(BaseModel):
+    character_id: Optional[int] = None
+    character_slug: Optional[str] = None
+    title: str
+    notation_sequence: str
+    total_damage: int
+    hit_count: int
+    difficulty: Optional[str] = "MEDIUM"
+    combo_type: Optional[str] = "MIDSCREEN"
+    launcher_type: Optional[str] = "NORMAL_HIT"
+    stage_id: Optional[int] = None
+    starter_move_id: Optional[int] = None
+    easier_alternative_id: Optional[int] = None
+    verification_status: Optional[str] = "VERIFIED"
+

@@ -33,6 +33,7 @@ from backend.app.schemas.matchup import (
 )
 from backend.app.schemas.character import CharacterRead
 from backend.app.schemas.stage import StageRead
+from backend.app.services.gameplay_knowledge import GameplayKnowledgeService
 
 
 class MatchupAnalyzerEngine:
@@ -51,17 +52,20 @@ class MatchupAnalyzerEngine:
         player_moves = db.query(Move).filter(Move.character_id == player_char.id).all()
         opponent_moves = db.query(Move).filter(Move.character_id == opponent_char.id).all()
 
-        # 2. Compute verified punish matrix
-        punish_matrix = cls.compute_punish_matrix(player_moves, opponent_moves)
+        # 2. Compute verified punish matrix in both directions (P1 vs P2, and P2 vs P1)
+        p1_punish_matrix = cls.compute_punish_matrix(player_moves, opponent_moves)
+        p2_punish_matrix = cls.compute_punish_matrix(opponent_moves, player_moves)
 
-        # 3. Compute player key moves
+        # 3. Compute key moves for both characters
         key_moves = cls.extract_key_moves(player_moves)
+        opponent_key_moves = cls.extract_key_moves(opponent_moves)
 
         # 4. Compute stage synergy and hazard advice
         stage_synergy = cls.evaluate_stage_synergy(stage, conditions)
 
-        # 5. Retrieve suitable combos from verified combo routes
+        # 5. Retrieve suitable combos from verified combo routes for both characters
         suitable_combos = cls.find_suitable_combos(db, player_char.id, stage, conditions)
+        opponent_suitable_combos = cls.find_suitable_combos(db, opponent_char.id, stage, conditions)
 
         # 6. Evaluate archetype strengths and weaknesses
         strengths, weaknesses = cls.evaluate_strengths_and_weaknesses(
@@ -94,7 +98,7 @@ class MatchupAnalyzerEngine:
         useful_moves = cls.build_useful_moves(lab_note, key_moves, player_moves)
         dangerous_moves = cls.build_dangerous_moves(lab_note, opponent_moves)
         spacing_and_movement = cls.build_spacing_movement(lab_note, player_char, opponent_char)
-        defensive_tactics = cls.build_defensive_tactics(lab_note, punish_matrix, opponent_moves)
+        defensive_tactics = cls.build_defensive_tactics(lab_note, p1_punish_matrix, opponent_moves)
         sidestep_and_tracking = cls.build_sidestep_tracking(lab_note, opponent_char)
         heat_and_mechanics = cls.build_heat_mechanics(lab_note, player_char, opponent_char, player_moves, opponent_moves)
         stage_matchup_synergy = cls.build_stage_matchup_synergy(stage, conditions, player_char, opponent_char, lab_note)
@@ -105,7 +109,8 @@ class MatchupAnalyzerEngine:
             "patch_version": lab_note.patch_version if lab_note else "3.00.02",
             "player_moves_analyzed": len(player_moves),
             "opponent_moves_analyzed": len(opponent_moves),
-            "punish_options_found": len(punish_matrix),
+            "punish_options_found": len(p1_punish_matrix),
+            "p2_punish_options_found": len(p2_punish_matrix),
             "stage_hazards_verified": len(cls.get_stage_hazards_list(stage)),
             "is_lab_verified": has_specific_notes,
             "matchup_rating": overall_assessment.rating,
@@ -137,12 +142,38 @@ class MatchupAnalyzerEngine:
             hazards=cls.get_stage_hazards_list(stage)
         )
 
+        # 9. Extract Pro Master Compendium Tactics & Relativity
+        opponent_sidestep_guide = (
+            GameplayKnowledgeService.get_sidestep_for_character(opponent_char.slug)
+            or GameplayKnowledgeService.get_sidestep_for_character(opponent_char.name)
+        )
+        opponent_throw_break_guide = (
+            GameplayKnowledgeService.get_throw_break_for_character(opponent_char.slug)
+            or GameplayKnowledgeService.get_throw_break_for_character(opponent_char.name)
+        )
+        opponent_anti_cheese_guide = (
+            GameplayKnowledgeService.get_anti_cheese_for_character(opponent_char.slug)
+            or GameplayKnowledgeService.get_anti_cheese_for_character(opponent_char.name)
+        )
+        opponent_install_guide = (
+            GameplayKnowledgeService.get_install_for_character(opponent_char.slug)
+            or GameplayKnowledgeService.get_install_for_character(opponent_char.name)
+        )
+        opponent_ten_hit_guide = (
+            GameplayKnowledgeService.get_ten_hit_for_character(opponent_char.slug)
+            or GameplayKnowledgeService.get_ten_hit_for_character(opponent_char.name)
+        )
+        player_wall_combo_guide = (
+            GameplayKnowledgeService.get_wall_combo_for_character(player_char.slug)
+            or GameplayKnowledgeService.get_wall_combo_for_character(player_char.name)
+        )
+
         return MatchupOverviewResponse(
             player_character=CharacterRead.model_validate(player_char),
             opponent_character=CharacterRead.model_validate(opponent_char),
             stage=stage_read,
             conditions=conditions,
-            punish_matrix=punish_matrix,
+            punish_matrix=p1_punish_matrix,
             player_key_moves=key_moves,
             stage_synergy=stage_synergy,
             suitable_combos=suitable_combos,
@@ -161,7 +192,19 @@ class MatchupAnalyzerEngine:
             sidestep_and_tracking=sidestep_and_tracking,
             heat_and_mechanics=heat_and_mechanics,
             stage_matchup_synergy=stage_matchup_synergy,
-            directional_provenance=directional_provenance
+            directional_provenance=directional_provenance,
+            # Phase 2 Complete Two-Player Matchup Additions
+            p1_punish_matrix=p1_punish_matrix,
+            p2_punish_matrix=p2_punish_matrix,
+            opponent_key_moves=opponent_key_moves,
+            opponent_suitable_combos=opponent_suitable_combos,
+            # Master Compendium Pro Tactics & Relativity (Parts 5, 8, 14, 19, 22, 23)
+            opponent_sidestep_guide=opponent_sidestep_guide,
+            opponent_throw_break_guide=opponent_throw_break_guide,
+            opponent_anti_cheese_guide=opponent_anti_cheese_guide,
+            opponent_install_guide=opponent_install_guide,
+            opponent_ten_hit_guide=opponent_ten_hit_guide,
+            player_wall_combo_guide=player_wall_combo_guide
         )
 
     @classmethod
@@ -443,6 +486,25 @@ class MatchupAnalyzerEngine:
                 opponent_homing_moves=homing
             )
 
+        # Pro Compendium Master Sidestep Table (Part 5)
+        ss_guide = (
+            GameplayKnowledgeService.get_sidestep_for_character(opponent_char.slug)
+            or GameplayKnowledgeService.get_sidestep_for_character(opponent_char.name)
+        )
+        if ss_guide:
+            side = ss_guide.get("weak_side", "NEUTRAL")
+            label = f"Sidestep Left ({side})" if "SSL" in side else (f"Sidestep Right ({side})" if "SSR" in side else f"Directional ({side})")
+            whiffs = ss_guide.get("whiff_notes", "") or ss_guide.get("whiffs_on_step", "")
+            linear = [f"{opponent_char.name}'s {m.strip()}" for m in whiffs.split(",") if m.strip()] if whiffs else [f"{opponent_char.name}'s linear approach tools"]
+            reasoning = ss_guide.get("details") or whiffs or f"Step {side} against {opponent_char.name} outside close jab range."
+            return SidestepTrackingInfo(
+                recommended_side=side,
+                side_label=label,
+                reasoning=reasoning,
+                linear_moves_to_step=linear,
+                opponent_homing_moves=[f"Respect {opponent_char.name}'s tracking & homing checks"]
+            )
+
         # Default heuristic based on character archetype
         mishima_slugs = ["kazuya", "reina", "heihachi", "devil-jin"]
         if opponent_char.slug in mishima_slugs:
@@ -494,11 +556,23 @@ class MatchupAnalyzerEngine:
             f"Use Heat Burst defensively to escape {opponent_char.name}'s aggressive string momentum."
         )
 
+        opp_install = (
+            GameplayKnowledgeService.get_install_for_character(opponent_char.slug)
+            or GameplayKnowledgeService.get_install_for_character(opponent_char.name)
+        )
+        if opp_install:
+            i_name = opp_install.get("install_name", "Special Install")
+            i_act = opp_install.get("activation", "Heat or specific trigger moves")
+            i_danger = opp_install.get("unlocks_danger", opp_install.get("buff_effects", "Enhanced damage & property extensions"))
+            install_dyn = f"Install Threat: {i_name} (Activation: {i_act}). Unlocks: {i_danger}"
+        else:
+            install_dyn = f"Monitor stance transitions carefully; Heat Dash allows canceling recovery into guaranteed pressure."
+
         return HeatMechanicsInfo(
             player_heat_focus=p_focus,
             opponent_heat_threats=f"Watch out for {opponent_char.name}'s Heat Smash which imposes heavy block stun and chip damage.",
             heat_smash_interaction=f"Conserve Heat gauge until a wall-carry opportunity presents itself for maximum stage hazard conversion.",
-            stance_and_install_dynamics=f"Monitor stance transitions carefully; Heat Dash allows canceling recovery into guaranteed pressure."
+            stance_and_install_dynamics=install_dyn
         )
 
     @classmethod
@@ -552,35 +626,75 @@ class MatchupAnalyzerEngine:
         )
 
     @classmethod
-    def compute_punish_matrix(cls, player_moves: List[Move], opponent_moves: List[Move]) -> List[PunishOption]:
-        """Calculates exact frame-advantage punish options against punishable opponent attacks."""
+    def compute_punish_matrix(cls, defender_moves: List[Move], attacker_moves: List[Move]) -> List[PunishOption]:
+        """
+        Calculates exact frame-advantage punish options against punishable attacker attacks.
+        Distinguishes standing vs while-standing / crouching punish options,
+        evaluates pushback risks and practical reach, and tags verification status.
+        """
         punishes: List[PunishOption] = []
 
-        # Find opponent moves that are punishable (block disadvantage <= -10)
-        punishable_opponent_moves = [
-            m for m in opponent_moves 
+        # Find attacker moves that are punishable (block disadvantage <= -10)
+        punishable_attacker_moves = [
+            m for m in attacker_moves 
             if m.block_advantage is not None and m.block_advantage <= -10
         ]
 
-        # Valid player attacks with known startup
-        valid_player_punishers = [
-            m for m in player_moves
+        # Valid defender attacks with known startup >= 10
+        valid_defender_punishers = [
+            m for m in defender_moves
             if m.startup_frames is not None and m.startup_frames >= 10
         ]
 
-        for opp_m in punishable_opponent_moves:
-            window = abs(opp_m.block_advantage)
-            candidates = [p for p in valid_player_punishers if p.startup_frames <= window]
+        # Known high-pushback move patterns in Tekken
+        high_pushback_keywords = [
+            "qcf+2", "deathfist", "f,f+2", "demon's paw", "f,n,d,df+1",
+            "dragon uppercut", "4~3", "demon scissors", "phoenix", "heavy pushback"
+        ]
+
+        for att_m in punishable_attacker_moves:
+            window = abs(att_m.block_advantage)
+            hit_lvl = (att_m.hit_level or "").lower().strip()
+            is_low = "l" in hit_lvl
+
+            # Determine defender stance requirement
+            if is_low:
+                stance_req = "WHILE_STANDING"
+                # Filter for While-Standing / crouching moves
+                ws_candidates = [
+                    p for p in valid_defender_punishers
+                    if p.startup_frames <= window and (
+                        "ws" in (p.original_notation or "").lower() or
+                        "while standing" in (p.name or "").lower()
+                    )
+                ]
+                candidates = ws_candidates if ws_candidates else [p for p in valid_defender_punishers if p.startup_frames <= window]
+            else:
+                stance_req = "STANDING"
+                # Standing moves (exclude pure WS moves)
+                standing_candidates = [
+                    p for p in valid_defender_punishers
+                    if p.startup_frames <= window and not (
+                        (p.original_notation or "").lower().startswith("ws") and not (p.original_notation or "").lower().startswith("ws+")
+                    )
+                ]
+                candidates = standing_candidates if standing_candidates else [p for p in valid_defender_punishers if p.startup_frames <= window]
+
             if not candidates:
                 continue
 
-            optimal_move = max(candidates, key=lambda x: (x.damage or 0, -x.startup_frames))
+            # Prioritize launchers if window is wide enough (>= 14f)
             launch_candidates = [
                 c for c in candidates 
-                if any(p.property_type == "launcher" for p in (c.properties or []))
+                if any(p.property_type == "launcher" or "launch" in (p.property_type or "").lower() for p in (c.properties or []))
+                or "upper" in (c.name or "").lower()
+                or (c.startup_frames >= 14 and (c.damage or 0) >= 20)
             ]
-            recommended = launch_candidates[0] if launch_candidates else optimal_move
 
+            optimal_move = max(candidates, key=lambda x: (x.damage or 0, -x.startup_frames))
+            recommended = launch_candidates[0] if (launch_candidates and window >= 14) else optimal_move
+
+            # Determine Punish Tier
             if recommended.startup_frames <= 10:
                 tier = "i10 Jab Punish"
             elif recommended.startup_frames <= 12:
@@ -590,21 +704,47 @@ class MatchupAnalyzerEngine:
             else:
                 tier = "Launch Punish"
 
-            is_launcher = any(p.property_type == "launcher" for p in (recommended.properties or []))
-            is_heat = any("heat" in p.property_type for p in (recommended.properties or []))
+            is_launcher = (
+                any("launch" in (p.property_type or "").lower() for p in (recommended.properties or []))
+                or "launch" in tier.lower()
+                or (recommended.startup_frames >= 14 and (recommended.damage or 0) >= 20)
+            )
+            is_heat = any("heat" in (p.property_type or "").lower() for p in (recommended.properties or []))
             punish_type = "Launcher" if is_launcher else ("Heat Engager" if is_heat else "Heavy Knockdown")
+
+            # Check Pushback & Spacing conditions
+            att_not = (att_m.original_notation or "").lower()
+            att_name = (att_m.name or "").lower()
+            is_high_pushback = any(kw in att_not or kw in att_name for kw in high_pushback_keywords)
+
+            if is_high_pushback:
+                pushback_risk = "HIGH"
+                verification_status = "CONDITIONAL"
+                conditions_note = "High block pushback: Standard i10 jab (1,2) will whiff; requires deep dash or long-reach punisher."
+            else:
+                pushback_risk = "NORMAL"
+                verification_status = "GUARANTEED"
+                if stance_req == "WHILE_STANDING":
+                    conditions_note = f"Guaranteed While-Standing punish on low block (Window: -{window})."
+                else:
+                    conditions_note = f"Guaranteed Standing punish on block (Window: -{window})."
 
             punishes.append(
                 PunishOption(
-                    opponent_move_name=opp_m.name,
-                    opponent_move_input=opp_m.original_notation,
-                    opponent_block_advantage=opp_m.block_advantage,
+                    opponent_move_name=att_m.name,
+                    opponent_move_input=att_m.original_notation,
+                    opponent_block_advantage=att_m.block_advantage,
                     recommended_punish_name=recommended.name,
                     recommended_punish_input=recommended.original_notation,
                     punish_startup=recommended.startup_frames,
                     damage=recommended.damage,
                     punish_tier=tier,
-                    punish_type=punish_type
+                    punish_type=punish_type,
+                    stance_requirement=stance_req,
+                    verification_status=verification_status,
+                    conditions_note=conditions_note,
+                    hit_level=att_m.hit_level,
+                    pushback_risk=pushback_risk
                 )
             )
 

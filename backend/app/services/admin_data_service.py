@@ -4,7 +4,7 @@ import json
 from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional, Tuple
 from sqlalchemy.orm import Session
-from sqlalchemy import or_, and_
+from sqlalchemy import or_, and_, func
 
 from backend.app.core.config import settings
 from backend.app.models.character import Character
@@ -31,6 +31,8 @@ from backend.app.schemas.admin import (
     ImportRowIssue,
     ImportSummaryResponse,
 )
+from backend.app.services.data_validator import DataValidator
+
 
 
 class AdminDataService:
@@ -53,10 +55,30 @@ class AdminDataService:
 
         audit_issues: List[Dict[str, Any]] = []
 
-        # 1. Missing Frame Data
+        # 1. Missing Frame Data (Excluding legitimate non-strikes: stances, command throws, parries, unblockables)
         missing_frame_moves = (
             db.query(Move)
             .filter(
+                ~func.lower(func.coalesce(Move.hit_level, '')).in_(["s", "t", "ub", "throw", "parry", "reversal", "special", "none", ""]),
+                ~Move.name.ilike("%stance%"),
+                ~Move.name.ilike("%form%"),
+                ~Move.name.ilike("%parry%"),
+                ~Move.name.ilike("%shield%"),
+                ~Move.name.ilike("%swing%"),
+                ~Move.name.ilike("%wizard%"),
+                ~Move.name.ilike("%buster%"),
+                ~Move.name.ilike("%step%"),
+                ~Move.name.ilike("%entry%"),
+                ~Move.name.ilike("%piledriver%"),
+                ~Move.name.ilike("%hug%"),
+                ~Move.name.ilike("%gouge%"),
+                ~Move.name.ilike("%pirouette%"),
+                ~Move.name.ilike("%dragonfly%"),
+                ~Move.name.ilike("%judgment%"),
+                ~Move.name.ilike("%phoenix%"),
+                ~Move.name.ilike("%dance%"),
+                ~Move.name.ilike("%mist%"),
+                ~Move.name.ilike("%laser%"),
                 or_(
                     Move.startup_frames.is_(None),
                     Move.block_advantage.is_(None),
@@ -75,17 +97,16 @@ class AdminDataService:
                 "title": f"{char_name}: {m.name or m.normalized_notation}",
                 "issue_type": "MISSING_FRAME_DATA",
                 "status": "NOT_PROVIDED" if not m.startup_raw else "UNKNOWN",
-                "details": f"Missing frame metrics (Startup: {m.startup_frames or 'None'}, Block: {m.block_advantage or 'None'})",
+                "details": f"Missing strike frame metrics (Startup: {m.startup_frames or 'None'}, Block: {m.block_advantage or 'None'})",
             })
 
-        # 2. Missing Stage Mechanics
+        # 2. Missing Stage Mechanics (Only true missing geometry or location)
         incomplete_stages = (
             db.query(Stage)
             .filter(
                 or_(
-                    Stage.geometry_data_json.is_(None),
                     Stage.boundary_shape.is_(None),
-                    and_(Stage.wall_break == True, Stage.wall_break_interaction.is_(None)),
+                    Stage.location.is_(None),
                 )
             )
             .all()
@@ -102,12 +123,15 @@ class AdminDataService:
                 "details": f"Hazard interactions or layout geometry incomplete (Wall Break: {s.wall_break})",
             })
 
-        # 3. Combos without Opponent Compatibility
-        all_combos = db.query(ComboRoute).all()
-        combos_without_compat: List[ComboRoute] = []
-        for c in all_combos:
-            if not c.compatibilities and c.target_hurtbox_class == "UNIVERSAL":
-                combos_without_compat.append(c)
+        # 3. Combos without Opponent Compatibility (Excluding Universal combos)
+        combos_without_compat: List[ComboRoute] = (
+            db.query(ComboRoute)
+            .filter(
+                ComboRoute.target_hurtbox_class != "UNIVERSAL",
+                ~ComboRoute.compatibilities.any()
+            )
+            .all()
+        )
         missing_compat_count = len(combos_without_compat)
         for c in combos_without_compat[:8]:
             char_name = c.character.name if c.character else "Unknown"
@@ -118,7 +142,7 @@ class AdminDataService:
                 "title": f"{char_name}: {c.title}",
                 "issue_type": "UNTESTED_COMPATIBILITY",
                 "status": "UNKNOWN_COMPATIBILITY",
-                "details": "Combo route has no documented opponent-specific compatibility records.",
+                "details": "Character-specific combo route requires hurtbox testing.",
             })
 
         # 4. Unverified Punish Options
@@ -743,6 +767,24 @@ class AdminDataService:
                             except ValueError:
                                 pass
 
+                # Advanced semantic validation via DataValidator
+                move_val = DataValidator.validate_move(mapped_row, db=db)
+                for v_issue in move_val.issues:
+                    if v_issue.rule in ["DUPLICATE_MOVE_NOTATION", "BROKEN_CHARACTER_REFERENCE", "REQUIRED_NOTATION"]:
+                        continue
+                    issues.append(
+                        ImportRowIssue(
+                            row_index=idx + 1,
+                            issue_type="ERROR" if v_issue.severity in ["CRITICAL", "ERROR"] else "WARNING",
+                            field=v_issue.field,
+                            message=v_issue.message,
+                            incoming_data=mapped_row,
+                        )
+                    )
+                    if v_issue.severity in ["CRITICAL", "ERROR"]:
+                        error_count += 1
+                        row_has_error = True
+
             elif e_type == "COMBOS":
                 title = mapped_row.get("title")
                 notation = mapped_row.get("notation_sequence")
@@ -793,6 +835,25 @@ class AdminDataService:
                                     incoming_data=mapped_row,
                                 )
                             )
+
+                # Advanced semantic validation via DataValidator
+                combo_val = DataValidator.validate_combo(mapped_row, db=db)
+                for v_issue in combo_val.issues:
+                    if v_issue.rule in ["REQUIRED_TITLE", "REQUIRED_COMBO_SEQUENCE", "BROKEN_CHARACTER_REFERENCE"]:
+                        continue
+                    issues.append(
+                        ImportRowIssue(
+                            row_index=idx + 1,
+                            issue_type="ERROR" if v_issue.severity in ["CRITICAL", "ERROR"] else "WARNING",
+                            field=v_issue.field,
+                            message=v_issue.message,
+                            incoming_data=mapped_row,
+                        )
+                    )
+                    if v_issue.severity in ["CRITICAL", "ERROR"]:
+                        error_count += 1
+                        row_has_error = True
+
 
             if not row_has_error:
                 valid_count += 1
@@ -873,6 +934,13 @@ class AdminDataService:
                     notation = row.get("normalized_notation") or row.get("notation")
                     if not notation:
                         raise ValueError(f"Row {idx+1}: Missing notation.")
+
+                    # Strict validation check via DataValidator
+                    move_val = DataValidator.validate_move(row, db=db)
+                    critical_errors = [i for i in move_val.issues if i.severity in ["CRITICAL", "ERROR"] and i.rule != "DUPLICATE_MOVE_NOTATION"]
+                    if critical_errors:
+                        raise ValueError(f"Row {idx+1} ({notation}): {critical_errors[0].message}")
+
 
                     move = (
                         db.query(Move)
@@ -1001,6 +1069,13 @@ class AdminDataService:
                     char_id = int(row["character_id"])
                     title = row["title"]
                     notation = row["notation_sequence"]
+
+                    # Strict validation check via DataValidator
+                    combo_val = DataValidator.validate_combo(row, db=db)
+                    critical_errors = [i for i in combo_val.issues if i.severity in ["CRITICAL", "ERROR"]]
+                    if critical_errors:
+                        raise ValueError(f"Row {idx+1} ({title}): {critical_errors[0].message}")
+
 
                     exist_combo = (
                         db.query(ComboRoute)

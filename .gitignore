@@ -35,6 +35,7 @@ htmlcov/
 *.db
 *.sqlite
 *.sqlite3
+*.bak
 
 # Environment & Secrets
 .env

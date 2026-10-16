@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <radialGradient id="sub_void" cx="50%" cy="40%" r="80%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.3"/>
+      <stop offset="35%" stop-color="#3b0764" stop-opacity="0.7"/>
+      <stop offset="70%" stop-color="#0f172a" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#020617" stop-opacity="1"/>
+    </radialGradient>
+    <linearGradient id="sub_floor" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0369a1" stop-opacity="0.5"/>
+      <stop offset="40%" stop-color="#0f172a" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#020617" stop-opacity="1"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="720" fill="#020617"/>
+  <rect width="1280" height="720" fill="url(#sub_void)"/>
+
+  <!-- Floating Crystal Monoliths -->
+  <polygon points="180,140 230,220 210,380 140,320 130,200" fill="#0c4a6e" opacity="0.6"/>
+  <polygon points="180,140 230,220 210,380" fill="#38bdf8" opacity="0.3"/>
+
+  <polygon points="1060,110 1120,200 1100,390 1020,330 1010,180" fill="#0c4a6e" opacity="0.6"/>
+  <polygon points="1060,110 1120,200 1100,390" fill="#38bdf8" opacity="0.3"/>
+
+  <polygon points="340,80 370,140 350,260 310,210" fill="#1e1b4b" opacity="0.5"/>
+  <polygon points="900,90 930,150 910,280 870,220" fill="#1e1b4b" opacity="0.5"/>
+
+  <!-- Ethereal Void Energy Ring -->
+  <ellipse cx="640" cy="340" rx="220" ry="220" fill="none" stroke="#38bdf8" stroke-width="2" opacity="0.25" stroke-dasharray="12 16"/>
+  <circle cx="640" cy="340" r="140" fill="#0284c7" opacity="0.1" filter="blur(30px)"/>
+
+  <!-- Crystalline Ground Plate -->
+  <polygon points="120,490 1160,490 1280,720 0,720" fill="url(#sub_floor)"/>
+  <line x1="120" y1="490" x2="1160" y2="490" stroke="#38bdf8" stroke-width="3" opacity="0.8"/>
+
+  <!-- Arena Grid Lines -->
+  <ellipse cx="640" cy="590" rx="420" ry="95" fill="none" stroke="#0ea5e9" stroke-width="2.5" opacity="0.6"/>
+  <ellipse cx="640" cy="590" rx="280" ry="60" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="10 8" opacity="0.4"/>
+  <circle cx="640" cy="590" r="7" fill="#38bdf8" filter="drop-shadow(0 0 12px #38bdf8)"/>
+</svg>

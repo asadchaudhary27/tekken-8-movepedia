@@ -10,7 +10,9 @@ from backend.app.api.v1.endpoints import (
     matchup,
     punishment,
     combos,
-    admin
+    admin,
+    search,
+    gameplay_guides,
 )
 
 api_router = APIRouter()
@@ -25,3 +27,6 @@ api_router.include_router(matchup.router, prefix="/matchup", tags=["Matchup Anal
 api_router.include_router(punishment.router, prefix="/punishment", tags=["Smart Punishment"])
 api_router.include_router(combos.router, prefix="/combos", tags=["Combos & Stage Routes"])
 api_router.include_router(admin.router, prefix="/admin", tags=["Admin & Data Management"])
+api_router.include_router(search.router, prefix="/search", tags=["Global Search"])
+api_router.include_router(gameplay_guides.router, prefix="/guides", tags=["Pro Gameplay Guides"])
+

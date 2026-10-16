@@ -428,3 +428,100 @@ def test_admin_authorization_and_atomic_import_rollback(client: TestClient, test
     # Ensure nothing was committed to database
     count_after = test_db.query(Move).count()
     assert count_after == count_before
+
+
+def test_phase8_realistic_competitive_workflow(client: TestClient, test_db: Session):
+    """
+    Rigorously validates the Phase 8 user workflow:
+    1. Select P1 character (Jin)
+    2. Select P2 opponent (Kazuya)
+    3. Choose a stage (The Arena)
+    4. Filter moves by startup and safety (i10-i15 Safe)
+    5. Review a punish opportunity (opponent unsafe move -> guaranteed punish)
+    6. Open a relevant combo (stage-aware launch route)
+    7. Verify combo notation & steps
+    8. Change character (P2 becomes Bryan)
+    9. Confirm old matchup and combo results are replaced by Bryan-specific results
+    10. Swap characters (P1=Bryan, P2=Jin) and verify reversed perspective integrity
+    """
+    # 1 & 2: Select Characters
+    chars = client.get("/api/v1/characters").json()
+    jin = next(c for c in chars if c["slug"] == "jin")
+    kazuya = next(c for c in chars if c["slug"] == "kazuya")
+    bryan = next((c for c in chars if c["slug"] == "bryan"), None)
+    if not bryan:
+        bryan = next(c for c in chars if c["slug"] in ["king", "claudio", "reina"])
+
+    # 3: Select Stage
+    stages = client.get("/api/v1/stages").json()
+    arena = next(s for s in stages if s["slug"] == "the-arena")
+
+    # 4: Filter Moves by startup and safety
+    moves_res = client.get(
+        f"/api/v1/moves?character_slug={jin['slug']}&startup_min=10&startup_max=15&block_safety=SAFE&limit=50"
+    )
+    assert moves_res.status_code == 200
+    m_exp = moves_res.json()
+    assert isinstance(m_exp, list)
+    assert len(m_exp) > 0
+    for m in m_exp:
+        assert m["character_slug"] == "jin"
+        if m["startup_frames"] is not None:
+            assert 10 <= m["startup_frames"] <= 15
+        assert m["block_safety"] in ["SAFE", "PLUS"]
+
+
+    # 5: Review a Punish Opportunity
+    punish_res = client.get(
+        f"/api/v1/punishment/options?player_character_id={jin['id']}&opponent_character_id={kazuya['id']}"
+    )
+    assert punish_res.status_code == 200
+    p_opts = punish_res.json()["options"]
+    assert len(p_opts) > 0
+    punishable = [o for o in p_opts if o.get("is_punishable")]
+    assert len(punishable) > 0
+    first_punish = punishable[0]
+    assert first_punish["is_punishable"] is True
+    assert len(first_punish["recommended_punish_input"]) > 0
+
+
+    # 6 & 7: Open relevant combo & check notation
+    combo_res = client.get(
+        f"/api/v1/combos/recommendations?player_slug={jin['slug']}&opponent_slug={kazuya['slug']}&stage_id={arena['id']}"
+    )
+    assert combo_res.status_code == 200
+    combos = combo_res.json()
+    assert len(combos["standard_launch"]) > 0
+    top_combo = combos["standard_launch"][0]
+    assert len(top_combo["notation_sequence"]) > 0
+    assert top_combo["total_damage"] > 0
+    assert top_combo["hit_count"] >= 1
+
+    # 8 & 9: Change one character (P2 becomes Bryan)
+    new_matchup = client.post("/api/v1/matchup/analyze", json={
+        "player_character_id": jin["id"],
+        "opponent_character_id": bryan["id"],
+        "stage_id": arena["id"],
+        "conditions": {"player_side": "P1"}
+    }).json()
+    assert new_matchup["opponent_character"]["slug"] == bryan["slug"]
+    assert new_matchup["opponent_character"]["slug"] != kazuya["slug"]
+
+    # Combos against Bryan
+    bryan_combos = client.get(
+        f"/api/v1/combos/recommendations?player_slug={jin['slug']}&opponent_slug={bryan['slug']}&stage_id={arena['id']}"
+    ).json()
+    assert bryan_combos["opponent_hurtbox"]["character_name"] == bryan["name"]
+
+
+    # 10: Swap Characters (P1=Bryan, P2=Jin)
+    swapped_matchup = client.post("/api/v1/matchup/analyze", json={
+        "player_character_id": bryan["id"],
+        "opponent_character_id": jin["id"],
+        "stage_id": arena["id"],
+        "conditions": {"player_side": "P1"}
+    }).json()
+    assert swapped_matchup["player_character"]["slug"] == bryan["slug"]
+    assert swapped_matchup["opponent_character"]["slug"] == jin["slug"]
+    assert "Bryan" in swapped_matchup["directional_provenance"]["direction"] or bryan["name"] in swapped_matchup["directional_provenance"]["direction"]
+

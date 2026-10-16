@@ -24,9 +24,15 @@ from backend.app.schemas.admin import (
     ImportPreviewResponse,
     ImportExecuteRequest,
     ImportSummaryResponse,
+    DatabaseAuditReport,
+    ValidationResult,
+    MoveValidationRequest,
+    ComboValidationRequest,
 )
+from backend.app.services.data_validator import DataValidator
 
 router = APIRouter()
+
 
 
 @router.get("/dashboard", response_model=QualityDashboardStats)
@@ -337,3 +343,43 @@ def export_dataset(
         )
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+
+@router.post("/audit/integrity", response_model=DatabaseAuditReport)
+def run_database_integrity_audit(
+    db: Session = Depends(get_db),
+    admin_user: str = Depends(verify_admin_token),
+):
+    """
+    Executes a comprehensive non-destructive audit of the entire database.
+    Checks relational invariants, broken foreign keys, physical fighting game bounds,
+    hazard compatibility, and missing-value semantics.
+    """
+    return DataValidator.audit_entire_database(db)
+
+
+@router.post("/validate/move", response_model=ValidationResult)
+def validate_move_data(
+    payload: MoveValidationRequest,
+    db: Session = Depends(get_db),
+    admin_user: str = Depends(verify_admin_token),
+):
+    """
+    Validates a single move record against physical Tekken frame bounds,
+    missing-value semantics, notation syntax, and character existence.
+    """
+    return DataValidator.validate_move(payload.model_dump(), db=db)
+
+
+@router.post("/validate/combo", response_model=ValidationResult)
+def validate_combo_data(
+    payload: ComboValidationRequest,
+    db: Session = Depends(get_db),
+    admin_user: str = Depends(verify_admin_token),
+):
+    """
+    Validates a single combo record against starter move ownership,
+    stage hazard compatibility, damage/hit bounds, and difficulty.
+    """
+    return DataValidator.validate_combo(payload.model_dump(), db=db)
+

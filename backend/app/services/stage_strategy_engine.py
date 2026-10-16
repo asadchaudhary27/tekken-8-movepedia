@@ -215,7 +215,17 @@ class StageStrategyEngine:
         requires_heat: Optional[bool] = None,
         requires_ch: Optional[bool] = None,
         difficulty: Optional[str] = None,
-        stage_section: Optional[str] = None
+        launcher_type: Optional[str] = None,
+        min_damage: Optional[int] = None,
+        max_damage: Optional[int] = None,
+        uses_wall: Optional[bool] = None,
+        uses_tornado: Optional[bool] = None,
+        is_stage_dependent: Optional[bool] = None,
+        required_stance: Optional[str] = None,
+        verification_status: Optional[str] = None,
+        target_hurtbox_class: Optional[str] = None,
+        stage_section: Optional[str] = None,
+        query_str: Optional[str] = None
     ) -> List[ComboRouteRead]:
         """Filters combos dynamically based on multi-faceted criteria."""
         query = db.query(ComboRoute)
@@ -248,10 +258,88 @@ class StageStrategyEngine:
             query = query.filter(ComboRoute.requires_counter_hit == requires_ch)
 
         if difficulty and difficulty.upper() != "ALL":
-            query = query.filter(ComboRoute.difficulty == difficulty.upper())
+            diff_upper = difficulty.upper()
+            if diff_upper in ["BEGINNER", "EASY"]:
+                query = query.filter(ComboRoute.difficulty.in_(["EASY", "BEGINNER"]))
+            elif diff_upper in ["INTERMEDIATE", "MEDIUM"]:
+                query = query.filter(ComboRoute.difficulty.in_(["MEDIUM", "INTERMEDIATE"]))
+            elif diff_upper in ["ADVANCED", "HARD"]:
+                query = query.filter(ComboRoute.difficulty.in_(["HARD", "ADVANCED"]))
+            elif diff_upper == "OPTIMAL":
+                query = query.filter(ComboRoute.difficulty == "OPTIMAL")
+            else:
+                query = query.filter(ComboRoute.difficulty == diff_upper)
+
+        if launcher_type and launcher_type.upper() != "ALL":
+            lt_upper = launcher_type.upper()
+            if lt_upper in ["COUNTER_HIT", "CH"]:
+                query = query.filter(
+                    (ComboRoute.launcher_type == "COUNTER_HIT") | (ComboRoute.requires_counter_hit == True)
+                )
+            elif lt_upper == "NORMAL_HIT":
+                query = query.filter(
+                    (ComboRoute.launcher_type == "NORMAL_HIT") & (ComboRoute.requires_counter_hit == False)
+                )
+            elif lt_upper == "LAUNCHER":
+                query = query.filter(
+                    (ComboRoute.launcher_type.in_(["NORMAL_HIT", "TORNADO_STARTER"])) | 
+                    (ComboRoute.title.ilike("%launch%")) | (ComboRoute.combo_type == "MIDSCREEN")
+                )
+            elif lt_upper == "PUNISH":
+                query = query.filter(
+                    (ComboRoute.launcher_type == "PUNISH") | (ComboRoute.title.ilike("%punish%"))
+                )
+            else:
+                query = query.filter(ComboRoute.launcher_type == lt_upper)
+
+        if min_damage is not None:
+            query = query.filter(ComboRoute.total_damage >= min_damage)
+
+        if max_damage is not None:
+            query = query.filter(ComboRoute.total_damage <= max_damage)
+
+        if uses_wall is not None:
+            query = query.filter(ComboRoute.uses_wall == uses_wall)
+
+        if uses_tornado is not None:
+            query = query.filter(ComboRoute.uses_tornado == uses_tornado)
+
+        if is_stage_dependent is not None:
+            query = query.filter(ComboRoute.is_stage_dependent == is_stage_dependent)
+
+        if required_stance and required_stance.upper() != "ALL":
+            if required_stance.upper() in ["NONE", "NO_STANCE"]:
+                query = query.filter(
+                    (ComboRoute.required_stance == None) | (ComboRoute.required_stance == "NONE")
+                )
+            else:
+                query = query.filter(ComboRoute.required_stance.ilike(f"%{required_stance}%"))
+
+        if verification_status and verification_status.upper() != "ALL":
+            query = query.filter(ComboRoute.verification_status.ilike(f"%{verification_status}%"))
+
+        if target_hurtbox_class and target_hurtbox_class.upper() != "ALL":
+            query = query.filter(ComboRoute.target_hurtbox_class == target_hurtbox_class.upper())
 
         if stage_section and stage_section.upper() != "ALL":
             query = query.filter(ComboRoute.stage_section.ilike(f"%{stage_section}%"))
 
+        if query_str and query_str.strip():
+            q_clean = f"%{query_str.strip()}%"
+            query = query.filter(
+                (ComboRoute.title.ilike(q_clean)) |
+                (ComboRoute.notation_sequence.ilike(q_clean)) |
+                (ComboRoute.starter_move_name.ilike(q_clean)) |
+                (ComboRoute.starter_move_input.ilike(q_clean)) |
+                (ComboRoute.ender_move_name.ilike(q_clean)) |
+                (ComboRoute.ender_move_input.ilike(q_clean))
+            )
+
         combos = query.order_by(ComboRoute.total_damage.desc()).all()
-        return [ComboRouteRead.model_validate(c) for c in combos]
+        results: List[ComboRouteRead] = []
+        for c in combos:
+            item = ComboRouteRead.model_validate(c)
+            if c.character:
+                item.character_name = c.character.name
+            results.append(item)
+        return results

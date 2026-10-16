@@ -4,7 +4,8 @@ from sqlalchemy.orm import Session
 from backend.app.database.session import get_db
 from backend.app.models.character import Character
 from backend.app.models.stage import Stage
-from backend.app.schemas.combo import ComboRouteRead
+from backend.app.models.combo_route import ComboRoute
+from backend.app.schemas.combo import ComboRouteRead, ComboBenchmarkComparison
 from backend.app.schemas.combo_compatibility import (
     ComboRecommendationReport,
     DamageCalculationRequest,
@@ -26,13 +27,22 @@ def list_combos(
     requires_heat: Optional[bool] = Query(None, description="Filter by Heat requirement"),
     requires_ch: Optional[bool] = Query(None, description="Filter by Counter-Hit requirement"),
     difficulty: Optional[str] = Query(None, description="EASY, MEDIUM, HARD, OPTIMAL, or ALL"),
+    launcher_type: Optional[str] = Query(None, description="NORMAL_HIT, COUNTER_HIT, LAUNCHER, PUNISH, etc."),
+    min_damage: Optional[int] = Query(None, description="Minimum scaled damage threshold"),
+    max_damage: Optional[int] = Query(None, description="Maximum scaled damage threshold"),
+    uses_wall: Optional[bool] = Query(None, description="Filter by wall interaction requirement"),
+    uses_tornado: Optional[bool] = Query(None, description="Filter by tornado spin requirement"),
+    is_stage_dependent: Optional[bool] = Query(None, description="Filter by stage dependency"),
+    required_stance: Optional[str] = Query(None, description="Filter by required stance (e.g. ZEN, SENTAI)"),
+    verification_status: Optional[str] = Query(None, description="VERIFIED, EXPERIMENTAL, REPORTED, UNVERIFIED"),
+    target_hurtbox_class: Optional[str] = Query(None, description="UNIVERSAL, MALE_STANDARD, FEMALE_COMPACT, BIG, BEARS"),
     stage_section: Optional[str] = Query(None, description="Filter by stage section (e.g. Subway, Magma)"),
+    q: Optional[str] = Query(None, description="Search starter, title, or notation"),
     db: Session = Depends(get_db)
 ):
     """
-    Returns verified combo routes filtered by tactical classification (midscreen, wall carry,
-    wall combo ender, wall break, floor break, balcony break), stage dependencies, Heat state,
-    counter-hit starters, and execution difficulty. Zero guessed routes.
+    Returns verified combo routes filtered by tactical classification, stage dependencies,
+    starter type, damage range, stance requirements, Heat state, and execution difficulty. Zero guessed routes.
     """
     return StageStrategyEngine.filter_combos(
         db=db,
@@ -44,6 +54,17 @@ def list_combos(
         requires_heat=requires_heat,
         requires_ch=requires_ch,
         difficulty=difficulty,
+        launcher_type=launcher_type,
+        min_damage=min_damage,
+        max_damage=max_damage,
+        uses_wall=uses_wall,
+        uses_tornado=uses_tornado,
+        is_stage_dependent=is_stage_dependent,
+        required_stance=required_stance,
+        verification_status=verification_status,
+        target_hurtbox_class=target_hurtbox_class,
+        stage_section=stage_section,
+        query_str=q,
     )
 
 
@@ -143,3 +164,107 @@ def calculate_combo_damage(
         damage_type=payload.damage_type,
         calculation_method=payload.calculation_method,
     )
+
+
+@router.get(
+    "/benchmark/compare",
+    response_model=ComboBenchmarkComparison,
+    summary="Side-by-side benchmark comparison of two combo routes"
+)
+def benchmark_compare_combos(
+    combo_a_id: int = Query(..., description="ID of first combo route (e.g. P1)"),
+    combo_b_id: int = Query(..., description="ID of second combo route (e.g. P2)"),
+    db: Session = Depends(get_db)
+):
+    combo_a = db.query(ComboRoute).filter(ComboRoute.id == combo_a_id).first()
+    combo_b = db.query(ComboRoute).filter(ComboRoute.id == combo_b_id).first()
+
+    if not combo_a or not combo_b:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="One or both combo routes could not be found."
+        )
+
+    read_a = ComboRouteRead.model_validate(combo_a)
+    if combo_a.character:
+        read_a.character_name = combo_a.character.name
+    read_b = ComboRouteRead.model_validate(combo_b)
+    if combo_b.character:
+        read_b.character_name = combo_b.character.name
+
+    dmg_diff = combo_a.total_damage - combo_b.total_damage
+    hit_diff = combo_a.hit_count - combo_b.hit_count
+    dph_a = round(combo_a.total_damage / max(1, combo_a.hit_count), 2)
+    dph_b = round(combo_b.total_damage / max(1, combo_b.hit_count), 2)
+
+    # Assess direct comparability
+    notes = []
+    is_comparable = True
+
+    same_ch = (combo_a.requires_counter_hit == combo_b.requires_counter_hit)
+    if not same_ch:
+        is_comparable = False
+        notes.append("Asymmetric starter: One route requires Counter-Hit (CH) while the other is a Normal Hit starter.")
+
+    same_wall = (combo_a.uses_wall == combo_b.uses_wall)
+    if not same_wall:
+        is_comparable = False
+        notes.append("Stage difference: One route relies on Wall Splat/Combo while the other is open midscreen.")
+
+    same_heat = (combo_a.uses_heat == combo_b.uses_heat)
+    if not same_heat:
+        notes.append("Resource delta: One route consumes Heat resource while the other is meterless.")
+
+    if is_comparable:
+        comp_summary = "Directly comparable: Both routes share compatible starter properties and neutral conditions."
+    else:
+        comp_summary = "Conditional divergence: " + " ".join(notes)
+
+    # Practicality comparison
+    diff_order = {"EASY": 1, "MEDIUM": 2, "HARD": 3, "OPTIMAL": 4}
+    rank_a = diff_order.get((combo_a.difficulty or "MEDIUM").upper(), 2)
+    rank_b = diff_order.get((combo_b.difficulty or "MEDIUM").upper(), 2)
+
+    char_a_name = read_a.character_name or "Route 1"
+    char_b_name = read_b.character_name or "Route 2"
+
+    if rank_a < rank_b:
+        pract = f"{char_a_name} is easier to execute consistently ({combo_a.difficulty}) than {char_b_name} ({combo_b.difficulty})."
+    elif rank_a > rank_b:
+        pract = f"{char_b_name} offers easier execution ({combo_b.difficulty}) compared to {char_a_name} ({combo_a.difficulty})."
+    else:
+        pract = f"Both routes feature equivalent execution difficulty ({combo_a.difficulty})."
+
+    return ComboBenchmarkComparison(
+        combo_a=read_a,
+        combo_b=read_b,
+        damage_difference=dmg_diff,
+        hit_difference=hit_diff,
+        damage_per_hit_a=dph_a,
+        damage_per_hit_b=dph_b,
+        is_directly_comparable=is_comparable,
+        comparability_notes=comp_summary,
+        practicality_comparison=pract
+    )
+
+
+@router.get(
+    "/{combo_id}",
+    response_model=ComboRouteRead,
+    summary="Get verified combo route details by ID"
+)
+def get_combo_by_id(
+    combo_id: int,
+    db: Session = Depends(get_db)
+):
+    combo = db.query(ComboRoute).filter(ComboRoute.id == combo_id).first()
+    if not combo:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Combo route with ID {combo_id} not found."
+        )
+    read_obj = ComboRouteRead.model_validate(combo)
+    if combo.character:
+        read_obj.character_name = combo.character.name
+    return read_obj
+

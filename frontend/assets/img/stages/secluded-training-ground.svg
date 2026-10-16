@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <linearGradient id="sec_sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#451a03"/>
+      <stop offset="35%" stop-color="#7c2d12"/>
+      <stop offset="60%" stop-color="#b45309"/>
+      <stop offset="85%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#090a0f"/>
+    </linearGradient>
+    <linearGradient id="sec_wood" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#29180e"/>
+      <stop offset="50%" stop-color="#1a0f08"/>
+      <stop offset="100%" stop-color="#0b0604"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="720" fill="url(#sec_sky)"/>
+
+  <!-- Mountain Silhouettes -->
+  <polygon points="0,380 180,260 360,340 540,220 720,310 900,240 1080,320 1280,250 1280,500 0,500" fill="#18181b" opacity="0.7"/>
+  <polygon points="0,420 220,320 440,390 680,300 940,380 1280,310 1280,500 0,500" fill="#09090b" opacity="0.9"/>
+
+  <!-- Traditional Dojo Roof & Pillars -->
+  <polygon points="60,320 640,160 1220,320 1200,340 640,190 80,340" fill="#27272a"/>
+  <line x1="220" y1="330" x2="220" y2="480" stroke="#3f3f46" stroke-width="12"/>
+  <line x1="420" y1="280" x2="420" y2="480" stroke="#3f3f46" stroke-width="12"/>
+  <line x1="860" y1="280" x2="860" y2="480" stroke="#3f3f46" stroke-width="12"/>
+  <line x1="1060" y1="330" x2="1060" y2="480" stroke="#3f3f46" stroke-width="12"/>
+
+  <!-- Dojo Wooden Arena Ring -->
+  <polygon points="0,480 1280,480 1280,720 0,720" fill="url(#sec_wood)"/>
+  <line x1="0" y1="480" x2="1280" y2="480" stroke="#f59e0b" stroke-width="3" opacity="0.7"/>
+
+  <!-- Tatami Ring Markings -->
+  <ellipse cx="640" cy="590" rx="400" ry="90" fill="none" stroke="#d97706" stroke-width="3" opacity="0.6"/>
+  <ellipse cx="640" cy="590" rx="260" ry="58" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="14 10" opacity="0.45"/>
+  <circle cx="640" cy="590" r="6" fill="#f59e0b" filter="drop-shadow(0 0 10px #f59e0b)"/>
+
+  <!-- Warm Lantern Glow -->
+  <circle cx="220" cy="360" r="14" fill="#fbbf24" opacity="0.8" filter="blur(6px)"/>
+  <circle cx="1060" cy="360" r="14" fill="#fbbf24" opacity="0.8" filter="blur(6px)"/>
+</svg>
