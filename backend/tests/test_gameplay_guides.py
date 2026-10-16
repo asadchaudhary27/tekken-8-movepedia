@@ -126,3 +126,70 @@ def test_guides_character_tactics_slug(client: TestClient):
     assert data["sidestep"] is not None
     assert "SSL" in data["sidestep"]["weak_side"]
     assert data["anti_cheese"] is not None
+    assert "heat_smash" in data
+    assert data["heat_smash"] is not None
+    assert "i16" in data["heat_smash"]["startup_frames"]
+    assert "blender_scenarios" in data
+    assert isinstance(data["blender_scenarios"], list)
+
+
+def test_character_heat_smashes_roster(client: TestClient):
+    # Test all 43 character heat smashes
+    response = client.get("/api/v1/guides/character-heat-smashes")
+    assert response.status_code == 200
+    data = response.json()
+    assert isinstance(data, list)
+    assert len(data) == 43
+    # Check Jack-8 fastest heat smash (i10)
+    jack = [h for h in data if h["character_slug"] == "jack-8"]
+    assert len(jack) == 1
+    assert jack[0]["startup_frames"] == "i10"
+
+    # Test filtering by category
+    res_fast = client.get("/api/v1/guides/character-heat-smashes?category=Fastest")
+    assert res_fast.status_code == 200
+    fast_data = res_fast.json()
+    assert len(fast_data) >= 7
+
+    # Test view=characters on main heat-smashes endpoint
+    res_view = client.get("/api/v1/guides/heat-smashes?view=characters")
+    assert res_view.status_code == 200
+    assert len(res_view.json()) == 43
+
+
+def test_movement_bible_techniques(client: TestClient):
+    response = client.get("/api/v1/guides/movement-bible")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 7
+    kbd = [m for m in data if m["technique_slug"] == "korean-backdash"]
+    assert len(kbd) == 1
+    assert "socd_shortcut" in kbd[0]
+    assert "Hold Back" in kbd[0]["socd_shortcut"]
+    assert "warning" in kbd[0]
+    assert "sway" in kbd[0]["warning"].lower()
+
+    # Test search filter
+    res_wave = client.get("/api/v1/guides/movement-bible?q=wavedash")
+    assert res_wave.status_code == 200
+    assert len(res_wave.json()) >= 1
+
+
+def test_emergency_blender_protocol(client: TestClient):
+    response = client.get("/api/v1/guides/emergency-protocol")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 20
+
+    # Test specific scenario fields
+    kaz = [b for b in data if b["character_slug"] == "kazuya"]
+    assert len(kaz) >= 1
+    assert "panic_trigger" in kaz[0]
+    assert "verified_safe_response" in kaz[0]
+    assert "risk_reward" in kaz[0]
+    assert "drill" in kaz[0]
+
+    # Test filter by character
+    res_kaz = client.get("/api/v1/guides/emergency-protocol?character=kazuya")
+    assert res_kaz.status_code == 200
+    assert len(res_kaz.json()) >= 1

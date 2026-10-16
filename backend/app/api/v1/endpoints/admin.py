@@ -1,16 +1,30 @@
+from datetime import datetime, timezone, timedelta
 from typing import List, Optional, Dict, Any
-from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
-from fastapi.responses import PlainTextResponse
+import os
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, Request, status
+from fastapi.responses import PlainTextResponse, FileResponse
 from sqlalchemy.orm import Session
 
 from backend.app.database.session import get_db
-from backend.app.core.admin_auth import verify_admin_token
+from backend.app.core.admin_auth import verify_admin_token, get_current_admin_user
 from backend.app.models.source import DataSource
 from backend.app.models.patch import GamePatch
 from backend.app.models.verification import VerificationRecord
 from backend.app.models.move import Move
 from backend.app.models.character import Character
-from backend.app.services.admin_data_service import AdminDataService
+from backend.app.models.admin_user import AdminUser
+from backend.app.core.security import (
+    hash_password,
+    verify_password,
+    create_access_token,
+    check_rate_limit,
+    record_failed_attempt,
+    reset_rate_limit,
+    generate_totp_secret,
+    get_totp_provisioning_uri,
+    generate_qr_code_base64,
+    verify_totp_code,
+)
 from backend.app.schemas.admin import (
     QualityDashboardStats,
     VerificationRecordRead,
@@ -29,7 +43,20 @@ from backend.app.schemas.admin import (
     MoveValidationRequest,
     ComboValidationRequest,
 )
+from backend.app.schemas.admin_auth import (
+    AdminLoginRequest,
+    AdminLoginResponse,
+    AdminUserRead,
+    AdminUserCreate,
+    ChangePasswordRequest,
+    ResetPasswordRequest,
+    TOTPSetupResponse,
+    TOTPVerifyRequest,
+    TOTPDisableRequest,
+    FighterBioUpdateRequest,
+)
 from backend.app.services.data_validator import DataValidator
+from backend.app.services.admin_data_service import AdminDataService
 
 router = APIRouter()
 
@@ -382,4 +409,320 @@ def validate_combo_data(
     stage hazard compatibility, damage/hit bounds, and difficulty.
     """
     return DataValidator.validate_combo(payload.model_dump(), db=db)
+
+
+# ===========================================================================
+# ENTERPRISE ADMIN AUTHENTICATION & MANAGEMENT ENDPOINTS
+# ===========================================================================
+
+@router.post("/login", response_model=AdminLoginResponse)
+def admin_login(
+    payload: AdminLoginRequest,
+    request: Request,
+    db: Session = Depends(get_db)
+):
+    """
+    Authenticates an administrator using Username OR Email + Password.
+    Includes brute-force lockout (5 failed attempts = 15m lockout) and optional TOTP 2FA.
+    """
+    ident = payload.username_or_email.strip().lower()
+    client_ip = request.client.host if request.client else "unknown"
+
+    # 1. Rate Limiting Check (by identifier and client IP)
+    blocked, wait_secs = check_rate_limit(ident)
+    if not blocked:
+        blocked, wait_secs = check_rate_limit(client_ip)
+    if blocked:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"Account temporarily locked due to excessive failed attempts. Please retry in {wait_secs} seconds."
+        )
+
+    # 2. Lookup AdminUser
+    user = db.query(AdminUser).filter(
+        (AdminUser.username.ilike(ident)) | (AdminUser.email.ilike(ident))
+    ).first()
+
+    now = datetime.now(timezone.utc)
+    if not user:
+        record_failed_attempt(ident)
+        record_failed_attempt(client_ip)
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid username/email or password."
+        )
+
+    # Check database-level account lock
+    if user.locked_until and user.locked_until.replace(tzinfo=timezone.utc) > now:
+        remaining = int((user.locked_until.replace(tzinfo=timezone.utc) - now).total_seconds())
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"Account is locked. Please try again in {remaining} seconds."
+        )
+
+    # 3. Verify Password
+    if not verify_password(payload.password, user.password_hash):
+        user.failed_login_attempts += 1
+        if user.failed_login_attempts >= 5:
+            user.locked_until = now + timedelta(minutes=15)
+        db.commit()
+        record_failed_attempt(ident)
+        record_failed_attempt(client_ip)
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid username/email or password."
+        )
+
+    # 4. Check TOTP 2FA if enabled
+    if user.totp_enabled:
+        if not payload.totp_code:
+            return AdminLoginResponse(
+                access_token=None,
+                requires_2fa=True,
+                message="Two-factor authentication code required."
+            )
+        if not verify_totp_code(user.totp_secret, payload.totp_code):
+            record_failed_attempt(ident)
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid 6-digit Authenticator code. Please check your app and try again."
+            )
+
+    # 5. Success: Reset lockouts & issue signed JWT
+    user.failed_login_attempts = 0
+    user.locked_until = None
+    user.last_login = now
+    db.commit()
+
+    reset_rate_limit(ident)
+    reset_rate_limit(client_ip)
+
+    token = create_access_token({
+        "sub": str(user.id),
+        "username": user.username,
+        "email": user.email,
+        "role": user.role
+    })
+
+    return AdminLoginResponse(
+        access_token=token,
+        token_type="bearer",
+        requires_2fa=False,
+        user=AdminUserRead.model_validate(user),
+        message=f"Welcome back, {user.username}."
+    )
+
+
+@router.get("/me", response_model=AdminUserRead)
+def get_current_admin_profile(
+    current_user: AdminUser = Depends(get_current_admin_user)
+):
+    """Returns profile information for the authenticated admin user."""
+    return current_user
+
+
+@router.post("/change-password")
+def change_admin_password(
+    payload: ChangePasswordRequest,
+    current_user: AdminUser = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Allows authenticated admin to change their own password."""
+    if not verify_password(payload.current_password, current_user.password_hash):
+        raise HTTPException(status_code=400, detail="Current password does not match.")
+    if payload.new_password != payload.confirm_password:
+        raise HTTPException(status_code=400, detail="New password and confirmation do not match.")
+    if len(payload.new_password) < 8:
+        raise HTTPException(status_code=400, detail="Password must be at least 8 characters long.")
+
+    current_user.password_hash = hash_password(payload.new_password)
+    db.commit()
+    return {"status": "SUCCESS", "message": "Password changed successfully."}
+
+
+@router.get("/users", response_model=List[AdminUserRead])
+def list_admin_users(
+    current_user: AdminUser = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Lists all registered administrative accounts."""
+    return db.query(AdminUser).order_by(AdminUser.id).all()
+
+
+@router.post("/users", response_model=AdminUserRead)
+def create_admin_user(
+    payload: AdminUserCreate,
+    current_user: AdminUser = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """SuperAdmin self-service tool to create a new admin or editor account."""
+    if current_user.role != "SuperAdmin":
+        raise HTTPException(status_code=403, detail="Only SuperAdmins can create new admin accounts.")
+
+    existing = db.query(AdminUser).filter(
+        (AdminUser.username == payload.username) | (AdminUser.email == payload.email)
+    ).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Username or email is already registered.")
+
+    new_user = AdminUser(
+        username=payload.username.strip(),
+        email=payload.email.strip().lower(),
+        password_hash=hash_password(payload.password),
+        role=payload.role,
+        totp_enabled=False
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
+
+
+@router.delete("/users/{user_id}")
+def delete_admin_user(
+    user_id: int,
+    current_user: AdminUser = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Deletes or revokes a secondary admin user."""
+    if current_user.role != "SuperAdmin":
+        raise HTTPException(status_code=403, detail="Only SuperAdmins can delete accounts.")
+    if current_user.id == user_id:
+        raise HTTPException(status_code=400, detail="You cannot delete your own active superadmin account.")
+
+    target = db.query(AdminUser).filter_by(id=user_id).first()
+    if not target:
+        raise HTTPException(status_code=404, detail="Admin user not found.")
+
+    db.delete(target)
+    db.commit()
+    return {"status": "SUCCESS", "message": f"Admin user '{target.username}' revoked successfully."}
+
+
+@router.post("/users/{user_id}/reset-password")
+def reset_secondary_admin_password(
+    user_id: int,
+    payload: ResetPasswordRequest,
+    current_user: AdminUser = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """SuperAdmin resets password for another admin user."""
+    if current_user.role != "SuperAdmin":
+        raise HTTPException(status_code=403, detail="Only SuperAdmins can reset passwords.")
+
+    target = db.query(AdminUser).filter_by(id=user_id).first()
+    if not target:
+        raise HTTPException(status_code=404, detail="Admin user not found.")
+
+    target.password_hash = hash_password(payload.new_password)
+    target.failed_login_attempts = 0
+    target.locked_until = None
+    db.commit()
+    return {"status": "SUCCESS", "message": f"Password reset for '{target.username}'."}
+
+
+# ---------------------------------------------------------------------------
+# 2FA TOTP Authenticator Activation & Management
+# ---------------------------------------------------------------------------
+
+@router.post("/2fa/setup", response_model=TOTPSetupResponse)
+def setup_totp_authenticator(
+    current_user: AdminUser = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Generates a new TOTP secret and QR code for Google Authenticator / Authy.
+    Does not activate 2FA until user verifies with an actual code.
+    """
+    secret = generate_totp_secret()
+    current_user.totp_secret = secret
+    db.commit()
+
+    uri = get_totp_provisioning_uri(current_user.username, secret)
+    qr_base64 = generate_qr_code_base64(uri)
+
+    return TOTPSetupResponse(
+        secret=secret,
+        provisioning_uri=uri,
+        qr_code_base64=qr_base64,
+        manual_entry_key=secret
+    )
+
+
+@router.post("/2fa/enable")
+def enable_totp_authenticator(
+    payload: TOTPVerifyRequest,
+    current_user: AdminUser = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Verifies a test 6-digit code and activates 2FA for the account."""
+    if not current_user.totp_secret:
+        raise HTTPException(status_code=400, detail="Run /2fa/setup first to generate a secret.")
+
+    if not verify_totp_code(current_user.totp_secret, payload.code):
+        raise HTTPException(status_code=400, detail="Invalid 6-digit code. Check your Authenticator app.")
+
+    current_user.totp_enabled = True
+    db.commit()
+    return {"status": "SUCCESS", "message": "Two-Factor Authentication is now ENABLED."}
+
+
+@router.post("/2fa/disable")
+def disable_totp_authenticator(
+    payload: TOTPDisableRequest,
+    current_user: AdminUser = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Disables 2FA after password confirmation (switches back to standard login)."""
+    if not verify_password(payload.password, current_user.password_hash):
+        raise HTTPException(status_code=400, detail="Password incorrect. Cannot disable 2FA.")
+
+    current_user.totp_enabled = False
+    current_user.totp_secret = None
+    db.commit()
+    return {"status": "SUCCESS", "message": "Two-Factor Authentication is now DISABLED (Standard Login active)."}
+
+
+# ---------------------------------------------------------------------------
+# Database Backup & Maintenance
+# ---------------------------------------------------------------------------
+
+@router.get("/database/backup")
+def download_database_backup(
+    current_user: AdminUser = Depends(get_current_admin_user),
+):
+    """Securely downloads a copy of the SQLite database."""
+    db_file = os.path.abspath("tekken8_fyp.db")
+    if not os.path.exists(db_file):
+        raise HTTPException(status_code=404, detail="Database file not found.")
+
+    return FileResponse(
+        path=db_file,
+        filename=f"tekken8_esports_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.db",
+        media_type="application/x-sqlite3"
+    )
+
+
+@router.put("/fighters/{slug}/bio")
+def update_fighter_bio(
+    slug: str,
+    payload: FighterBioUpdateRequest,
+    current_user: AdminUser = Depends(get_current_admin_user),
+    db: Session = Depends(get_db)
+):
+    """Updates fighter biographical and lore metadata."""
+    char = db.query(Character).filter_by(slug=slug).first()
+    if not char:
+        raise HTTPException(status_code=404, detail=f"Fighter '{slug}' not found.")
+
+    if payload.avatar_url:
+        char.avatar_url = payload.avatar_url
+    if payload.bio_summary:
+        char.hurtbox_notes = payload.bio_summary
+    if payload.origin:
+        char.archetype = payload.origin
+    db.commit()
+    return {"status": "SUCCESS", "message": f"Bio updated for {char.name}", "slug": slug}
+
+
 

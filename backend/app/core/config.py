@@ -27,6 +27,16 @@ class Settings(BaseSettings):
     ADMIN_SECRET_KEY: str = "tekken8-fyp-admin-secret-2026"
     CURRENT_GAME_PATCH: str = "3.00.02"
 
+    # Cryptographic JWT & Security Settings
+    JWT_SECRET_KEY: str = "43efbafec22418dce9a727050d62fb5bccded47fbdef6171919b8ab59a34d627"
+    JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440  # 24 hours
+
+    # Initial SuperAdmin Credentials (read from .env on first seed)
+    INITIAL_ADMIN_USER: str = "alpha"
+    INITIAL_ADMIN_EMAIL: str = "asadqaisar17@gmail.com"
+    INITIAL_ADMIN_PASSWORD: str = "Alpha_1122#"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

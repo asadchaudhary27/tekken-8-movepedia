@@ -62,4 +62,9 @@ tekken8combo.kagewebsite.com/
 tekkendocs.com/
 data/raw/
 data/reports/
+*.zip
+scripts/*.txt
+static/
+
+
 

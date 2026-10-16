@@ -167,6 +167,14 @@ class MatchupAnalyzerEngine:
             GameplayKnowledgeService.get_wall_combo_for_character(player_char.slug)
             or GameplayKnowledgeService.get_wall_combo_for_character(player_char.name)
         )
+        opponent_all_throws = (
+            GameplayKnowledgeService.get_all_throws_for_character(opponent_char.slug)
+            or GameplayKnowledgeService.get_all_throws_for_character(opponent_char.name)
+        )
+        player_all_wall_combos = (
+            GameplayKnowledgeService.get_all_wall_combos_for_character(player_char.slug)
+            or GameplayKnowledgeService.get_all_wall_combos_for_character(player_char.name)
+        )
 
         return MatchupOverviewResponse(
             player_character=CharacterRead.model_validate(player_char),
@@ -204,7 +212,9 @@ class MatchupAnalyzerEngine:
             opponent_anti_cheese_guide=opponent_anti_cheese_guide,
             opponent_install_guide=opponent_install_guide,
             opponent_ten_hit_guide=opponent_ten_hit_guide,
-            player_wall_combo_guide=player_wall_combo_guide
+            player_wall_combo_guide=player_wall_combo_guide,
+            opponent_all_throws=opponent_all_throws,
+            player_all_wall_combos=player_all_wall_combos
         )
 
     @classmethod

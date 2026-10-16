@@ -13,6 +13,15 @@ from backend.app.models.user_preference import UserPreference
 from backend.app.models.stage import Stage
 from backend.app.models.matchup_note import MatchupNote
 from backend.app.models.practice import PracticeRecord
+from backend.app.models.admin_user import AdminUser
+from backend.app.models.character_arsenal import (
+    CharacterThrow,
+    CharacterWallCombo,
+    CharacterTenHit,
+    CharacterHeatSmash,
+    MovementTechnique,
+    BlenderScenario,
+)
 
 __all__ = [
     "DataSource",
@@ -31,4 +40,11 @@ __all__ = [
     "Stage",
     "MatchupNote",
     "PracticeRecord",
+    "AdminUser",
+    "CharacterThrow",
+    "CharacterWallCombo",
+    "CharacterTenHit",
+    "CharacterHeatSmash",
+    "MovementTechnique",
+    "BlenderScenario",
 ]

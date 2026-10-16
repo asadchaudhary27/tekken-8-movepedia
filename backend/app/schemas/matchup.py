@@ -191,6 +191,8 @@ class MatchupOverviewResponse(BaseModel):
     opponent_install_guide: Optional[Dict[str, Any]] = Field(default=None, description="Opponent unique install/buff meters & critical threat windows (Part 23)")
     opponent_ten_hit_guide: Optional[Dict[str, Any]] = Field(default=None, description="Opponent 10-hit combo string interrupt/parry timing (Part 19)")
     player_wall_combo_guide: Optional[Dict[str, Any]] = Field(default=None, description="Player optimal wall combo ender and tornado utilization (Part 22)")
+    opponent_all_throws: List[Dict[str, Any]] = Field(default_factory=list, description="All throws for opponent character")
+    player_all_wall_combos: List[Dict[str, Any]] = Field(default_factory=list, description="All wall combo routes for player character")
 
 
 

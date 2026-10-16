@@ -13,6 +13,9 @@
   <!-- Premium Top Navigation Bar -->
   <!-- Premium Top Navigation Bar (Design 1: Kazuya Left / Jin Right Battle Clash) -->
   <header class="navbar navbar-theme-clash" id="topNavbar">
+    <!-- Mobile Navigation Backdrop Overlay -->
+    <div class="nav-mobile-backdrop" id="navMobileBackdrop"></div>
+
     <!-- Clash Artwork Endcaps -->
     <div class="nav-art-kazuya" aria-hidden="true"></div>
     <div class="nav-art-jin" aria-hidden="true"></div>
@@ -44,6 +47,16 @@
     </nav>
 
     <div class="nav-actions">
+      <!-- Dual-Tier UX Mode Switcher (Ranked Essentials vs. Tournament Pro) -->
+      <div class="user-mode-switcher" id="userModeSwitcher" title="Switch between Simplified Ranked Essentials and Technical Tournament Pro Lab">
+        <button type="button" class="user-mode-btn active mode-essentials" id="btnModeEssentials" onclick="setUserMode('essentials')" title="Ranked Essentials: Simple 6 Core Moves, 3-Card Matchup Briefings, and Bread &amp; Butter Combos">
+          <span>🟢 Essentials</span>
+        </button>
+        <button type="button" class="user-mode-btn mode-pro" id="btnModePro" onclick="setUserMode('pro')" title="Tournament Pro: Complete 655-Move Frame Spreadsheet, 8-Tab Relativity Engine, and Micro-Spacing Telemetry">
+          <span>🟡 Pro Lab</span>
+        </button>
+      </div>
+
       <!-- Universal Attack Button Mapping Toggle (Arcade / PlayStation / Xbox) -->
       <div class="nav-controller-toggle" id="navControllerToggle" title="Universal Button Mapping Notation">
         <button type="button" class="nav-ctl-btn active" data-layout="ARCADE" onclick="setControllerLayout('ARCADE')" title="Standard Tekken: 1, 2, 3, 4">🕹️ 1·2·3·4</button>
@@ -95,7 +108,7 @@
         <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
 
-      <a href="/presentation" class="btn-swagger" style="background:rgba(255,26,60,0.18); border-color:#ff1a3c; color:#fff;" title="Platform Overview &amp; Interactive Guide">📊 Overview</a>
+      <a href="/presentation" class="btn-swagger btn-overview" title="Platform Overview &amp; Interactive Guide">📊 Overview</a>
       <a href="/docs" target="_blank" class="btn-swagger" title="OpenAPI Swagger Spec">API Docs</a>
     </div>
   </header>
@@ -289,6 +302,25 @@
         </div>
       </div>
 
+      <!-- Core 6 Weapons Combat Kit (Ranked Essentials Default) -->
+      <div class="core-weapons-wrap" id="coreWeaponsWrap">
+        <div class="core-weapons-header">
+          <div class="core-weapons-title">
+            <span>⚡ CORE COMBAT KIT (ESSENTIAL WEAPONS)</span>
+            <span class="badge">KEY GAMEPLAN MOVES</span>
+          </div>
+          <button type="button" class="btn-progressive-toggle" id="btnToggleFullFrameData" onclick="toggleFullFrameSheet()">
+            <span id="btnToggleFullFrameText">📊 Expand Full Technical Frame Sheet</span>
+            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+        <div class="core-weapons-grid" id="coreWeaponsGrid">
+          <!-- Populated dynamically via renderCoreWeaponsKit() -->
+        </div>
+      </div>
+
+      <!-- Progressive Disclosure Container for Full Technical Frame Data -->
+      <div id="fullFrameDataSheet">
       <!-- Quick Safety & Property Filter Pills -->
       <div class="moves-safety-filters" id="movesSafetyFilters">
         <span class="safety-filter-label">Quick Safety:</span>
@@ -367,14 +399,14 @@
         <table class="moves-table">
           <thead>
             <tr>
-              <th>Move Name</th>
+              <th class="sortable-th" onclick="sortMovesByColumn('name')" id="th_sort_name" title="Click to sort by Move Name">Move Name <span class="sort-icon">↕</span></th>
               <th>Command</th>
-              <th>Level</th>
-              <th>Startup</th>
-              <th>Block</th>
-              <th>Hit</th>
-              <th>CH</th>
-              <th>Damage</th>
+              <th class="sortable-th" onclick="sortMovesByColumn('hit_level')" id="th_sort_hit_level" title="Click to sort by Hit Level">Level <span class="sort-icon">↕</span></th>
+              <th class="sortable-th" onclick="sortMovesByColumn('startup')" id="th_sort_startup" title="Click to sort by Startup Frames">Startup <span class="sort-icon">↕</span></th>
+              <th class="sortable-th" onclick="sortMovesByColumn('block')" id="th_sort_block" title="Click to sort by Block Advantage">Block <span class="sort-icon">↕</span></th>
+              <th class="sortable-th" onclick="sortMovesByColumn('hit')" id="th_sort_hit" title="Click to sort by Hit Advantage">Hit <span class="sort-icon">↕</span></th>
+              <th class="sortable-th" onclick="sortMovesByColumn('ch')" id="th_sort_ch" title="Click to sort by Counter-Hit Advantage">CH <span class="sort-icon">↕</span></th>
+              <th class="sortable-th" onclick="sortMovesByColumn('damage')" id="th_sort_damage" title="Click to sort by Damage">Damage <span class="sort-icon">↕</span></th>
               <th>Safety &amp; Punish</th>
               <th>Properties</th>
               <th style="text-align:center;">Action</th>
@@ -402,6 +434,7 @@
           </div>
         </div>
       </div>
+      </div> <!-- /#fullFrameDataSheet -->
     </section>
       <section id="combo-lab" class="section-combo-lab">
       <div class="section-header-row">
@@ -549,6 +582,11 @@
 
       <!-- Main Combos Container Grid -->
       <div class="combo-lab-grid-container">
+        <!-- Universal Bread & Butter Hero Combo Card (Ranked Essentials Default) -->
+        <div class="bnb-combo-hero" id="bnbComboHero">
+          <!-- Rendered dynamically via renderBnbHeroCombo() in app.js -->
+        </div>
+
         <!-- Single Perspective Grid -->
         <div id="comboLabGrid" class="combo-lab-grid">
           <!-- Rendered dynamically via renderComboLab() in app.js -->
@@ -578,6 +616,42 @@
         </div>
         <div class="ccd-body" id="comboCompareBody">
           <!-- Populated dynamically with 2 side-by-side cards -->
+        </div>
+      </div>
+
+      <!-- Interactive Aerial Damage Scaling Calculator (Backend API: POST /api/v1/combos/calculate-damage) -->
+      <div class="damage-calc-dock" id="damageScalingDock">
+        <div class="calc-dock-header">
+          <div class="calc-dock-title">
+            <span>⚡ TEKKEN 8 AERIAL DAMAGE SCALING CALCULATOR</span>
+            <span class="badge-block-plus" style="font-size:0.65rem; padding:0.15rem 0.4rem;">VERIFIED FORMULA</span>
+          </div>
+          <button type="button" class="btn btn-secondary btn-xs" onclick="toggleScalingCalculator()" id="btnToggleScalingCalc">Collapse / Expand</button>
+        </div>
+        <div id="damageScalingContent">
+          <p style="color:var(--text-muted); font-size:0.8rem; margin-bottom:1rem;">
+            Tekken 8 applies dynamic aerial juggle dampening: <strong>Hit 1: 100%</strong> (120% on Counter-Hit), <strong>Hit 2: 70%</strong>, <strong>Hit 3: 50%</strong>, <strong>Hit 4: 40%</strong>, <strong>Hit 5+: 30% floor</strong>. Test any combo sequence below to calculate true in-game scaled damage vs blind summation.
+          </p>
+          <div class="calc-dock-grid">
+            <div class="calc-input-group">
+              <label class="calc-input-label" for="calcComboHits">Hit Damage Sequence (Comma-Separated, e.g. 23, 18, 14, 25):</label>
+              <input type="text" id="calcComboHits" class="calc-text-input" value="23, 18, 14, 25" placeholder="e.g. 23, 18, 14, 25">
+            </div>
+            <div class="calc-input-group" style="justify-content:flex-end;">
+              <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+                <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.8rem; color:#fff; cursor:pointer;">
+                  <input type="checkbox" id="calcIsCounterHit">
+                  <span>Counter-Hit Starter (+20%)</span>
+                </label>
+                <button type="button" class="btn-stg-action primary" onclick="runDamageCalculationLive()" style="padding:0.45rem 1rem; font-size:0.8rem;">
+                  🧮 Calculate Scaling
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="calc-results-wrap" id="calcResultsWrap" style="display:none;">
+            <!-- Populated dynamically via runDamageCalculationLive() -->
+          </div>
         </div>
       </div>
 
@@ -865,6 +939,25 @@
             </div>
           </div>
 
+          <!-- Pre-Match Briefing HUD (Ranked Essentials 30-Second Cheat Sheet) -->
+          <div class="pre-match-briefing-hud" id="preMatchBriefingHud">
+            <div class="briefing-hud-header">
+              <div class="briefing-hud-title">
+                <span>⏱️ 30-SECOND PRE-MATCH BRIEFING CHEAT SHEET</span>
+                <span class="badge-block-plus" style="font-size:0.65rem; padding:0.15rem 0.4rem;">RANKED ESSENTIALS</span>
+              </div>
+              <button type="button" class="btn-progressive-toggle" id="btnToggleProTelemetry" onclick="toggleProMatchupTelemetry()">
+                <span id="btnToggleProTelemetryText">📊 Expand Deep Telemetry &amp; Relativity Engine</span>
+                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+            </div>
+            <div class="cheat-sheet-grid" id="cheatSheetGrid">
+              <!-- Populated dynamically via renderPreMatchBriefingHud() in app.js -->
+            </div>
+          </div>
+
+          <!-- Progressive Disclosure Container for Deep Matchup Telemetry -->
+          <div id="proMatchupTelemetryContainer">
           <!-- Matchup Tactical Tab Bar (Progressive Disclosure) -->
           <div class="matchup-tabs-bar" id="matchupTabsBar">
             <button type="button" class="matchup-tab-btn active" data-tab="panel-overview">
@@ -983,6 +1076,13 @@
                   <div class="pt-heading" id="ptOpponentThrowHeading">Signature Throws: —</div>
                   <p class="pt-desc" id="ptOpponentThrowDesc">Visual hand cues and break buttons...</p>
                   <div class="pt-subtag break-subtag" id="ptOpponentThrowBreakTag">Break: 1 / 2 / 1+2</div>
+                  <div class="throw-break-interactive-row" style="margin-top:0.75rem; display:flex; gap:0.4rem; flex-wrap:wrap; align-items:center;">
+                    <span style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Break Test:</span>
+                    <button type="button" class="btn-tb-practice-chip" onclick="executeInteractiveThrowBreak('1')" title="Attempt Throw Break with Left Arm (1)">1 (LP)</button>
+                    <button type="button" class="btn-tb-practice-chip" onclick="executeInteractiveThrowBreak('2')" title="Attempt Throw Break with Right Arm (2)">2 (RP)</button>
+                    <button type="button" class="btn-tb-practice-chip" onclick="executeInteractiveThrowBreak('1+2')" title="Attempt Throw Break with Both Arms (1+2)">1+2 (Dual)</button>
+                  </div>
+                  <div id="throwBreakFeedback" class="throw-break-feedback-msg" style="display:none; margin-top:0.5rem; font-size:0.75rem; padding:0.4rem 0.6rem; border-radius:4px;"></div>
                 </div>
 
                 <!-- 3. Opponent Anti-Cheese & Scrub String Counters (Part 14) -->
@@ -1262,7 +1362,8 @@
                       </svg>
                       <span>SECTION 4: KEY TACTICAL MOVES (VS RIVAL)</span>
                     </div>
-                    <div class="p-filter-pills">
+                    <div class="p-filter-pills" style="display:flex; align-items:center; gap:0.4rem;">
+                      <span id="usefulMovesCountPill" class="combo-count-badge" style="font-size:0.75rem; padding:0.2rem 0.5rem;">0 Moves</span>
                       <button type="button" class="btn-segmented active" id="btnUsefulP1" onclick="setUsefulMovesPerspective('p1')">P1 Moves</button>
                       <button type="button" class="btn-segmented" id="btnUsefulP2" onclick="setUsefulMovesPerspective('p2')">P2 Moves</button>
                     </div>
@@ -1564,6 +1665,7 @@
 
 
         </div>
+        </div> <!-- /#proMatchupTelemetryContainer -->
 
       </div>
 
@@ -1818,31 +1920,48 @@
          ========================================================================== -->
     <div class="app-view" id="view-stages" data-view="stages">
       <section id="stages" class="section-stages">
-      <div class="section-header-row">
-        <div>
-          <h2 class="section-title">TEKKEN 8 BATTLE STAGES</h2>
-          <p style="color:var(--text-muted); font-size:0.85rem;">Official battlegrounds featuring floor blasts, wall crushes, and balcony breaks</p>
+        <div class="section-header-row">
+          <div>
+            <div class="analyzer-badge-pill" style="border-color:var(--accent-orange); color:var(--accent-orange); font-size:0.68rem; font-weight:800; letter-spacing:1px; margin-bottom:0.35rem;">OFFICIAL BATTLEGROUNDS &amp; TACTICAL BLUEPRINTS</div>
+            <h2 class="section-title">TEKKEN 8 BATTLE STAGES</h2>
+            <p style="color:var(--text-muted); font-size:0.85rem;">Official battlegrounds featuring 2D vector blueprints, hazard matrices, dimension telemetry, and character synergies</p>
+          </div>
+          <div class="stage-tag-filter">
+            <span class="badge badge-launcher" style="padding:0.4rem 0.8rem; font-size:0.75rem;">16 Official Arenas</span>
+          </div>
         </div>
-        <div class="stage-tag-filter">
-          <span class="badge badge-launcher" style="padding:0.4rem 0.8rem; font-size:0.75rem;">16 Official Arenas</span>
+
+        <!-- Stage Hazard Filter Pills -->
+        <div class="stage-filter-pills-row" id="stageFilterPills">
+          <button type="button" class="stage-f-pill active" data-stage-filter="ALL">ALL (16)</button>
+          <button type="button" class="stage-f-pill" data-stage-filter="WALL">WALL ARENAS</button>
+          <button type="button" class="stage-f-pill" data-stage-filter="WALL_BREAK">WALL BREAK</button>
+          <button type="button" class="stage-f-pill" data-stage-filter="FLOOR_BREAK">FLOOR BREAK</button>
+          <button type="button" class="stage-f-pill" data-stage-filter="BALCONY_BREAK">BALCONY BREAK</button>
+          <button type="button" class="stage-f-pill" data-stage-filter="FLOOR_BLAST">FLOOR BLAST</button>
+          <button type="button" class="stage-f-pill" data-stage-filter="INFINITE">INFINITE / OPEN</button>
         </div>
-      </div>
 
-      <!-- Stage Hazard Filter Pills (Phase 9) -->
-      <div class="stage-filter-pills-row" id="stageFilterPills">
-        <button type="button" class="stage-f-pill active" data-stage-filter="ALL">ALL (16)</button>
-        <button type="button" class="stage-f-pill" data-stage-filter="WALL">WALL ARENAS</button>
-        <button type="button" class="stage-f-pill" data-stage-filter="WALL_BREAK">WALL BREAK</button>
-        <button type="button" class="stage-f-pill" data-stage-filter="FLOOR_BREAK">FLOOR BREAK</button>
-        <button type="button" class="stage-f-pill" data-stage-filter="BALCONY_BREAK">BALCONY BREAK</button>
-        <button type="button" class="stage-f-pill" data-stage-filter="FLOOR_BLAST">FLOOR BLAST</button>
-        <button type="button" class="stage-f-pill" data-stage-filter="INFINITE">INFINITE / OPEN</button>
-      </div>
+        <!-- Split Command View: Left = 16 Stages Grid; Right = Tactical Inspector Command Center -->
+        <div class="stages-split-layout">
+          <!-- Left: 16 Stage Selection Grid -->
+          <div class="stages-selector-column">
+            <div class="stages-selector-header">
+              <span class="stg-sec-label">SELECT BATTLEGROUND (<span id="stgFilterCount">16</span>)</span>
+            </div>
+            <div class="stages-grid" id="stagesGrid">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
 
-      <div class="stages-grid" id="stagesGrid">
-        <!-- Rendered dynamically with generated photorealistic & vector artwork -->
-      </div>
-    </section>
+          <!-- Right: Tactical Inspector Command Center Panel -->
+          <div class="stages-inspector-column">
+            <div class="stage-inspector-panel" id="stageInspectorPanel">
+              <!-- Rendered dynamically by inspectStage() -->
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
     <!-- ==========================================================================
@@ -1858,9 +1977,21 @@
               26-Part Authoritative Encyclopedia: Universal Sidesteps, Throws, Anti-Cheese, Installs, Wall Enders, Movement Bible &amp; Hardware
             </p>
           </div>
-          <div class="analyzer-status-pill">
-            <span class="status-indicator-dot"></span>
-            <span>Patch 3.00.02 Active</span>
+          <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+            <!-- Language Switcher: English vs Roman Urdu -->
+            <div class="compendium-lang-switcher" style="display:inline-flex; background:rgba(22, 26, 36, 0.9); border:1px solid rgba(255,255,255,0.12); border-radius:6px; padding:3px; gap:4px;">
+              <span style="font-size:0.75rem; color:var(--text-muted); display:flex; align-items:center; padding-left:6px; padding-right:2px;">🌐 Lang:</span>
+              <button type="button" class="btn btn-xs compendium-lang-btn active" id="btnCompendiumLangEn" onclick="setCompendiumLanguage('en')" style="border-radius:4px; font-weight:700; padding:3px 8px; font-size:0.72rem;">
+                🇬🇧 English
+              </button>
+              <button type="button" class="btn btn-xs compendium-lang-btn" id="btnCompendiumLangUr" onclick="setCompendiumLanguage('ur')" style="border-radius:4px; font-weight:700; padding:3px 8px; font-size:0.72rem;">
+                🇵🇰 Roman Urdu
+              </button>
+            </div>
+            <div class="analyzer-status-pill">
+              <span class="status-indicator-dot"></span>
+              <span>Patch 3.00.02 Active</span>
+            </div>
           </div>
         </div>
 
@@ -1870,18 +2001,26 @@
             <input type="text" id="tacticsCompendiumSearch" class="tactics-search-input" placeholder="Search by character, move input, property, side (SSL/SSR), or technique..." oninput="filterTacticsCompendium()">
             <button type="button" class="btn-clear-search" id="btnTacticsClearSearch" onclick="clearTacticsSearch()">✕</button>
           </div>
+
+          <!-- 3-Pillar Master Categories -->
+          <div class="tactics-pillars-bar" style="display:flex; gap:0.5rem; margin-bottom:0.75rem; flex-wrap:wrap;">
+            <button type="button" class="btn btn-secondary btn-xs active" id="pillarDefenseBtn" onclick="switchTacticsPillar('defense')">🛡️ 1. Matchup Defense</button>
+            <button type="button" class="btn btn-secondary btn-xs" id="pillarSystemBtn" onclick="switchTacticsPillar('system')">⚡ 2. System Mechanics</button>
+            <button type="button" class="btn btn-secondary btn-xs" id="pillarHardwareBtn" onclick="switchTacticsPillar('hardware')">🕹️ 3. Tournament Hardware</button>
+          </div>
+
           <div class="tactics-tab-scroll-wrap">
             <div class="tactics-nav-tabs" id="tacticsNavTabs">
-              <button type="button" class="tactics-tab-btn active" data-tab="sidesteps" onclick="switchTacticsTab('sidesteps')">↔️ Sidestep Table</button>
-              <button type="button" class="tactics-tab-btn" data-tab="throw-breaks" onclick="switchTacticsTab('throw-breaks')">🤼 Throw Breaks</button>
-              <button type="button" class="tactics-tab-btn" data-tab="anti-cheese" onclick="switchTacticsTab('anti-cheese')">🧀 Anti-Cheese</button>
-              <button type="button" class="tactics-tab-btn" data-tab="installs" onclick="switchTacticsTab('installs')">⚡ Installs &amp; Meters</button>
-              <button type="button" class="tactics-tab-btn" data-tab="wall-combos" onclick="switchTacticsTab('wall-combos')">🧱 Wall Enders</button>
-              <button type="button" class="tactics-tab-btn" data-tab="ten-hit" onclick="switchTacticsTab('ten-hit')">🔟 10-Hit Counters</button>
-              <button type="button" class="tactics-tab-btn" data-tab="heat-smashes" onclick="switchTacticsTab('heat-smashes')">💥 Heat Smashes</button>
-              <button type="button" class="tactics-tab-btn" data-tab="movement" onclick="switchTacticsTab('movement')">🏃 Movement Bible</button>
-              <button type="button" class="tactics-tab-btn" data-tab="hardware" onclick="switchTacticsTab('hardware')">🕹️ Hardware &amp; Zero-Lag</button>
-              <button type="button" class="tactics-tab-btn" data-tab="emergency" onclick="switchTacticsTab('emergency')">🚨 Blender Protocol</button>
+              <button type="button" class="tactics-tab-btn active" data-pillar="defense" data-tab="sidesteps" onclick="switchTacticsTab('sidesteps')">↔️ Sidestep Table</button>
+              <button type="button" class="tactics-tab-btn" data-pillar="defense" data-tab="throw-breaks" onclick="switchTacticsTab('throw-breaks')">🤼 Throw Breaks</button>
+              <button type="button" class="tactics-tab-btn" data-pillar="defense" data-tab="anti-cheese" onclick="switchTacticsTab('anti-cheese')">🧀 Anti-Cheese</button>
+              <button type="button" class="tactics-tab-btn" data-pillar="defense" data-tab="ten-hit" onclick="switchTacticsTab('ten-hit')">🔟 10-Hit Counters</button>
+              <button type="button" class="tactics-tab-btn" data-pillar="defense" data-tab="emergency" onclick="switchTacticsTab('emergency')">🚨 Blender Protocol</button>
+              <button type="button" class="tactics-tab-btn" data-pillar="system" data-tab="installs" onclick="switchTacticsTab('installs')" style="display:none;">⚡ Installs &amp; Meters</button>
+              <button type="button" class="tactics-tab-btn" data-pillar="system" data-tab="wall-combos" onclick="switchTacticsTab('wall-combos')" style="display:none;">🧱 Wall Enders</button>
+              <button type="button" class="tactics-tab-btn" data-pillar="system" data-tab="heat-smashes" onclick="switchTacticsTab('heat-smashes')" style="display:none;">💥 Heat Smashes</button>
+              <button type="button" class="tactics-tab-btn" data-pillar="system" data-tab="movement" onclick="switchTacticsTab('movement')" style="display:none;">🏃 Movement Bible</button>
+              <button type="button" class="tactics-tab-btn" data-pillar="hardware" data-tab="hardware" onclick="switchTacticsTab('hardware')" style="display:none;">🕹️ Hardware &amp; Zero-Lag</button>
             </div>
           </div>
         </div>
@@ -2481,29 +2620,64 @@
           <div class="stage-modal-gradient"></div>
           <button class="btn-modal-close" type="button" onclick="closeStageDetailModal()">&times;</button>
           <div class="stage-modal-header-meta">
-            <div class="stage-meta-pill" id="sdCategoryPill">WALL ARENA</div>
+            <div class="stage-meta-tags-row">
+              <span class="stage-meta-pill" id="sdCategoryPill">WALL ARENA</span>
+              <span class="stage-meta-pill bgm" id="sdBgmPill">🎵 BGM: My Last Stand</span>
+            </div>
             <h2 class="stage-modal-title" id="sdTitle">The Arena</h2>
-            <div class="stage-modal-location" id="sdLocation">Mishima Zaibatsu Stadium</div>
+            <div class="stage-modal-location" id="sdLocation">Tokyo, Japan</div>
           </div>
         </div>
 
         <div class="stage-modal-body">
+          <!-- 4-Card Dimension Telemetry Row -->
+          <div class="sd-metrics-row">
+            <div class="sd-metric-card">
+              <div class="sd-metric-label">DIMENSIONS</div>
+              <div class="sd-metric-val" id="sdDimVal">28m × 28m</div>
+            </div>
+            <div class="sd-metric-card">
+              <div class="sd-metric-label">TOTAL ARENA AREA</div>
+              <div class="sd-metric-val" id="sdAreaVal">784 m²</div>
+            </div>
+            <div class="sd-metric-card">
+              <div class="sd-metric-label">WALL PROXIMITY</div>
+              <div class="sd-metric-val" id="sdDistVal">Medium</div>
+            </div>
+            <div class="sd-metric-card">
+              <div class="sd-metric-label">OPENING STANDOFF</div>
+              <div class="sd-metric-val" id="sdSpawnVal">2.8m</div>
+            </div>
+          </div>
+
           <div class="sd-grid">
+            <!-- Left Col: 2D Tactical Blueprint Radar & Hazards -->
             <div class="sd-col">
-              <h4 class="sd-sec-title">ENVIRONMENTAL GIMMICK &amp; ARCHITECTURE</h4>
-              <p id="sdGimmickText" class="sd-desc-text"></p>
-              
-              <h4 class="sd-sec-title">HAZARD SPECIFICATIONS</h4>
+              <h4 class="sd-sec-title">2D TACTICAL BLUEPRINT &amp; BOUNDARY RADAR</h4>
+              <div class="sd-blueprint-box" id="sdBlueprintBox">
+                <!-- Scaled SVG Radar rendered here -->
+              </div>
+
+              <h4 class="sd-sec-title" style="margin-top:1.25rem;">ENVIRONMENTAL HAZARD MATRIX</h4>
               <div class="sd-hazards-list" id="sdHazardsList"></div>
             </div>
 
+            <!-- Right Col: Meta Impact, S-Tier Fighters, Combo Adjustments -->
             <div class="sd-col">
-              <h4 class="sd-sec-title">TACTICAL HAZARD SYNERGY &amp; POSITIONING</h4>
-              <p id="sdTacticsText" class="sd-desc-text"></p>
+              <h4 class="sd-sec-title">PRO-ESPORTS META IMPACT &amp; ARCHETYPE</h4>
+              <p id="sdMetaImpactText" class="sd-desc-text"></p>
+
+              <h4 class="sd-sec-title" style="margin-top:1.25rem;">BEST ADVANTAGED FIGHTERS (S-TIER)</h4>
+              <div class="sd-fighters-grid" id="sdFightersGrid">
+                <!-- Dynamically populated with clickable character cards -->
+              </div>
+
+              <h4 class="sd-sec-title" style="margin-top:1.25rem;">OPTIMAL STAGE COMBO ADJUSTMENTS</h4>
+              <ul class="sd-combo-rules-list" id="sdComboRulesList"></ul>
 
               <div class="sd-actions-row">
                 <button type="button" class="btn-sd-select primary" id="btnSelectAsBattleground" onclick="selectStageAsBattleground()">
-                  ⚔️ Select as Battleground in Combat Lab
+                  ⚔️ Select as Active Battleground in Combat Lab
                 </button>
               </div>
             </div>
@@ -2916,24 +3090,317 @@
       </div>
     </div>
 
-    <!-- Tactics Compendium is now primary SPA view #view-tactics -->
-
-        <div class="tactics-compendium-body" id="tacticsCompendiumContent">
-          <!-- Dynamic cards or tables rendered via switchTacticsTab() -->
-        </div>
-
-        <div class="practice-modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:0.8rem; color:var(--text-dim);" id="tacticsEntryCountLabel">Showing 43 character tactical entries</span>
-          <button type="button" class="btn btn-secondary" onclick="closeTacticsHubModal()">Close</button>
-        </div>
-      </div>
-    </div>
-
     <!-- Toast Notification Container -->
     <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
-
   </main>
+
+  <!-- Admin Authentication Modal (Obsidian Theme with Zero-Exposure Security) -->
+  <div id="adminAuthModal" class="practice-modal-backdrop admin-auth-backdrop" style="display:none; z-index:10000;" onclick="if(event.target===this) closeAdminAuthModal()">
+    <div class="practice-modal-card admin-auth-card">
+      <div class="practice-modal-header" style="border-bottom: 1px solid rgba(237, 104, 35, 0.25);">
+        <div class="settings-header-wrap">
+          <span class="user-practice-note-badge" style="background: rgba(237,104,35,0.15); color: #ED6823; border: 1px solid rgba(237,104,35,0.4);">
+            🛡️ RESTRICTED STAFF ACCESS
+          </span>
+          <h3 class="pm-title" style="color: #F3F4F6;">ADMINISTRATIVE AUTHENTICATION</h3>
+        </div>
+        <button class="btn-modal-close" type="button" onclick="closeAdminAuthModal()">&times;</button>
+      </div>
+      <form id="adminLoginForm" onsubmit="handleAdminLoginSubmit(event)" class="note-edit-body" style="padding: 1.5rem;">
+        <div id="adminLoginAlert" class="admin-alert-banner" style="display:none;"></div>
+        
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label class="form-label" for="adminLoginIdentifier">USERNAME OR EMAIL</label>
+          <input type="text" id="adminLoginIdentifier" class="form-input" placeholder="e.g. alpha or asadqaisar17@gmail.com" autocomplete="username" required>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label class="form-label" for="adminLoginPassword">SECURE PASSWORD</label>
+          <div style="position:relative; display:flex; align-items:center;">
+            <input type="password" id="adminLoginPassword" class="form-input" style="padding-right: 2.75rem;" placeholder="••••••••••••" autocomplete="current-password" required>
+            <button type="button" id="btnTogglePasswordVisibility" class="btn-password-eye" onclick="togglePasswordVisibility('adminLoginPassword', this)" title="Show/Hide Password" aria-label="Toggle password visibility">
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label class="form-label" for="adminLoginTotpCode">2FA TOTP AUTHENTICATOR CODE <span style="font-weight:400; opacity:0.6; text-transform:none;">(Required if 2FA is active)</span></label>
+          <input type="text" id="adminLoginTotpCode" class="form-input" placeholder="6-digit rolling code (e.g. 123456)" maxlength="8" autocomplete="one-time-code">
+        </div>
+
+        <div style="margin-top: 1.5rem; display:flex; flex-direction:column; gap:0.75rem;">
+          <button type="submit" id="btnSubmitAdminLogin" class="btn btn-primary" style="width:100%; justify-content:center; padding:0.85rem; font-weight:700; background: linear-gradient(135deg, #ED6823 0%, #C44300 100%);">
+            AUTHENTICATE &amp; ENTER
+          </button>
+        </div>
+
+        <div class="admin-security-footer-note" style="margin-top:1rem; padding:0.75rem; background:rgba(255,255,255,0.03); border-radius:6px; font-size:0.72rem; color:var(--text-dim); line-height:1.4;">
+          🔒 <strong>Zero-Exposure Security Architecture:</strong> Passwords protected with salted cryptographic hashes. Authenticated sessions are issued HMAC-SHA256 signed JWT tokens. Brute-force rate limiting enforces a 15-minute lockout after 5 consecutive failed attempts.
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Enterprise Admin Command Center Drawer -->
+  <div id="adminCommandCenterDrawer" class="admin-drawer-backdrop" style="display:none; z-index:9999;" onclick="if(event.target===this) closeAdminCommandCenter()">
+    <div class="admin-drawer-container">
+      <div class="admin-drawer-header">
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+          <div class="admin-shield-icon">🛡️</div>
+          <div>
+            <h2 class="admin-drawer-title">COMMAND CENTER</h2>
+            <div class="admin-drawer-user-meta">
+              <span>Logged in as: <strong id="adminSessionUsername" style="color:var(--accent-orange);">alpha</strong></span>
+              <span class="admin-role-badge" id="adminSessionRole">SuperAdmin</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="handleAdminLogout()" title="Terminate session">
+            🚪 Sign Out
+          </button>
+          <button type="button" class="btn-modal-close" onclick="closeAdminCommandCenter()" title="Close drawer">&times;</button>
+        </div>
+      </div>
+
+      <!-- Admin Drawer Tab Navigation -->
+      <div class="admin-tabs-nav">
+        <button type="button" class="admin-tab-btn active" id="tabBtnSecurity" onclick="switchAdminTab('security')">
+          🔐 Security &amp; Access Control
+        </button>
+        <button type="button" class="admin-tab-btn" id="tabBtnContent" onclick="switchAdminTab('content')">
+          📊 Data, Content &amp; Backups
+        </button>
+      </div>
+
+      <!-- Admin Drawer Body -->
+      <div class="admin-drawer-body">
+        <!-- TAB 1: Security & Access Control -->
+        <div id="adminPaneSecurity" class="admin-tab-pane active">
+          <!-- Section: Password Management -->
+          <div class="admin-panel-card">
+            <div class="admin-panel-header">
+              <h4>🔑 Password Management</h4>
+              <span class="admin-panel-tag">Self-Service</span>
+            </div>
+            <form id="adminChangePasswordForm" onsubmit="handleAdminChangePassword(event)" style="display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:0.75rem; align-items:end;">
+              <div class="form-group">
+                <label class="form-label">CURRENT PASSWORD</label>
+                <input type="password" id="adminCurrentPassword" class="form-input" placeholder="Current password" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">NEW PASSWORD</label>
+                <input type="password" id="adminNewPassword" class="form-input" placeholder="Min 8 chars" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">CONFIRM NEW PASSWORD</label>
+                <input type="password" id="adminConfirmPassword" class="form-input" placeholder="Repeat new password" required>
+              </div>
+              <button type="submit" class="btn btn-primary" style="height:42px;">Update Password</button>
+            </form>
+            <div id="adminPasswordMsg" style="margin-top:0.5rem; font-size:0.8rem; display:none;"></div>
+          </div>
+
+          <!-- Section: 2FA TOTP Configuration -->
+          <div class="admin-panel-card" style="margin-top:1.25rem;">
+            <div class="admin-panel-header">
+              <h4>📱 Two-Factor Authentication (TOTP / RFC 6238)</h4>
+              <span id="admin2faStatusBadge" class="badge-2fa-disabled">Disabled</span>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-dim); margin-bottom:1rem;">
+              Enhance account security using Google Authenticator, Authy, or 1Password. When enabled, signing in requires a dynamic 6-digit rolling code.
+            </p>
+            <div id="admin2faSetupBox" style="display:none; background:rgba(0,0,0,0.4); border:1px solid var(--border-color); border-radius:8px; padding:1.25rem; margin-bottom:1rem;">
+              <div style="display:flex; flex-wrap:wrap; gap:1.5rem; align-items:center;">
+                <div id="admin2faQrContainer" style="background:#fff; padding:10px; border-radius:6px; display:inline-block;"></div>
+                <div style="flex:1; min-width:240px;">
+                  <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.25rem;">1. Scan QR code or enter manual key:</p>
+                  <code id="admin2faSecretText" style="display:block; padding:0.5rem; background:#12151f; border:1px solid #23293d; color:var(--accent-orange); font-size:0.85rem; word-break:break-all; border-radius:4px; margin-bottom:0.75rem;"></code>
+                  <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.25rem;">2. Enter 6-digit code to verify &amp; activate:</p>
+                  <div style="display:flex; gap:0.5rem;">
+                    <input type="text" id="admin2faConfirmCode" class="form-input" placeholder="123456" maxlength="6" style="max-width:140px;">
+                    <button type="button" class="btn btn-primary" onclick="confirmEnable2FA()">Verify &amp; Activate 2FA</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancel2FASetup()">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="admin2faActions">
+              <button type="button" id="btnTrigger2faSetup" class="btn btn-secondary" onclick="initiate2FASetup()">
+                🔐 Set Up Two-Factor Authentication
+              </button>
+              <button type="button" id="btnTrigger2faDisable" class="btn btn-danger" style="display:none;" onclick="initiate2FADisable()">
+                ⚠️ Disable Two-Factor Authentication
+              </button>
+            </div>
+            <div id="admin2faMsg" style="margin-top:0.5rem; font-size:0.8rem; display:none;"></div>
+          </div>
+
+          <!-- Section: Multi-Admin User Roster -->
+          <div class="admin-panel-card" style="margin-top:1.25rem;">
+            <div class="admin-panel-header">
+              <h4>👥 Administrative Staff Directory</h4>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="loadAdminUsersList()">🔄 Refresh Directory</button>
+            </div>
+            <div style="overflow-x:auto; margin-top:0.75rem;">
+              <table class="admin-table" id="adminUsersTable">
+                <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>2FA Status</th>
+                    <th>Last Login</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminUsersTableBody">
+                  <tr><td colspan="6" style="text-align:center; color:var(--text-dim);">Loading staff accounts...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Add Secondary Admin Form -->
+            <div style="margin-top:1.25rem; border-top:1px solid var(--border-color); padding-top:1rem;">
+              <h5 style="margin-bottom:0.75rem; font-size:0.88rem; color:#fff;">➕ Provision Secondary Administrator</h5>
+              <form id="adminCreateUserForm" onsubmit="handleCreateAdminUser(event)" style="display:grid; grid-template-columns:1fr 1.2fr 1fr 120px auto; gap:0.75rem; align-items:end;">
+                <div class="form-group">
+                  <label class="form-label">USERNAME</label>
+                  <input type="text" id="newAdminUsername" class="form-input" placeholder="e.g. analyst_beta" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">EMAIL</label>
+                  <input type="email" id="newAdminEmail" class="form-input" placeholder="staff@tekken8.gg" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">INITIAL PASSWORD</label>
+                  <input type="password" id="newAdminPassword" class="form-input" placeholder="Temp password" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">ROLE</label>
+                  <select id="newAdminRole" class="form-select">
+                    <option value="Admin">Admin</option>
+                    <option value="SuperAdmin">SuperAdmin</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="height:42px;">Provision User</button>
+              </form>
+              <div id="adminCreateUserMsg" style="margin-top:0.5rem; font-size:0.8rem; display:none;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: Data, Content & Backups -->
+        <div id="adminPaneContent" class="admin-tab-pane" style="display:none;">
+          <!-- Database Backup Card -->
+          <div class="admin-panel-card">
+            <div class="admin-panel-header">
+              <h4>💾 Authoritative Database Backup</h4>
+              <span class="admin-panel-tag">Snapshot</span>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-dim); margin-bottom:1rem;">
+              Download an atomic, zero-downtime binary copy of <code style="color:var(--accent-cyan);">tekken8_fyp.db</code> containing all 43 fighters, 655 moves, 89 combos, 16 battlegrounds, and verification audit trails.
+            </p>
+            <button type="button" class="btn btn-primary" onclick="downloadDatabaseBackup()" style="display:inline-flex; align-items:center; gap:0.5rem;">
+              📥 Download Live SQLite Database (.db)
+            </button>
+            <span id="dbBackupStatus" style="margin-left:1rem; font-size:0.8rem; color:var(--text-dim);"></span>
+          </div>
+
+          <!-- Fighter Bio & Canonical Lore Quick Editor -->
+          <div class="admin-panel-card" style="margin-top:1.25rem;">
+            <div class="admin-panel-header">
+              <h4>🥋 Fighter Canonical Bio &amp; Metadata Editor</h4>
+              <span class="admin-panel-tag">Content Sync</span>
+            </div>
+            <div style="display:flex; gap:1rem; align-items:center; margin-bottom:1rem;">
+              <label class="form-label" style="margin:0;">Select Fighter to Edit:</label>
+              <select id="adminBioFighterSelect" class="form-select" style="max-width:260px;" onchange="loadAdminFighterBio()"></select>
+            </div>
+            <form id="adminBioEditForm" onsubmit="handleSaveFighterBio(event)">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:0.75rem;">
+                <div class="form-group">
+                  <label class="form-label">ORIGIN / NATIONALITY</label>
+                  <input type="text" id="adminBioCountry" class="form-input">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">FIGHTING STYLE</label>
+                  <input type="text" id="adminBioStyle" class="form-input">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">HEIGHT (CM / FT)</label>
+                  <input type="text" id="adminBioHeight" class="form-input">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">WEIGHT (KG / LBS)</label>
+                  <input type="text" id="adminBioWeight" class="form-input">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">WEAK SIDESTEP</label>
+                  <select id="adminBioSidestep" class="form-select">
+                    <option value="SSL">SSL (Sidestep Left)</option>
+                    <option value="SSR">SSR (Sidestep Right)</option>
+                    <option value="Both">Both / Situational</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">ARCHETYPE</label>
+                  <input type="text" id="adminBioArchetype" class="form-input">
+                </div>
+              </div>
+              <div class="form-group" style="margin-top:0.75rem;">
+                <label class="form-label">CANONICAL LORE &amp; TEKKEN 8 STORY PROFILE</label>
+                <textarea id="adminBioLore" class="form-textarea" rows="3"></textarea>
+              </div>
+              <div style="margin-top:1rem; display:flex; justify-content:flex-end;">
+                <button type="submit" class="btn btn-primary">Save Fighter Bio Changes</button>
+              </div>
+              <div id="adminBioSaveMsg" style="margin-top:0.5rem; font-size:0.8rem; display:none;"></div>
+            </form>
+          </div>
+
+          <!-- Telemetry & Raw Data Exports -->
+          <div class="admin-panel-card" style="margin-top:1.25rem;">
+            <div class="admin-panel-header">
+              <h4>📤 Bulk Data Extraction</h4>
+              <span class="admin-panel-tag">Exports</span>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-dim); margin-bottom:0.75rem;">
+              Export raw move sets and frame metadata for external analysis or esports broadcast graphics:
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:0.75rem;">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="exportData('moves', 'JSON')">Export Moves (JSON)</button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="exportData('moves', 'CSV')">Export Moves (CSV)</button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="exportData('combos', 'JSON')">Export Combos (JSON)</button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="exportData('combos', 'CSV')">Export Combos (CSV)</button>
+            </div>
+          </div>
+
+          <!-- Database Integrity & Invariants Audit Card (Backend API: POST /api/v1/admin/audit/integrity) -->
+          <div class="admin-panel-card" style="margin-top:1.25rem;">
+            <div class="admin-panel-header">
+              <h4>🛡️ Database Integrity &amp; Invariants Audit</h4>
+              <span class="admin-panel-tag" id="auditHealthBadge">Zero-Downtime Audit</span>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-dim); margin-bottom:1rem;">
+              Execute a non-destructive relational audit checking orphaned moves, physical fighting game bounds (startup &gt; 0), valid hit levels, and stage hazard consistency.
+            </p>
+            <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+              <button type="button" class="btn btn-primary" onclick="runDatabaseIntegrityAudit()" style="display:inline-flex; align-items:center; gap:0.5rem;">
+                🔍 Run Database Integrity Audit
+              </button>
+              <span id="auditRunStatus" style="font-size:0.8rem; color:var(--text-dim);"></span>
+            </div>
+            <div id="auditReportResults" class="audit-report-box" style="display:none;">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer class="footer">
@@ -2945,9 +3412,15 @@
     <p style="margin-top:0.4rem; font-size:0.75rem; color:var(--text-dim);">
       Commercial-grade competitive companion platform for TEKKEN 8. Frame data and move properties curated from authoritative community research and patch v3.00.02. TEKKEN™ 8 is a registered trademark of Bandai Namco Entertainment Inc.
     </p>
+    <div style="margin-top:1.25rem; display:flex; justify-content:center; align-items:center; gap:0.75rem;">
+      <button type="button" id="btnOpenAdminAuth" class="btn-admin-portal-trigger" onclick="toggleAdminPortal()">
+        <span class="admin-lock-icon">🔒</span> <span id="adminPortalBtnText">Admin Portal</span>
+      </button>
+    </div>
   </footer>
 
   <script src="/assets/js/dossiers.js"></script>
+  <script src="/assets/js/stages.js"></script>
   <script src="/assets/js/app.js"></script>
 </body>
 </html>

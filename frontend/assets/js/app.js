@@ -43,6 +43,14 @@ const state = {
     pageSize: 10,
     filteredMoves: []
   },
+  movesSort: {
+    column: null,
+    direction: 'asc'
+  },
+  userMode: localStorage.getItem('tekken8_user_mode') || 'essentials',
+  compendiumLang: localStorage.getItem('tekken8_compendium_lang') || 'en',
+  fullFrameSheetOpen: false,
+  proMatchupTelemetryOpen: false,
   sources: [],
   coverage: null,
   sessionToken: getOrCreateSessionToken(),
@@ -117,9 +125,16 @@ const state = {
   activeMatchupTab: 'panel-overview',
   viewAllMatchup: false,
   admin: {
-    key: 'tekken8-fyp-admin-secret-2026',
-    user: 'Lead Lab Architect',
-    currentTab: 'tabIssues',
+    token: localStorage.getItem('tekken8_admin_jwt') || null,
+    user: (function() {
+      try {
+        const u = localStorage.getItem('tekken8_admin_user');
+        return u ? JSON.parse(u) : null;
+      } catch (e) {
+        return null;
+      }
+    })(),
+    currentTab: 'security',
     dashboardData: null,
     previewResponse: null
   },
@@ -706,12 +721,14 @@ function switchAppView(viewName, scrollTarget) {
 
   // 5. Scroll smoothly
   if (scrollTarget) {
-    setTimeout(() => {
-      const targetEl = document.getElementById(scrollTarget);
-      if (targetEl) {
-        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 60);
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        const targetEl = document.getElementById(scrollTarget);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 120);
+    });
   } else {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -729,6 +746,14 @@ window.addEventListener('hashchange', () => {
       return;
     }
   }
+  if (rawHash.includes('stages/')) {
+    const slug = rawHash.split('stages/')[1]?.replace('/', '');
+    if (slug) {
+      switchAppView('stages');
+      inspectStage(slug);
+      return;
+    }
+  }
   if (['fighters', 'matchup', 'stages', 'tactics'].includes(rawHash)) {
     switchAppView(rawHash);
   } else if (['hero', 'roster', 'moves', 'combo-lab', 'notation'].includes(rawHash)) {
@@ -742,6 +767,8 @@ window.addEventListener('hashchange', () => {
 
 // 1. Initial Load
 document.addEventListener('DOMContentLoaded', async () => {
+  initUserMode();
+  initCompendiumLanguage();
   setupEventListeners();
   setupRosterControls();
   initMatchupTabs();
@@ -754,7 +781,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await initMatchupAnalyzer();
   initPunishAssistant();
   await loadPunishmentOptions();
-  initAdminHub();
+  initAdminPortal();
   renderFeaturedMoves();
   populateHeroCombatTriad();
   initComboLab();
@@ -771,6 +798,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const slug = initHash.split('fighters/')[1]?.replace('/', '');
     switchAppView('fighters');
     if (slug) setTimeout(() => openCharacterProfile(slug), 150);
+  } else if (initHash.includes('stages/')) {
+    const slug = initHash.split('stages/')[1]?.replace('/', '');
+    switchAppView('stages');
+    if (slug) setTimeout(() => inspectStage(slug), 150);
   } else if (['matchup', 'stages', 'tactics'].includes(initHash)) {
     switchAppView(initHash);
   } else if (['analyzer', 'punish-assistant'].includes(initHash)) {
@@ -799,16 +830,39 @@ function setupEventListeners() {
   // Mobile Menu Toggle
   const mobileToggle = document.getElementById('navMobileToggle');
   const mainNav = document.getElementById('mainNavLinks');
-  if (mobileToggle && mainNav) {
-    mobileToggle.addEventListener('click', () => {
-      mainNav.classList.toggle('mobile-open');
-      mobileToggle.classList.toggle('active');
-    });
+  const navWrapper = document.getElementById('navLinksWrapper');
+  const navBackdrop = document.getElementById('navMobileBackdrop');
+
+  function closeMobileNav() {
+    if (mainNav) mainNav.classList.remove('mobile-open');
+    if (navWrapper) navWrapper.classList.remove('mobile-open');
+    if (mobileToggle) mobileToggle.classList.remove('active');
+    if (navBackdrop) navBackdrop.classList.remove('active');
+    document.body.classList.remove('nav-locked');
+  }
+
+  function toggleMobileNav() {
+    const isOpen = mainNav ? mainNav.classList.contains('mobile-open') : false;
+    if (isOpen) {
+      closeMobileNav();
+    } else {
+      if (mainNav) mainNav.classList.add('mobile-open');
+      if (navWrapper) navWrapper.classList.add('mobile-open');
+      if (mobileToggle) mobileToggle.classList.add('active');
+      if (navBackdrop) navBackdrop.classList.add('active');
+      document.body.classList.add('nav-locked');
+    }
+  }
+
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', toggleMobileNav);
+  }
+  if (navBackdrop) {
+    navBackdrop.addEventListener('click', closeMobileNav);
+  }
+  if (mainNav) {
     mainNav.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', () => {
-        mainNav.classList.remove('mobile-open');
-        mobileToggle.classList.remove('active');
-      });
+      link.addEventListener('click', closeMobileNav);
     });
   }
 
@@ -1203,17 +1257,26 @@ function renderRosterGrid() {
                onerror="this.src='/assets/avatars/${c.slug}.jpg'; this.onerror=()=>this.src='/assets/avatars/jin-brand-256-C1-oe_x3.webp'"/>
           ${c.is_dlc ? '<span class="roster-dlc-tag">DLC</span>' : ''}
           ${isSelected ? '<span class="roster-active-indicator">SELECTED</span>' : ''}
-          <button type="button" class="btn-roster-fav ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleCharacterFavorite('${c.slug}')" title="Favorite ${c.name}">
+          <button type="button" class="btn-roster-fav ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleCharacterFavorite('${c.slug}')" title="Favorite ${c.name}" aria-label="Favorite ${c.name}">
             ${isFav ? '★' : '☆'}
           </button>
         </div>
         <div class="roster-card-info">
-          <div class="roster-card-name">${c.name}</div>
-          <div class="roster-card-style">${style}</div>
-          <div class="roster-card-chips">
+          <div class="roster-card-name" title="${c.name}">${c.name}</div>
+          <div class="roster-card-style" title="${style}">${style}</div>
+          <div class="roster-card-meta">
             <span class="roster-chip ${hb.badgeClass}">${hb.label}</span>
-            <button type="button" class="btn-roster-profile-link" onclick="event.stopPropagation(); openCharacterProfile('${c.slug}')" title="View ${c.name} Fighter Dossier &amp; Canonical Metrics">
-              👤 Dossier
+            ${c.is_dlc ? '<span class="roster-chip chip-dlc">DLC S2</span>' : '<span class="roster-chip chip-base">BASE</span>'}
+          </div>
+          <div class="roster-card-actions" role="toolbar" aria-label="${c.name} quick actions">
+            <button type="button" class="btn-roster-action btn-roster-dossier btn-roster-profile-link" onclick="event.stopPropagation(); viewFighterProfile('${c.slug}')" title="View ${c.name} Profile Dossier" aria-label="View ${c.name} Dossier">
+              <span>👤</span> Dossier
+            </button>
+            <button type="button" class="btn-roster-action btn-roster-matchup btn-roster-profile-link matchup" onclick="event.stopPropagation(); compareInMatchup('${c.slug}')" title="Compare ${c.name} in Matchup Lab" aria-label="Compare ${c.name} in Matchup Lab">
+              <span>⚔️</span> Match
+            </button>
+            <button type="button" class="btn-roster-action btn-roster-combos btn-roster-profile-link combo" onclick="event.stopPropagation(); loadInComboLab('${c.slug}')" title="Load ${c.name} in Combo Lab" aria-label="Load ${c.name} in Combo Lab">
+              <span>🥊</span> Combos
             </button>
           </div>
         </div>
@@ -1282,7 +1345,22 @@ function setupMovesSafetyFilters() {
     btn.addEventListener('click', () => {
       buttons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      state.movesSafetyFilter = btn.dataset.safety || 'ALL';
+      const safety = btn.dataset.safety || 'ALL';
+      state.movesSafetyFilter = safety;
+
+      // Synchronize secondary toolbar dropdowns
+      const hlSelect = document.getElementById('moveFilterHitLevel');
+      const stanceSelect = document.getElementById('moveFilterStance');
+      const punishSelect = document.getElementById('moveFilterPunish');
+
+      if (['HIGH', 'MID', 'LOW'].includes(safety)) {
+        if (hlSelect) hlSelect.value = safety;
+      } else if (safety === 'STANCE') {
+        if (stanceSelect) stanceSelect.value = 'STANCE_ONLY';
+      } else if (safety === 'SAFE' || safety === 'LAUNCH_PUNISH') {
+        if (punishSelect) punishSelect.value = safety === 'SAFE' ? 'SAFE' : 'LAUNCH_PUNISHABLE';
+      }
+
       const searchVal = document.getElementById('movesTableFilter')?.value.toLowerCase().trim() || '';
       filterMovesTable(searchVal);
     });
@@ -1542,6 +1620,10 @@ async function selectCharacter(slug) {
 
   // Fetch moves for this fighter
   await loadMovesForCharacter(char.id);
+
+  // Phase 4 UX: Populate Core 6 Weapons Combat Kit and BnB Hero Combo
+  renderCoreWeaponsKit(char);
+  renderBnbHeroCombo(char);
 }
 
 // ==========================================================================
@@ -1608,6 +1690,11 @@ async function loadMovesForCharacter(characterId) {
 
   // Filter and render table
   filterMovesTable();
+
+  // Phase 4 UX: Refresh Core Weapons Kit for Move Explorer
+  if (state.selectedCharacter) {
+    renderCoreWeaponsKit(state.selectedCharacter);
+  }
 }
 
 function changeMovesPage(delta) {
@@ -1975,11 +2062,94 @@ function filterMovesTable(query = undefined) {
     });
   }
 
+  // Apply Active Column Sorting
+  if (state.movesSort && state.movesSort.column) {
+    const col = state.movesSort.column;
+    const dir = state.movesSort.direction === 'desc' ? -1 : 1;
+    filtered.sort((a, b) => {
+      if (col === 'name') {
+        const valA = (a.name || '').toLowerCase();
+        const valB = (b.name || '').toLowerCase();
+        return valA.localeCompare(valB) * dir;
+      } else if (col === 'hit_level') {
+        const valA = (a.hit_level || '').toLowerCase();
+        const valB = (b.hit_level || '').toLowerCase();
+        return valA.localeCompare(valB) * dir;
+      } else if (col === 'startup') {
+        const valA = a.startup_frames != null ? a.startup_frames : 9999;
+        const valB = b.startup_frames != null ? b.startup_frames : 9999;
+        return (valA - valB) * dir;
+      } else if (col === 'block') {
+        const valA = a.block_advantage != null ? a.block_advantage : -9999;
+        const valB = b.block_advantage != null ? b.block_advantage : -9999;
+        return (valA - valB) * dir;
+      } else if (col === 'hit') {
+        const valA = a.hit_advantage != null ? a.hit_advantage : -9999;
+        const valB = b.hit_advantage != null ? b.hit_advantage : -9999;
+        return (valA - valB) * dir;
+      } else if (col === 'ch') {
+        const valA = a.counter_hit_advantage != null ? a.counter_hit_advantage : -9999;
+        const valB = b.counter_hit_advantage != null ? b.counter_hit_advantage : -9999;
+        return (valA - valB) * dir;
+      } else if (col === 'damage') {
+        const valA = a.damage != null ? a.damage : 0;
+        const valB = b.damage != null ? b.damage : 0;
+        return (valA - valB) * dir;
+      }
+      return 0;
+    });
+  }
+
   renderMovesTable(filtered, true);
 }
 
+function sortMovesByColumn(column) {
+  playSfx('click');
+  if (!state.movesSort) {
+    state.movesSort = { column: null, direction: 'asc' };
+  }
+  if (state.movesSort.column === column) {
+    if (state.movesSort.direction === 'asc') {
+      state.movesSort.direction = 'desc';
+    } else {
+      state.movesSort.column = null;
+      state.movesSort.direction = 'asc';
+    }
+  } else {
+    state.movesSort.column = column;
+    state.movesSort.direction = 'asc';
+  }
+
+  // Update header classes and indicator icons
+  document.querySelectorAll('.sortable-th').forEach(th => {
+    th.classList.remove('active');
+    const icon = th.querySelector('.sort-icon');
+    if (icon) icon.textContent = '↕';
+  });
+
+  if (state.movesSort.column) {
+    const activeTh = document.getElementById(`th_sort_${state.movesSort.column}`);
+    if (activeTh) {
+      activeTh.classList.add('active');
+      const icon = activeTh.querySelector('.sort-icon');
+      if (icon) {
+        icon.textContent = state.movesSort.direction === 'asc' ? '▲' : '▼';
+      }
+    }
+  }
+
+  filterMovesTable();
+}
+window.sortMovesByColumn = sortMovesByColumn;
+
 function resetMovesFilter() {
   state.movesSafetyFilter = 'ALL';
+  state.movesSort = { column: null, direction: 'asc' };
+  document.querySelectorAll('.sortable-th').forEach(th => {
+    th.classList.remove('active');
+    const icon = th.querySelector('.sort-icon');
+    if (icon) icon.textContent = '↕';
+  });
   const filterInput = document.getElementById('movesTableFilter');
   if (filterInput) filterInput.value = '';
 
@@ -2001,15 +2171,16 @@ function resetMovesFilter() {
   });
 
   filterMovesTable('');
-  showToast('Move Explorer filters reset to all data', 'info');
+  showToast('Move Explorer filters and sorting reset', 'info');
 }
 
 async function openMoveDetailModal(moveId) {
   playSfx('click');
   let move = (state.moves || []).find(m => m.id === moveId);
-  if (!move) {
-    move = await fetchAPI(`/moves/${moveId}`, true);
-  }
+  try {
+    const liveMove = await fetchAPI(`/moves/${moveId}`, false);
+    if (liveMove) move = liveMove;
+  } catch (_) {}
   if (!move) {
     showToast('Unable to load move details', 'error');
     return;
@@ -2248,6 +2419,8 @@ async function loadStages() {
     state.stages = data;
   }
   renderStages();
+  const initialId = state.selectedStageId || (state.stages && state.stages[0]?.id) || 1;
+  inspectStage(initialId, { skipHash: true });
 }
 
 async function setGlobalStage(stageId, options = {}) {
@@ -2324,23 +2497,25 @@ async function setGlobalStage(stageId, options = {}) {
 
 function selectStage(stageId) {
   playSfx('click');
-  setGlobalStage(stageId, { scrollToSection: 'analyzer' });
+  inspectStage(stageId);
 }
 
 function renderStages() {
   const container = document.getElementById('stagesGrid');
-  if (!container) return;
+  if (!container || !state.stages) return;
 
-  const currentSelect = document.getElementById('stageSelect');
-  const activeStageId = currentSelect ? parseInt(currentSelect.value) : (state.selectedStageId || 1);
+  const countBadge = document.getElementById('stgFilterCount');
+  if (countBadge) countBadge.textContent = state.stages.length;
+
+  const activeStageId = state.selectedStageId || 1;
 
   container.innerHTML = state.stages.map(s => {
     const hazardsList = s.hazards || [];
     const imgSrc = s.image_url || s.image || '/assets/img/stages/arena.jpg';
-    const fallbackSvg = '/assets/img/stages/arena.svg';
+    const fallbackSvg = s.fallback_svg || '/assets/img/stages/arena.svg';
     const locationStr = s.location || 'Official Arena';
     const gimmickStr = s.notes || s.special_mechanics || s.gimmick || (s.has_walls ? 'Walled tournament battleground' : 'Infinite arena');
-    const isSelected = s.id === activeStageId;
+    const isSelected = String(s.id) === String(activeStageId);
     const boundaryStr = s.has_walls ? (s.boundary_shape || 'Walled') : 'Infinite';
     const distStr = s.wall_distance || (s.has_walls ? '24m' : 'Unbounded');
 
@@ -2361,11 +2536,11 @@ function renderStages() {
     return `
       <div class="stage-card ${isSelected ? 'active' : ''}" 
            id="stage_card_${s.id}" 
-           onclick="selectStage(${s.id})"
-           onkeydown="if(event.key==='Enter'||event.key===' ')selectStage(${s.id})"
+           onclick="inspectStage(${s.id})"
+           ondblclick="inspectStage(${s.id}, { openModal: true })"
            role="button"
            tabindex="0"
-           aria-label="Select stage ${s.name}: ${boundaryStr}, ${distStr}"
+           aria-label="Inspect stage ${s.name}: ${boundaryStr}, ${distStr}"
            title="${gimmickStr}">
         <div class="stage-img-wrap">
           <img class="stage-img" src="${imgSrc}" alt="${altText}" loading="lazy" onerror="this.src='${fallbackSvg}'">
@@ -2380,8 +2555,8 @@ function renderStages() {
               <div class="stage-name">${s.name}</div>
               <div class="stage-location">${locationStr} • <span style="color:var(--text-muted); font-size:0.7rem;">${boundaryStr} (${distStr})</span></div>
             </div>
-            <button class="stage-select-btn ${isSelected ? 'selected' : ''}" type="button" aria-pressed="${isSelected}">
-              ${isSelected ? 'Selected' : 'Select'}
+            <button class="stage-select-btn ${isSelected ? 'selected' : ''}" type="button" aria-pressed="${isSelected}" onclick="event.stopPropagation(); inspectStage(${s.id}, { openModal: true })">
+              ${isSelected ? 'Active' : 'Inspect'}
             </button>
           </div>
           <div class="stage-hazards">
@@ -2473,20 +2648,44 @@ function insertNotationToken(token) {
 }
 
 function testNotationString(notation) {
+  if (!notation) return;
+  playSfx('click');
+  if (typeof switchAppView === 'function') {
+    switchAppView('fighters');
+  }
   const inputEl = document.getElementById('notationInput');
   if (inputEl) {
     inputEl.value = notation;
     updateNotationDisplay();
-    document.getElementById('notation').scrollIntoView({ behavior: 'smooth' });
   }
+  const notSection = document.getElementById('notation');
+  if (notSection) {
+    setTimeout(() => {
+      notSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      notSection.classList.remove('notation-target-pulse');
+      void notSection.offsetWidth;
+      notSection.classList.add('notation-target-pulse');
+      setTimeout(() => notSection.classList.remove('notation-target-pulse'), 2000);
+    }, 100);
+  }
+  showToast(`🎮 Loaded "${notation}" into Command Notation Engine`, 'info');
 }
 
 function filterByMoveText(text) {
+  playSfx('click');
+  if (typeof switchAppView === 'function') {
+    switchAppView('fighters');
+  }
   const tableFilter = document.getElementById('movesTableFilter');
   if (tableFilter) {
     tableFilter.value = text;
     filterMovesTable(text.toLowerCase());
-    document.getElementById('moves').scrollIntoView({ behavior: 'smooth' });
+  }
+  const movesSection = document.getElementById('moves');
+  if (movesSection) {
+    setTimeout(() => {
+      movesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   }
 }
 
@@ -3160,6 +3359,9 @@ function renderMatchupDashboard(data) {
   if (hazardsBox) {
     hazardsBox.innerHTML = (st.hazards || []).map(h => `<span class="hazard-pill">${h}</span>`).join('');
   }
+
+  // Phase 4 UX: Instant 3-Card Pre-Match Briefing HUD (Ranked Essentials / Pro)
+  renderPreMatchBriefingHud(p1, p2, data);
 
   // 2. SECTION 1: Overall Matchup Assessment Banner
   const oa = data.overall_assessment;
@@ -4025,15 +4227,15 @@ function resetComboFilters() {
   state.combosPhase5.activeCategory = 'ALL';
   const sInput = document.getElementById('comboSearchInput');
   if (sInput) sInput.value = '';
-  const heatToggle = document.getElementById('comboHeatToggle');
+  const heatToggle = document.getElementById('comboCheckHeat') || document.getElementById('comboHeatToggle');
   if (heatToggle) heatToggle.checked = false;
-  const chToggle = document.getElementById('comboCHToggle');
+  const chToggle = document.getElementById('comboCheckCH') || document.getElementById('comboCHToggle');
   if (chToggle) chToggle.checked = false;
-  const diffSelect = document.getElementById('comboDifficultyFilter');
+  const diffSelect = document.getElementById('comboDiffSelect') || document.getElementById('comboDifficultyFilter');
   if (diffSelect) diffSelect.value = 'ALL';
   const hurtSelect = document.getElementById('comboHurtboxFilter');
   if (hurtSelect) hurtSelect.value = 'ALL';
-  document.querySelectorAll('.cl-cat-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === 'ALL'));
+  document.querySelectorAll('#comboTypePills .combo-filter-btn, .cl-cat-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === 'ALL'));
   if (typeof renderComboRecommendations === 'function') {
     renderComboRecommendations();
   }
@@ -5156,534 +5358,794 @@ async function resetSessionPracticeProgress() {
 }
 
 // ==========================================================================
-// Phase 7: Matchup Data Management, Import Studio & Quality Hub
+// Enterprise Admin Authentication & Command Center Portal
 // ==========================================================================
 
-function toggleAdminHub() {
-  const content = document.getElementById('adminHubContent');
-  const icon = document.getElementById('adminToggleIcon');
-  const text = document.getElementById('adminToggleText');
-  if (!content) return;
-  const isHidden = content.style.display === 'none';
-  if (isHidden) {
-    content.style.display = 'block';
-    if (icon) icon.textContent = '▼';
-    if (text) text.textContent = 'Collapse Admin / Evaluator Studio';
-    refreshAdminDashboard();
+function getAdminAuthHeaders() {
+  const headers = { 'Content-Type': 'application/json' };
+  if (state.admin && state.admin.token) {
+    headers['Authorization'] = `Bearer ${state.admin.token}`;
+  }
+  return headers;
+}
+
+function updateAdminFooterButton() {
+  const btn = document.getElementById('btnOpenAdminAuth');
+  const text = document.getElementById('adminPortalBtnText');
+  if (!btn || !text) return;
+
+  if (state.admin && state.admin.token && state.admin.user) {
+    btn.classList.add('admin-logged-in');
+    text.innerHTML = `Staff: <strong style="color:var(--accent-orange);">${state.admin.user.username}</strong>`;
+    btn.title = `Admin Session Active (${state.admin.user.role}). Click or press Ctrl+Shift+A to open Command Center.`;
   } else {
-    content.style.display = 'none';
-    if (icon) icon.textContent = '▶';
-    if (text) text.textContent = 'Expand Admin / Evaluator Studio';
+    btn.classList.remove('admin-logged-in');
+    text.textContent = 'Admin Portal';
+    btn.title = 'Staff Authorization. Click or press Ctrl+Shift+A.';
   }
 }
-window.toggleAdminHub = toggleAdminHub;
 
-function initAdminHub() {
-  const keyInput = document.getElementById('adminSecretKeyInput');
-  const userInput = document.getElementById('adminUsernameInput');
-  if (keyInput) keyInput.value = state.admin.key;
-  if (userInput) userInput.value = state.admin.user;
+function initAdminPortal() {
+  window.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+      e.preventDefault();
+      toggleAdminPortal();
+    }
+  });
 
-  populateAdminCharacterSelect();
-  refreshAdminDashboard();
-  loadAdminSources();
+  updateAdminFooterButton();
+
+  if (state.admin && state.admin.token) {
+    verifyAdminSession().catch(() => {});
+  }
+}
+window.initAdminPortal = initAdminPortal;
+
+async function verifyAdminSession() {
+  if (!state.admin || !state.admin.token) return false;
+  try {
+    const res = await fetch(`${API_BASE}/admin/me`, {
+      headers: getAdminAuthHeaders()
+    });
+    if (res.ok) {
+      const user = await res.json();
+      state.admin.user = user;
+      localStorage.setItem('tekken8_admin_user', JSON.stringify(user));
+      updateAdminFooterButton();
+      return true;
+    } else {
+      handleAdminLogout(false);
+      return false;
+    }
+  } catch (err) {
+    console.warn('Admin session validation failed:', err);
+    return false;
+  }
 }
 
-async function refreshAdminDashboard() {
-  const keyInput = document.getElementById('adminSecretKeyInput');
-  const userInput = document.getElementById('adminUsernameInput');
-  if (keyInput) state.admin.key = keyInput.value.trim();
-  if (userInput) state.admin.user = userInput.value.trim();
+function toggleAdminPortal() {
+  if (state.admin && state.admin.token) {
+    const drawer = document.getElementById('adminCommandCenterDrawer');
+    if (drawer && drawer.style.display !== 'none') {
+      closeAdminCommandCenter();
+    } else {
+      openAdminCommandCenter();
+    }
+  } else {
+    openAdminAuthModal();
+  }
+}
+window.toggleAdminPortal = toggleAdminPortal;
 
-  const badge = document.getElementById('adminAuthBadge');
+function openAdminAuthModal() {
+  const modal = document.getElementById('adminAuthModal');
+  const alertBox = document.getElementById('adminLoginAlert');
+  if (alertBox) {
+    alertBox.style.display = 'none';
+    alertBox.textContent = '';
+  }
+  if (modal) modal.style.display = 'flex';
+  const idInput = document.getElementById('adminLoginIdentifier');
+  if (idInput) setTimeout(() => idInput.focus(), 100);
+}
+window.openAdminAuthModal = openAdminAuthModal;
+
+function closeAdminAuthModal() {
+  const modal = document.getElementById('adminAuthModal');
+  if (modal) modal.style.display = 'none';
+}
+window.closeAdminAuthModal = closeAdminAuthModal;
+
+function togglePasswordVisibility(inputId, btnEl) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  if (input.type === 'password') {
+    input.type = 'text';
+    if (btnEl) btnEl.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    if (btnEl) btnEl.textContent = '👁️';
+  }
+}
+window.togglePasswordVisibility = togglePasswordVisibility;
+
+async function handleAdminLoginSubmit(e) {
+  e.preventDefault();
+  const alertBox = document.getElementById('adminLoginAlert');
+  const btn = document.getElementById('btnSubmitAdminLogin');
+  const identifier = document.getElementById('adminLoginIdentifier').value.trim();
+  const password = document.getElementById('adminLoginPassword').value;
+  const totpCode = document.getElementById('adminLoginTotpCode') ? document.getElementById('adminLoginTotpCode').value.trim() : null;
+
+  if (!identifier || !password) return;
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'AUTHENTICATING...';
+  }
+  if (alertBox) alertBox.style.display = 'none';
 
   try {
-    const res = await fetch(`${API_BASE}/admin/dashboard`, {
-      headers: {
-        'X-Admin-Key': state.admin.key,
-        'X-Admin-User': state.admin.user
-      }
+    const payload = { identifier, password };
+    if (totpCode) payload.totp_code = totpCode;
+
+    const res = await fetch(`${API_BASE}/admin/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
     });
 
+    const data = await res.json();
+
     if (!res.ok) {
-      if (badge) {
-        badge.className = 'admin-auth-badge unauthorized';
-        badge.innerHTML = '<span>✕</span> <span>INVALID ADMIN KEY</span>';
+      if (alertBox) {
+        alertBox.className = 'admin-alert-banner alert-error';
+        alertBox.style.display = 'block';
+        alertBox.textContent = data.detail || 'Authentication failed. Please verify credentials.';
+      }
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'AUTHENTICATE & ENTER';
       }
       return;
     }
 
-    if (badge) {
-      badge.className = 'admin-auth-badge authorized';
-      badge.innerHTML = '<span>●</span> <span>ADMIN SESSION ACTIVE</span>';
+    if (data.requires_2fa) {
+      if (alertBox) {
+        alertBox.className = 'admin-alert-banner alert-error';
+        alertBox.style.display = 'block';
+        alertBox.textContent = '🔒 Two-Factor Authentication is active for this account. Please enter your 6-digit rolling code below.';
+      }
+      const totpInput = document.getElementById('adminLoginTotpCode');
+      if (totpInput) {
+        totpInput.focus();
+        totpInput.style.borderColor = '#ED6823';
+      }
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'VERIFY 2FA & ENTER';
+      }
+      return;
     }
 
-    const data = await res.json();
-    state.admin.dashboardData = data;
+    state.admin.token = data.access_token;
+    state.admin.user = data.user;
+    localStorage.setItem('tekken8_admin_jwt', data.access_token);
+    localStorage.setItem('tekken8_admin_user', JSON.stringify(data.user));
 
-    // Populate KPI cards
-    const setVal = (id, val) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = val;
-    };
+    closeAdminAuthModal();
+    updateAdminFooterButton();
+    openAdminCommandCenter();
 
-    setVal('adminMissingFramesVal', data.missing_frame_data_count);
-    setVal('adminMissingStagesVal', data.missing_stage_mechanics_count);
-    setVal('adminCombosNoCompatVal', data.combos_without_opponent_compatibility_count);
-    setVal('adminUnverifiedPunishesVal', data.unverified_punish_options_count);
-    setVal('adminConflictsVal', data.conflicting_records_count);
-    setVal('adminOutdatedPatchVal', data.outdated_patch_records_count);
-    setVal('adminIncompleteSourcesVal', data.incomplete_source_metadata_count);
-    setVal('adminAwaitingReviewVal', data.records_awaiting_review_count);
-
-    // Populate data states chips
-    const dist = data.status_distribution || {};
-    const setChip = (id, label, count) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = `${label} (${count || 0})`;
-    };
-    setChip('chipVerified', 'VERIFIED', dist.VERIFIED);
-    setChip('chipUnverified', 'UNVERIFIED', dist.UNVERIFIED);
-    setChip('chipConflicting', 'CONFLICTING', dist.CONFLICTING);
-    setChip('chipUnavailable', 'UNAVAILABLE', dist.UNAVAILABLE);
-    setChip('chipConfirmedAbsent', 'CONFIRMED ABSENT', dist.CONFIRMED_ABSENT);
-    setChip('chipUnknown', 'UNKNOWN', dist.UNKNOWN);
-    setChip('chipNotProvided', 'NOT PROVIDED', dist.NOT_PROVIDED);
-
-    // Render issues table
-    renderAdminIssues(data.audit_issues || []);
-
+    if (window.showToast) {
+      showToast(`Welcome back, ${data.user.username}! Admin session active.`, 'success');
+    }
   } catch (err) {
-    console.warn('Failed to load admin quality dashboard:', err);
-    if (badge) {
-      badge.className = 'admin-auth-badge unauthorized';
-      badge.innerHTML = '<span>✕</span> <span>CONNECTION ERROR</span>';
+    if (alertBox) {
+      alertBox.className = 'admin-alert-banner alert-error';
+      alertBox.style.display = 'block';
+      alertBox.textContent = `Connection error: ${err.message}`;
+    }
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'AUTHENTICATE & ENTER';
     }
   }
 }
+window.handleAdminLoginSubmit = handleAdminLoginSubmit;
 
-function renderAdminIssues(issues) {
-  const tbody = document.getElementById('adminIssuesTableBody');
-  const countTab = document.getElementById('adminIssuesCountTab');
-  if (countTab) countTab.textContent = issues.length;
-  if (!tbody) return;
-
-  if (issues.length === 0) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="7" style="text-align:center; padding:1.5rem; color:#00e676;">
-          ✓ All data records are verified with complete telemetry and zero active discrepancies!
-        </td>
-      </tr>
-    `;
+function openAdminCommandCenter() {
+  if (!state.admin || !state.admin.token) {
+    openAdminAuthModal();
     return;
   }
 
-  tbody.innerHTML = issues.map(iss => {
-    let sevClass = 'badge-pending';
-    if (iss.severity === 'CRITICAL' || iss.severity === 'HIGH') sevClass = 'badge-unverified';
-    else if (iss.severity === 'MEDIUM') sevClass = 'badge-review';
-    else sevClass = 'badge-approved';
+  const drawer = document.getElementById('adminCommandCenterDrawer');
+  if (!drawer) return;
 
-    return `
-      <tr>
-        <td><span class="feat-badge ${sevClass}">${iss.severity}</span></td>
-        <td><strong style="color:var(--accent-cyan); font-size:0.7rem;">${iss.entity_type}</strong></td>
-        <td><div style="font-weight:700; color:#fff;">${iss.title}</div></td>
-        <td><span style="color:#fbbf24; font-weight:700;">${iss.issue_type}</span></td>
-        <td><span class="state-chip ${iss.status.toLowerCase().replace(/_/g, '-')}">${iss.status}</span></td>
-        <td style="color:var(--text-muted);">${iss.details}</td>
-        <td>
-          <button type="button" class="btn-tb-reset" style="font-size:0.68rem; padding:0.2rem 0.5rem;" onclick="quickUpdateStatus('${iss.entity_type}', ${iss.entity_id}, 'VERIFIED')">
-            Mark Verified
-          </button>
-        </td>
-      </tr>
-    `;
-  }).join('');
+  drawer.style.display = 'flex';
+
+  const user = state.admin.user;
+  const usernameEl = document.getElementById('adminSessionUsername');
+  const roleEl = document.getElementById('adminSessionRole');
+  if (usernameEl && user) usernameEl.textContent = user.username;
+  if (roleEl && user) roleEl.textContent = user.role;
+
+  update2FABadge();
+  populateAdminBioFighterSelect();
+  loadAdminUsersList();
 }
+window.openAdminCommandCenter = openAdminCommandCenter;
 
-function switchAdminTab(tabId) {
-  state.admin.currentTab = tabId;
-  document.querySelectorAll('.admin-tab-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.tab === tabId);
-  });
-  document.querySelectorAll('.admin-tab-pane').forEach(p => {
-    p.classList.toggle('active', p.id === tabId);
-  });
-
-  if (tabId === 'tabHistory') loadVerificationHistory();
-  if (tabId === 'tabAttribution') loadAdminSources();
+function closeAdminCommandCenter() {
+  const drawer = document.getElementById('adminCommandCenterDrawer');
+  if (drawer) drawer.style.display = 'none';
 }
+window.closeAdminCommandCenter = closeAdminCommandCenter;
 
-async function loadVerificationHistory() {
-  const tbody = document.getElementById('adminHistoryTableBody');
-  if (!tbody) return;
+function handleAdminLogout(notify = true) {
+  state.admin.token = null;
+  state.admin.user = null;
+  localStorage.removeItem('tekken8_admin_jwt');
+  localStorage.removeItem('tekken8_admin_user');
+
+  closeAdminCommandCenter();
+  updateAdminFooterButton();
+
+  if (notify && window.showToast) {
+    showToast('Admin session terminated successfully.', 'info');
+  }
+}
+window.handleAdminLogout = handleAdminLogout;
+
+function switchAdminTab(tabKey) {
+  state.admin.currentTab = tabKey;
+  const tabSecurity = document.getElementById('tabBtnSecurity');
+  const tabContent = document.getElementById('tabBtnContent');
+  const paneSecurity = document.getElementById('adminPaneSecurity');
+  const paneContent = document.getElementById('adminPaneContent');
+
+  if (tabKey === 'security') {
+    if (tabSecurity) tabSecurity.classList.add('active');
+    if (tabContent) tabContent.classList.remove('active');
+    if (paneSecurity) paneSecurity.style.display = 'block';
+    if (paneContent) paneContent.style.display = 'none';
+    loadAdminUsersList();
+  } else {
+    if (tabSecurity) tabSecurity.classList.remove('active');
+    if (tabContent) tabContent.classList.add('active');
+    if (paneSecurity) paneSecurity.style.display = 'none';
+    if (paneContent) paneContent.style.display = 'block';
+    populateAdminBioFighterSelect();
+    loadAdminFighterBio();
+  }
+}
+window.switchAdminTab = switchAdminTab;
+
+async function handleAdminChangePassword(e) {
+  e.preventDefault();
+  const currentPwd = document.getElementById('adminCurrentPassword').value;
+  const newPwd = document.getElementById('adminNewPassword').value;
+  const confirmPwd = document.getElementById('adminConfirmPassword').value;
+  const msgEl = document.getElementById('adminPasswordMsg');
+
+  if (newPwd !== confirmPwd) {
+    if (msgEl) {
+      msgEl.style.display = 'block';
+      msgEl.style.color = '#ff4d6d';
+      msgEl.textContent = '✕ New passwords do not match.';
+    }
+    return;
+  }
+
+  if (newPwd.length < 8) {
+    if (msgEl) {
+      msgEl.style.display = 'block';
+      msgEl.style.color = '#ff4d6d';
+      msgEl.textContent = '✕ Password must be at least 8 characters long.';
+    }
+    return;
+  }
 
   try {
-    const res = await fetch(`${API_BASE}/admin/history?limit=50`, {
-      headers: {
-        'X-Admin-Key': state.admin.key,
-        'X-Admin-User': state.admin.user
-      }
+    const res = await fetch(`${API_BASE}/admin/change-password`, {
+      method: 'POST',
+      headers: getAdminAuthHeaders(),
+      body: JSON.stringify({
+        current_password: currentPwd,
+        new_password: newPwd,
+        confirm_password: confirmPwd
+      })
     });
-    if (!res.ok) return;
 
-    const records = await res.json();
-    if (records.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:1.5rem; color:var(--text-dim);">No verification audit records found yet.</td></tr>';
+    const data = await res.json();
+    if (res.ok) {
+      if (msgEl) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = '#00e676';
+        msgEl.textContent = '✓ Password updated successfully!';
+      }
+      document.getElementById('adminChangePasswordForm').reset();
+    } else {
+      if (msgEl) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = '#ff4d6d';
+        msgEl.textContent = `✕ ${data.detail || 'Failed to update password.'}`;
+      }
+    }
+  } catch (err) {
+    if (msgEl) {
+      msgEl.style.display = 'block';
+      msgEl.style.color = '#ff4d6d';
+      msgEl.textContent = `✕ Connection error: ${err.message}`;
+    }
+  }
+}
+window.handleAdminChangePassword = handleAdminChangePassword;
+
+function update2FABadge() {
+  const badge = document.getElementById('admin2faStatusBadge');
+  const btnSetup = document.getElementById('btnTrigger2faSetup');
+  const btnDisable = document.getElementById('btnTrigger2faDisable');
+  const isEnabled = state.admin && state.admin.user && state.admin.user.totp_enabled;
+
+  if (badge) {
+    if (isEnabled) {
+      badge.className = 'badge-2fa-enabled';
+      badge.textContent = 'Active & Enforced';
+    } else {
+      badge.className = 'badge-2fa-disabled';
+      badge.textContent = 'Disabled (Optional)';
+    }
+  }
+
+  if (btnSetup && btnDisable) {
+    if (isEnabled) {
+      btnSetup.style.display = 'none';
+      btnDisable.style.display = 'inline-flex';
+    } else {
+      btnSetup.style.display = 'inline-flex';
+      btnDisable.style.display = 'none';
+    }
+  }
+}
+
+async function initiate2FASetup() {
+  const setupBox = document.getElementById('admin2faSetupBox');
+  const qrContainer = document.getElementById('admin2faQrContainer');
+  const secretText = document.getElementById('admin2faSecretText');
+  const msgEl = document.getElementById('admin2faMsg');
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/2fa/setup`, {
+      method: 'POST',
+      headers: getAdminAuthHeaders()
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      if (msgEl) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = '#ff4d6d';
+        msgEl.textContent = err.detail || 'Failed to initialize 2FA setup.';
+      }
       return;
     }
 
-    tbody.innerHTML = records.map(r => {
-      const dt = new Date(r.verified_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const data = await res.json();
+    if (qrContainer) {
+      qrContainer.innerHTML = `<img src="${data.qr_code_base64}" alt="2FA QR Code" style="width:160px; height:160px; display:block;">`;
+    }
+    if (secretText) {
+      secretText.textContent = data.secret;
+    }
+    if (setupBox) setupBox.style.display = 'block';
+    if (msgEl) msgEl.style.display = 'none';
+  } catch (err) {
+    if (msgEl) {
+      msgEl.style.display = 'block';
+      msgEl.style.color = '#ff4d6d';
+      msgEl.textContent = `Error: ${err.message}`;
+    }
+  }
+}
+window.initiate2FASetup = initiate2FASetup;
+
+function cancel2FASetup() {
+  const setupBox = document.getElementById('admin2faSetupBox');
+  if (setupBox) setupBox.style.display = 'none';
+}
+window.cancel2FASetup = cancel2FASetup;
+
+async function confirmEnable2FA() {
+  const codeInput = document.getElementById('admin2faConfirmCode');
+  const code = codeInput ? codeInput.value.trim() : '';
+  const msgEl = document.getElementById('admin2faMsg');
+  const setupBox = document.getElementById('admin2faSetupBox');
+
+  if (!code || code.length < 6) {
+    alert('Please enter a 6-digit verification code from your Authenticator app.');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/2fa/enable`, {
+      method: 'POST',
+      headers: getAdminAuthHeaders(),
+      body: JSON.stringify({ code: code })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      if (state.admin.user) state.admin.user.totp_enabled = true;
+      localStorage.setItem('tekken8_admin_user', JSON.stringify(state.admin.user));
+      if (setupBox) setupBox.style.display = 'none';
+      update2FABadge();
+      if (msgEl) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = '#00e676';
+        msgEl.textContent = '✓ Two-Factor Authentication is now ENABLED.';
+      }
+      if (window.showToast) showToast('Two-Factor Authentication successfully activated.', 'success');
+    } else {
+      if (msgEl) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = '#ff4d6d';
+        msgEl.textContent = data.detail || 'Invalid verification code.';
+      }
+    }
+  } catch (err) {
+    if (msgEl) {
+      msgEl.style.display = 'block';
+      msgEl.style.color = '#ff4d6d';
+      msgEl.textContent = `Error: ${err.message}`;
+    }
+  }
+}
+window.confirmEnable2FA = confirmEnable2FA;
+
+async function initiate2FADisable() {
+  const pwd = prompt('Enter your master password to confirm disabling Two-Factor Authentication:');
+  if (!pwd) return;
+
+  const msgEl = document.getElementById('admin2faMsg');
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/2fa/disable`, {
+      method: 'POST',
+      headers: getAdminAuthHeaders(),
+      body: JSON.stringify({ password: pwd })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      if (state.admin.user) state.admin.user.totp_enabled = false;
+      localStorage.setItem('tekken8_admin_user', JSON.stringify(state.admin.user));
+      update2FABadge();
+      if (msgEl) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = '#00e676';
+        msgEl.textContent = '✓ Two-Factor Authentication has been disabled.';
+      }
+      if (window.showToast) showToast('2FA has been disabled. Standard login active.', 'info');
+    } else {
+      alert(data.detail || 'Failed to disable 2FA.');
+    }
+  } catch (err) {
+    alert(`Error: ${err.message}`);
+  }
+}
+window.initiate2FADisable = initiate2FADisable;
+
+async function loadAdminUsersList() {
+  const tbody = document.getElementById('adminUsersTableBody');
+  if (!tbody || !state.admin || !state.admin.token) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/users`, {
+      headers: getAdminAuthHeaders()
+    });
+
+    if (!res.ok) return;
+
+    const users = await res.json();
+    if (users.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-dim);">No administrator accounts found.</td></tr>';
+      return;
+    }
+
+    const currentUsername = state.admin.user ? state.admin.user.username : '';
+
+    tbody.innerHTML = users.map(u => {
+      const isSelf = u.username === currentUsername;
+      const lastLoginStr = u.last_login ? new Date(u.last_login).toLocaleString() : 'Never';
+      const totpStatus = u.totp_enabled
+        ? '<span style="color:#00e676; font-size:0.75rem;">● Enforced</span>'
+        : '<span style="color:var(--text-dim); font-size:0.75rem;">○ Disabled</span>';
+
       return `
         <tr>
-          <td style="color:var(--text-dim);">${dt}</td>
-          <td><strong style="color:var(--accent-cyan);">${r.entity_type}</strong></td>
-          <td>${r.field_name || '—'}</td>
-          <td style="color:#ff4d6d; font-family:monospace;">${r.old_value !== null ? r.old_value : '—'}</td>
-          <td style="color:#00e676; font-family:monospace;">${r.new_value !== null ? r.new_value : '—'}</td>
-          <td>${r.verified_by}</td>
-          <td><span style="font-size:0.65rem; color:#cbd5e1;">${r.method}</span></td>
-          <td><span class="feat-badge ${r.result === 'VERIFIED' ? 'badge-approved' : 'badge-unverified'}">${r.result}</span></td>
-          <td>${r.patch_version}</td>
-          <td style="color:var(--text-muted); font-size:0.7rem;">${r.evidence_notes || '—'}</td>
+          <td><strong style="color:#fff;">${u.username}</strong> ${isSelf ? '<span class="admin-self-pill">You</span>' : ''}</td>
+          <td style="color:var(--text-muted); font-size:0.8rem;">${u.email}</td>
+          <td><span class="admin-role-badge ${u.role === 'SuperAdmin' ? 'role-super' : 'role-admin'}">${u.role}</span></td>
+          <td>${totpStatus}</td>
+          <td style="color:var(--text-dim); font-size:0.75rem;">${lastLoginStr}</td>
+          <td>
+            <div style="display:flex; gap:0.4rem;">
+              <button type="button" class="btn btn-secondary btn-xs" onclick="promptResetAdminPassword(${u.id}, '${u.username}')" title="Reset password for ${u.username}">
+                Reset Pwd
+              </button>
+              ${!isSelf ? `
+                <button type="button" class="btn btn-danger btn-xs" onclick="confirmDeleteAdminUser(${u.id}, '${u.username}')" title="Delete account">
+                  Delete
+                </button>
+              ` : ''}
+            </div>
+          </td>
         </tr>
       `;
     }).join('');
   } catch (err) {
-    console.warn('Failed to load history:', err);
+    console.warn('Failed to load admin users:', err);
   }
 }
+window.loadAdminUsersList = loadAdminUsersList;
 
-async function loadAdminSources() {
-  const container = document.getElementById('adminSourcesList');
-  if (!container) return;
+async function handleCreateAdminUser(e) {
+  e.preventDefault();
+  const username = document.getElementById('newAdminUsername').value.trim();
+  const email = document.getElementById('newAdminEmail').value.trim();
+  const password = document.getElementById('newAdminPassword').value;
+  const role = document.getElementById('newAdminRole').value;
+  const msgEl = document.getElementById('adminCreateUserMsg');
 
-  try {
-    const res = await fetch(`${API_BASE}/admin/sources`, {
-      headers: {
-        'X-Admin-Key': state.admin.key,
-        'X-Admin-User': state.admin.user
-      }
-    });
-    if (!res.ok) return;
-    const sources = await res.json();
-
-    container.innerHTML = sources.map(s => `
-      <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:0.85rem;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
-          <strong style="color:#fff; font-size:0.85rem;">${s.name}</strong>
-          <span class="feat-badge badge-approved">${s.approval_status}</span>
-        </div>
-        <div style="font-size:0.72rem; color:var(--accent-gold); margin-bottom:0.25rem;">
-          License: <strong>${s.license_type}</strong>
-        </div>
-        <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:0.4rem;">
-          ${s.attribution_text || 'Attribution statement pending compliance review.'}
-        </div>
-        <div style="display:flex; justify-content:space-between; font-size:0.68rem; color:var(--text-dim);">
-          <span>Rate: ${s.rate_limit_policy}</span>
-          <a href="${s.base_url}" target="_blank" style="color:var(--accent-cyan); text-decoration:none;">Visit Source &rarr;</a>
-        </div>
-      </div>
-    `).join('');
-  } catch (err) {
-    console.warn('Failed to load sources:', err);
-  }
-}
-
-function populateAdminCharacterSelect() {
-  const sel = document.getElementById('editMoveCharSelect');
-  if (!sel || !state.characters) return;
-
-  sel.innerHTML = state.characters.map(c => `
-    <option value="${c.id}">${c.name} (${c.slug})</option>
-  `).join('');
-}
-
-async function quickUpdateStatus(entityType, entityId, newStatus) {
-  const reason = prompt(`Enter justification / lab evidence notes to update ${entityType} #${entityId} to ${newStatus}:`, 'Verified in Practice Mode with 60fps frame counter');
-  if (!reason) return;
+  if (!username || !email || !password) return;
 
   try {
-    const res = await fetch(`${API_BASE}/admin/verification-status`, {
+    const res = await fetch(`${API_BASE}/admin/users`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Admin-Key': state.admin.key,
-        'X-Admin-User': state.admin.user
-      },
+      headers: getAdminAuthHeaders(),
       body: JSON.stringify({
-        entity_type: entityType,
-        entity_id: entityId,
-        new_status: newStatus,
-        evidence_notes: reason
+        username: username,
+        email: email,
+        password: password,
+        role: role
       })
     });
 
+    const data = await res.json();
     if (res.ok) {
-      alert(`Status successfully updated to ${newStatus} and recorded in audit trail.`);
-      refreshAdminDashboard();
-    } else {
-      const err = await res.json();
-      alert(`Error updating status: ${err.detail || 'Request failed'}`);
-    }
-  } catch (err) {
-    alert(`Failed to update status: ${err.message}`);
-  }
-}
-
-async function handleAdminSaveMove(e) {
-  e.preventDefault();
-  const feedback = document.getElementById('adminEditorFeedback');
-
-  const charId = parseInt(document.getElementById('editMoveCharSelect').value);
-  const name = document.getElementById('editMoveName').value.trim();
-  const notation = document.getElementById('editMoveNotation').value.trim();
-  const startup = document.getElementById('editMoveStartup').value ? parseInt(document.getElementById('editMoveStartup').value) : null;
-  const block = document.getElementById('editMoveBlock').value ? parseInt(document.getElementById('editMoveBlock').value) : null;
-  const damage = document.getElementById('editMoveDamage').value ? parseInt(document.getElementById('editMoveDamage').value) : null;
-  const hitLevel = document.getElementById('editMoveHitLevel').value.trim() || null;
-  const statusVal = document.getElementById('editMoveStatus').value;
-  const reason = document.getElementById('editMoveReason').value.trim();
-
-  const payload = {
-    character_id: charId,
-    name: name,
-    normalized_notation: notation,
-    original_notation: notation,
-    startup_frames: startup,
-    block_advantage: block,
-    damage: damage,
-    hit_level: hitLevel,
-    verification_status: statusVal,
-    reason_for_change: reason
-  };
-
-  try {
-    const res = await fetch(`${API_BASE}/admin/moves`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Admin-Key': state.admin.key,
-        'X-Admin-User': state.admin.user
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (res.ok) {
-      if (feedback) {
-        feedback.style.color = '#00e676';
-        feedback.textContent = `✓ Move '${notation}' saved with audit trail!`;
+      if (msgEl) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = '#00e676';
+        msgEl.textContent = `✓ Account '${username}' provisioned successfully!`;
       }
-      refreshAdminDashboard();
+      document.getElementById('adminCreateUserForm').reset();
+      loadAdminUsersList();
     } else {
-      const err = await res.json();
-      if (feedback) {
-        feedback.style.color = '#ff4d6d';
-        feedback.textContent = `Error: ${err.detail || 'Failed to save move'}`;
+      if (msgEl) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = '#ff4d6d';
+        msgEl.textContent = `✕ ${data.detail || 'Failed to create user.'}`;
       }
     }
   } catch (err) {
-    if (feedback) {
-      feedback.style.color = '#ff4d6d';
-      feedback.textContent = `Error: ${err.message}`;
+    if (msgEl) {
+      msgEl.style.display = 'block';
+      msgEl.style.color = '#ff4d6d';
+      msgEl.textContent = `✕ Connection error: ${err.message}`;
     }
   }
 }
+window.handleCreateAdminUser = handleCreateAdminUser;
 
-function loadSampleImportJson() {
-  const textarea = document.getElementById('importPayloadTextarea');
-  const entitySel = document.getElementById('importEntityTypeSelect');
-  const formatSel = document.getElementById('importFormatSelect');
-
-  if (entitySel) entitySel.value = 'MOVES';
-  if (formatSel) formatSel.value = 'JSON';
-
-  const sample = [
-    {
-      "character_slug": "jin",
-      "name": "Demon Scissors Extension",
-      "normalized_notation": "4~3",
-      "startup_frames": 23,
-      "block_advantage": -13,
-      "damage": 25,
-      "hit_level": "m",
-      "verification_status": "VERIFIED"
-    },
-    {
-      "character_slug": "kazuya",
-      "name": "Abolishing Fist",
-      "normalized_notation": "df+1,2",
-      "startup_frames": 15,
-      "block_advantage": -14,
-      "damage": 32,
-      "hit_level": "m,m",
-      "verification_status": "UNVERIFIED"
-    }
-  ];
-
-  if (textarea) textarea.value = JSON.stringify(sample, null, 2);
-}
-
-function handleImportFileSelect(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    const text = event.target.result;
-    const textarea = document.getElementById('importPayloadTextarea');
-    if (textarea) textarea.value = text;
-
-    const formatSel = document.getElementById('importFormatSelect');
-    if (formatSel) {
-      formatSel.value = file.name.endsWith('.csv') ? 'CSV' : 'JSON';
-    }
-  };
-  reader.readAsText(file);
-}
-
-async function previewImportPayload() {
-  const textarea = document.getElementById('importPayloadTextarea');
-  const entityType = document.getElementById('importEntityTypeSelect').value;
-  const formatType = document.getElementById('importFormatSelect').value;
-  const pill = document.getElementById('importPreviewStatusPill');
-  const issuesList = document.getElementById('importIssuesList');
-  const commitBtn = document.getElementById('btnCommitImport');
-
-  if (!textarea || !textarea.value.trim()) {
-    alert('Please enter or load a CSV/JSON payload first.');
+async function promptResetAdminPassword(userId, username) {
+  const newPwd = prompt(`Enter new password for administrator '${username}' (min 8 chars):`);
+  if (!newPwd) return;
+  if (newPwd.length < 8) {
+    alert('Password must be at least 8 characters.');
     return;
   }
 
-  const payload = {
-    entity_type: entityType,
-    format: formatType,
-    raw_content: textarea.value.trim(),
-    source_name: 'Admin Workbench Import'
-  };
+  try {
+    const res = await fetch(`${API_BASE}/admin/users/${userId}/reset-password`, {
+      method: 'POST',
+      headers: getAdminAuthHeaders(),
+      body: JSON.stringify({ new_password: newPwd })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      alert(`Password for '${username}' has been successfully reset.`);
+    } else {
+      alert(data.detail || 'Failed to reset password.');
+    }
+  } catch (err) {
+    alert(`Error: ${err.message}`);
+  }
+}
+window.promptResetAdminPassword = promptResetAdminPassword;
+
+async function confirmDeleteAdminUser(userId, username) {
+  if (!confirm(`Are you sure you want to permanently delete administrator account '${username}'?`)) {
+    return;
+  }
 
   try {
-    const res = await fetch(`${API_BASE}/admin/import/preview`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Admin-Key': state.admin.key,
-        'X-Admin-User': state.admin.user
-      },
-      body: JSON.stringify(payload)
+    const res = await fetch(`${API_BASE}/admin/users/${userId}`, {
+      method: 'DELETE',
+      headers: getAdminAuthHeaders()
+    });
+    const data = await res.json();
+    if (res.ok) {
+      loadAdminUsersList();
+      if (window.showToast) showToast(`Administrator '${username}' deleted.`, 'info');
+    } else {
+      alert(data.detail || 'Failed to delete user.');
+    }
+  } catch (err) {
+    alert(`Error: ${err.message}`);
+  }
+}
+window.confirmDeleteAdminUser = confirmDeleteAdminUser;
+
+async function downloadDatabaseBackup() {
+  const statusEl = document.getElementById('dbBackupStatus');
+  if (statusEl) statusEl.textContent = 'Preparing backup snapshot...';
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/database/backup`, {
+      headers: getAdminAuthHeaders()
     });
 
     if (!res.ok) {
-      const err = await res.json();
-      alert(`Preview failed: ${err.detail || 'Invalid payload'}`);
+      const err = await res.json().catch(() => ({}));
+      if (statusEl) statusEl.textContent = `✕ Backup failed: ${err.detail || res.statusText}`;
       return;
     }
 
-    const preview = await res.json();
-    state.admin.previewResponse = preview;
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tekken8_backup_${new Date().toISOString().replace(/[:.]/g, '-')}.db`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
 
-    // Metrics
-    document.getElementById('ipmValid').textContent = preview.valid_rows_count;
-    document.getElementById('ipmErrors').textContent = preview.error_rows_count;
-    document.getElementById('ipmDuplicates').textContent = preview.duplicate_count;
-    document.getElementById('ipmProtected').textContent = preview.verified_protection_count;
-
-    if (pill) {
-      if (preview.is_importable) {
-        pill.className = 'feat-badge badge-approved';
-        pill.textContent = 'VALIDATION PASSED';
-      } else {
-        pill.className = 'feat-badge badge-unverified';
-        pill.textContent = `${preview.error_rows_count} ERRORS DETECTED`;
-      }
-    }
-
-    // Issues list
-    if (issuesList) {
-      if (preview.issues.length === 0) {
-        issuesList.innerHTML = '<div style="color:#00e676; padding:0.5rem;">✓ Zero validation errors or conflict blocks detected. Ready to commit.</div>';
-      } else {
-        issuesList.innerHTML = preview.issues.map(iss => {
-          let color = '#ff4d6d';
-          if (iss.issue_type === 'DUPLICATE') color = '#fbbf24';
-          if (iss.issue_type === 'UNVERIFIED_OVERWRITE_PROTECTED') color = '#c084fc';
-          return `
-            <div style="border-bottom:1px solid rgba(255,255,255,0.05); padding:0.25rem 0;">
-              <span style="color:${color}; font-weight:800;">[Row ${iss.row_index}] ${iss.issue_type}:</span>
-              <span style="color:#e2e8f0;">${iss.message}</span>
-            </div>
-          `;
-        }).join('');
-      }
-    }
-
-    if (commitBtn) {
-      commitBtn.disabled = !preview.is_importable || preview.valid_rows_count === 0;
-    }
-
+    if (statusEl) statusEl.textContent = '✓ Database snapshot downloaded successfully!';
+    setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 5000);
   } catch (err) {
-    alert(`Error during preview: ${err.message}`);
+    if (statusEl) statusEl.textContent = `✕ Error: ${err.message}`;
   }
 }
+window.downloadDatabaseBackup = downloadDatabaseBackup;
 
-async function executeCommittedImport() {
-  const preview = state.admin.previewResponse;
-  if (!preview || !preview.preview_rows) return;
+function populateAdminBioFighterSelect() {
+  const sel = document.getElementById('adminBioFighterSelect');
+  if (!sel || sel.children.length > 0) return;
 
-  const allowOverride = document.getElementById('checkAllowVerifiedOverride').checked;
-  const feedback = document.getElementById('importResultFeedback');
-  const commitBtn = document.getElementById('btnCommitImport');
+  const characters = (state.characters && state.characters.length > 0)
+    ? state.characters
+    : Object.keys(window.DOSSIERS || {}).map(k => ({ slug: k, name: window.DOSSIERS[k].name }));
 
-  if (commitBtn) commitBtn.disabled = true;
-  if (feedback) {
-    feedback.style.color = '#38bdf8';
-    feedback.textContent = 'Executing transaction-safe import...';
+  sel.innerHTML = characters.map(c => `
+    <option value="${c.slug}">${c.name}</option>
+  `).join('');
+
+  loadAdminFighterBio();
+}
+
+function loadAdminFighterBio() {
+  const sel = document.getElementById('adminBioFighterSelect');
+  if (!sel || !sel.value) return;
+
+  const slug = sel.value;
+  const dossier = window.DOSSIERS ? window.DOSSIERS[slug] : null;
+
+  const countryEl = document.getElementById('adminBioCountry');
+  const styleEl = document.getElementById('adminBioStyle');
+  const heightEl = document.getElementById('adminBioHeight');
+  const weightEl = document.getElementById('adminBioWeight');
+  const sidestepEl = document.getElementById('adminBioSidestep');
+  const archetypeEl = document.getElementById('adminBioArchetype');
+  const loreEl = document.getElementById('adminBioLore');
+
+  if (dossier) {
+    if (countryEl) countryEl.value = dossier.country || '';
+    if (styleEl) styleEl.value = dossier.style || '';
+    if (heightEl) heightEl.value = dossier.height || '';
+    if (weightEl) weightEl.value = dossier.weight || '';
+    if (sidestepEl) sidestepEl.value = dossier.weak_side ? (dossier.weak_side.includes('SSL') ? 'SSL' : (dossier.weak_side.includes('SSR') ? 'SSR' : 'Both')) : 'SSL';
+    if (archetypeEl) archetypeEl.value = dossier.archetype || '';
+    if (loreEl) loreEl.value = dossier.lore || '';
   }
+}
+window.loadAdminFighterBio = loadAdminFighterBio;
+
+async function handleSaveFighterBio(e) {
+  e.preventDefault();
+  const sel = document.getElementById('adminBioFighterSelect');
+  const slug = sel ? sel.value : null;
+  const msgEl = document.getElementById('adminBioSaveMsg');
+  if (!slug) return;
 
   const payload = {
-    entity_type: preview.entity_type,
-    rows: preview.preview_rows,
-    source_name: 'Admin Workbench Import',
-    allow_override_verified: allowOverride
+    origin: document.getElementById('adminBioCountry').value.trim(),
+    fighting_style: document.getElementById('adminBioStyle').value.trim(),
+    height: document.getElementById('adminBioHeight').value.trim(),
+    weight: document.getElementById('adminBioWeight').value.trim(),
+    bio_summary: document.getElementById('adminBioLore').value.trim()
   };
 
   try {
-    const res = await fetch(`${API_BASE}/admin/import/execute`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Admin-Key': state.admin.key,
-        'X-Admin-User': state.admin.user
-      },
+    const res = await fetch(`${API_BASE}/admin/fighters/${slug}/bio`, {
+      method: 'PUT',
+      headers: getAdminAuthHeaders(),
       body: JSON.stringify(payload)
     });
 
-    const summary = await res.json();
-    if (summary.success) {
-      if (feedback) {
-        feedback.style.color = '#00e676';
-        feedback.textContent = `✓ ${summary.message}`;
+    const data = await res.json();
+    if (res.ok) {
+      if (window.DOSSIERS && window.DOSSIERS[slug]) {
+        if (payload.origin) window.DOSSIERS[slug].country = payload.origin;
+        if (payload.fighting_style) window.DOSSIERS[slug].style = payload.fighting_style;
+        if (payload.height) window.DOSSIERS[slug].height = payload.height;
+        if (payload.weight) window.DOSSIERS[slug].weight = payload.weight;
+        if (payload.bio_summary) window.DOSSIERS[slug].lore = payload.bio_summary;
       }
-      refreshAdminDashboard();
+
+      if (msgEl) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = '#00e676';
+        msgEl.textContent = `✓ Bio changes saved for ${slug}!`;
+      }
+      setTimeout(() => { if (msgEl) msgEl.style.display = 'none'; }, 4000);
     } else {
-      if (feedback) {
-        feedback.style.color = '#ff4d6d';
-        feedback.textContent = `✕ Import rolled back: ${summary.message}`;
+      if (msgEl) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = '#ff4d6d';
+        msgEl.textContent = data.detail || 'Failed to update bio.';
       }
     }
   } catch (err) {
-    if (feedback) {
-      feedback.style.color = '#ff4d6d';
-      feedback.textContent = `Error: ${err.message}`;
+    if (msgEl) {
+      msgEl.style.display = 'block';
+      msgEl.style.color = '#ff4d6d';
+      msgEl.textContent = `Error: ${err.message}`;
     }
   }
 }
+window.handleSaveFighterBio = handleSaveFighterBio;
 
-// ==========================================================================
+async function exportData(entity, format) {
+  try {
+    const res = await fetch(`${API_BASE}/admin/export/${entity}?format=${format}`, {
+      headers: getAdminAuthHeaders()
+    });
+
+    if (!res.ok) {
+      alert(`Export failed: ${res.statusText}`);
+      return;
+    }
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tekken8_${entity}_${new Date().toISOString().slice(0, 10)}.${format.toLowerCase()}`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  } catch (err) {
+    alert(`Failed to export data: ${err.message}`);
+  }
+}
+window.exportData = exportData;
+
+
 // 1. Audio Synthesis Sound FX Engine (Web Audio API)
 // ==========================================================================
 let audioCtx = null;
@@ -6735,6 +7197,12 @@ function renderComboLab() {
 
   const persp = state.comboFinder.perspective || 'P1';
 
+  // Phase 4 UX: Populate Universal Bread & Butter Hero Combo Spotlight
+  const activeChar = (persp === 'P2')
+    ? (state.characters?.find(c => c.slug === state.comboFinder.p2Slug) || state.selectedCharacter)
+    : (state.characters?.find(c => c.slug === state.comboFinder.p1Slug) || state.selectedCharacter);
+  renderBnbHeroCombo(activeChar);
+
   // Update Perspective Button Counts
   const p1Filtered = filterCombos(state.comboFinder.p1Combos || []);
   const p2Filtered = filterCombos(state.comboFinder.p2Combos || []);
@@ -6961,11 +7429,14 @@ function renderComboCompareDock() {
         `;
       }).join('')}
       ${comboCompareList.length === 1 ? `
-        <div class="compare-card placeholder">
-          <div class="cc-placeholder-content">
-            <span style="font-size:1.8rem;">⚖️</span>
+        <div class="compare-card placeholder" style="border: 1px dashed var(--accent-gold); background: rgba(245, 158, 11, 0.04);">
+          <div class="cc-placeholder-content" style="padding:1.5rem 1rem;">
+            <span style="font-size:2rem;">⚖️</span>
             <div style="font-weight:700; color:#fff; margin-top:0.5rem;">Select a Second Combo</div>
-            <div style="font-size:0.8rem; color:var(--text-muted);">Click "⚖️ Compare" on any combo card (P1 or P2) to benchmark damage efficiency side-by-side.</div>
+            <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.75rem;">Click "⚖️ Compare" on any combo in the list below to run a side-by-side benchmark comparison.</div>
+            <button type="button" class="btn-hero-secondary" style="font-size:0.75rem; padding:0.35rem 0.8rem;" onclick="document.getElementById('comboLabGrid')?.scrollIntoView({behavior:'smooth', block:'start'})">
+              Browse Combos Below ↓
+            </button>
           </div>
         </div>
       ` : ''}
@@ -7238,7 +7709,7 @@ function filterStagesGrid(filter = 'ALL') {
   if (filter === 'WALL') {
     list = list.filter(s => s.has_walls !== false);
   } else if (filter === 'WALL_BREAK') {
-    list = list.filter(s => s.wall_break || (s.hazards && s.hazards.some(h => h.toLowerCase().includes('wall'))));
+    list = list.filter(s => s.wall_break || (s.hazards && s.hazards.some(h => h.toLowerCase().includes('wall break') || h.toLowerCase().includes('hard wall'))));
   } else if (filter === 'FLOOR_BREAK') {
     list = list.filter(s => s.floor_break || (s.hazards && s.hazards.some(h => h.toLowerCase().includes('floor break'))));
   } else if (filter === 'BALCONY_BREAK') {
@@ -7249,29 +7720,63 @@ function filterStagesGrid(filter = 'ALL') {
     list = list.filter(s => s.has_walls === false || (s.hazards && s.hazards.length === 0));
   }
 
+  const countBadge = document.getElementById('stgFilterCount');
+  if (countBadge) countBadge.textContent = list.length;
+
+  const activeStageId = state.selectedStageId || 1;
+
   container.innerHTML = list.map(s => {
     const hazardsList = s.hazards || [];
     const imgSrc = s.image_url || s.image || '/assets/img/stages/arena.jpg';
+    const fallbackSvg = s.fallback_svg || '/assets/img/stages/arena.svg';
     const locationStr = s.location || 'Official Arena';
     const gimmickStr = s.notes || s.special_mechanics || s.gimmick || (s.has_walls ? 'Walled tournament battleground' : 'Infinite arena');
+    const isSelected = String(s.id) === String(activeStageId);
+    const boundaryStr = s.has_walls ? (s.boundary_shape || 'Walled') : 'Infinite';
+    const distStr = s.wall_distance || (s.has_walls ? '24m' : 'Unbounded');
+
+    // Destructible Hazard Badges
+    const hazardBadges = [];
+    if (imgSrc.endsWith('.svg')) hazardBadges.push('<span class="stage-overlay-badge badge-blueprint" style="background:rgba(14,165,233,0.9); color:#fff; border:1px solid #38bdf8; font-weight:800;">TACTICAL BLUEPRINT</span>');
+    if (!s.has_walls) hazardBadges.push('<span class="stage-overlay-badge badge-infinite">INFINITE</span>');
+    if (s.wall_break) hazardBadges.push('<span class="stage-overlay-badge badge-wallbreak">WALL BREAK</span>');
+    if (s.hard_wall_break) hazardBadges.push('<span class="stage-overlay-badge badge-wallbreak">HARD WALL BREAK</span>');
+    if (s.wall_blast) hazardBadges.push('<span class="stage-overlay-badge badge-wallbreak">WALL BLAST</span>');
+    if (s.wall_bound) hazardBadges.push('<span class="stage-overlay-badge badge-wallbreak">WALL BOUND</span>');
+    if (s.floor_break) hazardBadges.push('<span class="stage-overlay-badge badge-floorbreak">FLOOR BREAK</span>');
+    if (s.floor_blast) hazardBadges.push('<span class="stage-overlay-badge badge-floorbreak">FLOOR BLAST</span>');
+    if (s.balcony_break) hazardBadges.push('<span class="stage-overlay-badge badge-balcony">BALCONY BREAK</span>');
+
+    const altText = imgSrc.endsWith('.svg') ? `Tactical Blueprint Vector: ${s.name}` : `Arena Photograph: ${s.name}`;
 
     return `
-      <div class="stage-card" id="stage_card_${s.id}" onclick="openStageDetailModal('${s.id}')">
+      <div class="stage-card ${isSelected ? 'active' : ''}" 
+           id="stage_card_${s.id}" 
+           onclick="inspectStage(${s.id})"
+           ondblclick="inspectStage(${s.id}, { openModal: true })"
+           role="button"
+           tabindex="0"
+           aria-label="Inspect stage ${s.name}">
         <div class="stage-img-wrap">
-          <img class="stage-img" src="${imgSrc}" alt="${s.name}" loading="lazy"/>
-          <div class="stage-overlay"></div>
-          <div class="stage-hazard-badges">
-            ${hazardsList.map(h => `<span class="hazard-badge">${h}</span>`).join('')}
-            ${s.has_walls === false ? '<span class="hazard-badge" style="background:#3b82f6;">INFINITE</span>' : ''}
+          <img class="stage-img" src="${imgSrc}" alt="${altText}" loading="lazy" onerror="this.src='${fallbackSvg}'">
+          <div class="stage-img-overlay-badges">
+            ${hazardBadges.join('')}
           </div>
+          ${isSelected ? '<div class="stage-selected-indicator"><span>ACTIVE ARENA</span></div>' : ''}
         </div>
-        <div class="stage-info">
-          <h3 class="stage-name">${s.name}</h3>
-          <p class="stage-location">${locationStr}</p>
-          <p class="stage-gimmick">${gimmickStr}</p>
-          <button type="button" class="btn-stage-inspect" onclick="event.stopPropagation(); openStageDetailModal('${s.id}')">
-            <span>Inspect Arena Dynamics</span> &rarr;
-          </button>
+        <div class="stage-meta">
+          <div class="stage-meta-header">
+            <div>
+              <div class="stage-name">${s.name}</div>
+              <div class="stage-location">${locationStr} • <span style="color:var(--text-muted); font-size:0.7rem;">${boundaryStr} (${distStr})</span></div>
+            </div>
+            <button class="stage-select-btn ${isSelected ? 'selected' : ''}" type="button" onclick="event.stopPropagation(); inspectStage(${s.id}, { openModal: true })">
+              ${isSelected ? 'Active' : 'Inspect'}
+            </button>
+          </div>
+          <div class="stage-hazards">
+            ${hazardsList.map(h => `<span class="hazard-pill">${h}</span>`).join('')}
+          </div>
         </div>
       </div>
     `;
@@ -7280,47 +7785,347 @@ function filterStagesGrid(filter = 'ALL') {
 
 let activeDetailStageId = null;
 
-function openStageDetailModal(stageId) {
+function inspectStage(stageIdOrSlug, options = {}) {
   playSfx('click');
-  const stage = state.stages.find(s => String(s.id) === String(stageId)) || state.stages[0];
-  if (!stage) return;
+  const stageObj = state.stages?.find(s => String(s.id) === String(stageIdOrSlug) || s.slug === String(stageIdOrSlug).toLowerCase()) 
+                   || (window.getStageDossier ? window.getStageDossier(stageIdOrSlug) : null)
+                   || state.stages?.[0];
+  if (!stageObj) return;
 
-  activeDetailStageId = stage.id;
+  const dossier = (window.getStageDossier ? window.getStageDossier(stageObj.slug || stageObj.id) : null) || stageObj;
+  const activeId = stageObj.id || dossier.id;
+  state.selectedStageId = activeId;
+  activeDetailStageId = activeId;
 
-  const modal = document.getElementById('stageDetailModal');
+  // 1. Highlight active card in grid
+  document.querySelectorAll('.stage-card').forEach(c => c.classList.remove('active'));
+  const sc = document.getElementById(`stage_card_${activeId}`);
+  if (sc) sc.classList.add('active');
+
+  // 2. Sync background global state without navigating away
+  setGlobalStage(activeId, { skipComboLabRefresh: false, skipScroll: true });
+
+  // 3. Render Inspector Panel in Split View
+  renderStageInspectorPanel(dossier, stageObj);
+
+  // 4. Populate Modal content
+  populateStageModal(dossier, stageObj);
+
+  // 4b. Load dynamic engine strategy from API
+  loadDynamicStageStrategy(activeId);
+
+  // 5. Update deep linking hash
+  if (dossier.slug && !options.skipHash) {
+    try {
+      history.pushState(null, '', `#/stages/${dossier.slug}`);
+    } catch (e) {
+      try { window.location.hash = `/stages/${dossier.slug}`; } catch (err) {}
+    }
+  }
+
+  // 6. Open Modal if requested
+  if (options.openModal) {
+    const modal = document.getElementById('stageDetailModal');
+    if (modal) modal.style.display = 'flex';
+  }
+}
+
+function renderStageInspectorPanel(dossier, stageObj) {
+  const panel = document.getElementById('stageInspectorPanel');
+  if (!panel || !dossier) return;
+
+  const imgSrc = dossier.image_url || stageObj.image_url || '/assets/img/stages/arena.jpg';
+  const fallbackSvg = dossier.fallback_svg || '/assets/img/stages/arena.svg';
+  const dims = dossier.dimensions || {
+    width_m: 24,
+    length_m: 24,
+    area_sqm: 576,
+    distance_to_wall: 'Medium',
+    spawn_distance_m: 2.8
+  };
+  const hazards = dossier.hazards || {
+    has_walls: true,
+    wall_break: false,
+    hard_wall_break: false,
+    balcony_break: false,
+    floor_break: false,
+    floor_blast: false,
+    wall_blast: false,
+    wall_bound: false
+  };
+
+  // Build Hazard Chips
+  const hazardEntries = [
+    { key: 'wall_break', name: 'Wall Break', icon: '💥', active: hazards.wall_break, desc: 'Knockdown impacts fracture outer walls, unlocking secondary arena zones.' },
+    { key: 'hard_wall_break', name: 'Hard Wall Break', icon: '🧱', active: hazards.hard_wall_break, desc: 'Requires high-impact wall splat to shatter reinforced structural pillars.' },
+    { key: 'balcony_break', name: 'Balcony Break', icon: '🪜', active: hazards.balcony_break, desc: 'Breaks perimeter railings plunging fighters downward into lower tier.' },
+    { key: 'floor_break', name: 'Floor Break', icon: '⬇️', active: hazards.floor_break, desc: 'Downward strikes collapse floorboards into subterranean level.' },
+    { key: 'floor_blast', name: 'Floor Blast', icon: '🌋', active: hazards.floor_blast, desc: 'Thermal / magma eruptions launch opponents skyward for juggle resets.' },
+    { key: 'wall_blast', name: 'Wall Blast', icon: '⚡', active: hazards.wall_blast, desc: 'Explosive billboards or electrical fencing trigger violent knockback.' },
+    { key: 'wall_bound', name: 'Wall Bound', icon: '🔄', active: hazards.wall_bound, desc: 'Impact with stone pillars bounces target upward for instant pickup.' }
+  ];
+
+  const sTierFighters = dossier.s_tier_fighters || [];
+  const comboRules = dossier.combo_adjustments || [];
+
+  panel.innerHTML = `
+    <div class="stg-insp-hero">
+      <img src="${imgSrc}" class="stg-insp-bg" alt="${dossier.name}" onerror="this.src='${fallbackSvg}'">
+      <div class="stg-insp-gradient"></div>
+      <div class="stg-insp-header-meta">
+        <div>
+          <div class="stg-meta-badges-row">
+            <span class="stg-badge category">${dossier.setting_type || 'OFFICIAL BATTLEGROUND'}</span>
+            <span class="stg-badge bgm">🎵 BGM: ${dossier.bgm || 'Official OST'}</span>
+            <span class="stg-badge" style="background:rgba(56,189,248,0.2); border:1px solid #38bdf8; color:#38bdf8;">${dims.distance_to_wall || 'Standard'} PROXIMITY</span>
+          </div>
+          <h2 class="stg-insp-title">${dossier.name}</h2>
+          <div class="stg-insp-location">📍 ${dossier.location || 'Official Arena'}</div>
+        </div>
+        <div class="stg-insp-actions-top">
+          <button type="button" class="btn-stg-action primary" onclick="selectStageAsBattleground()">
+            ⚔️ Set Active Arena
+          </button>
+          <button type="button" class="btn-stg-action" onclick="openStageDetailModal('${dossier.id}')" title="Zoom Blueprint & Full Screen">
+            🔍 Full Screen
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Centimeter-Accurate Dimension Telemetry Grid -->
+    <div class="stg-metrics-grid">
+      <div class="stg-metric-card">
+        <span class="stg-metric-label">Dimensions (m &amp; cm)</span>
+        <span class="stg-metric-val">${dims.width_m}m × ${dims.length_m}m</span>
+        <span class="stg-metric-subval" style="font-size:0.75rem; color:#94a3b8; display:block; margin-top:2px;">${dims.width_cm || (dims.width_m * 100)} cm × ${dims.length_cm || (dims.length_m * 100)} cm</span>
+      </div>
+      <div class="stg-metric-card">
+        <span class="stg-metric-label">Total Arena Area</span>
+        <span class="stg-metric-val">${dims.area_sqm} m²</span>
+        <span class="stg-metric-subval" style="font-size:0.75rem; color:#94a3b8; display:block; margin-top:2px;">${(dims.area_sqm * 10000).toLocaleString()} cm²</span>
+      </div>
+      <div class="stg-metric-card">
+        <span class="stg-metric-label">Back Wall Distance</span>
+        <span class="stg-metric-val" style="color:${hazards.has_walls ? '#f59e0b' : '#38bdf8'};">${dims.wall_dist_behind_m ? `${dims.wall_dist_behind_m}m / ${dims.wall_dist_behind_cm}cm` : (dims.distance_to_wall || 'Medium')}</span>
+        <span class="stg-metric-subval" style="font-size:0.75rem; color:#94a3b8; display:block; margin-top:2px;">${dims.backdashes_to_wall ? `${dims.backdashes_to_wall} backdashes to wall` : 'Infinite open ground'}</span>
+      </div>
+      <div class="stg-metric-card">
+        <span class="stg-metric-label">Side Wall Clearance</span>
+        <span class="stg-metric-val">${dims.side_wall_dist_m ? `${dims.side_wall_dist_m}m / ${dims.side_wall_dist_cm}cm` : 'Standard'}</span>
+        <span class="stg-metric-subval" style="font-size:0.75rem; color:#94a3b8; display:block; margin-top:2px;">Spawn Standoff: ${dims.spawn_distance_m || 4.0}m (${dims.spawn_distance_cm || 400}cm)</span>
+      </div>
+    </div>
+
+    <!-- Precision Spawn Coordinates & Combo Carry Telemetry Banner -->
+    <div style="background:rgba(15,23,42,0.6); border:1px solid rgba(56,189,248,0.2); border-radius:8px; padding:0.65rem 0.85rem; margin-bottom:1rem; font-size:0.82rem; display:flex; flex-direction:column; gap:4px;">
+      <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+        <span><strong style="color:#38bdf8;">🎯 Spawn Center:</strong> Coordinates (0, 0) | P1: ${dims.p1_spawn || '-200 cm'} | P2: ${dims.p2_spawn || '+200 cm'}</span>
+        <span><strong style="color:#f59e0b;">📏 Lateral Clearance:</strong> ${dims.side_wall_dist_m || '10'}m (${dims.side_wall_dist_cm || '1,000'}cm)</span>
+      </div>
+      <div style="color:#cbd5e1;">
+        <strong style="color:#10b981;">🥊 Combo Carry to Wall:</strong> ${dims.combo_carry_requirement || 'Standard Combo + Tornado (T!) to wall'}
+      </div>
+      ${dims.secondary_floor ? `
+      <div style="margin-top:4px; padding-top:4px; border-top:1px dashed rgba(255,255,255,0.15); color:#e2e8f0;">
+        <strong style="color:#ec4899;">⚡ Secondary Floor Telemetry (${dims.secondary_floor.name || 'Lower Tier'}):</strong>
+        ${dims.secondary_floor.width_m}m × ${dims.secondary_floor.length_m}m (${dims.secondary_floor.width_cm} cm × ${dims.secondary_floor.length_cm} cm), Area: ${dims.secondary_floor.area_sqm} m²
+        ${dims.secondary_floor.wall_dist_behind_m ? `| Wall Behind: ${dims.secondary_floor.wall_dist_behind_m}m / ${dims.secondary_floor.wall_dist_behind_cm}cm (${dims.secondary_floor.backdashes_to_wall} backdashes)` : ''}
+        ${dims.secondary_floor.tier3_cellar_m ? `<br><strong style="color:#f59e0b;">🏰 Tier 3 Ancient Cellar:</strong> ${dims.secondary_floor.tier3_cellar_m}` : ''}
+        ${dims.secondary_floor.tier3_abyss_m ? `<br><strong style="color:#f59e0b;">🌌 Tier 3 Abyss:</strong> ${dims.secondary_floor.tier3_abyss_m}` : ''}
+      </div>` : ''}
+    </div>
+
+    <!-- Scrollable Tactical Intelligence Body -->
+    <div class="stg-insp-scrollbody">
+      <!-- 2D Blueprint Radar -->
+      <div>
+        <h4 class="sd-sec-title">2D TACTICAL BLUEPRINT &amp; ENGAGEMENT RADAR</h4>
+        <div class="stg-blueprint-frame">
+          ${window.renderStageBlueprintSvg ? window.renderStageBlueprintSvg(dossier) : ''}
+        </div>
+        <div class="stg-blueprint-legend">
+          <span class="stg-legend-tag"><span class="stg-legend-dot" style="background:#ef4444;"></span> Boundary / Wall</span>
+          <span class="stg-legend-tag"><span class="stg-legend-dot" style="background:#38bdf8;"></span> P1 Spawn</span>
+          <span class="stg-legend-tag"><span class="stg-legend-dot" style="background:#f43f5e;"></span> P2 Spawn</span>
+          ${hazards.wall_break ? '<span class="stg-legend-tag"><span class="stg-legend-dot" style="background:#ea580c;"></span> Wall Break</span>' : ''}
+          ${hazards.balcony_break ? '<span class="stg-legend-tag"><span class="stg-legend-dot" style="background:#f59e0b;"></span> Balcony Break</span>' : ''}
+          ${hazards.floor_break ? '<span class="stg-legend-tag"><span class="stg-legend-dot" style="background:#f97316;"></span> Floor Break</span>' : ''}
+          ${hazards.floor_blast ? '<span class="stg-legend-tag"><span class="stg-legend-dot" style="background:#06b6d4;"></span> Floor Blast</span>' : ''}
+          ${hazards.wall_blast ? '<span class="stg-legend-tag"><span class="stg-legend-dot" style="background:#ef4444;"></span> Wall Blast</span>' : ''}
+          ${hazards.wall_bound ? '<span class="stg-legend-tag"><span class="stg-legend-dot" style="background:#a855f7;"></span> Wall Bound</span>' : ''}
+        </div>
+      </div>
+
+      <!-- Environmental Hazard Specifications -->
+      <div>
+        <h4 class="sd-sec-title">ENVIRONMENTAL HAZARD MATRIX</h4>
+        <div class="stg-hazards-grid">
+          ${hazardEntries.map(h => `
+            <div class="stg-hazard-card ${h.active ? 'active' : ''}" onclick="showHazardTacticalAlert('${h.name}', '${escapeHtml(h.desc)}', ${h.active})" title="${h.active ? 'Click to inspect hazard mechanics' : 'Inactive on this stage'}">
+              <div class="stg-hazard-icon">${h.icon}</div>
+              <div class="stg-hazard-meta">
+                <div class="stg-hazard-name" style="color:${h.active ? '#fbbf24' : '#64748b'};">
+                  ${h.name} ${h.active ? '• VERIFIED' : '• N/A'}
+                </div>
+                <div class="stg-hazard-desc">${h.active ? h.desc : 'No mechanic active on this arena.'}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Pro-Esports Meta Impact & Dynamic Strategy -->
+      <div>
+        <h4 class="sd-sec-title">PRO-ESPORTS META IMPACT &amp; ARENA ARCHETYPE</h4>
+        <p class="sd-desc-text" style="margin:0;">
+          ${dossier.meta_impact || 'Standard competitive battleground with verified perimeter boundaries.'}
+        </p>
+        <div id="stageDynamicStrategyNotes"></div>
+      </div>
+
+      <!-- Best Advantaged Fighters (S-Tier) -->
+      <div>
+        <h4 class="sd-sec-title">BEST ADVANTAGED FIGHTERS (S-TIER SYNERGY)</h4>
+        <div class="stg-fighters-grid">
+          ${sTierFighters.map(f => `
+            <div class="stg-fighter-chip" onclick="openCharacterProfile('${f.slug}')" title="Click to view ${f.name}'s complete Fighter Dossier">
+              <img src="/assets/avatars/${f.slug}.jpg" class="stg-fighter-avatar" alt="${f.name}" onerror="this.src='/assets/avatars/${f.slug}.webp'">
+              <div class="stg-fighter-meta">
+                <div class="stg-fighter-name">${f.name}</div>
+                <div class="stg-fighter-role">${f.archetype}</div>
+                <div class="stg-fighter-reason">${f.advantage_reason}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Optimal Stage Combo Adjustments -->
+      <div>
+        <h4 class="sd-sec-title">OPTIMAL STAGE COMBO ADJUSTMENTS</h4>
+        <ul class="stg-combos-list">
+          ${comboRules.map(rule => `
+            <li class="stg-combo-item">
+              <span class="stg-combo-bullet">▶</span>
+              <span>${rule}</span>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    </div>
+  `;
+}
+
+function populateStageModal(dossier, stageObj) {
+  if (!dossier) return;
+
   const heroImg = document.getElementById('sdHeroImg');
   const title = document.getElementById('sdTitle');
   const loc = document.getElementById('sdLocation');
   const catPill = document.getElementById('sdCategoryPill');
-  const gimmickText = document.getElementById('sdGimmickText');
+  const bgmPill = document.getElementById('sdBgmPill');
+  const dimVal = document.getElementById('sdDimVal');
+  const areaVal = document.getElementById('sdAreaVal');
+  const distVal = document.getElementById('sdDistVal');
+  const spawnVal = document.getElementById('sdSpawnVal');
+  const blueprintBox = document.getElementById('sdBlueprintBox');
   const hazardsList = document.getElementById('sdHazardsList');
-  const tacticsText = document.getElementById('sdTacticsText');
+  const metaImpactText = document.getElementById('sdMetaImpactText');
+  const fightersGrid = document.getElementById('sdFightersGrid');
+  const comboRulesList = document.getElementById('sdComboRulesList');
 
-  if (heroImg) heroImg.src = stage.image_url || stage.image || '/assets/img/stages/arena.jpg';
-  if (title) title.textContent = stage.name;
-  if (loc) loc.textContent = stage.location || 'Tournament Arena';
-  if (catPill) catPill.textContent = stage.has_walls === false ? 'INFINITE ARENA' : 'OCTAGONAL WALL ARENA';
-  if (gimmickText) gimmickText.textContent = stage.notes || stage.gimmick || 'Standard Tekken 8 competitive stage featuring dynamic destructible boundaries.';
+  const imgSrc = dossier.image_url || stageObj?.image_url || '/assets/img/stages/arena.jpg';
+  const fallbackSvg = dossier.fallback_svg || '/assets/img/stages/arena.svg';
+  const dims = dossier.dimensions || { width_m: 24, length_m: 24, area_sqm: 576, distance_to_wall: 'Medium', spawn_distance_m: 2.8 };
+  const hazards = dossier.hazards || { has_walls: true };
+
+  if (heroImg) {
+    heroImg.src = imgSrc;
+    heroImg.onerror = () => { heroImg.src = fallbackSvg; };
+  }
+  if (title) title.textContent = dossier.name;
+  if (loc) loc.textContent = dossier.location || 'Official Arena';
+  if (catPill) catPill.textContent = dossier.setting_type || (hazards.has_walls ? 'WALLED ARENA' : 'INFINITE ARENA');
+  if (bgmPill) bgmPill.textContent = `🎵 BGM: ${dossier.bgm || 'Official OST'}`;
+
+  if (dimVal) dimVal.innerHTML = `${dims.width_m}m × ${dims.length_m}m<br><span style="font-size:0.75rem; color:#94a3b8; font-weight:normal;">${dims.width_cm || (dims.width_m * 100)} cm × ${dims.length_cm || (dims.length_m * 100)} cm</span>`;
+  if (areaVal) areaVal.innerHTML = `${dims.area_sqm} m²<br><span style="font-size:0.75rem; color:#94a3b8; font-weight:normal;">${(dims.area_sqm * 10000).toLocaleString()} cm²</span>`;
+  if (distVal) {
+    distVal.innerHTML = dims.wall_dist_behind_m
+      ? `${dims.wall_dist_behind_m}m / ${dims.wall_dist_behind_cm}cm<br><span style="font-size:0.75rem; color:#94a3b8; font-weight:normal;">${dims.backdashes_to_wall} backdashes to wall</span>`
+      : (dims.distance_to_wall || 'Medium');
+    distVal.style.color = hazards.has_walls ? '#f59e0b' : '#38bdf8';
+  }
+  if (spawnVal) spawnVal.innerHTML = `Center (0,0) | ${dims.spawn_distance_m || 4.0}m<br><span style="font-size:0.75rem; color:#94a3b8; font-weight:normal;">P1: -200cm, P2: +200cm</span>`;
+
+  if (blueprintBox && window.renderStageBlueprintSvg) {
+    blueprintBox.innerHTML = window.renderStageBlueprintSvg(dossier);
+  }
 
   if (hazardsList) {
-    const list = stage.hazards || (stage.wall_break ? ['Wall Break'] : ['Wall Bound']);
-    hazardsList.innerHTML = list.map(h => `
-      <div class="sd-hazard-chip">
-        <span class="sdh-icon">💥</span>
+    const hazardEntries = [
+      { name: 'Wall Break', icon: '💥', active: hazards.wall_break, desc: 'Fractures perimeter walls into secondary area.' },
+      { name: 'Hard Wall Break', icon: '🧱', active: hazards.hard_wall_break, desc: 'Reinforced pillars require heavy impact to break.' },
+      { name: 'Balcony Break', icon: '🪜', active: hazards.balcony_break, desc: 'Breaks railing plunging down to lower tier.' },
+      { name: 'Floor Break', icon: '⬇️', active: hazards.floor_break, desc: 'Downward strikes break floor into lower crypt.' },
+      { name: 'Floor Blast', icon: '🌋', active: hazards.floor_blast, desc: 'Thermal magma eruption launches target skyward.' },
+      { name: 'Wall Blast', icon: '⚡', active: hazards.wall_blast, desc: 'Explosive billboards or electrical fencing knockback.' },
+      { name: 'Wall Bound', icon: '🔄', active: hazards.wall_bound, desc: 'Stone pillars rebound target for instant juggle.' }
+    ];
+
+    hazardsList.innerHTML = hazardEntries.map(h => `
+      <div class="sd-hazard-chip ${h.active ? 'active' : ''}" style="opacity:${h.active ? '1' : '0.45'}; cursor:${h.active ? 'pointer' : 'default'};" onclick="showHazardTacticalAlert('${h.name}', '${escapeHtml(h.desc)}', ${h.active})" title="${h.active ? 'Click to inspect hazard mechanics' : 'Inactive on this stage'}">
+        <span class="sdh-icon">${h.icon}</span>
         <div class="sdh-meta">
-          <div class="sdh-title">${h}</div>
-          <div class="sdh-desc">Expands combo potential with additional scaling floor bounce or wall collapse.</div>
+          <div class="sdh-title" style="color:${h.active ? '#fbbf24' : '#94a3b8'};">
+            ${h.name} ${h.active ? '• VERIFIED' : '• N/A'}
+          </div>
+          <div class="sdh-desc">${h.active ? h.desc : 'No mechanic active on this battleground.'}</div>
         </div>
       </div>
     `).join('');
   }
 
-  if (tacticsText) {
-    tacticsText.textContent = stage.has_walls === false
-      ? 'Infinite arena eliminates corner carry danger. Focus on infinite backdashing, keepout pokes, and long-range whiff punishment.'
-      : 'Maintain center stage dominance. Wall carry routes should be prioritized over raw damage, routing into wall splat for guaranteed 20+ additional wall combo damage.';
+  if (metaImpactText) {
+    metaImpactText.textContent = dossier.meta_impact || 'Standard Tekken 8 tournament arena with verified perimeter boundaries.';
   }
 
+  if (fightersGrid) {
+    const fighters = dossier.s_tier_fighters || [];
+    fightersGrid.innerHTML = fighters.map(f => `
+      <div class="stg-fighter-chip" onclick="closeStageDetailModal(); openCharacterProfile('${f.slug}')" title="View ${f.name}'s Dossier">
+        <img src="/assets/avatars/${f.slug}.jpg" class="stg-fighter-avatar" alt="${f.name}" onerror="this.src='/assets/avatars/${f.slug}.webp'">
+        <div class="stg-fighter-meta">
+          <div class="stg-fighter-name">${f.name}</div>
+          <div class="stg-fighter-role">${f.archetype}</div>
+          <div class="stg-fighter-reason">${f.advantage_reason}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  if (comboRulesList) {
+    const rules = dossier.combo_adjustments || [];
+    comboRulesList.innerHTML = rules.map(r => `
+      <li class="stg-combo-item">
+        <span class="stg-combo-bullet">▶</span>
+        <span>${r}</span>
+      </li>
+    `).join('');
+  }
+}
+
+function openStageDetailModal(stageId) {
+  playSfx('click');
+  const stage = state.stages?.find(s => String(s.id) === String(stageId)) || state.stages?.[0];
+  const dossier = window.getStageDossier ? window.getStageDossier(stage ? stage.slug || stage.id : stageId) : stage;
+  if (!stage && !dossier) return;
+
+  activeDetailStageId = stage?.id || dossier.id;
+  populateStageModal(dossier, stage);
+
+  const modal = document.getElementById('stageDetailModal');
   if (modal) modal.style.display = 'flex';
 }
 
@@ -7331,12 +8136,52 @@ function closeStageDetailModal() {
 }
 
 function selectStageAsBattleground() {
-  if (!activeDetailStageId) return;
-  playSfx('launch');
-  selectStage(activeDetailStageId);
-  closeStageDetailModal();
-  showToast(`Selected stage as battleground!`, 'success');
+  try {
+    const stageId = activeDetailStageId || state.selectedStageId || 1;
+    playSfx('launch');
+    closeStageDetailModal();
+    setGlobalStage(stageId, { skipComboLabRefresh: false });
+    switchAppView('matchup', 'analyzer');
+    const stg = state.stages?.find(s => String(s.id) === String(stageId));
+    showToast(`⚔️ ${stg ? stg.name : 'Stage'} set as Active Lab Battleground!`, 'success');
+  } catch (err) {
+    console.error('selectStageAsBattleground error:', err);
+  }
 }
+
+function showHazardTacticalAlert(hazardName, hazardDesc, isActive) {
+  playSfx('click');
+  if (isActive) {
+    showToast(`⚡ ${hazardName}: ${hazardDesc}`, 'info');
+  } else {
+    showToast(`ℹ️ ${hazardName} is NOT active on this battleground.`, 'info');
+  }
+}
+window.showHazardTacticalAlert = showHazardTacticalAlert;
+
+async function loadDynamicStageStrategy(stageId) {
+  try {
+    const pSlug = state.selectedCharacter?.slug || 'jin';
+    const oSlug = state.matchup?.opponent?.slug || 'kazuya';
+    const report = await fetchAPI(`/stages/${stageId}/strategy?player_slug=${pSlug}&opponent_slug=${oSlug}`);
+    if (report && report.strategy_notes) {
+      const container = document.getElementById('stageDynamicStrategyNotes');
+      if (container) {
+        container.innerHTML = `
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.75rem 1rem; margin-top:0.75rem;">
+            <div style="font-size:0.75rem; font-weight:800; color:var(--accent-cyan); text-transform:uppercase; margin-bottom:0.35rem;">
+              🧠 Live Engine Strategy (${report.wall_proximity_rating} Wall Proximity)
+            </div>
+            <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.5;">${escapeHtml(report.strategy_notes)}</div>
+          </div>
+        `;
+      }
+    }
+  } catch (e) {
+    console.warn('Stage strategy fetch warning:', e);
+  }
+}
+window.loadDynamicStageStrategy = loadDynamicStageStrategy;
 
 // ==========================================================================
 // 8. Tactical Attribute Bars & Move Comparison Tool (Phase 8)
@@ -7648,31 +8493,50 @@ function updateProfileFavState(slug) {
 }
 
 function setFighterFromProfile(role) {
-  playSfx('launch');
-  if (!state.selectedCharacter) return;
-  if (role === 'P1') {
-    state.matchup.player = state.selectedCharacter;
-    const sel = document.getElementById('playerSelect');
-    if (sel) sel.value = state.selectedCharacter.slug;
-    showToast(`Set ${state.selectedCharacter.name} as Player 1`, 'success');
-  } else {
-    state.matchup.opponent = state.selectedCharacter;
-    const sel = document.getElementById('opponentSelect');
-    if (sel) sel.value = state.selectedCharacter.slug;
-    showToast(`Set ${state.selectedCharacter.name} as Opponent`, 'info');
+  try {
+    playSfx('launch');
+    if (!state.selectedCharacter) return;
+    const char = state.selectedCharacter;
+    if (role === 'P1') {
+      state.matchup.player = char;
+      const sel = document.getElementById('playerSelect');
+      if (sel) {
+        sel.value = char.id;
+        if (typeof updatePlayerPreview === 'function') updatePlayerPreview();
+      }
+      showToast(`Set ${char.name} as Player 1`, 'success');
+    } else {
+      state.matchup.opponent = char;
+      const sel = document.getElementById('opponentSelect');
+      if (sel) {
+        sel.value = char.id;
+        if (typeof updateOpponentPreview === 'function') updateOpponentPreview();
+      }
+      showToast(`Set ${char.name} as Opponent`, 'info');
+    }
+    closeCharacterProfile();
+    switchAppView('matchup', 'analyzer');
+    if (typeof runMatchupAnalysis === 'function') {
+      runMatchupAnalysis();
+    }
+  } catch (err) {
+    console.error('setFighterFromProfile error:', err);
   }
-  closeCharacterProfile();
-  const an = document.getElementById('analyzer');
-  if (an) an.scrollIntoView({ behavior: 'smooth' });
 }
 
 function openComboLabFromProfile() {
-  playSfx('click');
-  const slug = state.selectedCharacter?.slug || 'jin';
-  closeCharacterProfile();
-  const lab = document.getElementById('combo-lab');
-  if (lab) lab.scrollIntoView({ behavior: 'smooth' });
-  loadComboLabForFighter(slug);
+  try {
+    playSfx('click');
+    const slug = state.selectedCharacter?.slug || 'jin';
+    closeCharacterProfile();
+    switchAppView('fighters', 'combo-lab');
+    if (typeof loadComboLabForFighter === 'function') {
+      loadComboLabForFighter(slug);
+    }
+    showToast(`Loaded ${state.selectedCharacter?.name || slug} in Combo Lab`, 'info');
+  } catch (err) {
+    console.error('openComboLabFromProfile error:', err);
+  }
 }
 
 function populateProfileSections(char) {
@@ -8625,6 +9489,11 @@ window.openNotationGuideModal = openNotationGuideModal;
 window.closeNotationGuideModal = closeNotationGuideModal;
 window.generateShareableUrl = generateShareableUrl;
 window.copyShareableUrl = copyShareableUrl;
+window.inspectStage = inspectStage;
+window.selectStage = selectStage;
+window.openStageDetailModal = openStageDetailModal;
+window.closeStageDetailModal = closeStageDetailModal;
+window.selectStageAsBattleground = selectStageAsBattleground;
 
 // ==========================================================================
 // Master Compendium & Pro Tactics Hub Module (Parts 1 to 26)
@@ -8753,7 +9622,11 @@ async function openTacticsHubModal(defaultTab = 'sidesteps') {
 function closeTacticsHubModal() {
   playSfx('click');
   const modal = document.getElementById('tacticsHubModal');
-  if (modal) modal.style.display = 'none';
+  if (modal) {
+    modal.style.display = 'none';
+  } else {
+    switchAppView('fighters');
+  }
 }
 
 async function switchTacticsTab(tabName) {
@@ -8793,6 +9666,25 @@ async function loadAndRenderTacticsData(tabName, query = '') {
     default: endpoint = '/guides/sidesteps';
   }
 
+  if (tabName === 'heat-smashes') {
+    try {
+      const [matrixData, charsData] = await Promise.all([
+        fetchAPI('/guides/heat-smashes', true),
+        fetchAPI('/guides/character-heat-smashes', true)
+      ]);
+      const combined = {
+        matrix: Array.isArray(matrixData) ? matrixData : [],
+        characters: Array.isArray(charsData) ? charsData : []
+      };
+      window.tacticsState.cache['heat-smashes'] = combined;
+      renderTacticsUI('heat-smashes', combined, query);
+      return;
+    } catch(err) {
+      container.innerHTML = `<div style="padding:2rem; text-align:center; color:var(--accent-red);">Failed to load heat smashes records: ${err.message}</div>`;
+      return;
+    }
+  }
+
   try {
     const data = await fetchAPI(endpoint, true);
     window.tacticsState.cache[tabName] = data;
@@ -8802,35 +9694,338 @@ async function loadAndRenderTacticsData(tabName, query = '') {
   }
 }
 
+// Global tactics compendium sub-filters
+function setThrowCategoryFilter(cat) {
+  if (!window.tacticsState) window.tacticsState = {};
+  window.tacticsState.throwCategory = cat;
+  playSfx('click');
+  const cachedData = window.tacticsState.cache?.['throw-breaks'];
+  const searchInput = document.getElementById('tacticsCompendiumSearch');
+  const query = searchInput ? searchInput.value.trim() : '';
+  if (cachedData) {
+    renderTacticsUI('throw-breaks', cachedData, query);
+  }
+}
+window.setThrowCategoryFilter = setThrowCategoryFilter;
+
+function setWallRouteFilter(route) {
+  if (!window.tacticsState) window.tacticsState = {};
+  window.tacticsState.wallRoute = route;
+  playSfx('click');
+  const cachedData = window.tacticsState.cache?.['wall-combos'];
+  const searchInput = document.getElementById('tacticsCompendiumSearch');
+  const query = searchInput ? searchInput.value.trim() : '';
+  if (cachedData) {
+    renderTacticsUI('wall-combos', cachedData, query);
+  }
+}
+window.setWallRouteFilter = setWallRouteFilter;
+
+function setHeatSmashCategoryFilter(cat) {
+  if (!window.tacticsState) window.tacticsState = {};
+  window.tacticsState.heatCategory = cat;
+  playSfx('click');
+  const cachedData = window.tacticsState.cache?.['heat-smashes'];
+  const searchInput = document.getElementById('tacticsCompendiumSearch');
+  const query = searchInput ? searchInput.value.trim() : '';
+  if (cachedData) {
+    renderTacticsUI('heat-smashes', cachedData, query);
+  }
+}
+window.setHeatSmashCategoryFilter = setHeatSmashCategoryFilter;
+
+function setHeatSmashViewMode(mode) {
+  if (!window.tacticsState) window.tacticsState = {};
+  window.tacticsState.heatSmashView = mode;
+  playSfx('click');
+  const cachedData = window.tacticsState.cache?.['heat-smashes'];
+  const searchInput = document.getElementById('tacticsCompendiumSearch');
+  const query = searchInput ? searchInput.value.trim() : '';
+  if (cachedData) {
+    renderTacticsUI('heat-smashes', cachedData, query);
+  }
+}
+window.setHeatSmashViewMode = setHeatSmashViewMode;
+
+function setMovementFilter(filterType) {
+  if (!window.tacticsState) window.tacticsState = {};
+  window.tacticsState.movementFilter = filterType;
+  playSfx('click');
+  const cachedData = window.tacticsState.cache?.['movement'];
+  const searchInput = document.getElementById('tacticsCompendiumSearch');
+  const query = searchInput ? searchInput.value.trim() : '';
+  if (cachedData) {
+    renderTacticsUI('movement', cachedData, query);
+  }
+}
+window.setMovementFilter = setMovementFilter;
+
+function setBlenderScenarioFilter(filterType) {
+  if (!window.tacticsState) window.tacticsState = {};
+  window.tacticsState.blenderFilter = filterType;
+  playSfx('click');
+  const cachedData = window.tacticsState.cache?.['emergency'];
+  const searchInput = document.getElementById('tacticsCompendiumSearch');
+  const query = searchInput ? searchInput.value.trim() : '';
+  if (cachedData) {
+    renderTacticsUI('emergency', cachedData, query);
+  }
+}
+window.setBlenderScenarioFilter = setBlenderScenarioFilter;
+
+function renderHitSequenceBadges(seqStr) {
+  if (!seqStr || typeof seqStr !== 'string') return '—';
+  const hits = seqStr.split(',').map(h => h.trim().toLowerCase()).filter(Boolean);
+  return `<div class="hit-seq-wrap">${hits.map((h, i) => {
+    let cls = 'hit-badge-mid';
+    let label = 'M';
+    if (h.includes('h')) { cls = 'hit-badge-high'; label = 'H'; }
+    else if (h.includes('l')) { cls = 'hit-badge-low'; label = 'L'; }
+    else if (h.includes('u')) { cls = 'hit-badge-unblockable'; label = 'U!'; }
+    else if (h.includes('m')) { cls = 'hit-badge-mid'; label = 'M'; }
+    return `<span class="hit-badge ${cls}" title="Hit #${i+1}: ${label}">${label}</span>`;
+  }).join('')}</div>`;
+}
+
+function renderBreakBadge(breakInput) {
+  const bi = (breakInput || '').trim();
+  if (bi === '1') {
+    return `<span class="break-badge-1">1 Break</span>`;
+  } else if (bi === '2') {
+    return `<span class="break-badge-2">2 Break</span>`;
+  } else if (bi === '1+2') {
+    return `<span class="break-badge-12">1+2 Break</span>`;
+  } else if (bi.toLowerCase().includes('unbreakable')) {
+    return `<span class="break-badge-unbreakable">Unbreakable</span>`;
+  } else {
+    return `<span class="break-badge-1" style="background:rgba(255,255,255,0.1); color:#fff; border-color:rgba(255,255,255,0.2);">${escapeHtml(bi || '1 or 2')}</span>`;
+  }
+}
+
 function renderTacticsUI(tabName, rawData, query = '') {
   const container = document.getElementById('tacticsCompendiumContent');
   const countLabel = document.getElementById('tacticsEntryCountLabel');
   if (!container) return;
 
   const q = query.toLowerCase().trim();
+  const isUrdu = (state.compendiumLang === 'ur');
 
   if (tabName === 'hardware') {
     renderHardwareGuide(container, rawData);
-    if (countLabel) countLabel.textContent = 'Hardware zero-lag latency optimization & controller specs';
+    if (countLabel) {
+      countLabel.textContent = isUrdu 
+        ? 'Hardware zero-lag latency optimization & controller specs (Patch v3.00.02)'
+        : 'Hardware zero-lag latency optimization & controller specs (Patch v3.00.02)';
+    }
     return;
   }
 
-  if (!Array.isArray(rawData)) {
-    container.innerHTML = '<div style="padding:2rem; text-align:center; color:var(--text-muted);">No records found.</div>';
+  let heatMatrix = [];
+  let heatChars = [];
+  if (tabName === 'heat-smashes') {
+    if (rawData && typeof rawData === 'object' && !Array.isArray(rawData)) {
+      heatMatrix = rawData.matrix || [];
+      heatChars = rawData.characters || [];
+    } else if (Array.isArray(rawData)) {
+      if (rawData.length > 0 && (rawData[0].startup_frames || rawData[0].command_input)) {
+        heatChars = rawData;
+      } else {
+        heatMatrix = rawData;
+      }
+    }
+    if (heatChars.length === 0 && window.tacticsState?.cache?.['heat-smashes']?.characters) {
+      heatChars = window.tacticsState.cache['heat-smashes'].characters;
+    }
+    if (heatMatrix.length === 0 && window.tacticsState?.cache?.['heat-smashes']?.matrix) {
+      heatMatrix = window.tacticsState.cache['heat-smashes'].matrix;
+    }
+  } else if (!Array.isArray(rawData)) {
+    container.innerHTML = `<div style="padding:2rem; text-align:center; color:var(--text-muted);">${isUrdu ? 'Koi record nahi mila.' : 'No records found.'}</div>`;
     return;
   }
 
-  // Filter
-  const filtered = q ? rawData.filter(item => {
-    return Object.values(item).some(val => typeof val === 'string' && val.toLowerCase().includes(q));
-  }) : rawData;
+  // Base text search filter
+  let filtered = (tabName !== 'heat-smashes' && Array.isArray(rawData))
+    ? (q ? rawData.filter(item => Object.values(item).some(val => typeof val === 'string' && val.toLowerCase().includes(q))) : [...rawData])
+    : [];
+
+  // Heat smash variables
+  const activeHeatView = window.tacticsState?.heatSmashView || 'matrix';
+  const activeHeatCat = window.tacticsState?.heatCategory || 'ALL';
+
+  let filteredMatrix = [...heatMatrix];
+  if (q) {
+    filteredMatrix = filteredMatrix.filter(item => Object.values(item).some(val => typeof val === 'string' && val.toLowerCase().includes(q)));
+  }
+  if (activeHeatCat === 'FASTEST') {
+    filteredMatrix = filteredMatrix.filter(i => (i.category || '').toLowerCase().includes('fastest') || (i.category || '').toLowerCase().includes('i10'));
+  } else if (activeHeatCat === 'LOW') {
+    filteredMatrix = filteredMatrix.filter(i => (i.category || '').toLowerCase().includes('low'));
+  } else if (activeHeatCat === 'PROJECTILE') {
+    filteredMatrix = filteredMatrix.filter(i => (i.category || '').toLowerCase().includes('projectile') || (i.category || '').toLowerCase().includes('long-range'));
+  } else if (activeHeatCat === 'PLUS_STANCE') {
+    filteredMatrix = filteredMatrix.filter(i => (i.category || '').toLowerCase().includes('plus') || (i.category || '').toLowerCase().includes('stance'));
+  } else if (activeHeatCat === 'THROW') {
+    filteredMatrix = filteredMatrix.filter(i => (i.category || '').toLowerCase().includes('throw'));
+  } else if (activeHeatCat === 'HAZARD') {
+    filteredMatrix = filteredMatrix.filter(i => (i.category || '').toLowerCase().includes('break') || (i.category || '').toLowerCase().includes('hazard'));
+  }
+
+  let filteredChars = [...heatChars];
+  if (q) {
+    filteredChars = filteredChars.filter(item => Object.values(item).some(val => typeof val === 'string' && val.toLowerCase().includes(q)));
+  }
+  if (activeHeatCat === 'FASTEST') {
+    filteredChars = filteredChars.filter(i => (i.category || '').toLowerCase().includes('fastest') || parseInt((i.startup_frames || '99').replace(/\D/g, '')) <= 14);
+  } else if (activeHeatCat === 'LOW') {
+    filteredChars = filteredChars.filter(i => (i.hit_level || '').toLowerCase().includes('l') || (i.category || '').toLowerCase().includes('low'));
+  } else if (activeHeatCat === 'PROJECTILE') {
+    filteredChars = filteredChars.filter(i => (i.category || '').toLowerCase().includes('projectile') || (i.category || '').toLowerCase().includes('long-range'));
+  } else if (activeHeatCat === 'PLUS_STANCE') {
+    filteredChars = filteredChars.filter(i => (i.category || '').toLowerCase().includes('plus') || (i.category || '').toLowerCase().includes('stance') || (i.block_frames || '').includes('+'));
+  } else if (activeHeatCat === 'THROW') {
+    filteredChars = filteredChars.filter(i => (i.category || '').toLowerCase().includes('throw'));
+  } else if (activeHeatCat === 'HAZARD') {
+    filteredChars = filteredChars.filter(i => (i.category || '').toLowerCase().includes('break') || (i.hazard_property && i.hazard_property !== 'None'));
+  }
+
+  // Tab-specific sub-filtering
+  if (tabName === 'throw-breaks') {
+    const activeCat = window.tacticsState?.throwCategory || 'ALL';
+    if (activeCat === 'COMMAND') {
+      filtered = filtered.filter(item => (item.category || '').toLowerCase().includes('command'));
+    } else if (activeCat === 'GENERIC') {
+      filtered = filtered.filter(item => (item.category || '').toLowerCase().includes('generic'));
+    } else if (activeCat === 'SIDE_BACK') {
+      filtered = filtered.filter(item => {
+        const cat = (item.category || '').toLowerCase();
+        return cat.includes('side') || cat.includes('back');
+      });
+    }
+  } else if (tabName === 'wall-combos') {
+    const activeRoute = window.tacticsState?.wallRoute || 'ALL';
+    if (activeRoute === 'MAX_DMG') {
+      filtered = filtered.filter(item => (item.route_type || '').toLowerCase().includes('max damage'));
+    } else if (activeRoute === 'POST_TORNADO') {
+      filtered = filtered.filter(item => (item.route_type || '').toLowerCase().includes('post-tornado'));
+    } else if (activeRoute === 'OKI_SETUP') {
+      filtered = filtered.filter(item => {
+        const rt = (item.route_type || '').toLowerCase();
+        return rt.includes('oki') || rt.includes('setup') || rt.includes('resplat');
+      });
+    }
+  } else if (tabName === 'movement') {
+    const activeMovementFilter = window.tacticsState?.movementFilter || 'ALL';
+    if (activeMovementFilter === 'DEFENSE') {
+      filtered = filtered.filter(item => {
+        const slug = (item.technique_slug || item.technique || '').toLowerCase();
+        return slug.includes('backdash') || slug.includes('sidestep') || slug.includes('fuzzy') || slug.includes('dash-block');
+      });
+    } else if (activeMovementFilter === 'OFFENSE') {
+      filtered = filtered.filter(item => {
+        const slug = (item.technique_slug || item.technique || '').toLowerCase();
+        return slug.includes('wavedash') || slug.includes('crouch-cancel') || slug.includes('sidewalk');
+      });
+    }
+  } else if (tabName === 'emergency') {
+    const activeBlenderFilter = window.tacticsState?.blenderFilter || 'ALL';
+    if (activeBlenderFilter === 'VORTEX') {
+      filtered = filtered.filter(item => {
+        const text = ((item.scenario || item.scenario_title || '') + ' ' + (item.situation || item.frame_situation || '')).toLowerCase();
+        return text.includes('vortex') || text.includes('stance') || text.includes('blender');
+      });
+    } else if (activeBlenderFilter === 'OKI') {
+      filtered = filtered.filter(item => {
+        const text = ((item.scenario || item.scenario_title || '') + ' ' + (item.situation || item.frame_situation || '')).toLowerCase();
+        return text.includes('oki') || text.includes('throw') || text.includes('ground');
+      });
+    } else if (activeBlenderFilter === 'PLUS_TRAP') {
+      filtered = filtered.filter(item => {
+        const text = ((item.scenario || item.scenario_title || '') + ' ' + (item.situation || item.frame_situation || '')).toLowerCase();
+        return text.includes('plus') || text.includes('loop') || text.includes('trap');
+      });
+    } else if (activeBlenderFilter === 'UNIVERSAL') {
+      filtered = filtered.filter(item => {
+        const text = ((item.character || item.character_name || '') + ' ' + (item.scenario || item.scenario_title || '')).toLowerCase();
+        return text.includes('universal') || text.includes('dickjab') || text.includes('burst');
+      });
+    }
+  }
 
   if (countLabel) {
-    countLabel.textContent = `Showing ${filtered.length} of ${rawData.length} entries`;
+    if (tabName === 'heat-smashes') {
+      if (activeHeatView === 'matrix') {
+        countLabel.textContent = isUrdu 
+          ? `Kul ${heatMatrix.length} Danger Categories mein se ${filteredMatrix.length} dikhayi ja rahi hain`
+          : `Showing ${filteredMatrix.length} of ${heatMatrix.length} Heat Smash Danger Categories`;
+      } else {
+        countLabel.textContent = isUrdu 
+          ? `Kul 43 Fighters mein se ${filteredChars.length} Heat Smashes dikhaye ja rahe hain`
+          : `Showing ${filteredChars.length} of ${heatChars.length} Character Heat Smashes`;
+      }
+    } else {
+      countLabel.textContent = isUrdu 
+        ? `Kul ${rawData.length} mein se ${filtered.length} entries dikhayi ja rahi hain`
+        : `Showing ${filtered.length} of ${rawData.length} entries`;
+    }
   }
 
-  if (filtered.length === 0) {
-    container.innerHTML = `<div class="empty-state-card" style="margin:2rem auto;"><div class="empty-icon">🔍</div><h4 class="empty-title">No matching entries found</h4><p class="empty-desc">No entries match your search query "${query}".</p></div>`;
+  if (tabName !== 'heat-smashes' && filtered.length === 0) {
+    let emptySubFilterBar = '';
+    if (tabName === 'throw-breaks') {
+      const activeCat = window.tacticsState?.throwCategory || 'ALL';
+      emptySubFilterBar = `
+        <div class="tactics-subfilter-bar">
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-right:4px;">${isUrdu ? 'Category Filter:' : 'Category Filter:'}</span>
+          <button type="button" class="tactics-subfilter-btn ${activeCat === 'ALL' ? 'active' : ''}" onclick="setThrowCategoryFilter('ALL')">${isUrdu ? 'Tamam Throws' : 'All Throws'} (${rawData.length})</button>
+          <button type="button" class="tactics-subfilter-btn ${activeCat === 'COMMAND' ? 'active' : ''}" onclick="setThrowCategoryFilter('COMMAND')">⚡ ${isUrdu ? 'Command Throws' : 'Command Throws'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeCat === 'GENERIC' ? 'active' : ''}" onclick="setThrowCategoryFilter('GENERIC')">🤼 ${isUrdu ? 'Generic (1+3 / 2+4 / uf+1+2)' : 'Generic (1+3 / 2+4 / uf+1+2)'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeCat === 'SIDE_BACK' ? 'active' : ''}" onclick="setThrowCategoryFilter('SIDE_BACK')">🔄 ${isUrdu ? 'Side & Back Throws' : 'Side & Back Throws'}</button>
+        </div>
+      `;
+    } else if (tabName === 'wall-combos') {
+      const activeRoute = window.tacticsState?.wallRoute || 'ALL';
+      emptySubFilterBar = `
+        <div class="tactics-subfilter-bar">
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-right:4px;">${isUrdu ? 'Route Type Filter:' : 'Route Type Filter:'}</span>
+          <button type="button" class="tactics-subfilter-btn ${activeRoute === 'ALL' ? 'active' : ''}" onclick="setWallRouteFilter('ALL')">${isUrdu ? 'Tamam Wall Enders' : 'All Routes'} (${rawData.length})</button>
+          <button type="button" class="tactics-subfilter-btn ${activeRoute === 'MAX_DMG' ? 'active' : ''}" onclick="setWallRouteFilter('MAX_DMG')">💥 ${isUrdu ? 'Max Damage (T! Available)' : 'Max Damage (T! Available)'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeRoute === 'POST_TORNADO' ? 'active' : ''}" onclick="setWallRouteFilter('POST_TORNADO')">🌀 ${isUrdu ? 'Post-Tornado Ender' : 'Post-Tornado Ender'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeRoute === 'OKI_SETUP' ? 'active' : ''}" onclick="setWallRouteFilter('OKI_SETUP')">🎯 ${isUrdu ? 'Oki / Resplat Setup' : 'Oki / Resplat Setup'}</button>
+        </div>
+      `;
+    } else if (tabName === 'movement') {
+      const activeMovementFilter = window.tacticsState?.movementFilter || 'ALL';
+      emptySubFilterBar = `
+        <div class="tactics-subfilter-bar">
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-right:4px;">${isUrdu ? 'Movement Category:' : 'Movement Filter:'}</span>
+          <button type="button" class="tactics-subfilter-btn ${activeMovementFilter === 'ALL' ? 'active' : ''}" onclick="setMovementFilter('ALL')">${isUrdu ? 'Tamam Techniques' : 'All Techniques'} (${rawData.length})</button>
+          <button type="button" class="tactics-subfilter-btn ${activeMovementFilter === 'DEFENSE' ? 'active' : ''}" onclick="setMovementFilter('DEFENSE')">🛡️ ${isUrdu ? 'Defensive Movement' : 'Defensive Movement'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeMovementFilter === 'OFFENSE' ? 'active' : ''}" onclick="setMovementFilter('OFFENSE')">⚡ ${isUrdu ? 'Offensive Movement' : 'Offensive Movement'}</button>
+        </div>
+      `;
+    } else if (tabName === 'emergency') {
+      const activeBlenderFilter = window.tacticsState?.blenderFilter || 'ALL';
+      emptySubFilterBar = `
+        <div class="tactics-subfilter-bar">
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-right:4px;">${isUrdu ? 'Scenario Type:' : 'Scenario Filter:'}</span>
+          <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'ALL' ? 'active' : ''}" onclick="setBlenderScenarioFilter('ALL')">${isUrdu ? 'Tamam Scenarios' : 'All Scenarios'} (${rawData.length})</button>
+          <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'VORTEX' ? 'active' : ''}" onclick="setBlenderScenarioFilter('VORTEX')">🌀 ${isUrdu ? '50/50 Stance Vortex' : '50/50 Stance Vortex'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'OKI' ? 'active' : ''}" onclick="setBlenderScenarioFilter('OKI')">🤼 ${isUrdu ? 'Ground Oki & Throws' : 'Ground Oki & Throws'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'PLUS_TRAP' ? 'active' : ''}" onclick="setBlenderScenarioFilter('PLUS_TRAP')">⚡ ${isUrdu ? 'Plus Frame Traps' : 'Plus Frame Traps'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'UNIVERSAL' ? 'active' : ''}" onclick="setBlenderScenarioFilter('UNIVERSAL')">🚨 ${isUrdu ? 'Universal Panic Counterplay' : 'Universal Panic Counterplay'}</button>
+        </div>
+      `;
+    }
+
+    container.innerHTML = `
+      ${emptySubFilterBar}
+      <div class="empty-state-card" style="margin:2rem auto;">
+        <div class="empty-icon">🔍</div>
+        <h4 class="empty-title">${isUrdu ? 'Koi matching record nahi mila' : 'No matching entries found'}</h4>
+        <p class="empty-desc">${isUrdu ? `Aapki search ya filter se koi record match nahi hua.` : `No entries match your search query or filter.`}</p>
+      </div>
+    `;
     return;
   }
 
@@ -8839,9 +10034,9 @@ function renderTacticsUI(tabName, rawData, query = '') {
       <table class="analyzer-table tactics-table">
         <thead>
           <tr>
-            <th>Character</th>
-            <th>Weak Side</th>
-            <th>Whiff Exploit &amp; Linear Moves</th>
+            <th>${isUrdu ? 'Fighter' : 'Character'}</th>
+            <th>${isUrdu ? 'Kamzor Taraf (Weak Side)' : 'Weak Side'}</th>
+            <th>${isUrdu ? 'Dodge / Whiff Hone Wale Linear Attacks' : 'Whiff Exploit & Linear Moves'}</th>
           </tr>
         </thead>
         <tbody>
@@ -8850,11 +10045,12 @@ function renderTacticsUI(tabName, rawData, query = '') {
             const isLeft = side.includes('SSL');
             const isRight = side.includes('SSR');
             const badgeCls = isLeft ? 'ssl' : (isRight ? 'ssr' : 'neutral');
+            const notes = isUrdu ? (row.whiff_notes_ur || row.whiff_notes) : (row.whiff_notes_en || row.whiff_notes || row.details || '—');
             return `
               <tr>
-                <td><strong>${row.character}</strong></td>
-                <td><span class="sidestep-badge-pill ${badgeCls}">${side}</span></td>
-                <td>${row.whiff_notes || row.details || '—'}</td>
+                <td><strong>${escapeHtml(row.character)}</strong></td>
+                <td><span class="sidestep-badge-pill ${badgeCls}">${escapeHtml(side)}</span></td>
+                <td>${escapeHtml(notes || '—')}</td>
               </tr>
             `;
           }).join('')}
@@ -8862,184 +10058,643 @@ function renderTacticsUI(tabName, rawData, query = '') {
       </table>
     `;
   } else if (tabName === 'throw-breaks') {
+    const activeCat = window.tacticsState?.throwCategory || 'ALL';
     container.innerHTML = `
+      <div class="tactics-subfilter-bar">
+        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-right:4px;">${isUrdu ? 'Category Filter:' : 'Category Filter:'}</span>
+        <button type="button" class="tactics-subfilter-btn ${activeCat === 'ALL' ? 'active' : ''}" onclick="setThrowCategoryFilter('ALL')">${isUrdu ? 'Tamam Throws' : 'All Throws'} (${rawData.length})</button>
+        <button type="button" class="tactics-subfilter-btn ${activeCat === 'COMMAND' ? 'active' : ''}" onclick="setThrowCategoryFilter('COMMAND')">⚡ ${isUrdu ? 'Command Throws' : 'Command Throws'}</button>
+        <button type="button" class="tactics-subfilter-btn ${activeCat === 'GENERIC' ? 'active' : ''}" onclick="setThrowCategoryFilter('GENERIC')">🤼 ${isUrdu ? 'Generic (1+3 / 2+4 / uf+1+2)' : 'Generic (1+3 / 2+4 / uf+1+2)'}</button>
+        <button type="button" class="tactics-subfilter-btn ${activeCat === 'SIDE_BACK' ? 'active' : ''}" onclick="setThrowCategoryFilter('SIDE_BACK')">🔄 ${isUrdu ? 'Side & Back Throws' : 'Side & Back Throws'}</button>
+      </div>
+
       <table class="analyzer-table tactics-table">
         <thead>
           <tr>
-            <th>Character</th>
-            <th>Throw Name</th>
-            <th>Input</th>
-            <th>Visual Hand Cue &amp; Guaranteed Break</th>
+            <th>${isUrdu ? 'Fighter' : 'Character'}</th>
+            <th>${isUrdu ? 'Throw Ka Naam & Qisam' : 'Throw Name & Category'}</th>
+            <th>${isUrdu ? 'Command Input' : 'Input Notation'}</th>
+            <th>${isUrdu ? 'Startup' : 'Startup'}</th>
+            <th>${isUrdu ? 'Break Input & Window' : 'Break Input & Window'}</th>
+            <th>${isUrdu ? 'Visual Hand Cue' : 'Visual Animation Cue'}</th>
+            <th>${isUrdu ? 'Damage & Khasusiyat' : 'Damage & Properties'}</th>
           </tr>
         </thead>
         <tbody>
-          ${filtered.map(row => `
-            <tr>
-              <td><strong>${row.character}</strong></td>
-              <td><span style="color:var(--accent-gold); font-weight:700;">${row.throw_name}</span></td>
-              <td><code>${formatTekkenNotation(row.input_notation || '')}</code></td>
-              <td><span class="break-subtag">${row.break_guide}</span></td>
-            </tr>
-          `).join('')}
+          ${filtered.map(row => {
+            const cue = isUrdu ? (row.visual_cue_ur || row.visual_cue) : (row.visual_cue_en || row.visual_cue);
+            const prop = isUrdu ? (row.property_ur || row.property) : (row.property_en || row.property);
+            const cat = row.category || 'Throw';
+            const catBadgeStyle = cat.includes('Command') 
+              ? 'background:rgba(237,104,35,0.2); color:var(--accent-orange); border:1px solid rgba(237,104,35,0.3);'
+              : (cat.includes('Generic') 
+                ? 'background:rgba(0,229,255,0.15); color:var(--accent-cyan); border:1px solid rgba(0,229,255,0.25);'
+                : 'background:rgba(255,255,255,0.08); color:var(--text-dim); border:1px solid rgba(255,255,255,0.12);');
+
+            let handIcon = '👐';
+            if ((row.break_input || '') === '1') handIcon = '👈';
+            else if ((row.break_input || '') === '2') handIcon = '👉';
+
+            return `
+              <tr>
+                <td><strong>${escapeHtml(row.character)}</strong></td>
+                <td>
+                  <div style="color:var(--accent-gold); font-weight:700; margin-bottom:2px;">${escapeHtml(row.throw_name)}</div>
+                  <span class="badge" style="font-size:0.68rem; font-weight:700; padding:1px 6px; border-radius:3px; ${catBadgeStyle}">${escapeHtml(cat)}</span>
+                </td>
+                <td><code>${formatTekkenNotation(row.input_notation || '')}</code></td>
+                <td><span class="badge" style="background:rgba(255,255,255,0.06); font-family:var(--font-mono); font-size:0.8rem; font-weight:700;">${escapeHtml(row.startup_frames || 'i12')}</span></td>
+                <td>
+                  ${renderBreakBadge(row.break_input)}
+                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:3px;">${escapeHtml(row.break_window || '20f standard')}</div>
+                </td>
+                <td>
+                  <span style="font-size:0.82rem; font-weight:600; display:flex; align-items:center; gap:4px;">
+                    <span>${handIcon}</span> <span>${escapeHtml(cue || 'Visual Cue')}</span>
+                  </span>
+                </td>
+                <td>
+                  <span style="color:var(--accent-orange); font-weight:700; font-family:var(--font-mono);">${escapeHtml(row.damage || '35')} DMG</span>
+                  ${prop && prop !== 'Normal' && prop !== 'Standard' ? `<div style="font-size:0.72rem; color:var(--accent-cyan); margin-top:2px;">${escapeHtml(prop)}</div>` : ''}
+                </td>
+              </tr>
+            `;
+          }).join('')}
         </tbody>
       </table>
     `;
   } else if (tabName === 'anti-cheese') {
     container.innerHTML = `
       <div class="compendium-cards-grid">
-        ${filtered.map(row => `
-          <div class="compendium-tactic-card">
-            <div class="ctc-header">
-              <span class="ctc-char">${row.character}</span>
-              <span class="ctc-move">${row.cheese_move}</span>
+        ${filtered.map(row => {
+          const problem = isUrdu ? (row.why_players_lose_ur || row.why_players_lose) : (row.why_players_lose_en || row.why_players_lose);
+          const solution = isUrdu ? (row.pro_counter_ur || row.pro_counter) : (row.pro_counter_en || row.pro_counter);
+          return `
+            <div class="compendium-tactic-card">
+              <div class="ctc-header">
+                <span class="ctc-char">${escapeHtml(row.character)}</span>
+                <span class="ctc-move">${escapeHtml(row.cheese_move)}</span>
+              </div>
+              <div class="ctc-problem"><strong>${isUrdu ? 'Players Kyun Haarte Hain:' : 'Why Players Lose:'}</strong> ${escapeHtml(problem || '')}</div>
+              <div class="ctc-solution"><strong>${isUrdu ? 'Pro Khilariyon Ka Tod:' : 'Pro Counter:'}</strong> ${escapeHtml(solution || '')}</div>
             </div>
-            <div class="ctc-problem"><strong>Why Players Lose:</strong> ${row.why_players_lose}</div>
-            <div class="ctc-solution"><strong>Pro Counter:</strong> ${row.pro_counter}</div>
-          </div>
-        `).join('')}
+          `;
+        }).join('')}
       </div>
     `;
   } else if (tabName === 'installs') {
     container.innerHTML = `
       <div class="compendium-cards-grid">
-        ${filtered.map(row => `
-          <div class="compendium-tactic-card install-card">
-            <div class="ctc-header">
-              <span class="ctc-char">${row.character}</span>
-              <span class="ctc-move" style="color:var(--accent-cyan);">${row.install_name}</span>
+        ${filtered.map(row => {
+          const act = isUrdu ? (row.activation_ur || row.activation) : (row.activation_en || row.activation);
+          const unl = isUrdu ? (row.unlocks_danger_ur || row.unlocks_danger) : (row.unlocks_danger_en || row.unlocks_danger);
+          return `
+            <div class="compendium-tactic-card install-card">
+              <div class="ctc-header">
+                <span class="ctc-char">${escapeHtml(row.character)}</span>
+                <span class="ctc-move" style="color:var(--accent-cyan); font-weight:800;">${escapeHtml(row.install_name)}</span>
+              </div>
+              <div class="ctc-problem"><strong>${isUrdu ? 'Activation (Kaise Milta Hai):' : 'Activation:'}</strong> ${escapeHtml(act || '')}</div>
+              <div class="ctc-solution" style="color:var(--accent-pink);"><strong>${isUrdu ? 'Danger / Buff Mein Kya Milta Hai:' : 'Danger / Unlocks:'}</strong> ${escapeHtml(unl || '')}</div>
             </div>
-            <div class="ctc-problem"><strong>Activation:</strong> ${row.activation}</div>
-            <div class="ctc-solution" style="color:var(--accent-pink);"><strong>Danger / Unlocks:</strong> ${row.unlocks_danger}</div>
-          </div>
-        `).join('')}
+          `;
+        }).join('')}
       </div>
     `;
   } else if (tabName === 'wall-combos') {
+    const activeRoute = window.tacticsState?.wallRoute || 'ALL';
     container.innerHTML = `
+      <div class="tactics-subfilter-bar">
+        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-right:4px;">${isUrdu ? 'Route Type Filter:' : 'Route Type Filter:'}</span>
+        <button type="button" class="tactics-subfilter-btn ${activeRoute === 'ALL' ? 'active' : ''}" onclick="setWallRouteFilter('ALL')">${isUrdu ? 'Tamam Wall Enders' : 'All Routes'} (${rawData.length})</button>
+        <button type="button" class="tactics-subfilter-btn ${activeRoute === 'MAX_DMG' ? 'active' : ''}" onclick="setWallRouteFilter('MAX_DMG')">💥 ${isUrdu ? 'Max Damage (T! Available)' : 'Max Damage (T! Available)'}</button>
+        <button type="button" class="tactics-subfilter-btn ${activeRoute === 'POST_TORNADO' ? 'active' : ''}" onclick="setWallRouteFilter('POST_TORNADO')">🌀 ${isUrdu ? 'Post-Tornado Ender' : 'Post-Tornado Ender'}</button>
+        <button type="button" class="tactics-subfilter-btn ${activeRoute === 'OKI_SETUP' ? 'active' : ''}" onclick="setWallRouteFilter('OKI_SETUP')">🎯 ${isUrdu ? 'Oki / Resplat Setup' : 'Oki / Resplat Setup'}</button>
+      </div>
+
       <table class="analyzer-table tactics-table">
         <thead>
           <tr>
-            <th>Character</th>
-            <th>Optimal Wall Ender</th>
-            <th>Damage &amp; Utility Notes</th>
+            <th>${isUrdu ? 'Fighter' : 'Character'}</th>
+            <th>${isUrdu ? 'Route Ka Naam' : 'Route Type'}</th>
+            <th>${isUrdu ? 'Wall Ender Notation' : 'Optimal Wall Ender'}</th>
+            <th>${isUrdu ? 'Total Damage' : 'Total Damage'}</th>
+            <th>${isUrdu ? 'Spike / Flip Property' : 'Property'}</th>
+            <th>${isUrdu ? 'Tactical Utility Notes' : 'Tactical Utility Notes'}</th>
           </tr>
         </thead>
         <tbody>
-          ${filtered.map(row => `
-            <tr>
-              <td><strong>${row.character}</strong></td>
-              <td><span style="color:var(--accent-cyan); font-weight:700;">${row.wall_ender_optimal}</span></td>
-              <td>${row.damage_utility}</td>
-            </tr>
-          `).join('')}
+          ${filtered.map(row => {
+            const ender = row.wall_ender || row.wall_ender_optimal || 'Standard Ender';
+            const notes = isUrdu 
+              ? (row.tactical_notes_ur || row.damage_utility_ur || row.tactical_notes || row.damage_utility) 
+              : (row.tactical_notes_en || row.damage_utility_en || row.tactical_notes || row.damage_utility);
+            const rt = row.route_type || 'Optimal Route';
+            
+            let routeBadgeStyle = 'background:rgba(0,229,255,0.15); color:var(--accent-cyan); border:1px solid rgba(0,229,255,0.3);';
+            if (rt.includes('Max Damage')) {
+              routeBadgeStyle = 'background:rgba(168,85,247,0.2); color:#c084fc; border:1px solid rgba(168,85,247,0.4);';
+            } else if (rt.includes('Oki') || rt.includes('Setup') || rt.includes('Resplat')) {
+              routeBadgeStyle = 'background:rgba(234,179,8,0.2); color:var(--accent-gold); border:1px solid rgba(234,179,8,0.4);';
+            }
+
+            return `
+              <tr>
+                <td><strong>${escapeHtml(row.character)}</strong></td>
+                <td><span class="badge" style="font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:4px; ${routeBadgeStyle}">${escapeHtml(rt)}</span></td>
+                <td><code>${formatTekkenNotation(ender)}</code></td>
+                <td><span class="badge" style="background:rgba(237,104,35,0.22); color:var(--accent-orange); font-weight:800; font-size:0.82rem; font-family:var(--font-mono);">${escapeHtml(row.total_wall_damage || (row.damage_num ? row.damage_num + ' DMG' : '35 DMG'))}</span></td>
+                <td><span class="badge" style="background:rgba(0,229,255,0.12); color:var(--accent-cyan); font-weight:600; font-size:0.75rem;">${escapeHtml(row.spike_flip_property || 'Ground Spike')}</span></td>
+                <td style="font-size:0.8rem; line-height:1.45;">${escapeHtml(notes || '—')}</td>
+              </tr>
+            `;
+          }).join('')}
         </tbody>
       </table>
     `;
   } else if (tabName === 'ten-hit') {
+    const banner = isUrdu ? `
+      <div style="padding:0.85rem 1.1rem; background:rgba(237,104,35,0.12); border-left:4px solid var(--accent-orange); border-radius:6px; margin-bottom:1.1rem; font-size:0.82rem; line-height:1.6;">
+        <strong style="color:var(--accent-orange);">💡 10-Hit Todne Ke 4 Golden Rules:</strong><br>
+        1) <em>Koi 10-hit true combo nahi hota</em> — chahe pehle 2 hits lag jayein, 4th ya 5th hit par block ya low parry ho sakta hai.<br>
+        2) <em>Har 10-hit mein aik Weak Low kick hoti hai</em> (4th, 5th, ya 6th hit par) jahan bas <code>df</code> hold karne se auto Low Parry launch lagta hai.<br>
+        3) Pehle fast punches mein jab (1,2) mash na karein warna Counter-Hit khayenge.<br>
+        4) Confusion mein pause point par <code>2+3</code> (Heat Burst) ya Power Crush daba dein — sequence wahin toot jayega!
+      </div>
+    ` : `
+      <div style="padding:0.85rem 1.1rem; background:rgba(0,229,255,0.08); border-left:4px solid var(--accent-cyan); border-radius:6px; margin-bottom:1.1rem; font-size:0.82rem; line-height:1.6;">
+        <strong style="color:var(--accent-cyan);">💡 4 Golden Engine Rules for Stopping 10-Hit Strings:</strong><br>
+        1) <em>No 10-Hit is a true combo</em> — you can block or low parry mid-string even after taking initial hits.<br>
+        2) <em>Every string features a predictable Low kick</em> around hit 4, 5, or 6 — holding <code>df</code> guarantees a Low Parry launch.<br>
+        3) Never mash jab checks during early fast punches.<br>
+        4) If in doubt, use <code>2+3</code> (Raw Heat Burst) or Power Crush at the pause gap to break the sequence!
+      </div>
+    `;
+
     container.innerHTML = `
+      ${banner}
       <table class="analyzer-table tactics-table">
         <thead>
           <tr>
-            <th>Character</th>
-            <th>10-Hit Combo Name</th>
-            <th>Counter / Low Parry / Duck Window</th>
+            <th>${isUrdu ? 'Fighter' : 'Character'}</th>
+            <th>${isUrdu ? '10-Hit String Input' : '10-Hit Sequence Input'}</th>
+            <th>${isUrdu ? 'Hit Sequence (H/M/L)' : 'Hit Sequence (H/M/L)'}</th>
+            <th>${isUrdu ? 'Kahan Rokein? (Exact Weak Point)' : 'Where to Duck / Parry (Weak Point)'}</th>
+            <th>${isUrdu ? 'Interrupt Gap (i10 / Power Crush)' : 'Interrupt Gap (i10 / Crush)'}</th>
+            <th>${isUrdu ? 'Exact Counter Action' : 'Optimal Counter Action'}</th>
           </tr>
         </thead>
         <tbody>
-          ${filtered.map(row => `
-            <tr>
-              <td><strong>${row.character}</strong></td>
-              <td><span style="color:var(--accent-gold);">${row.ten_hit_name}</span></td>
-              <td><span class="counter-subtag">${row.how_to_counter}</span></td>
-            </tr>
-          `).join('')}
+          ${filtered.map(row => {
+            const where = isUrdu 
+              ? (row.where_to_duck_parry_ur || row.where_to_duck_parry) 
+              : (row.where_to_duck_parry_en || row.where_to_duck_parry);
+            const gap = isUrdu
+              ? (row.interrupt_gap_ur || row.interrupt_gap)
+              : (row.interrupt_gap_en || row.interrupt_gap);
+            const opt = isUrdu 
+              ? (row.optimal_punish_ur || row.optimal_punish || row.how_to_counter) 
+              : (row.optimal_punish_en || row.optimal_punish || row.how_to_counter);
+            return `
+              <tr>
+                <td><strong>${escapeHtml(row.character)}</strong></td>
+                <td><code>${formatTekkenNotation(row.combo_input || row.ten_hit_name || '')}</code></td>
+                <td>${renderHitSequenceBadges(row.hit_sequence_breakdown)}</td>
+                <td><span style="color:var(--accent-gold); font-weight:700;">${escapeHtml(where || '')}</span></td>
+                <td><span style="color:var(--accent-cyan); font-size:0.8rem; font-weight:600;">${escapeHtml(gap || 'Gap available')}</span></td>
+                <td><span class="break-subtag" style="background:rgba(34,197,94,0.15); color:var(--accent-green); border:1px solid rgba(34,197,94,0.3); font-size:0.8rem; font-weight:700; padding:3px 8px; border-radius:4px;">${escapeHtml(opt || '')}</span></td>
+              </tr>
+            `;
+          }).join('')}
         </tbody>
       </table>
     `;
   } else if (tabName === 'heat-smashes') {
-    container.innerHTML = `
-      <div class="compendium-cards-grid">
-        ${filtered.map(row => `
-          <div class="compendium-tactic-card">
-            <div class="ctc-header">
-              <span class="ctc-char">${row.category || 'Heat Smash'}</span>
-              <span class="ctc-move" style="color:var(--accent-gold);">${row.advantage_on_block || ''}</span>
-            </div>
-            <div class="ctc-problem"><strong>Properties:</strong> ${row.properties || ''}</div>
-            <div class="ctc-solution"><strong>Tactical Counter:</strong> ${row.counter_strategy || row.description || ''}</div>
-          </div>
-        `).join('')}
+    const subFilterBar = `
+      <div class="tactics-subfilter-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-right:4px;">${isUrdu ? 'Category Filter:' : 'Category Filter:'}</span>
+          <button type="button" class="tactics-subfilter-btn ${activeHeatCat === 'ALL' ? 'active' : ''}" onclick="setHeatSmashCategoryFilter('ALL')">${isUrdu ? 'Tamam Categories' : 'All Categories'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeHeatCat === 'FASTEST' ? 'active' : ''}" onclick="setHeatSmashCategoryFilter('FASTEST')">⚡ ${isUrdu ? 'Fastest (i10–i14)' : 'Fastest (i10–i14)'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeHeatCat === 'LOW' ? 'active' : ''}" onclick="setHeatSmashCategoryFilter('LOW')">🔻 ${isUrdu ? 'Lows (Must Duck)' : 'Lows (Must Duck)'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeHeatCat === 'PROJECTILE' ? 'active' : ''}" onclick="setHeatSmashCategoryFilter('PROJECTILE')">🏹 ${isUrdu ? 'Long-Range / Beams' : 'Long-Range / Beams'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeHeatCat === 'PLUS_STANCE' ? 'active' : ''}" onclick="setHeatSmashCategoryFilter('PLUS_STANCE')">🔄 ${isUrdu ? 'Plus on Block Stance (+6)' : 'Plus on Block Stance (+6)'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeHeatCat === 'THROW' ? 'active' : ''}" onclick="setHeatSmashCategoryFilter('THROW')">🤼 ${isUrdu ? 'Throw Transitions' : 'Throw Transitions'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeHeatCat === 'HAZARD' ? 'active' : ''}" onclick="setHeatSmashCategoryFilter('HAZARD')">💥 ${isUrdu ? 'Stage Hazards' : 'Stage Hazards'}</button>
+        </div>
+        <div style="display:flex; gap:6px; align-items:center;">
+          <button type="button" class="tactics-subfilter-btn ${activeHeatView === 'matrix' ? 'active' : ''}" onclick="setHeatSmashViewMode('matrix')" style="font-weight:800;">🥋 ${isUrdu ? 'Danger Matrix' : 'Danger Matrix'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeHeatView === 'characters' ? 'active' : ''}" onclick="setHeatSmashViewMode('characters')" style="font-weight:800;">📋 ${isUrdu ? 'Tamam 43 Fighters Table' : 'All 43 Fighters Table'}</button>
+        </div>
       </div>
     `;
-  } else if (tabName === 'movement') {
-    container.innerHTML = `
-      <div class="compendium-cards-grid">
-        ${filtered.map(row => `
-          <div class="compendium-tactic-card">
-            <div class="ctc-header">
-              <span class="ctc-char" style="color:var(--accent-cyan);">${row.technique}</span>
-              <span class="ctc-move">${row.input_execution || ''}</span>
-            </div>
-            <div class="ctc-problem"><strong>Execution Detail:</strong> ${row.details || row.execution || ''}</div>
-            <div class="ctc-solution"><strong>Tactical Application:</strong> ${row.tactical_use || row.application || ''}</div>
+
+    if (activeHeatView === 'characters') {
+      if (filteredChars.length === 0) {
+        container.innerHTML = `
+          ${subFilterBar}
+          <div class="empty-state-card" style="margin:2rem auto;">
+            <div class="empty-icon">🔍</div>
+            <h4 class="empty-title">${isUrdu ? 'Koi matching Heat Smash nahi mila' : 'No matching Heat Smashes found'}</h4>
+            <p class="empty-desc">${isUrdu ? 'Aapki search ya filter se koi fighter match nahi hua.' : 'No fighter matches your search or filter.'}</p>
           </div>
-        `).join('')}
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        ${subFilterBar}
+        <table class="analyzer-table tactics-table">
+          <thead>
+            <tr>
+              <th>${isUrdu ? 'Fighter' : 'Character'}</th>
+              <th>${isUrdu ? 'Command Input' : 'Command Input'}</th>
+              <th>${isUrdu ? 'Startup' : 'Startup'}</th>
+              <th>${isUrdu ? 'Hit Level' : 'Hit Level'}</th>
+              <th>${isUrdu ? 'Damage' : 'Damage'}</th>
+              <th>${isUrdu ? 'Block Frame' : 'On Block'}</th>
+              <th>${isUrdu ? 'Category & Stance' : 'Category & Stance'}</th>
+              <th>${isUrdu ? 'Stage Hazard' : 'Stage Hazard'}</th>
+              <th>${isUrdu ? 'Tactical Counter & Punish' : 'Tactical Counter Strategy'}</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filteredChars.map(row => {
+              const startupNum = parseInt((row.startup_frames || '99').replace(/\D/g, '')) || 16;
+              const isFastest = startupNum <= 12;
+              const isPlus = (row.block_frames || '').includes('+');
+              const blk = (row.block_frames || '-9 Safe');
+
+              let blkBadgeStyle = 'background:rgba(255,255,255,0.08); color:var(--text-dim); border:1px solid rgba(255,255,255,0.12);';
+              if (blk.includes('-14') || blk.includes('-15') || blk.toLowerCase().includes('launch')) {
+                blkBadgeStyle = 'background:rgba(239,68,68,0.22); color:#f87171; border:1px solid rgba(239,68,68,0.5); font-weight:800;';
+              } else if (isPlus) {
+                blkBadgeStyle = 'background:rgba(168,85,247,0.25); color:#c084fc; border:1px solid rgba(168,85,247,0.5); font-weight:800;';
+              } else if (blk.includes('-9') || blk.toLowerCase().includes('safe')) {
+                blkBadgeStyle = 'background:rgba(34,197,94,0.15); color:var(--accent-green); border:1px solid rgba(34,197,94,0.3);';
+              }
+
+              const startupBadgeStyle = isFastest
+                ? 'background:rgba(0,229,255,0.2); color:var(--accent-cyan); border:1px solid rgba(0,229,255,0.4); font-weight:900;'
+                : 'background:rgba(255,255,255,0.06); font-family:var(--font-mono); font-size:0.8rem; font-weight:700;';
+
+              const counter = isUrdu 
+                ? (row.tactical_counter_ur || row.tactical_counter || row.properties_notes_ur || row.properties_notes) 
+                : (row.tactical_counter_en || row.tactical_counter || row.properties_notes_en || row.properties_notes);
+
+              const stance = row.stance_transition;
+              const hazard = row.hazard_property;
+
+              return `
+                <tr>
+                  <td><strong>${escapeHtml(row.character)}</strong></td>
+                  <td><code>${formatTekkenNotation(row.command_input || '2+3')}</code></td>
+                  <td><span class="badge" style="${startupBadgeStyle}">${escapeHtml(row.startup_frames || 'i16')}${isFastest ? ' ⚡' : ''}</span></td>
+                  <td>${renderHitSequenceBadges(row.hit_level)}</td>
+                  <td><span style="color:var(--accent-orange); font-weight:800; font-family:var(--font-mono); font-size:0.85rem;">${escapeHtml(row.damage || '50')} DMG</span></td>
+                  <td><span class="badge" style="font-size:0.75rem; padding:2px 8px; border-radius:4px; ${blkBadgeStyle}">${escapeHtml(blk)}</span></td>
+                  <td>
+                    <div style="font-weight:700; font-size:0.72rem; color:var(--accent-gold); margin-bottom:2px;">${escapeHtml(row.category || 'Standard')}</div>
+                    ${stance && stance !== 'None' ? `<span class="badge" style="background:rgba(168,85,247,0.18); color:#c084fc; font-size:0.68rem; font-weight:700; border:1px solid rgba(168,85,247,0.3);">➡️ ${escapeHtml(stance)}</span>` : ''}
+                  </td>
+                  <td>
+                    ${hazard && hazard !== 'None' ? `<span class="badge" style="background:rgba(239,68,68,0.2); color:#f87171; font-size:0.72rem; font-weight:800; border:1px solid rgba(239,68,68,0.4);">💥 ${escapeHtml(hazard)}</span>` : '<span style="color:var(--text-muted); font-size:0.72rem;">None</span>'}
+                  </td>
+                  <td style="font-size:0.8rem; line-height:1.45; max-width:320px;">${escapeHtml(counter || 'Standard Heat counter rules apply.')}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    } else {
+      // Danger Matrix View
+      if (filteredMatrix.length === 0) {
+        container.innerHTML = `
+          ${subFilterBar}
+          <div class="empty-state-card" style="margin:2rem auto;">
+            <div class="empty-icon">🔍</div>
+            <h4 class="empty-title">${isUrdu ? 'Koi matching Heat Smash Category nahi mili' : 'No matching Heat Smash Categories found'}</h4>
+            <p class="empty-desc">${isUrdu ? 'Aapki search ya filter se koi category match nahi hui.' : 'No category matches your search or filter.'}</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        ${subFilterBar}
+        <div class="compendium-cards-grid">
+          ${filteredMatrix.map(row => {
+            const cat = isUrdu ? (row.category_ur || row.category) : (row.category_en || row.category);
+            const props = isUrdu 
+              ? (row.properties_ur || row.properties) 
+              : (row.properties_en || row.properties || 'Properties verified for Patch 3.00.02');
+            const counter = isUrdu 
+              ? (row.counter_strategy_ur || row.danger_and_counter) 
+              : (row.counter_strategy_en || row.counter_strategy || row.danger_and_counter);
+            const adv = row.advantage_on_block || '-9 Safe';
+
+            let advBadgeStyle = 'background:rgba(237,104,35,0.2); color:var(--accent-orange); font-weight:800; font-size:0.75rem;';
+            if (adv.includes('-14') || adv.includes('-15') || adv.toLowerCase().includes('launch')) {
+              advBadgeStyle = 'background:rgba(239,68,68,0.25); color:#f87171; border:1px solid rgba(239,68,68,0.5); font-weight:900; font-size:0.75rem;';
+            } else if (adv.includes('+')) {
+              advBadgeStyle = 'background:rgba(168,85,247,0.25); color:#c084fc; border:1px solid rgba(168,85,247,0.5); font-weight:900; font-size:0.75rem;';
+            }
+
+            return `
+              <div class="compendium-tactic-card heat-matrix-card" style="border-top:3px solid var(--accent-orange);">
+                <div class="ctc-header">
+                  <span class="ctc-char" style="color:var(--accent-orange); font-size:1.05rem; font-weight:800;">${escapeHtml(cat)}</span>
+                  <span class="badge" style="${advBadgeStyle}">${escapeHtml(adv)}</span>
+                </div>
+                <div class="heat-card-characters">
+                  🥋 <strong>${isUrdu ? 'Fighters jin par apply hota hai:' : 'Key Characters:'}</strong>
+                  <span style="color:var(--accent-gold); font-family:var(--font-mono);">${escapeHtml(row.characters || '')}</span>
+                </div>
+                <div class="ctc-problem" style="margin-bottom:0.6rem;">
+                  <strong>${isUrdu ? '🔬 Khasusiyat & Frame Data:' : '🔬 Properties & Startup:'}</strong> ${escapeHtml(props || '')}
+                </div>
+                <div class="ctc-solution heat-solution-box">
+                  <strong>${isUrdu ? '🛡️ Bachne Aur Todne Ka Tarika:' : '🛡️ Tactical Counter Strategy:'}</strong> ${escapeHtml(counter || '')}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+  } else if (tabName === 'movement') {
+    const activeMovementFilter = window.tacticsState?.movementFilter || 'ALL';
+    container.innerHTML = `
+      <div class="tactics-subfilter-bar">
+        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-right:4px;">${isUrdu ? 'Movement Category:' : 'Movement Filter:'}</span>
+        <button type="button" class="tactics-subfilter-btn ${activeMovementFilter === 'ALL' ? 'active' : ''}" onclick="setMovementFilter('ALL')">${isUrdu ? 'Tamam Techniques' : 'All Techniques'} (${rawData.length})</button>
+        <button type="button" class="tactics-subfilter-btn ${activeMovementFilter === 'DEFENSE' ? 'active' : ''}" onclick="setMovementFilter('DEFENSE')">🛡️ ${isUrdu ? 'Defensive Movement (KBD / SS~B / Fuzzy)' : 'Defensive Movement (KBD / SS~B / Fuzzy)'}</button>
+        <button type="button" class="tactics-subfilter-btn ${activeMovementFilter === 'OFFENSE' ? 'active' : ''}" onclick="setMovementFilter('OFFENSE')">⚡ ${isUrdu ? 'Offensive Movement (Wavedash / iWR / Dash Block)' : 'Offensive Movement (Wavedash / iWR / Dash Block)'}</button>
+      </div>
+
+      <div class="movement-bible-grid">
+        ${filtered.map(row => {
+          const tech = isUrdu ? (row.technique_ur || row.technique_name_ur || row.technique_name || row.technique) : (row.technique_en || row.technique_name_en || row.technique_name || row.technique);
+          const why = isUrdu ? (row.why_ur || row.why_it_matters_ur || row.why) : (row.why_en || row.why_it_matters_en || row.why);
+          const exec = isUrdu ? (row.execution_breakdown_ur || row.execution_breakdown) : (row.execution_breakdown_en || row.execution_breakdown);
+          const use = isUrdu ? (row.tactical_use_ur || row.tactical_application_ur || row.tactical_use) : (row.tactical_use_en || row.tactical_application_en || row.tactical_use);
+          const warn = isUrdu ? (row.warning_ur || row.warning) : (row.warning_en || row.warning);
+          const socd = row.socd_shortcut || '';
+          const inputCmd = row.input || row.command_input || '';
+          const slug = row.technique_slug || '';
+
+          let icon = '🏃';
+          if (slug.includes('backdash')) icon = '💨';
+          else if (slug.includes('wavedash')) icon = '⚡';
+          else if (slug.includes('crouch-cancel')) icon = '🎯';
+          else if (slug.includes('sidestep')) icon = '🛡️';
+          else if (slug.includes('fuzzy')) icon = '👁️';
+          else if (slug.includes('sidewalk')) icon = '🔄';
+          else if (slug.includes('dash-block')) icon = '🛑';
+
+          return `
+            <div class="movement-technique-card">
+              <div class="mtc-header">
+                <div class="mtc-title-wrap">
+                  <span class="mtc-icon">${icon}</span>
+                  <h4 class="mtc-title">${escapeHtml(tech)}</h4>
+                </div>
+                <span class="badge" style="background:rgba(0,229,255,0.15); color:var(--accent-cyan); font-weight:800; font-size:0.75rem;">Patch 3.00.02</span>
+              </div>
+
+              <div class="mtc-command-row">
+                <span class="mtc-label">${isUrdu ? 'Standard Notation:' : 'Standard Notation:'}</span>
+                <div class="mtc-command-pill">
+                  <code>${formatTekkenNotation(inputCmd)}</code>
+                </div>
+              </div>
+
+              ${socd ? `
+                <div class="mtc-socd-pill">
+                  <span class="socd-icon">⌨️</span>
+                  <div class="socd-text"><strong>${isUrdu ? 'SOCD / Leverless Shortcut:' : 'SOCD / Leverless Shortcut:'}</strong> <code>${formatTekkenNotation(socd)}</code></div>
+                </div>
+              ` : ''}
+
+              <div class="mtc-section mtc-physics">
+                <div class="mtc-section-heading">🔬 <strong>${isUrdu ? 'Physics & Engine Logic (Kyun Kaam Karta Hai):' : 'Physics & Engine Mechanics:'}</strong></div>
+                <p class="mtc-section-text">${escapeHtml(why || '')}</p>
+              </div>
+
+              ${exec ? `
+                <div class="mtc-section mtc-execution">
+                  <div class="mtc-section-heading">🕹️ <strong>${isUrdu ? 'Execution Ka Tarika (Step-by-Step):' : 'Step-by-Step Execution:'}</strong></div>
+                  <p class="mtc-section-text">${escapeHtml(exec)}</p>
+                </div>
+              ` : ''}
+
+              <div class="mtc-section mtc-application">
+                <div class="mtc-section-heading">🏆 <strong>${isUrdu ? 'Tournament Application:' : 'Tournament Application:'}</strong></div>
+                <p class="mtc-section-text">${escapeHtml(use || '')}</p>
+              </div>
+
+              ${warn ? `
+                <div class="mtc-warning-banner">
+                  ⚠️ <strong>${isUrdu ? 'Khabardaar / Sway Character Lockout:' : 'Warning / Sway Character Lockout:'}</strong>
+                  <span>${escapeHtml(warn)}</span>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }).join('')}
       </div>
     `;
   } else if (tabName === 'emergency') {
+    const activeBlenderFilter = window.tacticsState?.blenderFilter || 'ALL';
     container.innerHTML = `
-      <div class="compendium-cards-grid">
-        ${filtered.map(row => `
-          <div class="compendium-tactic-card emergency-card">
-            <div class="ctc-header">
-              <span class="ctc-char" style="color:var(--accent-red);">${row.scenario || 'Blender Scenario'}</span>
-              <span class="ctc-move">${row.urgency || 'HIGH'}</span>
-            </div>
-            <div class="ctc-problem"><strong>Panic Trigger:</strong> ${row.situation || ''}</div>
-            <div class="ctc-solution" style="color:var(--accent-gold);"><strong>Safe Response:</strong> ${row.action || row.solution || ''}</div>
-          </div>
-        `).join('')}
+      <div class="tactics-subfilter-bar">
+        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-right:4px;">${isUrdu ? 'Scenario Type:' : 'Scenario Filter:'}</span>
+        <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'ALL' ? 'active' : ''}" onclick="setBlenderScenarioFilter('ALL')">${isUrdu ? 'Tamam Scenarios' : 'All Scenarios'} (${rawData.length})</button>
+        <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'VORTEX' ? 'active' : ''}" onclick="setBlenderScenarioFilter('VORTEX')">🌀 ${isUrdu ? '50/50 Stance Vortex' : '50/50 Stance Vortex'}</button>
+        <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'OKI' ? 'active' : ''}" onclick="setBlenderScenarioFilter('OKI')">🤼 ${isUrdu ? 'Ground Oki & Throws' : 'Ground Oki & Throws'}</button>
+        <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'PLUS_TRAP' ? 'active' : ''}" onclick="setBlenderScenarioFilter('PLUS_TRAP')">⚡ ${isUrdu ? 'Plus Frame Traps' : 'Plus Frame Traps'}</button>
+        <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'UNIVERSAL' ? 'active' : ''}" onclick="setBlenderScenarioFilter('UNIVERSAL')">🚨 ${isUrdu ? 'Universal Panic Counterplay' : 'Universal Panic Counterplay'}</button>
       </div>
+
+      <table class="analyzer-table tactics-table blender-table">
+        <thead>
+          <tr>
+            <th style="min-width:180px;">${isUrdu ? 'Fighter & Blender Scenario' : 'Character & Blender Scenario'}</th>
+            <th style="min-width:140px;">${isUrdu ? 'Frame Situation' : 'Frame Situation'}</th>
+            <th style="min-width:220px;">${isUrdu ? 'Panic Trigger (Kya HARGIZ Na Karein)' : 'Panic Trigger (What NOT To Do)'}</th>
+            <th style="min-width:250px;">${isUrdu ? 'Verified Safe Response (Exact Frame Solution)' : 'Verified Safe Response (Exact Frame Solution)'}</th>
+            <th style="min-width:130px;">${isUrdu ? 'Risk / Reward' : 'Risk / Reward'}</th>
+            <th style="min-width:180px;">${isUrdu ? 'Practice Mode Drill' : 'Practice Drill Setup'}</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${filtered.map(row => {
+            const scen = isUrdu ? (row.scenario_ur || row.scenario_title_ur || row.scenario) : (row.scenario_en || row.scenario_title_en || row.scenario);
+            const sit = isUrdu ? (row.situation_ur || row.frame_situation_ur || row.situation) : (row.situation_en || row.frame_situation_en || row.situation);
+            const panic = isUrdu ? (row.panic_trigger_ur || row.panic_trigger) : (row.panic_trigger_en || row.panic_trigger);
+            const safeResp = isUrdu 
+              ? (row.verified_safe_response_ur || row.action_ur || row.verified_safe_response || row.action) 
+              : (row.verified_safe_response_en || row.action_en || row.verified_safe_response || row.action);
+            const risk = isUrdu ? (row.risk_reward_ur || row.risk_reward_rating_ur || row.risk_reward) : (row.risk_reward_en || row.risk_reward_rating_en || row.risk_reward);
+            const drill = row.practice_drill_input || row.drill || '';
+
+            let riskBadgeStyle = 'background:rgba(34,197,94,0.15); color:var(--accent-green); border:1px solid rgba(34,197,94,0.3);';
+            if ((risk || '').toLowerCase().includes('high risk') || (risk || '').toLowerCase().includes('50/50')) {
+              riskBadgeStyle = 'background:rgba(239,68,68,0.2); color:#f87171; border:1px solid rgba(239,68,68,0.4);';
+            } else if ((risk || '').toLowerCase().includes('medium')) {
+              riskBadgeStyle = 'background:rgba(234,179,8,0.2); color:var(--accent-gold); border:1px solid rgba(234,179,8,0.4);';
+            }
+
+            return `
+              <tr>
+                <td>
+                  <strong>${escapeHtml(row.character || row.character_name || '')}</strong>
+                  <div style="font-size:0.82rem; color:var(--accent-red); font-weight:800; margin-top:2px;">${escapeHtml(scen || '')}</div>
+                </td>
+                <td>
+                  <span class="badge" style="background:rgba(237,104,35,0.18); color:var(--accent-orange); font-size:0.75rem; font-weight:700; font-family:var(--font-mono);">${escapeHtml(sit || '')}</span>
+                </td>
+                <td>
+                  <div class="blender-panic-box">
+                    <span class="panic-x">❌</span>
+                    <span>${escapeHtml(panic || '')}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="blender-safe-box">
+                    <span class="safe-shield">🛡️</span>
+                    <div>${escapeHtml(safeResp || '')}</div>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge" style="font-size:0.74rem; font-weight:800; padding:2px 8px; border-radius:4px; ${riskBadgeStyle}">${escapeHtml(risk || 'Verified Safe')}</span>
+                </td>
+                <td>
+                  ${drill ? `<code>${formatTekkenNotation(drill)}</code>` : '<span style="color:var(--text-muted); font-size:0.75rem;">—</span>'}
+                </td>
+              </tr>
+            `;
+          }).join('')}
+        </tbody>
+      </table>
     `;
   }
 }
 
 function renderHardwareGuide(container, data) {
   if (!data) return;
+  const isUrdu = (state.compendiumLang === 'ur');
   const cfg = data.pc_zero_lag_config || {};
   const ctl = data.controllers || [];
+  const zls = data.zero_lag_settings || [];
+
+  const vsyncVal = isUrdu ? (cfg.vsync_ur || cfg.vsync) : (cfg.vsync_en || cfg.vsync || 'OFF (Enables lowest frame delivery latency)');
+  const reflexVal = isUrdu ? (cfg.nvidia_reflex_ur || cfg.nvidia_reflex) : (cfg.nvidia_reflex_en || cfg.nvidia_reflex || 'ON + BOOST (GPU latency reduction)');
+  const fpsVal = isUrdu ? (cfg.framerate_cap_ur || cfg.framerate_cap) : (cfg.framerate_cap_en || cfg.framerate_cap || 'Locked 60 FPS (Tekken 8 physics engine lock)');
+  const dmodeVal = isUrdu ? (cfg.display_mode_ur || cfg.display_mode) : (cfg.display_mode_en || cfg.display_mode || 'Exclusive Fullscreen (Bypasses DWM compositor)');
+  const pollVal = isUrdu ? (cfg.usb_polling_ur || cfg.usb_polling) : (cfg.usb_polling_en || cfg.usb_polling || '1000 Hz / 1ms (Overclocked Controller)');
+  const socdVal = isUrdu ? (cfg.socd_cleaner_ur || cfg.socd_cleaner) : (cfg.socd_cleaner_en || cfg.socd_cleaner || 'Neutral SOCD (Left+Right=N, Up+Down=N) - Tournament Legal');
+
+  let zeroLagRows = '';
+  if (zls && zls.length > 0) {
+    zeroLagRows = `
+      <div class="dash-card" style="margin-top:1rem;">
+        <h4 style="color:var(--accent-orange); margin-bottom:0.75rem;">⚙️ ${isUrdu ? 'Tournament Netcode Aur Graphics Ki Recommendations' : 'Tournament Netcode & Graphics Recommendations'}</h4>
+        <table class="analyzer-table tactics-table">
+          <thead>
+            <tr>
+              <th>${isUrdu ? 'Setting Ka Naam' : 'Setting'}</th>
+              <th>${isUrdu ? 'Recommended Option' : 'Recommended'}</th>
+              <th>${isUrdu ? 'Kyun Zaroori Hai (Reason)' : 'Optimization Reason'}</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${zls.map(s => `
+              <tr>
+                <td><strong>${escapeHtml(s.setting)}</strong></td>
+                <td><span class="badge" style="background:rgba(34,197,94,0.15); color:var(--accent-green); font-weight:800;">${escapeHtml(s.recommended)}</span></td>
+                <td style="font-size:0.8rem; color:var(--text-dim);">${escapeHtml(s.reason)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
 
   container.innerHTML = `
     <div class="hardware-guide-layout">
       <div class="dash-card">
-        <h4 style="color:var(--accent-cyan); margin-bottom:0.75rem;">⚡ Zero-Lag PC &amp; Tournament Display Configuration</h4>
+        <h4 style="color:var(--accent-cyan); margin-bottom:0.75rem;">⚡ ${isUrdu ? 'Zero-Lag PC Aur Tournament Display Configuration' : 'Zero-Lag PC & Tournament Display Configuration'}</h4>
         <div class="hardware-specs-grid">
-          <div class="hw-spec-item"><strong>V-Sync:</strong> ${cfg.vsync || 'OFF (Enables lowest frame delivery latency)'}</div>
-          <div class="hw-spec-item"><strong>NVIDIA Reflex:</strong> ${cfg.nvidia_reflex || 'ON + BOOST (GPU latency reduction)'}</div>
-          <div class="hw-spec-item"><strong>Frame Rate:</strong> ${cfg.framerate_cap || 'Locked 60 FPS (Tekken 8 physics engine lock)'}</div>
-          <div class="hw-spec-item"><strong>Display Mode:</strong> ${cfg.display_mode || 'Exclusive Fullscreen (Bypasses DWM compositor)'}</div>
-          <div class="hw-spec-item"><strong>USB Polling:</strong> ${cfg.usb_polling || '1000 Hz / 1ms (Overclocked Controller)'}</div>
-          <div class="hw-spec-item"><strong>SOCD Rule:</strong> ${cfg.socd_cleaner || 'Neutral SOCD (Left+Right=N, Up+Down=N) - Tournament Legal'}</div>
+          <div class="hw-spec-item"><strong>V-Sync:</strong> ${escapeHtml(vsyncVal)}</div>
+          <div class="hw-spec-item"><strong>NVIDIA Reflex:</strong> ${escapeHtml(reflexVal)}</div>
+          <div class="hw-spec-item"><strong>Frame Rate:</strong> ${escapeHtml(fpsVal)}</div>
+          <div class="hw-spec-item"><strong>Display Mode:</strong> ${escapeHtml(dmodeVal)}</div>
+          <div class="hw-spec-item"><strong>USB Polling:</strong> ${escapeHtml(pollVal)}</div>
+          <div class="hw-spec-item"><strong>SOCD Rule:</strong> ${escapeHtml(socdVal)}</div>
         </div>
       </div>
       <div class="dash-card" style="margin-top:1rem;">
-        <h4 style="color:var(--accent-gold); margin-bottom:0.75rem;">🕹️ Controller Latency &amp; Input Comparison</h4>
+        <h4 style="color:var(--accent-gold); margin-bottom:0.75rem;">🕹️ ${isUrdu ? 'Controller Latency Aur Input Comparison' : 'Controller Latency & Input Comparison'}</h4>
         <div class="compendium-cards-grid">
-          ${ctl.map(c => `
-            <div class="compendium-tactic-card">
-              <div class="ctc-header">
-                <span class="ctc-char">${c.type}</span>
-                <span class="ctc-move" style="color:var(--accent-cyan);">${c.input_latency || ''}</span>
+          ${ctl.map(c => {
+            const pros = isUrdu ? (c.pros_ur || c.pros) : (c.pros_en || c.pros);
+            const notes = isUrdu ? (c.cons_ur || c.technique || c.cons) : (c.cons_en || c.cons || c.technique);
+            return `
+              <div class="compendium-tactic-card">
+                <div class="ctc-header">
+                  <span class="ctc-char">${escapeHtml(isUrdu ? (c.type_ur || c.type) : (c.type_en || c.type))}</span>
+                  <span class="ctc-move" style="color:var(--accent-cyan); font-weight:800;">${escapeHtml(c.input_latency || '1ms')}</span>
+                </div>
+                <div class="ctc-problem"><strong>${isUrdu ? 'Fawaid / Pros:' : 'Tournament Pros:'}</strong> ${escapeHtml(pros || '')}</div>
+                <div class="ctc-solution" style="color:var(--accent-gold);"><strong>${isUrdu ? 'Pro Technique & Notes:' : 'Execution & Secret Tech:'}</strong> ${escapeHtml(notes || '')}</div>
               </div>
-              <div class="ctc-problem"><strong>Pros:</strong> ${c.pros || ''}</div>
-              <div class="ctc-solution"><strong>Cons &amp; Notes:</strong> ${c.cons || ''}</div>
-            </div>
-          `).join('')}
+            `;
+          }).join('')}
         </div>
       </div>
+      ${zeroLagRows}
     </div>
   `;
 }
+
+function initCompendiumLanguage() {
+  const saved = localStorage.getItem('tekken8_compendium_lang');
+  const lang = saved || state.compendiumLang || 'en';
+  state.compendiumLang = lang;
+  const btnEn = document.getElementById('btnCompendiumLangEn');
+  const btnUr = document.getElementById('btnCompendiumLangUr');
+  if (btnEn) btnEn.classList.toggle('active', lang === 'en');
+  if (btnUr) btnUr.classList.toggle('active', lang === 'ur');
+}
+
+function setCompendiumLanguage(lang) {
+  state.compendiumLang = lang;
+  localStorage.setItem('tekken8_compendium_lang', lang);
+  playSfx('click');
+
+  const btnEn = document.getElementById('btnCompendiumLangEn');
+  const btnUr = document.getElementById('btnCompendiumLangUr');
+  if (btnEn) btnEn.classList.toggle('active', lang === 'en');
+  if (btnUr) btnUr.classList.toggle('active', lang === 'ur');
+
+  showToast(lang === 'ur' ? 'Compendium Language: Roman Urdu' : 'Compendium Language: English', 'info');
+
+  const activeTab = window.tacticsState?.currentTab || 'sidesteps';
+  const cachedData = window.tacticsState?.cache?.[activeTab];
+  const searchInput = document.getElementById('tacticsCompendiumSearch');
+  const query = searchInput ? searchInput.value.trim() : '';
+
+  if (cachedData) {
+    renderTacticsUI(activeTab, cachedData, query);
+  } else {
+    loadAndRenderTacticsData(activeTab, query);
+  }
+}
+window.initCompendiumLanguage = initCompendiumLanguage;
+window.setCompendiumLanguage = setCompendiumLanguage;
 
 function filterTacticsCompendium() {
   const searchInput = document.getElementById('tacticsCompendiumSearch');
@@ -9069,6 +10724,900 @@ window.switchTacticsTab = switchTacticsTab;
 window.filterTacticsCompendium = filterTacticsCompendium;
 window.clearTacticsSearch = clearTacticsSearch;
 window.renderProTacticsRelativityCard = renderProTacticsRelativityCard;
+window.setHeatSmashCategoryFilter = setHeatSmashCategoryFilter;
+window.setHeatSmashViewMode = setHeatSmashViewMode;
+window.setMovementFilter = setMovementFilter;
+window.setBlenderScenarioFilter = setBlenderScenarioFilter;
+
+// ==========================================================================
+// Damage Scaling Calculator & Database Integrity Audit (Phase 2)
+// ==========================================================================
+
+function toggleScalingCalculator() {
+  playSfx('click');
+  const content = document.getElementById('damageScalingContent');
+  const btn = document.getElementById('btnToggleScalingCalc');
+  if (!content) return;
+  if (content.style.display === 'none') {
+    content.style.display = 'block';
+    if (btn) btn.textContent = 'Collapse';
+  } else {
+    content.style.display = 'none';
+    if (btn) btn.textContent = 'Expand Calculator';
+  }
+}
+
+async function runDamageCalculationLive() {
+  playSfx('click');
+  const hitsInput = document.getElementById('calcComboHits');
+  const chInput = document.getElementById('calcIsCounterHit');
+  const resultsWrap = document.getElementById('calcResultsWrap');
+  if (!hitsInput || !resultsWrap) return;
+
+  const rawVal = hitsInput.value.trim();
+  if (!rawVal) {
+    showToast('Please enter hit damage values (e.g. 23, 18, 14, 25)', 'warning');
+    return;
+  }
+
+  const hitsArr = rawVal.split(',')
+    .map(s => parseInt(s.trim(), 10))
+    .filter(n => !isNaN(n) && n > 0);
+
+  if (hitsArr.length === 0) {
+    showToast('Invalid damage values. Please use comma-separated positive numbers.', 'error');
+    return;
+  }
+
+  const isCounterHit = chInput ? chInput.checked : false;
+
+  resultsWrap.style.display = 'block';
+  resultsWrap.innerHTML = `
+    <div style="text-align:center; padding:1.5rem; color:var(--text-muted);">
+      <div class="loader-spinner" style="margin:0 auto 0.75rem auto; width:28px; height:28px; border:3px solid rgba(237,104,35,0.2); border-top-color:var(--accent-orange); border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+      <span>Computing hit-by-hit aerial scaling against Tekken 8 physics engine...</span>
+    </div>
+  `;
+
+  try {
+    const payload = {
+      hits: hitsArr.map((dmg, idx) => ({
+        hit_number: idx + 1,
+        raw_damage: dmg,
+        move_notation: `Hit ${idx + 1}`
+      })),
+      is_counter_hit: isCounterHit,
+      damage_type: 'TESTED',
+      calculation_method: 'LAB_TESTED_IN_GAME'
+    };
+
+    const res = await fetch(`${API_BASE}/combos/calculate-damage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      throw new Error(`Calculation failed with status ${res.status}`);
+    }
+
+    const data = await res.json();
+    const dampeningPct = data.raw_damage_sum > 0 
+      ? Math.round((1 - data.scaled_damage_total / data.raw_damage_sum) * 100) 
+      : 0;
+
+    let hitsRows = '';
+    if (data.hits && data.hits.length > 0) {
+      hitsRows = data.hits.map(h => `
+        <tr>
+          <td style="font-weight:700; color:var(--accent-cyan); text-align:center;">#${h.hit_number}</td>
+          <td style="font-family:var(--font-mono); color:#fff;">${h.move_notation}</td>
+          <td style="color:var(--text-muted); text-align:right;">${h.raw_damage} dmg</td>
+          <td style="text-align:center;">
+            <span class="badge-block-${h.scaling_percent >= 100 ? 'plus' : (h.scaling_percent <= 30 ? 'minus' : 'neutral')}" style="font-size:0.75rem; padding:0.15rem 0.4rem;">
+              ${h.scaling_percent}%
+            </span>
+          </td>
+          <td style="font-weight:800; color:var(--accent-gold); text-align:right;">${h.scaled_damage} dmg</td>
+        </tr>
+      `).join('');
+    }
+
+    resultsWrap.innerHTML = `
+      <div class="calc-summary-bar">
+        <div class="calc-stat-block">
+          <div class="calc-stat-label">RAW SUMMATION</div>
+          <div class="calc-stat-val" style="color:var(--text-muted); text-decoration:line-through;">${data.raw_damage_sum} DMG</div>
+        </div>
+        <div class="calc-stat-block">
+          <div class="calc-stat-label">TRUE SCALED DAMAGE</div>
+          <div class="calc-stat-val" style="color:var(--accent-gold); font-size:1.4rem;">${data.scaled_damage_total} DMG</div>
+        </div>
+        <div class="calc-stat-block">
+          <div class="calc-stat-label">AERIAL DAMPENING</div>
+          <div class="calc-stat-val" style="color:var(--accent-orange);">${dampeningPct}% DECAY</div>
+        </div>
+        <div class="calc-stat-block">
+          <div class="calc-stat-label">STARTER PROPERTY</div>
+          <div class="calc-stat-val" style="font-size:0.85rem;">
+            ${isCounterHit ? '<span class="badge-block-plus">Counter-Hit (+20%)</span>' : '<span class="badge-block-neutral">Standard Hit (100%)</span>'}
+          </div>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto; margin-top:1rem;">
+        <table class="calc-table">
+          <thead>
+            <tr>
+              <th style="width:60px; text-align:center;">Hit #</th>
+              <th>Notation / Action</th>
+              <th style="text-align:right;">Raw Dmg</th>
+              <th style="text-align:center;">Scale Rate</th>
+              <th style="text-align:right;">Applied Dmg</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${hitsRows}
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:0.75rem; padding:0.6rem 0.8rem; background:rgba(0,0,0,0.3); border-left:3px solid var(--accent-cyan); font-size:0.75rem; color:var(--text-dim);">
+        <strong style="color:var(--accent-cyan);">Mechanics Note:</strong> ${data.scaling_formula_explanation || 'In Tekken 8, aerial juggles damp consecutive strikes down to a 30% floor. Wall Splats, Floor Blasts, and Heat Dashes recalculate scaling from preset breakpoints.'}
+      </div>
+    `;
+
+    showToast(`Calculated: ${data.scaled_damage_total} True Scaled Damage`, 'success');
+  } catch (err) {
+    console.error('Damage calculation error:', err);
+    resultsWrap.innerHTML = `
+      <div style="padding:1rem; background:rgba(225,29,72,0.15); border:1px solid var(--accent-red); border-radius:8px; color:#fff; font-size:0.85rem;">
+        <strong>Calculation Error:</strong> ${err.message || 'Failed to compute combo damage.'}
+      </div>
+    `;
+    showToast('Failed to calculate combo scaling.', 'error');
+  }
+}
+
+async function runDatabaseIntegrityAudit() {
+  playSfx('click');
+  const statusEl = document.getElementById('auditRunStatus');
+  const badgeEl = document.getElementById('auditHealthBadge');
+  const resultsEl = document.getElementById('auditReportResults');
+
+  if (statusEl) statusEl.innerHTML = '<span style="color:var(--accent-cyan);">🔍 Auditing database invariants & relational integrity...</span>';
+  if (badgeEl) badgeEl.textContent = 'Auditing Invariants...';
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/audit/integrity`, {
+      method: 'POST',
+      headers: getAdminAuthHeaders()
+    });
+
+    if (res.status === 401) {
+      if (statusEl) statusEl.innerHTML = '<span style="color:var(--accent-red);">❌ Unauthorized: Please authenticate in Admin Portal first.</span>';
+      if (badgeEl) badgeEl.textContent = 'Auth Required';
+      showToast('Admin session required. Please log in.', 'error');
+      return;
+    }
+
+    if (!res.ok) {
+      throw new Error(`Audit failed with status ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    if (badgeEl) {
+      if (data.health_score === 100.0) {
+        badgeEl.textContent = `HEALTH: 100% PERFECT`;
+        badgeEl.style.background = 'var(--accent-green)';
+        badgeEl.style.color = '#000';
+      } else if (data.is_healthy) {
+        badgeEl.textContent = `HEALTH: ${data.health_score}% HEALTHY`;
+        badgeEl.style.background = 'var(--accent-cyan)';
+        badgeEl.style.color = '#000';
+      } else {
+        badgeEl.textContent = `HEALTH: ${data.health_score}% ISSUES DETECTED`;
+        badgeEl.style.background = 'var(--accent-red)';
+        badgeEl.style.color = '#fff';
+      }
+    }
+
+    if (statusEl) {
+      statusEl.innerHTML = `<span style="color:var(--accent-green);">✅ Audit Completed (${new Date().toLocaleTimeString()})</span>`;
+    }
+
+    if (resultsEl) {
+      resultsEl.style.display = 'block';
+      let issuesHtml = '';
+      if (data.issues && data.issues.length > 0) {
+        issuesHtml = `
+          <div style="margin-top:1rem;">
+            <h5 style="color:var(--accent-orange); margin-bottom:0.5rem; font-size:0.85rem;">Detected Issues (${data.issues.length})</h5>
+            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+              ${data.issues.map(iss => `
+                <div style="padding:0.5rem 0.75rem; background:rgba(225,29,72,0.1); border-left:3px solid var(--accent-red); font-size:0.8rem;">
+                  <strong>[${iss.severity}]</strong> ${iss.description || iss.message}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else {
+        issuesHtml = `
+          <div style="margin-top:1rem; padding:0.75rem; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.3); border-radius:6px; font-size:0.82rem; color:var(--accent-green); display:flex; align-items:center; gap:0.5rem;">
+            <span>🛡️</span>
+            <span><strong>All Relational Invariants Verified:</strong> Zero orphaned records, physical frame startup bounds validated (&gt;0), valid hit levels verified, and all 16 battleground hazard coordinates synchronized.</span>
+          </div>
+        `;
+      }
+
+      resultsEl.innerHTML = `
+        <div class="audit-metrics-grid">
+          <div class="audit-metric-card">
+            <span class="audit-metric-num" style="color:var(--accent-cyan);">${data.total_characters}</span>
+            <span class="audit-metric-label">FIGHTERS AUDITED</span>
+          </div>
+          <div class="audit-metric-card">
+            <span class="audit-metric-num" style="color:var(--accent-gold);">${data.total_moves}</span>
+            <span class="audit-metric-label">FRAME DATA MOVES</span>
+          </div>
+          <div class="audit-metric-card">
+            <span class="audit-metric-num" style="color:var(--accent-orange);">${data.total_combos}</span>
+            <span class="audit-metric-label">COMBO ROUTES</span>
+          </div>
+          <div class="audit-metric-card">
+            <span class="audit-metric-num" style="color:#a855f7;">${data.total_stages}</span>
+            <span class="audit-metric-label">BATTLEGROUNDS</span>
+          </div>
+        </div>
+        ${issuesHtml}
+      `;
+    }
+
+    showToast(`Database Integrity Score: ${data.health_score}%`, 'success');
+  } catch (err) {
+    console.error('Audit failed:', err);
+    if (statusEl) statusEl.innerHTML = `<span style="color:var(--accent-red);">❌ Audit error: ${err.message}</span>`;
+    showToast('Failed to execute database audit.', 'error');
+  }
+}
+
+// Window global exports
+window.toggleScalingCalculator = toggleScalingCalculator;
+window.runDamageCalculationLive = runDamageCalculationLive;
+window.runDatabaseIntegrityAudit = runDatabaseIntegrityAudit;
+
+// ==========================================================================
+// Card Actions & Throw Break Interactive Practice Engine (Phase 2)
+// ==========================================================================
+
+function viewFighterProfile(slug) {
+  try {
+    playSfx('click');
+    openCharacterProfile(slug);
+  } catch (err) {
+    console.error('viewFighterProfile error:', err);
+  }
+}
+
+function compareInMatchup(slug) {
+  try {
+    playSfx('launch');
+    const char = state.characters?.find(c => c.slug === slug);
+    if (!char) return;
+    
+    // If player is already this character, set as opponent, else set as player 1
+    if (state.selectedCharacter?.slug === slug) {
+      state.matchup.player = char;
+      const pSel = document.getElementById('playerSelect');
+      if (pSel) { 
+        pSel.value = char.id; 
+        if (typeof updatePlayerPreview === 'function') updatePlayerPreview(); 
+      }
+    } else {
+      state.matchup.opponent = char;
+      const oSel = document.getElementById('opponentSelect');
+      if (oSel) { 
+        oSel.value = char.id; 
+        if (typeof updateOpponentPreview === 'function') updateOpponentPreview(); 
+      }
+    }
+    
+    switchAppView('matchup', 'analyzer');
+    if (typeof runMatchupAnalysis === 'function') {
+      runMatchupAnalysis();
+    }
+    showToast(`Loaded ${char.name} into Matchup Combat Lab!`, 'success');
+  } catch (err) {
+    console.error('compareInMatchup error:', err);
+  }
+}
+
+function loadInComboLab(slug) {
+  try {
+    playSfx('click');
+    const char = state.characters?.find(c => c.slug === slug);
+    if (!char) return;
+    selectCharacter(slug);
+    switchAppView('fighters', 'combo-lab');
+    if (typeof loadComboLabForFighter === 'function') {
+      loadComboLabForFighter(slug);
+    }
+    showToast(`Loaded ${char.name} in Combo Lab!`, 'info');
+  } catch (err) {
+    console.error('loadInComboLab error:', err);
+  }
+}
+
+function executeInteractiveThrowBreak(inputKey) {
+  try {
+    playSfx('click');
+    const feedbackEl = document.getElementById('throwBreakFeedback');
+    const hudFeedbackEl = document.getElementById('hudThrowBreakFeedback');
+
+    const p2Name = state.matchup?.opponent?.name || state.lastMatchupData?.opponent_character?.name || 'Opponent';
+    const tagText = document.getElementById('ptOpponentThrowBreakTag')?.textContent || '';
+    const descText = document.getElementById('ptOpponentThrowDesc')?.textContent || '';
+    const fullContext = (tagText + ' ' + descText).toLowerCase();
+
+    // Determine target break: 1, 2, or 1+2
+    let isCorrect = false;
+    let expectedBreak = '1 or 2';
+
+    if (fullContext.includes('1+2') || fullContext.includes('both hands') || fullContext.includes('both arms')) {
+      expectedBreak = '1+2';
+      isCorrect = (inputKey === '1+2');
+    } else if (fullContext.includes('break 2') || fullContext.includes('right hand') || fullContext.includes('break with 2')) {
+      expectedBreak = '2';
+      isCorrect = (inputKey === '2');
+    } else if (fullContext.includes('break 1') || fullContext.includes('left hand') || fullContext.includes('break with 1')) {
+      expectedBreak = '1';
+      isCorrect = (inputKey === '1');
+    } else {
+      expectedBreak = '1 or 2';
+      isCorrect = (inputKey === '1' || inputKey === '2');
+    }
+
+    const renderFeedback = (el) => {
+      if (!el) return;
+      el.style.display = 'block';
+      if (isCorrect) {
+        el.style.background = 'rgba(34, 197, 94, 0.15)';
+        el.style.border = '1px solid var(--accent-green)';
+        el.style.color = 'var(--accent-green)';
+        el.innerHTML = `✅ <strong>BREAK SUCCESSFUL!</strong> You broke ${p2Name}'s throw with <strong>${inputKey}</strong> (14f break window). Throw neutralized!`;
+      } else {
+        el.style.background = 'rgba(225, 29, 72, 0.15)';
+        el.style.border = '1px solid var(--accent-red)';
+        el.style.color = '#fff';
+        el.innerHTML = `❌ <strong>BREAK FAILED!</strong> Pressed <strong>${inputKey}</strong>, but this throw requires <strong>${expectedBreak}</strong>! Watch opponent's extended arms on grab startup.`;
+      }
+    };
+
+    if (feedbackEl) renderFeedback(feedbackEl);
+    if (hudFeedbackEl) renderFeedback(hudFeedbackEl);
+
+    if (isCorrect) {
+      playSfx('launch');
+      showToast(`Break Successful! ${inputKey} Escape Verified`, 'success');
+    } else {
+      playSfx('click');
+      showToast(`Break Failed! Required: ${expectedBreak}`, 'error');
+    }
+  } catch (err) {
+    console.error('executeInteractiveThrowBreak error:', err);
+  }
+}
+
+// ==========================================================================
+// Phase 4: Progressive Disclosure & UX Simplification Architecture
+// ==========================================================================
+
+function initUserMode() {
+  const mode = state.userMode || 'essentials';
+  document.body.classList.toggle('mode-essentials', mode === 'essentials');
+  document.body.classList.toggle('mode-pro', mode === 'pro');
+
+  const btnEssentials = document.getElementById('btnModeEssentials');
+  const btnPro = document.getElementById('btnModePro');
+  if (btnEssentials) btnEssentials.classList.toggle('active', mode === 'essentials');
+  if (btnPro) btnPro.classList.toggle('active', mode === 'pro');
+
+  // Progressive Disclosure Containers
+  const fullFrameSheet = document.getElementById('fullFrameDataSheet');
+  const proTelemetry = document.getElementById('proMatchupTelemetryContainer');
+  const btnToggleFullFrame = document.getElementById('btnToggleFullFrameData');
+  const btnToggleProTelemetry = document.getElementById('btnToggleProTelemetry');
+
+  if (mode === 'essentials') {
+    if (fullFrameSheet) {
+      fullFrameSheet.style.display = state.fullFrameSheetOpen ? 'block' : 'none';
+    }
+    if (btnToggleFullFrame) {
+      btnToggleFullFrame.classList.toggle('active', state.fullFrameSheetOpen);
+      btnToggleFullFrame.innerHTML = state.fullFrameSheetOpen
+        ? `<span>Hide Full Technical Frame Data</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`
+        : `<span>Explore Full Frame Data Spreadsheet (655 Moves)</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
+    }
+
+    if (proTelemetry) {
+      proTelemetry.style.display = state.proMatchupTelemetryOpen ? 'block' : 'none';
+    }
+    if (btnToggleProTelemetry) {
+      btnToggleProTelemetry.classList.toggle('active', state.proMatchupTelemetryOpen);
+      btnToggleProTelemetry.innerHTML = state.proMatchupTelemetryOpen
+        ? `<span>Hide Advanced Pro Telemetry</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`
+        : `<span>Deep Pro Telemetry (8 Lab Perspectives)</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
+    }
+  } else {
+    // Pro Mode: Expand technical sheets by default
+    if (fullFrameSheet) fullFrameSheet.style.display = 'block';
+    if (proTelemetry) proTelemetry.style.display = 'block';
+    if (btnToggleFullFrame) {
+      btnToggleFullFrame.classList.add('active');
+      btnToggleFullFrame.innerHTML = `<span>Hide Full Technical Frame Data</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`;
+    }
+    if (btnToggleProTelemetry) {
+      btnToggleProTelemetry.classList.add('active');
+      btnToggleProTelemetry.innerHTML = `<span>Hide Advanced Pro Telemetry</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`;
+    }
+  }
+}
+
+function setUserMode(mode) {
+  state.userMode = mode;
+  localStorage.setItem('tekken8_user_mode', mode);
+  playSfx('click');
+
+  if (mode === 'essentials') {
+    state.fullFrameSheetOpen = false;
+    state.proMatchupTelemetryOpen = false;
+    showToast('Switched to Ranked Essentials: Streamlined HUD activated', 'info');
+  } else {
+    state.fullFrameSheetOpen = true;
+    state.proMatchupTelemetryOpen = true;
+    showToast('Switched to Tournament Pro Lab: Full technical telemetry enabled', 'success');
+  }
+
+  initUserMode();
+}
+
+function toggleFullFrameSheet() {
+  state.fullFrameSheetOpen = !state.fullFrameSheetOpen;
+  playSfx('click');
+  const fullFrameSheet = document.getElementById('fullFrameDataSheet');
+  const btnToggleFullFrame = document.getElementById('btnToggleFullFrameData');
+  if (fullFrameSheet) fullFrameSheet.style.display = state.fullFrameSheetOpen ? 'block' : 'none';
+  if (btnToggleFullFrame) {
+    btnToggleFullFrame.classList.toggle('active', state.fullFrameSheetOpen);
+    btnToggleFullFrame.innerHTML = state.fullFrameSheetOpen
+      ? `<span>Hide Full Technical Frame Data</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`
+      : `<span>Explore Full Frame Data Spreadsheet (655 Moves)</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
+  }
+}
+
+function toggleProMatchupTelemetry() {
+  state.proMatchupTelemetryOpen = !state.proMatchupTelemetryOpen;
+  playSfx('click');
+  const proTelemetry = document.getElementById('proMatchupTelemetryContainer');
+  const btnToggleProTelemetry = document.getElementById('btnToggleProTelemetry');
+  if (proTelemetry) proTelemetry.style.display = state.proMatchupTelemetryOpen ? 'block' : 'none';
+  if (btnToggleProTelemetry) {
+    btnToggleProTelemetry.classList.toggle('active', state.proMatchupTelemetryOpen);
+    btnToggleProTelemetry.innerHTML = state.proMatchupTelemetryOpen
+      ? `<span>Hide Advanced Pro Telemetry</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`
+      : `<span>Deep Pro Telemetry (8 Lab Perspectives)</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
+  }
+}
+
+function renderCoreWeaponsKit(char) {
+  const grid = document.getElementById('coreWeaponsGrid');
+  if (!grid) return;
+
+  const currentMoves = (state.moves && state.moves.length > 0) ? state.moves : [];
+  if (!char || currentMoves.length === 0) {
+    grid.innerHTML = `<div style="grid-column: 1 / -1; padding: 1.5rem; text-align: center; color: var(--text-muted);">Select a fighter above to display the Core 6 Weapons kit.</div>`;
+    return;
+  }
+
+  // Find 6 archetype moves
+  const jab = currentMoves.find(m => m.command === '1') || 
+              currentMoves.find(m => (m.startup_frames === 10 || m.startup_raw === '10') && (m.hit_level || '').toLowerCase().includes('h')) || 
+              currentMoves[0];
+
+  const mid = currentMoves.find(m => ['df+1', 'd/f+1', 'b+1', 'f+1+2'].includes(m.command.toLowerCase())) || 
+              currentMoves.find(m => (m.hit_level || '').toLowerCase().includes('m') && m.block_advantage !== null && m.block_advantage >= -5 && (m.startup_frames || 99) <= 16) || 
+              currentMoves[1] || currentMoves[0];
+
+  const low = currentMoves.find(m => ['d+4', 'db+4', 'd/b+4', 'db+3', 'd+3', 'fc+df+4'].includes(m.command.toLowerCase())) || 
+              currentMoves.find(m => (m.hit_level || '').toLowerCase().includes('l') && (m.damage || 0) > 0) || 
+              currentMoves[2] || currentMoves[0];
+
+  const armor = currentMoves.find(m => m.is_power_crush || (m.properties || []).some(p => (typeof p === 'string' ? p : p.property_type || '').toLowerCase().includes('power crush'))) || 
+                currentMoves.find(m => ['b+1+2', 'f+1+4', 'b+2+3'].includes(m.command.toLowerCase())) || 
+                currentMoves[3] || currentMoves[0];
+
+  const launcher = currentMoves.find(m => ['df+2', 'uf+4', 'd/f+2', 'u/f+4', 'f,f+2', 'ws+2'].includes(m.command.toLowerCase())) || 
+                   currentMoves.find(m => (m.hit_advantage || '').toLowerCase().includes('launch') || (m.notes || '').toLowerCase().includes('launch')) || 
+                   currentMoves[4] || currentMoves[0];
+
+  const heat = currentMoves.find(m => m.is_heat_engager || (m.properties || []).some(p => (typeof p === 'string' ? p : p.property_type || '').toLowerCase().includes('heat engager'))) || 
+               currentMoves.find(m => ['f+1+2', 'ff+2', 'b+1+2', 'qcf+2'].includes(m.command.toLowerCase())) || 
+               currentMoves[5] || currentMoves[0];
+
+  const weapons = [
+    {
+      role: '⚡ FASTEST CHECK (i10)',
+      roleColor: 'var(--accent-cyan, #00e5ff)',
+      move: jab,
+      fallbackCmd: '1',
+      desc: 'Interrupt opponent pressure and take your turn back on block (+1).'
+    },
+    {
+      role: '🛡️ SAFE MID POKE',
+      roleColor: 'var(--accent-gold, #ffbe0b)',
+      move: mid,
+      fallbackCmd: 'df+1',
+      desc: 'Essential mid-level check. Cannot be ducked and safe against punishers.'
+    },
+    {
+      role: '🦶 LOW HARASS / CHIP',
+      roleColor: '#fb923c',
+      move: low,
+      fallbackCmd: 'd+4',
+      desc: 'Fast low poke to open up standing turtles and chip away at lifebars.'
+    },
+    {
+      role: '💥 POWER CRUSH (ARMOR)',
+      roleColor: 'var(--accent-red, #ff1e38)',
+      move: armor,
+      fallbackCmd: 'b+1+2',
+      desc: 'Absorbs incoming high/mid strikes during startup to counter aggressive mashers.'
+    },
+    {
+      role: '🚀 PRIMARY LAUNCHER',
+      roleColor: '#a855f7',
+      move: launcher,
+      fallbackCmd: 'df+2',
+      desc: 'Whiff punisher and combo starter for guaranteed 65+ damage juggles.'
+    },
+    {
+      role: '🔥 HEAT ENGAGER',
+      roleColor: 'var(--accent-orange, #ed6823)',
+      move: heat,
+      fallbackCmd: 'f+1+2',
+      desc: 'Activates Heat Rush (+17f on hit) and restores recoverable grey health.'
+    }
+  ];
+
+  grid.innerHTML = weapons.map(w => {
+    const m = w.move || {};
+    const cmd = m.command || w.fallbackCmd;
+    const name = m.name || char.name + ' Technique';
+    const startup = m.startup_raw || (m.startup_frames ? `i${m.startup_frames}` : 'i10-15');
+    
+    let blockText = 'N/A';
+    let blockClass = 'frame-zero';
+    if (m.block_advantage_raw) {
+      blockText = m.block_advantage_raw;
+      if (m.is_plus_on_block || (m.block_advantage !== null && m.block_advantage > 0)) blockClass = 'frame-plus';
+      else if (m.is_launch_punishable || (m.block_advantage !== null && m.block_advantage <= -15)) blockClass = 'frame-minus';
+      else if (m.block_advantage !== null) blockClass = m.block_advantage === 0 ? 'frame-zero' : 'frame-minus';
+    } else if (m.block_advantage !== null && m.block_advantage !== undefined) {
+      blockText = m.block_advantage > 0 ? `+${m.block_advantage}` : (m.block_advantage === 0 ? '±0' : `${m.block_advantage}`);
+      blockClass = m.block_advantage > 0 ? 'frame-plus' : (m.block_advantage === 0 ? 'frame-zero' : 'frame-minus');
+    }
+
+    const hitLvl = (m.hit_level || 'Mid').toUpperCase();
+    const dmg = m.damage ? `${m.damage} dmg` : '15-25 dmg';
+
+    return `
+      <div class="core-weapon-card">
+        <div class="core-weapon-role" style="color:${w.roleColor};">
+          <span>${w.role}</span>
+          <span style="font-size:0.65rem; color:var(--text-muted);">${hitLvl}</span>
+        </div>
+        <div class="core-weapon-notation">
+          <span>${formatTekkenNotation(cmd)}</span>
+        </div>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:0.4rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+          ${escapeHtml(name)}
+        </div>
+        <div class="core-weapon-meta">
+          <span class="badge" style="background:rgba(255,255,255,0.06); font-family:var(--font-mono); font-size:0.7rem;">${startup}</span>
+          <span class="badge ${blockClass}" style="font-family:var(--font-mono); font-size:0.7rem;">${blockText}</span>
+          <span class="badge" style="background:rgba(255,255,255,0.06); font-family:var(--font-mono); font-size:0.7rem;">${dmg}</span>
+        </div>
+        <div class="core-weapon-desc">
+          ${w.desc}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderPreMatchBriefingHud(p1, p2, data) {
+  const grid = document.getElementById('cheatSheetGrid');
+  if (!grid) return;
+
+  const ss = data.opponent_sidestep_guide;
+  const tb = data.opponent_throw_break_guide;
+  const ac = data.opponent_anti_cheese_guide;
+
+  // 1. Sidestep Direction
+  let ssDirection = 'SSL';
+  let ssIcon = '◀️';
+  let ssLabel = 'STEP TO YOUR LEFT (SSL)';
+  let ssWhiff = 'Linear approach strings & jab checks';
+  let ssDesc = `Step left outside close range against ${p2.name} to force whiffs and open launch windows.`;
+
+  if (ss) {
+    const rawSide = (ss.weak_side || '').toUpperCase();
+    if (rawSide.includes('SSR') || rawSide.includes('RIGHT')) {
+      ssDirection = 'SSR';
+      ssIcon = '▶️';
+      ssLabel = 'STEP TO YOUR RIGHT (SSR)';
+    } else if (rawSide.includes('BOTH') || rawSide.includes('NEUTRAL')) {
+      ssDirection = 'NEUTRAL';
+      ssIcon = '↔️';
+      ssLabel = 'ADAPTIVE NEUTRAL (CAUTION)';
+    } else {
+      ssDirection = 'SSL';
+      ssIcon = '◀️';
+      ssLabel = 'STEP TO YOUR LEFT (SSL)';
+    }
+    if (ss.whiffs_on_step || ss.whiff_notes) ssWhiff = ss.whiffs_on_step || ss.whiff_notes;
+    if (ss.details) ssDesc = ss.details;
+  }
+
+  // 2. Anti-Cheese / Spammed String
+  let cheeseName = `${p2.name} Signature String`;
+  let cheeseCounter = 'Duck the high extension and launch with ws punish';
+  let cheeseWhy = 'Has an evasive or delayed final hit that catches mashers';
+  let cheeseAction = 'DUCK & LAUNCH';
+
+  if (ac) {
+    if (ac.cheese_move) cheeseName = ac.cheese_move;
+    if (ac.pro_counter) {
+      cheeseCounter = ac.pro_counter;
+      const lowerCounter = ac.pro_counter.toLowerCase();
+      if (lowerCounter.includes('parry')) cheeseAction = 'LOW PARRY';
+      else if (lowerCounter.includes('duck')) cheeseAction = 'DUCK & LAUNCH';
+      else if (lowerCounter.includes('interrupt') || lowerCounter.includes('i10')) cheeseAction = 'JAB CHECK';
+      else if (lowerCounter.includes('block')) cheeseAction = 'BLOCK & PUNISH';
+    }
+    if (ac.why_players_lose) cheeseWhy = ac.why_players_lose;
+  }
+
+  // 3. Command Throw Break
+  let throwName = `${p2.name} Command Grab`;
+  let throwInput = 'Command Throw';
+  let throwBreak = '1 or 2';
+  let breakBadge = '1 OR 2';
+
+  if (tb) {
+    if (tb.throw_name) throwName = tb.throw_name;
+    if (tb.input_notation) throwInput = tb.input_notation;
+    if (tb.break_guide) {
+      const match = tb.break_guide.match(/Break\s+([0-9\+]+)/i);
+      if (match) {
+        throwBreak = match[1];
+        breakBadge = match[1];
+      } else {
+        throwBreak = tb.break_guide;
+        breakBadge = tb.break_guide;
+      }
+    }
+  }
+
+  grid.innerHTML = `
+    <!-- Card 1: Sidestep Direction -->
+    <div class="cheat-card spacing">
+      <div>
+        <div class="cheat-card-label" style="color:var(--accent-cyan);">🧭 1. SPACING &amp; SIDESTEP DIRECTION</div>
+        <div class="cheat-card-value" style="display:flex; align-items:center; gap:0.5rem; color:var(--accent-cyan);">
+          <span style="font-size:1.3rem;">${ssIcon}</span>
+          <span>${ssLabel}</span>
+        </div>
+        <div style="font-size:0.75rem; color:var(--accent-gold); margin-bottom:0.4rem; font-family:var(--font-mono);">
+          Whiffs on step: ${escapeHtml(ssWhiff)}
+        </div>
+        <div class="cheat-card-desc">
+          ${escapeHtml(ssDesc)}
+        </div>
+      </div>
+      <div style="margin-top:0.75rem; padding-top:0.5rem; border-top:1px solid rgba(255,255,200,0.08); font-size:0.72rem; color:var(--text-dim);">
+        💡 <em>Rule of Thumb: Never sidewalk inside point-blank range (-1 to -4 frames).</em>
+      </div>
+    </div>
+
+    <!-- Card 2: Spammed String Destroyer -->
+    <div class="cheat-card string">
+      <div>
+        <div class="cheat-card-label" style="color:var(--accent-red);">🛑 2. SPAMMED STRING DESTROYER</div>
+        <div class="cheat-card-value" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem;">
+          <span style="font-family:var(--font-mono); font-size:1rem;">${escapeHtml(cheeseName)}</span>
+          <span class="badge" style="background:var(--accent-red); color:#fff; font-size:0.7rem; font-weight:800;">${cheeseAction}</span>
+        </div>
+        <div style="font-size:0.75rem; color:#fff; font-weight:700; margin-bottom:0.4rem;">
+          ⚡ ${escapeHtml(cheeseCounter)}
+        </div>
+        <div class="cheat-card-desc">
+          <strong>Why players get hit:</strong> ${escapeHtml(cheeseWhy)}
+        </div>
+      </div>
+      <div style="margin-top:0.75rem; padding-top:0.5rem; border-top:1px solid rgba(255,255,200,0.08); font-size:0.72rem; color:var(--text-dim);">
+        💡 <em>Lab Drill: Practice crouching the high extension in practice mode.</em>
+      </div>
+    </div>
+
+    <!-- Card 3: Signature Throw Escape -->
+    <div class="cheat-card throw">
+      <div>
+        <div class="cheat-card-label" style="color:var(--accent-gold);">🥋 3. SIGNATURE THROW ESCAPE</div>
+        <div class="cheat-card-value" style="display:flex; justify-content:space-between; align-items:center;">
+          <span>${escapeHtml(throwName)}</span>
+          <span class="badge" style="background:var(--accent-gold); color:#000; font-size:0.9rem; font-weight:800; font-family:var(--font-mono);">${breakBadge}</span>
+        </div>
+        <div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:0.6rem;">
+          Input: <code>${escapeHtml(throwInput)}</code> | Escape Window: 14 Frames
+        </div>
+        <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:0.5rem;">
+          Interactive Practice (Test your reaction break):
+        </div>
+        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+          <button type="button" class="btn btn-secondary btn-xs" onclick="executeInteractiveThrowBreak('1')">Break 1 [□ / X]</button>
+          <button type="button" class="btn btn-secondary btn-xs" onclick="executeInteractiveThrowBreak('2')">Break 2 [△ / Y]</button>
+          <button type="button" class="btn btn-secondary btn-xs" onclick="executeInteractiveThrowBreak('1+2')">Break 1+2 [Both]</button>
+        </div>
+        <div id="hudThrowBreakFeedback" style="display:none; margin-top:0.6rem; font-size:0.75rem; padding:0.4rem 0.6rem; border-radius:4px;"></div>
+      </div>
+      <div style="margin-top:0.75rem; padding-top:0.5rem; border-top:1px solid rgba(255,255,200,0.08); font-size:0.72rem; color:var(--text-dim);">
+        💡 <em>Watch opponent's lead hand: left arm = 1, right arm = 2, both arms = 1+2.</em>
+      </div>
+    </div>
+  `;
+}
+
+function renderBnbHeroCombo(char) {
+  const heroEl = document.getElementById('bnbComboHero');
+  if (!heroEl) return;
+
+  const currentCombos = state.comboFinder?.p1Combos || [];
+  let bnb = null;
+
+  if (currentCombos.length > 0) {
+    bnb = currentCombos.find(c => (c.category || '').toLowerCase().includes('beginner')) ||
+          currentCombos.find(c => (c.category || '').toLowerCase().includes('standard')) ||
+          currentCombos.find(c => c.difficulty === 'EASY' || c.difficulty === 1 || c.difficulty === 2) ||
+          currentCombos[0];
+  }
+
+  const charName = char ? char.name : (state.selectedCharacter?.name || 'Fighter');
+  const title = bnb ? (bnb.title || bnb.name || `${charName} Standard BnB Juggle`) : `${charName} Universal Bread & Butter`;
+  const notation = bnb ? (bnb.notation_sequence || bnb.starter_move || 'df+2 > 4 > b+3 > T! > ender') : 'df+2 > 4 > b+3 > T! > f,f+2';
+  const dmg = bnb ? (bnb.total_damage || 65) : 65;
+  const hits = bnb ? (bnb.hit_count || 7) : 7;
+  const starter = bnb ? (bnb.starter_move || 'df+2') : 'df+2';
+
+  heroEl.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.6rem;">
+      <div>
+        <div class="bnb-hero-badge">⭐ UNIVERSAL BREAD &amp; BUTTER (100% RELIABLE)</div>
+        <h3 style="font-size:1.15rem; font-weight:800; color:#fff; margin-bottom:0.25rem;">${escapeHtml(title)}</h3>
+        <p style="font-size:0.78rem; color:var(--text-dim); margin-bottom:0;">
+          The single most consistent combo route for ${escapeHtml(charName)}. Maximum reliability, zero dropped inputs, and solid wall travel.
+        </p>
+      </div>
+      <div style="display:flex; gap:0.6rem; align-items:center;">
+        <div style="text-align:right;">
+          <div style="font-size:1.6rem; font-weight:900; color:var(--accent-orange); font-family:var(--font-mono); line-height:1;">${dmg} <span style="font-size:0.8rem; color:var(--text-dim);">DMG</span></div>
+          <div style="font-size:0.68rem; color:var(--text-muted);">${hits} Hits | Standard Launch</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual Notation Chain -->
+    <div class="bnb-hero-chain">
+      <span>${formatTekkenNotation(notation)}</span>
+    </div>
+
+    <!-- Route Anatomy & Execution Flow -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:0.6rem; margin-top:0.75rem;">
+      <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:6px; padding:0.5rem 0.75rem;">
+        <span style="font-size:0.65rem; color:var(--accent-cyan); font-weight:800; text-transform:uppercase;">1. LAUNCHER</span>
+        <div style="font-size:0.85rem; font-weight:700; color:#fff; font-family:var(--font-mono); margin-top:0.15rem;">${escapeHtml(starter)}</div>
+        <div style="font-size:0.7rem; color:var(--text-dim);">Normal hit or whiff launch</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:6px; padding:0.5rem 0.75rem;">
+        <span style="font-size:0.65rem; color:var(--accent-gold); font-weight:800; text-transform:uppercase;">2. JUGGLE FILLER</span>
+        <div style="font-size:0.85rem; font-weight:700; color:#fff; font-family:var(--font-mono); margin-top:0.15rem;">Air Control</div>
+        <div style="font-size:0.7rem; color:var(--text-dim);">Height maintenance</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:6px; padding:0.5rem 0.75rem;">
+        <span style="font-size:0.65rem; color:var(--accent-red); font-weight:800; text-transform:uppercase;">3. TORNADO (T!)</span>
+        <div style="font-size:0.85rem; font-weight:700; color:#fff; font-family:var(--font-mono); margin-top:0.15rem;">Bound Spike</div>
+        <div style="font-size:0.7rem; color:var(--text-dim);">Spins opponent for ender</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:6px; padding:0.5rem 0.75rem;">
+        <span style="font-size:0.65rem; color:var(--accent-green); font-weight:800; text-transform:uppercase;">4. GUARANTEED ENDER</span>
+        <div style="font-size:0.85rem; font-weight:700; color:#fff; font-family:var(--font-mono); margin-top:0.15rem;">Wall Carry &amp; Oki</div>
+        <div style="font-size:0.7rem; color:var(--text-dim);">Guaranteed knockdown</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div style="display:flex; gap:0.5rem; margin-top:0.85rem; flex-wrap:wrap; align-items:center;">
+      <button type="button" class="btn btn-secondary btn-xs" onclick="copyComboNotation('${escapeHtml(notation).replace(/'/g, "\\'")}')">
+        📋 Copy Notation
+      </button>
+      <button type="button" class="btn btn-secondary btn-xs" onclick="toggleScalingCalculator()">
+        🧮 Open Damage Scaling Calculator
+      </button>
+      <span style="font-size:0.72rem; color:var(--text-muted); margin-left:auto;">
+        💡 <em>Pro Tip: Master this route before attempting micro-dash or heat-burst extensions.</em>
+      </span>
+    </div>
+  `;
+}
+
+function switchTacticsPillar(pillar) {
+  playSfx('click');
+  const btnDefense = document.getElementById('pillarDefenseBtn');
+  const btnSystem = document.getElementById('pillarSystemBtn');
+  const btnHardware = document.getElementById('pillarHardwareBtn');
+
+  if (btnDefense) btnDefense.classList.toggle('active', pillar === 'defense');
+  if (btnSystem) btnSystem.classList.toggle('active', pillar === 'system');
+  if (btnHardware) btnHardware.classList.toggle('active', pillar === 'hardware');
+
+  const tabs = document.querySelectorAll('.tactics-tab-btn');
+  let firstTabName = null;
+
+  tabs.forEach(tab => {
+    const tabPillar = tab.getAttribute('data-pillar');
+    if (tabPillar === pillar) {
+      tab.style.display = 'inline-flex';
+      if (!firstTabName) firstTabName = tab.getAttribute('data-tab');
+    } else {
+      tab.style.display = 'none';
+    }
+  });
+
+  if (firstTabName && typeof switchTacticsTab === 'function') {
+    switchTacticsTab(firstTabName);
+  }
+}
+
+function copyComboNotation(notation) {
+  if (!notation) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(notation).then(() => {
+      showToast('Combo notation copied to clipboard!', 'success');
+    }).catch(() => {
+      showToast(`Copied notation: ${notation}`, 'info');
+    });
+  } else {
+    showToast(`Notation: ${notation}`, 'info');
+  }
+}
+
+// Window global exports
+window.viewFighterProfile = viewFighterProfile;
+window.compareInMatchup = compareInMatchup;
+window.loadInComboLab = loadInComboLab;
+window.executeInteractiveThrowBreak = executeInteractiveThrowBreak;
+window.initUserMode = initUserMode;
+window.setUserMode = setUserMode;
+window.toggleFullFrameSheet = toggleFullFrameSheet;
+window.toggleProMatchupTelemetry = toggleProMatchupTelemetry;
+window.renderCoreWeaponsKit = renderCoreWeaponsKit;
+window.renderPreMatchBriefingHud = renderPreMatchBriefingHud;
+window.renderBnbHeroCombo = renderBnbHeroCombo;
+window.switchTacticsPillar = switchTacticsPillar;
+window.copyComboNotation = copyComboNotation;
+
 
 
 

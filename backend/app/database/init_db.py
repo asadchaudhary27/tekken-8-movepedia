@@ -18,6 +18,9 @@ from backend.app.models.combo_compatibility import ComboCompatibility
 from backend.app.models.import_batch import ImportBatch
 from backend.app.models.stage import Stage
 from backend.app.models.matchup_note import MatchupNote
+from backend.app.models.admin_user import AdminUser
+from backend.app.core.security import hash_password
+from backend.app.core.config import settings
 from backend.app.services.notation import NotationEngine
 from backend.app.services.combo_compatibility_engine import ComboCompatibilityEngine, HURTBOX_QUIRKS
 
@@ -1593,7 +1596,7 @@ STAGES_DATA = [
         "slug": "urban-square-evening",
         "name": "Urban Square (Evening)",
         "location": "Times Square, New York, USA",
-        "image_url": "/assets/img/stages/urban-square-evening.svg",
+        "image_url": "/assets/img/stages/urban_square_evening.jpg",
         "has_walls": True,
         "boundary_shape": "Rectangular",
         "wall_distance": "26m x 18m (Rectangular)",
@@ -1631,7 +1634,7 @@ STAGES_DATA = [
         "slug": "arena-underground",
         "name": "The Arena (Underground)",
         "location": "Clandestine Tournament Facility",
-        "image_url": "/assets/img/stages/arena-underground.svg",
+        "image_url": "/assets/img/stages/arena_underground.jpg",
         "has_walls": True,
         "boundary_shape": "Octagonal",
         "wall_distance": "22m Octagon (Medium)",
@@ -1668,7 +1671,7 @@ STAGES_DATA = [
         "slug": "elegant-palace",
         "name": "Elegant Palace",
         "location": "Château de Versailles, France",
-        "image_url": "/assets/img/stages/elegant-palace.svg",
+        "image_url": "/assets/img/stages/elegant_palace.jpg",
         "has_walls": True,
         "boundary_shape": "Rectangular",
         "wall_distance": "24m x 18m (Multi-tiered)",
@@ -1706,7 +1709,7 @@ STAGES_DATA = [
         "slug": "descent-into-subconscious",
         "name": "Descent into Subconscious",
         "location": "Mishima Psychological Dreamscape",
-        "image_url": "/assets/img/stages/descent-into-subconscious.svg",
+        "image_url": "/assets/img/stages/descent_into_subconscious.jpg",
         "has_walls": True,
         "boundary_shape": "Circular",
         "wall_distance": "22m Diameter (Circular)",
@@ -1744,7 +1747,7 @@ STAGES_DATA = [
         "slug": "secluded-training-ground",
         "name": "Secluded Training Ground",
         "location": "Ancient Shinto Dojo, Japan",
-        "image_url": "/assets/img/stages/secluded-training-ground.svg",
+        "image_url": "/assets/img/stages/secluded_training_ground.jpg",
         "has_walls": True,
         "boundary_shape": "Square",
         "wall_distance": "20m x 20m (Square)",
@@ -1782,7 +1785,7 @@ STAGES_DATA = [
         "slug": "genmaji-temple",
         "name": "Genmaji Temple",
         "location": "Mountain Sanctuary, Japan",
-        "image_url": "/assets/img/stages/genmaji-temple.svg",
+        "image_url": "/assets/img/stages/genmaji_temple.jpg",
         "has_walls": True,
         "boundary_shape": "Octagonal",
         "wall_distance": "24m Octagon (Medium-Large)",
@@ -1813,6 +1816,81 @@ STAGES_DATA = [
                 {"element_type": "wall", "label": "Temple Pagoda Perimeter", "x": 200, "y": 200, "points": "120,40 280,40 360,120 360,280 280,360 120,360 40,280 40,120", "color": "#ea580c"},
                 {"element_type": "hazard", "label": "Destructible Pagoda Screen (East)", "x": 360, "y": 200, "width": 14, "height": 160, "color": "#f97316"},
                 {"element_type": "spawn", "label": "Zen Courtyard Center", "x": 200, "y": 200, "radius": 36, "color": "#facc15"}
+            ]
+        })
+    },
+    {
+        "slug": "fallen-destiny",
+        "name": "Fallen Destiny",
+        "location": "Ocean Platform during Tempest, North Atlantic",
+        "image_url": "/assets/img/stages/fallen_destiny.jpg",
+        "has_walls": True,
+        "boundary_shape": "Square",
+        "wall_distance": "26m x 26m (Medium)",
+        "layout_description": "Storm-swept offshore platform surrounded by tempest waves and torrential rain.",
+        "wall_break": False,
+        "hard_wall_break": False,
+        "wall_blast": True,
+        "wall_bound": False,
+        "wall_break_interaction": "Electrified perimeter fences trigger Wall Blast under oceanic tempest spray.",
+        "floor_break": False,
+        "floor_blast": False,
+        "floor_break_interaction": None,
+        "balcony_break": False,
+        "balcony_break_interaction": None,
+        "has_transitions": False,
+        "transition_description": "Monsoon downpour gives way to clearing horizon during final round.",
+        "transition_conditions": None,
+        "total_sections": 1,
+        "special_mechanics": "Electrified platform perimeter Wall Blast, dynamic tempest weather",
+        "notes": "Canonical clash arena set in the North Atlantic tempest.",
+        "geometry_data_json": json.dumps({
+            "is_verified": True,
+            "shape": "Square",
+            "width_meters": 26.0,
+            "length_meters": 26.0,
+            "canvas_viewbox": "0 0 400 400",
+            "elements": [
+                {"element_type": "hazard", "label": "Electrified Offshore Fence", "x": 200, "y": 200, "points": "50,50 350,50 350,350 50,350", "color": "#38bdf8"},
+                {"element_type": "spawn", "label": "Platform Center", "x": 200, "y": 200, "radius": 34, "color": "#ef4444"}
+            ]
+        })
+    },
+    {
+        "slug": "seaside-resort",
+        "name": "Seaside Resort",
+        "location": "Tropical Coastline, Caribbean",
+        "image_url": "/assets/img/stages/seaside_resort.jpg",
+        "has_walls": True,
+        "boundary_shape": "Rectangular",
+        "wall_distance": "32m x 24m (Medium-Long)",
+        "layout_description": "Sunlit tropical resort beach with destructible wooden cabanas extending into the tide line.",
+        "wall_break": True,
+        "hard_wall_break": False,
+        "wall_blast": False,
+        "wall_bound": False,
+        "wall_break_interaction": "Resort cabana railings shatter on wall-splat opening extended beach tide zone.",
+        "floor_break": False,
+        "floor_blast": False,
+        "floor_break_interaction": None,
+        "balcony_break": False,
+        "balcony_break_interaction": None,
+        "has_transitions": True,
+        "transition_description": "Cabana railing wall break transitions fighters into coastal surf zone.",
+        "transition_conditions": "Heavy wall-splat impact against cabana perimeter.",
+        "total_sections": 2,
+        "special_mechanics": "Cabana Wall Break, dynamic ocean surf and tide line transition",
+        "notes": "Vibrant Caribbean resort stage with wide keepout spacing and cabana transitions.",
+        "geometry_data_json": json.dumps({
+            "is_verified": True,
+            "shape": "Rectangular",
+            "width_meters": 32.0,
+            "length_meters": 24.0,
+            "canvas_viewbox": "0 0 400 300",
+            "elements": [
+                {"element_type": "wall", "label": "Resort Cabana Perimeter", "x": 200, "y": 30, "width": 320, "height": 14, "color": "#eab308"},
+                {"element_type": "hazard", "label": "Breakable Railing (East)", "x": 360, "y": 150, "width": 14, "height": 160, "color": "#f97316"},
+                {"element_type": "spawn", "label": "Sunny Beachfront Center", "x": 200, "y": 150, "radius": 34, "color": "#38bdf8"}
             ]
         })
     }
@@ -2791,6 +2869,20 @@ def init_db(db: Session):
         existing_mn.verification_status = mn_data.get("verification_status", "VERIFIED")
         existing_mn.last_reviewed = mn_data.get("last_reviewed")
     db.commit()
+
+    # 12. Seed Master Admin User if table is empty
+    admin_count = db.query(AdminUser).count()
+    if admin_count == 0:
+        master_admin = AdminUser(
+            username=settings.INITIAL_ADMIN_USER,
+            email=settings.INITIAL_ADMIN_EMAIL,
+            password_hash=hash_password(settings.INITIAL_ADMIN_PASSWORD),
+            role="SuperAdmin",
+            totp_enabled=False,
+            failed_login_attempts=0
+        )
+        db.add(master_admin)
+        db.commit()
 
 
 
