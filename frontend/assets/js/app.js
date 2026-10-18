@@ -754,7 +754,7 @@ window.setControllerLayout = setControllerLayout;
 // 4-View SPA Routing Engine (Fighters, Matchup, Stages, Tactics)
 // ==========================================================================
 function switchAppView(viewName, scrollTarget) {
-  const validViews = ['fighters', 'matchup', 'stages', 'tactics'];
+  const validViews = ['fighters', 'matchup', 'stages', 'tactics', 'strategy-hub'];
   if (!validViews.includes(viewName)) viewName = 'fighters';
 
   // 1. Toggle visibility of all views
@@ -783,6 +783,10 @@ function switchAppView(viewName, scrollTarget) {
     if (typeof switchTacticsTab === 'function') {
       const activeTab = (window.tacticsState && window.tacticsState.currentTab) || 'sidesteps';
       switchTacticsTab(activeTab);
+    }
+  } else if (viewName === 'strategy-hub') {
+    if (window.StrategyHub && typeof window.StrategyHub.init === 'function') {
+      window.StrategyHub.init();
     }
   } else if (viewName === 'matchup') {
     if (state.lastMatchupData) {
@@ -829,7 +833,7 @@ window.addEventListener('hashchange', () => {
       return;
     }
   }
-  if (['fighters', 'matchup', 'stages', 'tactics'].includes(rawHash)) {
+  if (['fighters', 'matchup', 'stages', 'tactics', 'strategy-hub'].includes(rawHash)) {
     switchAppView(rawHash);
   } else if (['hero', 'roster', 'moves', 'combo-lab', 'notation'].includes(rawHash)) {
     switchAppView('fighters', rawHash === 'hero' ? 'heroBannerSection' : (rawHash === 'roster' ? 'fighters' : rawHash));
@@ -877,7 +881,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const slug = initHash.split('stages/')[1]?.replace('/', '');
     switchAppView('stages');
     if (slug) setTimeout(() => inspectStage(slug), 150);
-  } else if (['matchup', 'stages', 'tactics'].includes(initHash)) {
+  } else if (['matchup', 'stages', 'tactics', 'strategy-hub'].includes(initHash)) {
     switchAppView(initHash);
   } else if (['analyzer', 'punish-assistant'].includes(initHash)) {
     switchAppView('matchup', initHash);

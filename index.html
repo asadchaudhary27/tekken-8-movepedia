@@ -46,6 +46,7 @@
         <li><a href="#matchup" class="nav-link" data-view="matchup" onclick="switchAppView('matchup'); return false;">Matchup Lab</a></li>
         <li><a href="#stages" class="nav-link" data-view="stages" onclick="switchAppView('stages'); return false;">Stage Blueprints</a></li>
         <li><a href="#tactics" class="nav-link" data-view="tactics" onclick="switchAppView('tactics'); return false;">Tactics Compendium</a></li>
+        <li><a href="#strategy-hub" class="nav-link" data-view="strategy-hub" onclick="switchAppView('strategy-hub'); return false;">Strategy Hub</a></li>
       </ul>
     </nav>
 
@@ -1953,6 +1954,16 @@
       </section>
     </div>
 
+    <!-- ==========================================================================
+         View 5: Tekken 8 Roster & Anti-Character Strategy Hub
+         ========================================================================== -->
+    <div class="app-view" id="view-strategy-hub" data-view="strategy-hub">
+      <div id="strategyHubContainer"></div>
+    </div>
+
+    <!-- Strategy Hub Character Strategy Dossier Modal (3-Tab: Profile/Lore, Offense/Traps, Anti-Character) -->
+    <div id="strategyDossierModal" class="sh-modal-backdrop" style="display:none;" onclick="if(event.target===this)StrategyHub.closeStrategyModal();"></div>
+
     <div id="practiceModal" class="practice-modal-backdrop" style="display:none;">
       <div class="practice-modal-card">
         
@@ -3162,6 +3173,8 @@
 
   <script src="/assets/js/dossiers.js"></script>
   <script src="/assets/js/stages.js"></script>
+  <script src="/assets/js/tekken8MasterData.js"></script>
+  <script src="/assets/js/strategyHub.js"></script>
   <script src="/assets/js/app.js"></script>
 </body>
 </html>

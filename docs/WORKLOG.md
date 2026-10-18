@@ -30,20 +30,24 @@
 
 ## 2. Current Session Task
 
-- **Task Name:** Notation Engine Removal, Mobile Navbar Repair, and High-Damage Combos Ingestion & Verification.
+- **Task Name:** Tekken 8 Roster & Anti-Character Strategy Hub Integration (44 Characters + Universal Mechanics).
 - **Objective:**
-  1. Remove "Notation Engine Prototype" section (`#notation`) from HTML and its modal trigger `#miBtnTestNotation`.
-  2. Fix mobile navbar menu failing to open on mobile screens by resolving `overflow: hidden` bounding, conflicting media query rules, and anchoring fixed slide-down drawer with backdrop.
-  3. Ingest all 79 high-damage optimal combo routes from `tekken8_high_damage_combos.txt` across 15 characters into `tekken8_fyp.db` and `SAMPLE_COMBOS_DATA` in `init_db.py`.
-  4. Formally verify all 79 combo routes match the user's data with 100% precision.
+  1. Parse 100% of raw data from `Tekken 8 Master Guide.docx` (all 44 characters + universal combat mechanics).
+  2. Create modular Data Layer `frontend/assets/js/tekken8MasterData.js` storing `UNIVERSAL_MECHANICS` and `ROSTER_DATA` (44 characters).
+  3. Create modular Component Controller `frontend/assets/js/strategyHub.js` powering:
+     - Component 1: Filterable Character Cards Grid with Search, Faction pills, Season pills, and Weak Side (`SSL` / `SSR`) badges.
+     - Component 2: 3-Tab Interactive Character Profile Modal (Tab 1: Profile & Lore, Tab 2: Offense & Traps "Jaal", Tab 3: Anti-Character Guide "Chakma Dena & Kamzoriyan" with SSL/SSR, punishable moves, duck & interrupt strings, and parry vulnerabilities).
+     - Component 3: Universal Mechanics Sub-Tabs (Controls & Notation, Frame Data Science, Master Low Parry Matrix, and Wall Traps & Escape Bible).
+  4. Scoped CSS styling in `frontend/assets/css/style.css` matching dark cyberpunk HUD theme with zero style collisions.
+  5. SPA integration in `frontend/index.html`, `index.html`, and `frontend/assets/js/app.js` (`switchAppView('strategy-hub')`).
 - **Deliverables:**
-  1. `frontend/index.html` & `index.html` (Notation Engine removed, mobile navigation preserved, 100% synchronized)
-  2. `frontend/assets/css/style.css` (Fixed mobile drawer layout, removed conflicting 768px nav-links overrides, high z-index backdrop)
-  3. `frontend/assets/js/app.js` (Null-safe guards for notation rendering and input listeners)
-  4. `backend/app/database/init_db.py` & `tekken8_fyp.db` (All 79 combos seeded with exact hits, damage scaling, conditions, and stage notes)
-  5. `scripts/seed_high_damage_combos.py`, `scripts/append_combos_to_init_db.py`, `scripts/verify_high_damage_combos.py`
-  6. `docs/WORKLOG.md` (Updated operational activity log)
-- **Execution Mode:** 100% Native Vanilla ES6, HTML5, CSS3. Zero framework bloat. Full database preservation. 148/148 tests passing.
+  1. `frontend/assets/js/tekken8MasterData.js` (Complete 44-character database + universal combat mechanics)
+  2. `frontend/assets/js/strategyHub.js` (Interactive UI controller with tab switching, search/filter, and modal)
+  3. `frontend/assets/css/style.css` (Scoped `.strat-hub-*` and `.sh-modal-*` styles with responsive design down to 320px)
+  4. `frontend/index.html` & `index.html` (100% byte-for-byte synchronized with `#strategy-hub` nav link, `#view-strategy-hub` view, and `#strategyDossierModal`)
+  5. `frontend/assets/js/app.js` (Updated `switchAppView`, `hashchange`, and `DOMContentLoaded` router)
+  6. `scripts/generate_master_data.py` & `scripts/build_strategy_data.py` (Deterministic ingestion pipelines)
+  7. Verification: 148/148 backend pytest tests passing; zero JS syntax errors.
 
 ---
 
@@ -59,3 +63,4 @@
 - **Future DLC Ingestion:** Ingest Season 3+ DLC fighters when released by Bandai Namco.
 - **Audio Sound FX:** Optional audio cues for controller button clicks in the notation guide.
 - **Cloud PostgreSQL Migration:** Provision a Supabase or Neon PostgreSQL instance if multi-user writable data (custom notes, user accounts) is moved beyond demo stage.
+
