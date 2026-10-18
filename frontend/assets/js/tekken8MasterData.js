@@ -2,6 +2,7 @@
  * TEKKEN 8 MASTER STRATEGY HUB & ROSTER DATA LAYER
  * Authoritative Canonical Reference for 44 Characters (32 Base + 12 DLCs)
  * Universal Mechanics: Controls, Frame Data, Master Low Parry Matrix, Wall Traps & Escape Bible.
+ * Primary Language: English (Default) with full bilingual Roman Urdu preservation.
  * Version: Tekken 8 Patch v3.00.02
  */
 
@@ -14,6 +15,7 @@
   "controls_notation": {
     "title": "Button Notation & Attack Legend",
     "title_ur": "بٹنوں کی پہچان اور نوٹیشن",
+    "desc": "Tekken utilizes universal numerical and directional notation to standardize execution across PlayStation, Xbox, and PC controllers.",
     "desc_ur": "ٹیکن میں ہر موو کو عالمی نمبرز اور ڈائریکشنز سے لکھا جاتا ہے تاکہ پلے اسٹیشن، ایکس باکس اور پی سی پر کھیلنا آسان ہو۔",
     "buttons": [
       {
@@ -21,6 +23,7 @@
         "name": "Left Punch (LP)",
         "ps": "Square ▢",
         "xb": "X",
+        "desc": "Fastest universal standing attack (i10 jab). Essential for turn checks.",
         "desc_ur": "سب سے تیز رفتار بنیادی مکہ (10 فریم جاب)"
       },
       {
@@ -28,6 +31,7 @@
         "name": "Right Punch (RP)",
         "ps": "Triangle △",
         "xb": "Y",
+        "desc": "Heavy straight punch; critical for hit-confirms and counter-hit combo routes.",
         "desc_ur": "بھاری سیدھا مکہ، کاؤنٹر ہٹ اور ہٹ کنفرم کے لیے بہترین"
       },
       {
@@ -35,6 +39,7 @@
         "name": "Left Kick (LK)",
         "ps": "Cross ✕",
         "xb": "A",
+        "desc": "Fast left leg thrust; controls neutral space and checks low/mid transitions.",
         "desc_ur": "تیز رفتار بائیں ٹانگ کی کک، فاصلہ برقرار رکھنے کا ٹول"
       },
       {
@@ -42,6 +47,7 @@
         "name": "Right Kick (RK)",
         "ps": "Circle ◯",
         "xb": "B",
+        "desc": "High-impact right kick; key for homing moves, hopkicks, and magic 4 launches.",
         "desc_ur": "طاقتور دائیں لات، ہاپ کک، ہومنگ یا لانچر مووز"
       },
       {
@@ -49,6 +55,7 @@
         "name": "Dual Punch",
         "ps": "▢ + △",
         "xb": "X + Y",
+        "desc": "Simultaneous punch input; triggers Power Crushes, command grabs, and Heat Burst.",
         "desc_ur": "دونوں مکے ایک ساتھ (پاور کرش، کمانڈ تھرو، یا بریک تھرو)"
       },
       {
@@ -56,6 +63,7 @@
         "name": "Dual Kick",
         "ps": "✕ + ◯",
         "xb": "A + B",
+        "desc": "Simultaneous kick input; activates acrobatic launchers and unique stance shifts.",
         "desc_ur": "دونوں لاتیں ایک ساتھ (سٹانسز اور جمپنگ لانچرز)"
       }
     ],
@@ -63,353 +71,418 @@
       {
         "dir": "f",
         "name": "Forward",
+        "desc": "Advance towards opponent",
         "ur": "آگے بڑھنا"
       },
       {
         "dir": "b",
         "name": "Back / Block",
+        "desc": "Retreat / High & Mid neutral guard",
         "ur": "پیچھے ہٹنا / ہائی اور مڈ بلاک"
       },
       {
         "dir": "d",
         "name": "Down",
+        "desc": "Crouch ducking state",
         "ur": "نیچے جھکنا"
       },
       {
         "dir": "u",
         "name": "Up",
+        "desc": "Jump / Sidestep background",
         "ur": "اوپر اچھلنا"
       },
       {
         "dir": "df",
         "name": "Down-Forward",
+        "desc": "Diagonal offensive low checks and Low Parry input",
         "ur": "آگے اور نیچے ترچھا (پوکس اور لو پیری df)"
       },
       {
         "dir": "db",
         "name": "Down-Back",
+        "desc": "Crouch Guard: blocks incoming lows and ducks under highs",
         "ur": "پیچھے اور نیچے ترچھا (لو بلاک اور ہائی ڈک db)"
       },
       {
         "dir": "uf",
         "name": "Up-Forward",
+        "desc": "Standard hopkick and aerial evasive jumping attacks",
         "ur": "آگے اور اوپر (ہاپ کک uf+4)"
       },
       {
         "dir": "ff / f,f",
         "name": "Dash",
+        "desc": "Forward dash gap-closer",
         "ur": "دو دفعہ تیز آگے دبانا (ڈیش)"
       },
       {
         "dir": "wr (f,f,f)",
         "name": "While Running",
+        "desc": "Triple forward sprint attack; massive frame advantage on block (+4 to +6)",
         "ur": "تین دفعہ آگے دبا کر بھاگتے ہوئے حملہ کرنا (+ آن بلاک)"
       },
       {
         "dir": "ws",
         "name": "While Standing / Rising",
+        "desc": "Attacks executed while transitioning from crouch to standing guard",
         "ur": "ڈک (نیچے بیٹھنے) کے بعد اٹھتے وقت حملہ کرنا"
       },
       {
         "dir": "CH",
         "name": "Counter Hit",
+        "desc": "Striking an opponent during their attack startup; unlocks bonus damage & launches",
         "ur": "جب حریف حملہ کر رہا ہو اور آپ کا وار پہلے لگ جائے"
       }
     ]
   },
   "frame_data_science": {
-    "title": "Frame Data Science & The Turn Priority",
+    "title": "Frame Data Science & Turn Priority",
     "title_ur": "فریم ڈیٹا سائنس: باری کس کی ہے؟",
-    "fps_rule": "Tekken 8 runs locked at 60 FPS (1 frame = 1/60th second).",
+    "fps_rule": "Tekken 8 runs locked at 60 FPS (1 frame = 1/60th of a second).",
     "rules": [
       {
         "tier": "Startup Frames (i10, i15)",
         "badge": "Startup i-Frames",
         "color": "cyan",
-        "ur": "موو نکلنے میں کتنا وقت لگتا ہے۔ گیم کا سب سے تیز ترین حملہ جاب (1) ہوتا ہے جو صرف 10 فریمز (i10) لیتا ہے، جبکہ عام لانچرز 15 فریمز (i15) لیتے ہیں۔"
+        "desc": "How quickly an attack becomes active. The fastest standing attack is the 10-frame Jab (i10), while standard mid orbital launchers activate at 15 frames (i15).",
+        "ur": "موو نکلنے میں کتنا وقت لگتا ہے۔ گیم کا سب سے تیز ترین حملہ جاب (1) ہوتا ہے جو صرف 10 فریمز (i10) لیتا ہے۔"
       },
       {
         "tier": "Plus Frames (+1 to +8 on Block)",
         "badge": "Plus (+) on Block",
         "color": "gold",
-        "ur": "اگر آپ کا حملہ بلاک ہوا اور آپ پلس (+) میں ہیں، تو آپ کی باری ابھی ختم نہیں ہوئی! اگر دونوں کھلاڑی ایک ساتھ بٹن دبائیں گے تو آپ کا حملہ پہلے لگے گا، اسی سے پریشر بنتا ہے۔"
+        "desc": "If your attack is blocked and you are at Plus frames, your offensive turn is still alive! If both players press a button simultaneously, yours hits first, creating relentless pressure.",
+        "ur": "اگر آپ کا حملہ بلاک ہوا اور آپ پلس (+) میں ہیں، تو آپ کی باری ابھی ختم نہیں ہوئی! دونوں بٹن دبائیں تو آپ کا وار پہلے لگے گا۔"
       },
       {
         "tier": "Minus Safe (-1 to -9 on Block)",
         "badge": "Safe on Block",
         "color": "blue",
-        "ur": "آپ کی باری ختم ہو گئی ہے اور اب مخالف کی باری ہے۔ لیکن اگر آپ پرسکون رہ کر بلاک کریں تو مخالف آپ کو کوئی مفت ڈیمیج نہیں دے سکتا۔"
+        "desc": "Your offensive turn has ended, and your opponent now has priority. However, as long as you hold neutral block, your opponent cannot land any guaranteed damage.",
+        "ur": "آپ کی باری ختم ہو گئی ہے۔ لیکن اگر آپ پرسکون رہ کر بلاک کریں تو مخالف آپ کو کوئی مفت ڈیمیج نہیں دے سکتا۔"
       },
       {
         "tier": "Punishable (-10 to -14 on Block)",
         "badge": "Punishable (-10 to -14)",
         "color": "orange",
+        "desc": "Unsafe moves that allow the defender to retaliate with guaranteed standing punishes (e.g., 10f jab strings, 12f heavy checks, or 14f knockdowns).",
         "ur": "اگر آپ کا موو بلاک ہو جائے تو مخالف آپ کو مفت مکے اور سٹرنگز مار سکتا ہے کیونکہ آپ اتنے فریمز تک بلاک نہیں کر سکتے۔"
       },
       {
         "tier": "Launch Punishable (-15 or worse)",
         "badge": "Launch Punishable (-15+)",
         "color": "red",
-        "ur": "یہ انتہائی غیر محفوظ مووز ہوتے ہیں (جیسے ہیل سویپ یا سنیک ایج)۔ بلاک ہونے پر حریف آپ کو ہوا میں اڑا کر 70 سے 95 ڈیمیج کا فل کومبو مار سکتا ہے!"
+        "desc": "Extremely unsafe moves on block (e.g., Hellsweeps, Snake Edges, Demoman). Blocking these guarantees a full While Standing or standing launcher for 70 to 95+ damage!",
+        "ur": "انتہائی غیر محفوظ مووز۔ بلاک ہونے پر حریف آپ کو ہوا میں اڑا کر 70 سے 95 ڈیمیج کا فل کومبو مار سکتا ہے!"
       }
     ],
     "triangle": {
       "title": "High, Mid, Low Combat Triangle",
       "title_ur": "ہائی، مڈ اور لو کا مثلث",
-      "high_ur": "High (Upper): تیز ترین حملے اور بلاک پر پلس فریمز دیتے ہیں۔ کمزوری: حریف نیچے بیٹھ کر (Duck) بچ سکتا ہے اور ws+2 سے لانچ کر سکتا ہے۔",
-      "low_ur": "Low (Lower): کھڑے ہو کر بلاک کرنے والے حریف کی ٹانگوں پر لگتے ہیں۔ کمزوری: نیچے بیٹھ کر (db) بلاک ہو جاتے ہیں یا df دبا کر لو پیری ہو جاتے ہیں۔",
-      "mid_ur": "Mid (Middle): نیچے بیٹھنے والے حریف کو سزا دیتے ہیں! جب آپ حریف کو لو اور ہائی سے تنگ کر کے جھکنے پر مجبور کریں، تو مڈ لانچر مار کر ہوا میں اڑا دیں۔"
+      "high": "High: Fastest attacks that grant strong plus frames on block. Weakness: Opponents can duck (db) under them and launch with While Standing ws+2.",
+      "high_ur": "High (Upper): تیز ترین حملے اور بلاک پر پلس فریمز دیتے ہیں۔ کمزوری: نیچے بیٹھ کر (Duck) بچا جا سکتا ہے۔",
+      "mid": "Mid: Beats ducking opponents. When opponents fear highs or annoying lows and crouch down, launch them into orbit with a safe mid launcher!",
+      "mid_ur": "Mid (Middle): نیچے بیٹھنے والے حریف کو سزا دیتے ہیں! مڈ لانچر مار کر ہوا میں اڑا دیں۔",
+      "low": "Low: Chips away at standing guard and hits legs. Weakness: Blocked in crouch (db) for heavy punishes, or low-parried with df for free combos.",
+      "low_ur": "Low (Lower): کھڑے ہو کر بلاک کرنے والے کی ٹانگوں پر لگتے ہیں۔ کمزوری: db بلاک یا df لو پیری ہو جاتے ہیں۔"
     },
     "frame_trap_4step": [
       {
         "step": "1. The Poke",
         "cmd": "1 / df+1",
+        "desc": "Step forward with a 1 jab (+1 on block) or a fast df+1 mid check to gauge their defensive habits.",
         "desc_ur": "آگے جا کر 1 (Jab +1 on block) یا df+1 (Fast Mid check) ماریں۔"
       },
       {
         "step": "2. The Low Annoyance",
         "cmd": "d+4 / db+3 / d+2",
-        "desc_ur": "جب وہ کھڑا ہو کر بلاک کرے تو تیز لو پوک ماریں تاکہ وہ جھکنے یا جلد بازی میں بٹن دبانے پر مجبور ہو۔"
+        "desc": "When they turtle in standing guard, chip away with annoying low pokes to provoke panic button presses.",
+        "desc_ur": "جب وہ کھڑا ہو کر بلاک کرے تو تیز لو پوک ماریں تاکہ وہ جلد بازی میں بٹن دبانے پر مجبور ہو۔"
       },
       {
         "step": "3. The Frame Trap",
         "cmd": "wr+2 / f+4 -> CH Mid",
-        "desc_ur": "پلس فریم موو (+4 سے +6) ماریں، اور جیسے ہی وہ بلاک کرے فوراً کاؤنٹر ہٹ مڈ بٹن (df+2 یا b+1) دبائیں!"
+        "desc": "Land a plus-on-block move (+4 to +6), then immediately buffer a fast Counter-Hit mid (df+2, b+1). If they press, they get launched!",
+        "desc_ur": "پلس فریم موو ماریں، اور جیسے ہی وہ بلاک کرے فوراً کاؤنٹر ہٹ مڈ بٹن مار کر لانچ کریں!"
       },
       {
         "step": "4. Stance Blender",
         "cmd": "Flamingo / Sentai / Vortex",
+        "desc": "Take your plus frame advantage into specialized stances, forcing a 50/50 high-low guessing game.",
         "desc_ur": "پلس فریمز لے کر سٹانس میں جائیں جہاں حریف کو 50/50 کا اندازہ لگانا پڑتا ہے!"
       }
     ],
     "spacing_settings": {
-      "range_0_ur": "Range 0 (چپک کر): 1 (Jab), df+1, تھروز (1+3 / 2+4), اور تیز لو پوکس۔ سست مووز مت چلائیں ورنہ انٹرپٹ ہو جائیں گے۔",
-      "range_mid_ur": "Range 1.5 - 2 (ایک سے دو قدم): پوکرز (df+2, b+4, uf+4) اور سائیڈ سٹیپ۔ حریف کا وار ہوا میں نکلے تو فوراً وہف پنشر ماریں۔",
+      "range_0": "Range 0 (Kissing Distance): Use rapid 1 jabs, df+1 checks, throws (1+3 / 2+4), and fast low pokes. Avoid slow start-up moves to prevent being interrupted.",
+      "range_0_ur": "Range 0 (چپک کر): 1 (Jab), df+1, تھروز (1+3 / 2+4), اور تیز لو پوکس۔",
+      "range_mid": "Range 1.5 - 2 (Mid-Range): Control space using keepout pokes (df+2, b+4, hopkicks uf+4) and sidesteps. Whiff punish any missed move with maximum damage.",
+      "range_mid_ur": "Range 1.5 - 2 (ایک سے دو قدم): پوکرز (df+2, b+4, uf+4) اور سائیڈ سٹیپ۔",
+      "range_long": "Range 3+ (Long Range): Close distances with While Running moves (wr+2, f,f,f+3) or Heat Burst to enforce frame traps.",
       "range_long_ur": "Range 3+ (دور فاصلہ): وہائل رننگ (wr+2) یا ہیٹ برسٹ چلا کر تیزی سے قریب آئیں۔",
-      "settings_ur": "کنٹرولر: L1=1+2, R1=3+4, L2=Heat Burst (2+3), R2=Rage Art۔ گرافکس: V-Sync کو OFF رکھیں اور Network کو 'Prioritize Response' پر سیٹ کریں۔ سپیشل سٹائل کو ہمیشہ OFF رکھیں۔"
+      "settings": "Controller: L1 = 1+2, R1 = 3+4, L2 = Heat Burst (2+3), R2 = Rage Art. Graphics: V-Sync OFF, Network setting 'Prioritize Response' to minimize latency. Special Style disabled.",
+      "settings_ur": "کنٹرولر: L1=1+2, R1=3+4, L2=Heat Burst, R2=Rage Art۔ V-Sync کو OFF رکھیں اور Special Style غیر فعال کریں۔"
     }
   },
   "parry_reversal_matrix": {
-    "title": "Master Parry, Reversal & Duck vs Block Matrix",
+    "title": "Master Parry, Reversal & Duck vs. Block Matrix",
     "title_ur": "پیری، ریورسل، لو پیری اور ڈک بمقابلہ بلاک گائیڈ",
     "low_parry_guide": {
       "cmd": "df (Down-Forward)",
-      "how_ur": "جب مخالف لو اٹیک مارے تو db بلاک کرنے کے بجائے df دبا کر رکھیں۔ حریف زمین پر منہ کے بل گرے گا اور باؤنڈ سٹیٹ استعمال ہو جائے گی۔",
-      "punish_flow_ur": "df (Low Parry) -> df+1 (یا ws+4) -> Jab Strings (1,2 / df+4) -> Long Range Ender (40 سے 50 مفت ڈیمیج!)",
-      "unparryable_ur": "ہتھیاروں کی تلواریں (Yoshimitsu, Victor, Clive), نینا کی بندوقیں، لا کے ننچکس، اور کما/پانڈا/راجر جونیئر کے سر اور دم کے لوز لو پیری نہیں ہوتے!"
+      "how": "When an opponent aims for your legs with a low attack, input and hold df (Down-Forward). The attacker faceplants onto the floor with the tornado bound state pre-consumed.",
+      "how_ur": "جب مخالف لو اٹیک مارے تو db بلاک کرنے کے بجائے df دبا کر رکھیں۔ حریف زمین پر گرے گا۔",
+      "punish_flow": "df (Low Parry) -> df+1 (or ws+4) -> Jab Strings (1,2 / df+4) -> Long Range Ender (40-50 Guaranteed Damage!)",
+      "punish_flow_ur": "df (Low Parry) -> df+1 -> Jab Strings -> Long Range Ender (40 سے 50 مفت ڈیمیج!)",
+      "unparryable": "Weapons (Yoshimitsu, Victor, Clive swords), Nina's gunshots, Law's nunchucks, and Kuma/Panda/Roger Jr. headbutts and tails CANNOT be low parried!",
+      "unparryable_ur": "ہتھیاروں کی تلواریں، بندوقیں، ننچکس، اور جانوروں کے سر اور دم لو پیری نہیں ہوتے!"
     },
     "decision_matrix": [
       {
         "situation": "Fast Low Pokes (d+4, db+3, Hwoarang d+3,4, Law d+2,3, Feng d+2)",
-        "action": "LOW PARRY (df) KAREIN!",
+        "action": "LOW PARRY (df)!",
         "action_type": "parry",
-        "reason_ur": "یہ لوز بلاک ہونے پر صرف -11 سے -13 ہوتے ہیں (بلاک پر صرف چھوٹی کک ملے گی)۔ لیکن لو پیری کرنے پر 45+ ڈیمیج کا پورا کومبو ملتا ہے!"
+        "reason": "These fast lows are only -11 to -13 on block, yielding only minor standing punishes. Low parrying rewards you with a guaranteed 45+ juggle combo!",
+        "reason_ur": "یہ لوز بلاک پر صرف -11 سے -13 ہوتے ہیں۔ لو پیری کرنے پر 45+ ڈیمیج کا پورا کومبو ملتا ہے!"
       },
       {
-        "situation": "String ke Beech Wale Lows (Law Junkyard b+2,3,4, King Ali Kicks, Nina d+3,4)",
-        "action": "LOW PARRY (df) KAREIN!",
+        "situation": "Mid-String Lows (Law Junkyard b+2,3,4, King Ali Kicks, Nina d+3,4)",
+        "action": "LOW PARRY (df)!",
         "action_type": "parry",
+        "reason": "Low parrying interrupts the string's momentum immediately, snatching back offensive initiative and delivering a free combo.",
         "reason_ur": "سٹرنگ کو بیچ میں توڑ کر آپ اپنی باری اور گارنٹیڈ کومبو دونوں فوراً حاصل کر لیتے ہیں۔"
       },
       {
         "situation": "Heavy / Stagger Lows (Kazuya Hellsweep, Bryan Snake Edge, Paul Demoman, Lili BT d+3+4)",
-        "action": "BLOCK (db) KAREIN! (Parry MAT karein)",
+        "action": "BLOCK (db) & LAUNCH! (Do NOT Low Parry)",
         "action_type": "block",
-        "reason_ur": "یہ مووز بلاک ہونے پر -15 سے -26 ہوتے ہیں! اگر لو پیری کریں گے تو صرف 45 ڈیمیج ملے گا، لیکن db سے بلاک کر کے ws+2 مارنے پر 80 سے 95 ڈیمیج کا فل لانچ ملے گا!"
+        "reason": "These moves are -15 to -26 on block. Low parry gives only 45 damage, but blocking in crouch (db) guarantees a full While Standing launch for 80 to 95+ damage!",
+        "reason_ur": "یہ مووز بلاک پر -15 سے -26 ہوتے ہیں! db سے بلاک کر کے ws+2 مارنے پر 80 سے 95 ڈیمیج کا فل لانچ ملے گا!"
       },
       {
-        "situation": "High Strings (Nina d+4,1, Law 1,2,3, Jin 2,1, Hwoarang d+3,4 ka 2nd hit, Paul 3,2)",
-        "action": "SIRF DUCK (d / db) KAREIN!",
+        "situation": "High Strings (Nina d+4,1, Law 1,2,3, Jin 2,1, Hwoarang d+3,4 2nd hit, Paul 3,2)",
+        "action": "DUCK (d / db) & LAUNCH!",
         "action_type": "duck",
-        "reason_ur": "ہائی اٹیک کو پیری کرنے پر صرف 25-30 ڈیمیج ملتا ہے، مگر نیچے بیٹھ کر (Duck) ہوا میں نکلنے دیں اور ws+2 مار کر مخالف کی آدھی ہیلتھ اڑا دیں!"
+        "reason": "Parrying a high only grants modest advantage, but ducking allows the attack to whiff completely overhead, exposing them to a ws+2 launcher.",
+        "reason_ur": "ہائی اٹیک کو پیری کرنے کے بجائے نیچے بیٹھ کر (Duck) ہوا میں نکلنے دیں اور ws+2 سے لانچ کریں!"
       }
     ],
     "unparryable_reversals": [
       {
-        "type": "Elbows (کہنیاں)",
+        "type": "Elbows",
         "examples": "Paul df+1, Bryan df+2 / b+1, Dragunov f+1+2",
-        "rule": "نارمل ریورسل سے پیری نہیں ہوتیں"
+        "rule": "Cannot be caught by standard high/mid reversals"
       },
       {
-        "type": "Knees (گھٹنے)",
+        "type": "Knees",
         "examples": "Bryan f+3, Feng df+3, Lars/Asuka b+4, Shaheen uf+4",
-        "rule": "ریورسل کو چیر کر منہ پر لگتے ہیں"
+        "rule": "Blows straight through parries and strikes cleanly"
       },
       {
         "type": "Headbutts & Shoulders",
         "examples": "Feng b+1+2, Heihachi f+1+2, Paul d+1+2, King f+2+3",
-        "rule": "باڈی ماس اٹیکس پیری نہیں ہو سکتے"
+        "rule": "Body-mass attacks cannot be deflected"
       },
       {
         "type": "Weapons & Projectiles",
         "examples": "Victor / Yoshimitsu / Clive swords, Devil Jin laser, Kunimitsu kunai",
-        "rule": "تلواریں اور فائر بالز ریورسل سے نہیں رکتیں"
+        "rule": "Weapon strikes pierce through all standard reversals"
       },
       {
         "type": "Heat Smash & Rage Arts",
-        "examples": "All characters Heat Smash and Rage Art finishers",
-        "rule": "انسٹنٹ ان پیرایبل"
+        "examples": "All character Heat Smashes and Rage Arts",
+        "rule": "Instantly bypasses all parries with armor penetration"
       }
     ],
     "character_parries_table": [
       {
         "char": "Jin Kazama",
         "cmd": "b+1+3 / b+2+4",
-        "catches": "SAB KUCH! Punches, Kicks, Elbows, Knees, Weapons",
-        "followup_ur": "ٹائم سلو ہوتا ہے: فوراً d+3+4 (Can-Can Kicks Full Launcher) ماریں!"
+        "catches": "EVERYTHING! Punches, Kicks, Elbows, Knees, and Weapons",
+        "followup": "Slows time: immediately input d+3+4 (Can-Can Kicks Full Launcher)!",
+        "followup_ur": "ٹائم سلو ہوتا ہے: فوراً d+3+4 کین کین ککس لانچر ماریں!"
       },
       {
         "char": "Leroy Smith",
         "cmd": "b+2 (Twin Dragon Gate)",
-        "catches": "Punches, Kicks, Elbows, Knees سب ڈیفلیکٹ کرتا ہے",
-        "followup_ur": "پیری لگتے ہی 1+2 دبائیں، لیروئے خود مکھوں کی بارش کر دے گا!"
+        "catches": "Deflects Punches, Kicks, Elbows, and Knees",
+        "followup": "On success, mash 1+2 for Leroy's Sun & Moon rapid punch flurry.",
+        "followup_ur": "پیری لگتے ہی 1+2 دبائیں، لیروئے خود مکھوں کی بارش کر دے گا۔"
       },
       {
         "char": "Asuka & Jun Kazama",
         "cmd": "b+1+3 / b+2+4 (Hold to Charge)",
         "catches": "High / Mid Punches & Kicks",
+        "followup": "Can be held to extend active parry window; triggers automatic 40-damage bone snap.",
         "followup_ur": "دبا کر رکھنے سے لمبا وقت ایکٹیو رہتی ہے، آٹومیٹک 40 ڈیمیج اٹیک!"
       },
       {
         "char": "Asuka / Feng / Lee",
         "cmd": "Sabaki Parries (Asuka b+2+3, Feng 1+2, Lee b+1+2)",
-        "catches": "اٹیک روکنے کے ساتھ ساتھ خود وار کرتی ہیں",
+        "catches": "Simultaneously blocks and attacks forward",
+        "followup": "Feng 1+2 automatically launches on parry. Press 2 after Lee's b+1+2.",
         "followup_ur": "فینگ کا 1+2 پیری ہوتے ہی خود لانچ کر دیتا ہے، لی کے بعد 2 دبائیں۔"
       },
       {
         "char": "Paul / Nina / Dragunov",
         "cmd": "b+1+3 / b+2+4",
         "catches": "Standard High / Mid Punches & Kicks",
+        "followup": "Automatic limb-breaking grappling animation with heavy knockdown.",
         "followup_ur": "آٹومیٹک ہڈی توڑنے والی ریورسل اینیمیشن چلتی ہے۔"
       },
       {
         "char": "King",
         "cmd": "b+1+3 (Kicks) & b+2+4 (Right Punches)",
-        "catches": "b+1+3 ککس پکڑتی ہے، b+2+4 پنچز",
-        "followup_ur": "کک پیری ٹانگ توڑ دیتی ہے، پنچ پیری کے بعد کنگ مخالف کی پشت پر آ جاتا ہے!"
+        "catches": "b+1+3 catches kicks; b+2+4 catches right punches",
+        "followup": "Kick parry breaks legs; punch parry spins King behind the opponent for a free throw.",
+        "followup_ur": "کک پیری ٹانگ توڑ دیتی ہے، پنچ پیری کے بعد کنگ پشت پر آ جاتا ہے!"
       },
       {
         "char": "Steve Fox",
         "cmd": "b+1+2 (Punch Parry)",
-        "catches": "High aur Mid Punches",
+        "catches": "High and Mid Punches only",
+        "followup": "Press 1 or 2 immediately for Steve's knockdown body hook.",
         "followup_ur": "1 یا 2 دبائیں، سٹیو ہک مار کر زمین پر گرا دے گا۔"
       },
       {
         "char": "Bryan Fury",
         "cmd": "b+1+2 (Punch Parry)",
-        "catches": "High aur Mid Punches",
+        "catches": "High and Mid Punches only",
+        "followup": "Press 2 (b+1+2 ~ 2) for an instant Mach Punch wall splat!",
         "followup_ur": "پیری لگتے ہی 2 دبائیں، برائن مایک پنچ مار کر دیوار پر اڑا دے گا!"
       },
       {
         "char": "Reina / Heihachi",
         "cmd": "b+1+3 / b+2+4 & Heaven's Wrath",
-        "catches": "Attacks seh kar bijli counter",
+        "catches": "Absorbs attack and counters with lightning strike",
+        "followup": "Reina in Heat auto-parries while standing in Heaven's Wrath (d+1+2) stance.",
         "followup_ur": "رائنا ہیٹ میں HW سٹانس (d+1+2) میں آٹو پیری کرتی ہے!"
       },
       {
         "char": "Yoshimitsu",
         "cmd": "1+4 (Flash)",
-        "catches": "6-frame hitbox جو ہر قریبی حملہ کاٹ دیتا ہے",
-        "followup_ur": "فل کو مبو کے لیے فوراً d+2,2,2 یا b+2,2 دبائیں!"
+        "catches": "6-frame close-range hitbox that cuts all incoming strikes",
+        "followup": "Converts on hit into full launch: immediately input d+2,2,2 or b+2,2.",
+        "followup_ur": "فل کومبو کے لیے فوراً d+2,2,2 یا b+2,2 دبائیں!"
       },
       {
         "char": "Azucena",
         "cmd": "Libertador (f+3+4)",
-        "catches": "Auto-Parry Highs aur Lows",
+        "catches": "Auto-parries incoming Highs and Lows in stance",
+        "followup": "Simply hold stance; once evasive roll triggers, input LIB 1+2 launcher.",
         "followup_ur": "سٹانس میں کھڑے رہیں، ڈاج ہوتے ہی LIB 1+2 لانچر مار دیں!"
       }
     ],
     "charge_guard_break_guide": {
       "title": "How to Charge Guard-Breaks & Defensive Parries",
       "title_ur": "گارڈ بریک اور پیریز چارج کرنے کا طریقہ",
-      "defensive_ur": "آسوکا اور جون کے پاس b+1+3 ریورسل کو ہولڈ (دبا کر رکھنے) کی سہولت ہے۔ جتنا لمبا دبائیں گے، پیری ونڈو اتنی طویل کھلی رہے گی۔",
-      "offensive_ur": "اٹیک بٹن کو دبا کر رکھنے (*) سے موو گارڈ بریک میں بدل جاتا ہے (جیسے Fahkumram 3,4~4*, Steve b+1*, Paul qcf+2*, Yujiro f,f+1+2*)۔ بلاک کرنے والا دیوار سے چپک جاتا ہے اور مفت اٹیک ملتا ہے۔"
+      "defensive": "Characters like Asuka and Jun can hold b+1+3 to extend their active parry window, delaying the recovery and catching hesitant opponent strikes.",
+      "defensive_ur": "آسوکا اور جون کے پاس b+1+3 ریورسل کو ہولڈ (دبا کر رکھنے) کی سہولت ہے۔",
+      "offensive": "Holding down attack inputs (*) charges power moves into unblockable guard breaks (e.g. Fahkumram 3,4~4*, Steve b+1*, Paul qcf+2*, Yujiro f,f+1+2*). Blocking opponents are wall-crushed with massive frame advantage.",
+      "offensive_ur": "اٹیک بٹن کو دبا کر رکھنے (*) سے موو گارڈ بریک میں بدل جاتا ہے اور حریف دیوار سے چپک جاتا ہے۔"
     }
   },
   "wall_traps_escape": {
     "title": "Deadly Wall Traps & Wall Escape Bible",
     "title_ur": "دیوار کے جان لیوا جال اور بچنے کے تین سنہری اصول",
-    "wall_combo_science_ur": "حریف کو دیوار پر ہائی وال سپلیٹ کریں، پھر جاب فلر (1 یا 2) مار کر ٹورنیڈو ایکسٹینشن دیں اور بھاری وال کومبو اینڈ کریں۔",
-    "universal_wall_crush_ur": "وال کرش مووز (+5 سے +9 آن بلاک) حریف کو دیوار کے ساتھ جما دیتے ہیں اور وہ پیچھے نہیں ہٹ سکتا۔ وہاں سے 50/50 لو یا مڈ لانچر لوپ لگائیں۔",
+    "wall_combo_science": "Secure a high wall splat, insert a rapid jab filler (1 or 2), convert through tornado extension, and execute your heaviest wall combo ender.",
+    "wall_combo_science_ur": "حریف کو دیوار پر ہائی وال سپلیٹ کریں، پھر جاب فلر مار کر ٹورنیڈو ایکسٹینشن دیں اور بھاری وال کومبو اینڈ کریں۔",
+    "universal_wall_crush": "Wall Crush moves (+5 to +9 on block) pin opponents against the brickwork, removing pushback and setting up inescapable 50/50 ground stomp vs mid re-splat loops.",
+    "universal_wall_crush_ur": "وال کرش مووز (+5 سے +9 آن بلاک) حریف کو دیوار کے ساتھ جما دیتے ہیں اور وہ پیچھے نہیں ہٹ سکتا۔",
     "character_wall_traps": [
       {
         "char": "Bryan Fury",
         "name": "The Taunt (1+3+4) Unblockable Trap",
-        "desc_ur": "دیوار پر حریف اٹھنے لگے تو Taunt ماریں۔ یہ ان بلاک ایبل ہے اور +16 فریمز دیتا ہے جس کے بعد f,b+2 (Mach Punch) یا جیٹ اپر گارنٹیڈ فری ڈیمیج ہے!"
+        "desc": "As the opponent recovers against the wall, execute Taunt. It is completely unblockable and grants +16 frames on contact, guaranteeing a free Jet Upper (fb+2) or Mach Punch!",
+        "desc_ur": "دیوار پر حریف اٹھنے لگے تو Taunt ماریں۔ یہ ان بلاک ایبل ہے اور +16 فریمز دیتا ہے جس کے بعد جیٹ اپر فری ڈیمیج ہے!"
       },
       {
         "char": "King & Armor King",
         "name": "Burning Knuckle & Giant Swing Wall Loop",
-        "desc_ur": "وال گرنے کے بعد uf+1+2* (Burning Knuckle) چارج کریں۔ اگر حریف لیٹا رہے تو 40 ڈیمیج، کھڑا ہو تو ان بلاک ایبل لانچ، اور بچنے کے لیے رول کرے تو جائنٹ سوئنگ پکڑ لیں!"
+        "desc": "Charge uf+1+2* (Burning Knuckle) after wall knockdown. If they stay down, take 40 damage; if they stand, launch unblockable; if they roll, Giant Swing catches them!",
+        "desc_ur": "وال گرنے کے بعد uf+1+2* چارج کریں۔ لیٹا رہے تو 40 ڈیمیج، کھڑا ہو تو ان بلاک ایبل لانچ، رول کرے تو جائنٹ سوئنگ!"
       },
       {
         "char": "Hwoarang",
         "name": "Chip-Death & Backturned Flamingo Loop",
-        "desc_ur": "دیوار پر فلیمنگو لوپ چلائیں۔ چیپ ڈیمیج سے ہیلتھ گھٹتی رہے گی، اور اگر وہ ڈک کرے تو مڈ کک مار کر دوبارہ وال سپلیٹ کر دیں!"
+        "desc": "Loop Flamingo pressure against walled opponents. Heavy chip damage continuously drains life, and ducking results in an instant mid wall-splat re-juggle.",
+        "desc_ur": "دیوار پر فلیمنگو لوپ چلائیں۔ چیپ ڈیمیج سے ہیلتھ گھٹتی رہے گی، اور ڈک کرنے پر مڈ وال سپلیٹ مل جائے گا!"
       },
       {
         "char": "Kazuya, Devil Jin & Reina",
         "name": "The Mishima Wall Vortex",
+        "desc": "Force a brutal 50/50 wall loop: Hellsweep (Low) knockdowns into another setup, while safe Demon Paw (ff+2) or EWGF (Mid/High) crushes ducking attempts.",
         "desc_ur": "دیوار پر ہیل سویپ (Low) یا ڈیمن پا / الیکٹرک (Mid) کا 50/50 لگائیں۔ غلط اندازے پر حریف دوبارہ دیوار سے ٹکرا جائے گا۔"
       },
       {
         "char": "Paul Phoenix",
         "name": "The 50/50 Wall Deletion",
-        "desc_ur": "وال سپلیٹ کے بعد ڈیمو مین (d+4,2:1+2) مڈ لو سویپ ماریں، یا ڈیتھ فسٹ (qcf+2) سے حریف کا آدھا لائف بار اڑا دیں!"
+        "desc": "After wall splat, force the ultimate guessing game: Demoman (d+4,2:1+2) sweep vs Deathfist (qcf+2) which deletes over 50% of the opponent's lifebar.",
+        "desc_ur": "وال سپلیٹ کے بعد ڈیمو مین مڈ لو سویپ ماریں، یا ڈیتھ فسٹ سے حریف کا آدھا لائف بار اڑا دیں!"
       },
       {
         "char": "Yoshimitsu",
         "name": "Unblockable Sword Sweep & Poison Trap",
-        "desc_ur": "دیوار پر fc df+1 (ان بلاک ایبل لو سورڈ سویپ) ماریں۔ اگر وہ جمپ کرے تو ws+2,1 مڈ ٹورنیڈو لانچر سے دوبارہ دیوار پر چپکا دیں!"
+        "desc": "Use fc df+1 (Unblockable Low Sword Sweep). If they jump or parry, ws+2,1 mid tornado launcher immediately re-splats them into the wall.",
+        "desc_ur": "دیوار پر fc df+1 ان بلاک ایبل لو سورڈ سویپ ماریں۔ جمپ کرے تو ws+2,1 سے دوبارہ دیوار پر چپکا دیں!"
       },
       {
         "char": "Jin Kazama",
         "name": "Scourge (d+2) & Electric Wall Trap",
-        "desc_ur": "دیوار پر f,f,f+3 (+6 وال کرش) ماریں۔ اب حریف جم چکا ہے: d+2 لو ماریں یا df+1,4~4 مڈ مار کر دوبارہ وال سپلیٹ کریں!"
+        "desc": "Pin opponents with f,f,f+3 (+6 Wall Crush), then mix d+2 (low punch that hits grounded opponents and counter-hit launches) with safe mid df+1,4~4.",
+        "desc_ur": "دیوار پر f,f,f+3 (+6 وال کرش) ماریں۔ d+2 لو ماریں یا df+1,4~4 مڈ مار کر دوبارہ وال سپلیٹ کریں!"
       },
       {
         "char": "Jack-8 & Alisa",
         "name": "Un-escapable Chip & Guard Break Loop",
-        "desc_ur": "جیک-8 گاما ہاول GMH 4 (+11 گارڈ بریک) مارتا ہے، اور الیسا چین سا (DES) نکال کر دیوار پر پش بیک کے بغیر نان سٹاپ چیپ کٹنگ کرتی ہے!"
+        "desc": "Jack-8 uses Gamma Howl GMH 4 (+11 guard break) into free punches; Alisa activates Chainsaws (DES) for relentless, zero-pushback chip shredding.",
+        "desc_ur": "جیک-8 گاما ہاول GMH 4 (+11 گارڈ بریک) مارتا ہے، اور الیسا چین سا نکال کر زیرو پش بیک چیپ کٹنگ کرتی ہے!"
       }
     ],
     "escape_rules": [
       {
         "rule": "1. Side-Walk Towards Open Side",
-        "badge": "کھلی طرف سائیڈ واک",
-        "desc_ur": "دیوار کے کونے سے نکلنے کے لیے مسلسل کھلی سائیڈ پر سائیڈ واک (u, u یا d, d ہولڈ) کریں اور جگہ ملتے ہی پوزیشن سوئچ تھرو (1+3 / 2+4) مار کر حریف کو دیوار میں پھینک دیں!"
+        "badge": "Side-Walk Open Side",
+        "desc": "Side-walk continuously (double-tap and hold u or d) toward the open stage direction. As soon as space opens, land a position-switch throw (1+3 / 2+4) to fling the opponent into the wall!",
+        "desc_ur": "دیوار کے کونے سے نکلنے کے لیے مسلسل کھلی سائیڈ پر سائیڈ واک کریں اور پوزیشن سوئچ تھرو مار کر حریف کو دیوار میں پھینک دیں!"
       },
       {
-        "rule": "2. Delay Wake-Up (فوراً مت اٹھیں!)",
-        "badge": "زمین پر رکے رہیں",
-        "desc_ur": "برائن کے ٹونٹ، کازویا کے وال ورٹیکس اور پال کے ڈیمو مین سے بچنے کا بہترین طریقہ ہے 1 سیکنڈ تک زمین پر بغیر کوئی بٹن دبائے لیٹے رہنا تاکہ ان کا ٹائمنگ مکس اپ ہوا میں نکل جائے!"
+        "rule": "2. Delay Wake-Up (Stay Grounded)",
+        "badge": "Stay Grounded",
+        "desc": "The most effective defense against Bryan's Taunt, Kazuya's Vortex, and Paul's Demoman is to remain grounded for a full second. Their timed mix-ups whiff harmlessly overhead.",
+        "desc_ur": "برائن کے ٹونٹ، کازویا کے وال ورٹیکس اور پال کے ڈیمو مین سے بچنے کا بہترین طریقہ ہے 1 سیکنڈ تک زمین پر بغیر کوئی بٹن دبائے لیٹے رہنا!"
       },
       {
-        "rule": "3. Jab + Side-Step (1 -> SS)",
-        "badge": "جاب مار کر نکلیں",
-        "desc_ur": "دیوار پر بڑے سست بٹن دبانے کے بجائے تیز جاب (1) یا ڈک جاب (db+1) ماریں اور فوراً باہر کی طرف سائیڈ سٹیپ کر کے دباؤ توڑ دیں!"
+        "rule": "3. Quick Jab + Sidestep",
+        "badge": "Jab & Sidestep",
+        "desc": "Instead of throwing slow, high-risk panic launchers, throw a rapid 1 jab or db+1 dickjab, then immediately sidestep outward into open arena space.",
+        "desc_ur": "دیوار پر سست بٹن دبانے کے بجائے تیز جاب (1) یا ڈک جاب (db+1) ماریں اور فوراً باہر کی طرف سائیڈ سٹیپ کر کے دباؤ توڑ دیں!"
       }
     ]
   },
   "defense_escape_5rules": [
     {
       "name": "The Dickjab (db+1 / d+1)",
+      "desc": "10-frame crouching punch that crushes highs and instantly halts relentless stance flows (Flamingo, Sentai, Hayashida).",
       "desc_ur": "10 فریم کا کراؤچنگ پنچ جو حریف کے ہائی اٹیکس کے نیچے سے نکل کر نینا، ہوارنگ اور رائنا کے سٹانس فلو کو توڑ دیتا ہے!"
     },
     {
       "name": "Power Crush (Armor)",
-      "desc_ur": "شیلڈ آئی کون والا موو (b+1+2 / f+1+2) جو ساتویں فریم سے ہائی اور مڈ مار کھا کر واپس کاؤنٹر کرتا ہے!"
+      "desc": "Armor attacks (b+1+2 / f+1+2) that absorb high and mid attacks starting from frame 7 to reverse offensive pressure.",
+      "desc_ur": "شیلڈ آئی کون والا موو جو ساتویں فریم سے ہائی اور مڈ مار کھا کر واپس کاؤنٹر کرتا ہے!"
     },
     {
       "name": "Heat Burst (2+3 / L2)",
+      "desc": "Armored universal activator that interrupts oppressive wall pressure and gives you +1 frame advantage.",
       "desc_ur": "دیوار پر پھنسے ہوں تو ہیٹ برسٹ دبائیں، اس میں آرمر ہوتا ہے جو حملہ روک کر آپ کو +1 اپنی باری دیتا ہے!"
     },
     {
       "name": "Sidestep + Block (u,n,b / d,n,b)",
+      "desc": "Step slightly and immediately cancel into neutral block; allows linear moves (wr+2, Electrics) to whiff without risking counter-hits.",
       "desc_ur": "سائیڈ سٹیپ کر کے فوراً بلاک دبائیں تاکہ ڈریگنوف کا wr+2 اور کازویا کا الیکٹرک ہوا میں نکل جائے!"
     },
     {
-      "name": "Throw Breaks (پکڑ توڑنا)",
+      "name": "Throw Breaks (Tech Grabs)",
+      "desc": "Left hand extends forward = break with 1; Right hand extends = break with 2; Both hands extend = break with 1+2.",
       "desc_ur": "بایاں ہاتھ آگے آئے تو 1، دایاں ہاتھ آگے آئے تو 2، اور دونوں ہاتھ ایک ساتھ آئیں تو 1+2 دبائیں!"
     }
   ]
@@ -431,6 +504,11 @@
     "avatar": "/assets/avatars/jin.jpg",
     "height": "183 cm (6'0\")",
     "weight": "87 kg",
+    "job_lore": "Former Head of the Mishima Zaibatsu; fights alongside Lars and Lee to stop Kazuya and rid the world of the cursed Devil Gene once and for all.",
+    "poking_buttons": "Poking Buttons: 1, 2 (i10 high jabs), df+1 (Mid check poke), f+4 (Premier Range 2 keepout mid kick, CH launcher), d+4 (Fast evasive low poke), db+4 (Plus-on-hit stature low).",
+    "pressure_moves": "Pressure Moves: 2,1,4 (Safe block string with wall-splat confirm), wr+3 (While Running mid kick: +6 on block!), Electric Wind Hook Fist (f,n,d,df:2: +5 on block launcher!).",
+    "mixup_blender": "Upper/Mid/Low Mix-up (Zenshin Stance ZEN - b+3+4 or f+4~f): Low: ZEN 4 (Diving low sweep) or Hellsweep (f,n,d,df+4). Mid: ZEN 1+2 or ZEN 3 (Homing mid check). High/Throw: ZEN 1+3 (Command grab) or ZEN u+1 (Evasive launcher).",
+    "trap_setup": "The Trap Setup: Approach with d+2 (high-crushing low with +4 on hit) and f+4. When the opponent turtles, input 2,1 then hesitate into uf+2 (evasive punch) or command grab uf+1+2.",
     "job_lore_ur": "Former Head of Mishima Zaibatsu; duniya ko apni shuru ki gayi jang aur Kazuya se bachane ke liye larta hai.",
     "poking_buttons_ur": "Poking Buttons: 1,2 (Jabs), df+1 (Mid check), f+4 (Long range mid CH launcher), d+4 (Fast low), db+4 (Plus frame low).",
     "pressure_moves_ur": "Pressure Moves: 2,1,4 (Safe string), f,f,f+3 (Running mid kick: +6 on block!), Electric Wind Hook Fist (f,n,d,df:2 - +5 on block).",
@@ -438,10 +516,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): d+2 (Scourge - High-crushing low jo CH par launch karta hai) aur f+4 se paas aayein. Jab woh darr kar block kare, 2,1 mar kar ruk jayein aur uf+2 (evasive punch) ya Throw (uf+1+2) mar dein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) karein taake EWHF, 2,1, aur f+4 hawa mein nikal jayein. Lekin Jin ka df+1 right track karta hai is liye mid-range par step-block karein.",
-      "minus_punishable_moves_ur": "-10 to -14: 2,1,4 (-6 safe magar 3rd hit duckable), df+1,4 (-13 punish), d+2 (-14 crouching punish). -15+ Launch: d+3+4 Can-Can (-15 Launch), db+4 (-15 Launch on block), ZEN 4 diving sweep (-26 Launch).",
-      "bait_duck_interrupt_ur": "2,1,4 ka aakhri hit High hai: duck kar ke ws+2 launcher marein! d+2 ko duck kar ke block karein aur ws launch dein. ZEN 1+3 throw ko break ya duck karein. d+4 fast low poke ko df se Low Parry karein.",
-      "parry_vulnerabilities_ur": "Jin ki b+1+3 parry har cheez (weapons, elbows, knees) deflect karti hai! Is se bachne ke liye delay timing karein ya low attacks marein jo b+1+3 se parry nahi hotay."
+      "weak_side_detail": "Sidestep Left (SSL) to evade Jin's 2,1 strings, EWHF, and f+4 keepout kicks. Beware of his df+1 mid check, which tracks to his right; step and immediately neutral block.",
+      "minus_punishable_moves": "-10 to -14 Punishable: 2,1,4 (safe on block, but 3rd hit is high duckable), df+1,4 (-13 on block), d+2 (-14 on block). -15+ Launch Punishable: Can-Can kicks d+3+4 (-15 Launch), db+4 (-15 Launch), ZEN 4 diving sweep (-26 Launch).",
+      "bait_duck_interrupt": "Duck under the 3rd hit of 2,1,4 and launch with While Standing ws+2! Duck and block d+2 on reaction to launch. Low parry d+4 pokes with df.",
+      "parry_vulnerabilities": "Jin's b+1+3 parry deflects virtually everything (weapons, elbows, and knees). Bait out his parry with hesitation or strike with low attacks that bypass his b+1+3 guard.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) to evade Jin's 2,1 strings, EWHF, and f+4 keepout kicks. Beware of his df+1 mid check, which tracks to his right; step and immediately neutral block.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: 2,1,4 (safe on block, but 3rd hit is high duckable), df+1,4 (-13 on block), d+2 (-14 on block). -15+ Launch Punishable: Can-Can kicks d+3+4 (-15 Launch), db+4 (-15 Launch), ZEN 4 diving sweep (-26 Launch).",
+      "bait_duck_interrupt_ur": "Duck under the 3rd hit of 2,1,4 and launch with While Standing ws+2! Duck and block d+2 on reaction to launch. Low parry d+4 pokes with df.",
+      "parry_vulnerabilities_ur": "Jin's b+1+3 parry deflects virtually everything (weapons, elbows, and knees). Bait out his parry with hesitation or strike with low attacks that bypass his b+1+3 guard."
     }
   },
   {
@@ -459,6 +541,11 @@
     "avatar": "/assets/avatars/kazuya.jpg",
     "height": "181 cm (5'11\")",
     "weight": "85 kg",
+    "job_lore": "Leader of G Corporation; seeks absolute global domination through demonic power after slaying his father Heihachi.",
+    "poking_buttons": "Poking Buttons: 1, 1 (i10 hit-confirmable 1,1,2 knockdown), df+4 (Safe mid check), db+4 (Stature low kick: +4 on hit!), df+1,2 (Fast mid check string).",
+    "pressure_moves": "Pressure Moves: EWGF (f,n,d,df:2: +5 on block high launcher!), f+4 (Crouch-forcing mid: +4 on block!), cd+1+2 (Overhead punch: +5 on block).",
+    "mixup_blender": "The 50/50 Mishima Vortex: Wave-dash into opponent's face: Low: Hellsweep (cd+4,1 - unseeable knockdown sweep) vs Mid: ff+3 (Safe mid launcher) or EWGF (High launcher).",
+    "trap_setup": "The Trap Setup: Push opponent to the wall, land f+4 (+4 crouch-forcing mid), then immediately input df+2 (Counter-Hit launcher) or cd+4,1 Hellsweep to loop them back onto the ground.",
     "job_lore_ur": "Head of G Corporation; apne baap Heihachi ko marne ke baad duniya par apni hukoomat qaim karna chahta hai.",
     "poking_buttons_ur": "Poking Buttons: 1,1 (Hit-confirmable 1,1,2), df+4 (Mid check), db+4 (Stature kick low: +4 on hit!), df+1,2.",
     "pressure_moves_ur": "Pressure Moves: EWGF (f,n,d,df:2 - +5 on block), f+4 (Crouch-forcing mid: +4 on block), cd+1+2 (+5 on block).",
@@ -466,10 +553,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): Opponent ko db+4 ya f+4 (block par) marein. Ab aap +4 hain. Foran df+2 दबाएं—agar agle bande ne jab bhi dabaya toh CH df+2 (Perfect Electric) se uski 70% life khatam!",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Kazuya ki sabse bari maut hai! EWGF, df+1, ff+3 aur cd+1+2 sab SSL par whiff ho jate hain. SSR ghalti se bhi mat karein warna Hellsweep clip karega.",
-      "minus_punishable_moves_ur": "-10 to -14: 1,1,2 (-17 on block - launch!), df+1,2 (-12 punish), f+1+2 (-12). -15+ Launch: Hellsweep (cd+4,1 -23 Stagger Low Launch!), df+2 (-15 Mid Launcher), Twin Pistons ws+1,2 (-15 Launch).",
-      "bait_duck_interrupt_ur": "Wave-dash dekh kar ghabrayein mat. Hellsweep ko db se BLOCK karein (df parry mat karein) aur ws+2 se 85+ damage ka combo dein! 1,1,2 agar hit na ho toh 3rd hit block kar ke launch karein.",
-      "parry_vulnerabilities_ur": "Kazuya ke paas normal parry nahi hai. Uske db+4 stature kick ko df se low parry karein. Kazuya ke f,f+3 mid kick aur EWGF punch parry ho sakte hain."
+      "weak_side_detail": "Sidestep Left (SSL) is Kazuya's ultimate weakness! EWGF, df+1, ff+3, and cd+1+2 all whiff cleanly against SSL. NEVER sidestep right or Hellsweep will clip you.",
+      "minus_punishable_moves": "-10 to -14 Punishable: 1,1,2 (-17 on block if unfinished/blocked), df+1,2 (-12 punish), f+1+2 (-12). -15+ Launch Punishable: Hellsweep (cd+4,1: -23 Stagger Low Launch!), df+2 (-15 Launch), Twin Pistons ws+1,2 (-15 Launch).",
+      "bait_duck_interrupt": "Do not panic against wave-dash. Block LOW with db to stagger-block Hellsweep and launch with ws+2 for 85+ damage! Duck under the 2nd hit of df+1,2 if delayed.",
+      "parry_vulnerabilities": "Kazuya has no reversal. Low parry db+4 with df. Kazuya's EWGF and f,f+3 can be deflected with high/mid punch and kick parries.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) is Kazuya's ultimate weakness! EWGF, df+1, ff+3, and cd+1+2 all whiff cleanly against SSL. NEVER sidestep right or Hellsweep will clip you.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: 1,1,2 (-17 on block if unfinished/blocked), df+1,2 (-12 punish), f+1+2 (-12). -15+ Launch Punishable: Hellsweep (cd+4,1: -23 Stagger Low Launch!), df+2 (-15 Launch), Twin Pistons ws+1,2 (-15 Launch).",
+      "bait_duck_interrupt_ur": "Do not panic against wave-dash. Block LOW with db to stagger-block Hellsweep and launch with ws+2 for 85+ damage! Duck under the 2nd hit of df+1,2 if delayed.",
+      "parry_vulnerabilities_ur": "Kazuya has no reversal. Low parry db+4 with df. Kazuya's EWGF and f,f+3 can be deflected with high/mid punch and kick parries."
     }
   },
   {
@@ -487,6 +578,11 @@
     "avatar": "/assets/avatars/reina.jpg",
     "height": "160 cm (5'3\")",
     "weight": "~54 kg",
+    "job_lore": "Student at Mishima Polytechnical School and secret daughter of Heihachi Mishima, fighting to awaken her dormant Devil Gene.",
+    "poking_buttons": "Poking Buttons: 1, 1 (Hit-confirmable 1,1,2), df+1,1 (Mid-mid check), f+4 (Crouching mid pressure), db+4 (Fast low poke), ss+4 (Sidestep low sweep).",
+    "pressure_moves": "Pressure Moves: ff+2 (Demon breath into Sentai SEN: premier gap-closer), wr+3 (While running kick: +6 on block into Heaven's Wrath HW).",
+    "mixup_blender": "Upper/Mid/Low Mix-up (Sentai Stance ff+2~f): Low: SEN 3 (Low sweep into full combo). Mid: SEN 1+2 (Armor power crush) or SEN 4 (Safe mid). High: SEN 1 (Plus on block launcher).",
+    "trap_setup": "The Trap Setup: After ff+2 SEN 1 (+ on block), if opponent hesitates, hit them with cd+4 (Hellsweep) or HW 3+4 launcher.",
     "job_lore_ur": "Mishima Polytechnical School ki student aur Heihachi ki khufiya beti jo Devil Gene jagane aayi hai.",
     "poking_buttons_ur": "Poking Buttons: 1,1 (Confirm into 1,1,2), df+1,1, f+4 (Mid crouching pressure), db+4 (Low poke), ss+4 (Sidestep low).",
     "pressure_moves_ur": "Pressure Moves: ff+2 (Demon breath into Sentai Stance SEN - Sabse best approach tool), f,f,f+3 (+6 on block into Heaven's Wrath HW).",
@@ -494,10 +590,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): ff+2 spam karein. Jab woh block kare, SEN 3 (High) ya SEN 1+3 (Throw) marein. Jab woh duck karne lage, toh SEN 2 ya df+2 se launch kar dein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) karein. ff+2, EWGF, aur Sentai (SEN) transitions SSL par hawa mein nikal jate hain.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,1 (-12 punish), f+4 (-13). -15+ Launch: cd+4 Hellsweep (-23 Stagger Launch!), SEN 3 sweep (-20 Launch), HW 3+4 (-15 Launch).",
-      "bait_duck_interrupt_ur": "ff+2 block hote hi foran DICKJAB (db+1) marein! Yeh Reina ke Sentai flow ko wahin tod deta hai aur uski saari fake 50/50 options band kar deta hai.",
-      "parry_vulnerabilities_ur": "Reina Heat mein Heaven's Wrath (HW d+1+2) mein auto-parry karti hai! HW mein khari ho toh punches/kicks mat marein, balke Elbows, Knees, ya Lows chalayein."
+      "weak_side_detail": "Sidestep Left (SSL) evades ff+2, EWGF, and Sentai stance entries. Step-block to avoid her homing 3+4.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,1 (-12 on block), f+4 (-13). -15+ Launch Punishable: cd+4 Hellsweep (-23 Stagger Low Launch!), SEN 3 sweep (-20 Launch), HW 3+4 (-15 Launch).",
+      "bait_duck_interrupt": "Immediately input a DICKJAB (db+1) upon blocking ff+2! This interrupts her Sentai transition and denies her entire 50/50 mix-up flow.",
+      "parry_vulnerabilities": "In Heat, Reina auto-parries attacks while in Heaven's Wrath (HW d+1+2). Do NOT throw high/mid strikes; use Knees, Elbows, or Lows to break HW stance.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades ff+2, EWGF, and Sentai stance entries. Step-block to avoid her homing 3+4.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,1 (-12 on block), f+4 (-13). -15+ Launch Punishable: cd+4 Hellsweep (-23 Stagger Low Launch!), SEN 3 sweep (-20 Launch), HW 3+4 (-15 Launch).",
+      "bait_duck_interrupt_ur": "Immediately input a DICKJAB (db+1) upon blocking ff+2! This interrupts her Sentai transition and denies her entire 50/50 mix-up flow.",
+      "parry_vulnerabilities_ur": "In Heat, Reina auto-parries attacks while in Heaven's Wrath (HW d+1+2). Do NOT throw high/mid strikes; use Knees, Elbows, or Lows to break HW stance."
     }
   },
   {
@@ -515,6 +615,11 @@
     "avatar": "/assets/avatars/jun.jpg",
     "height": "170 cm (5'7\")",
     "weight": "54 kg",
+    "job_lore": "Wildlife Surveillance Officer and mother of Jin Kazama; returns from the sacred forests of Yakushima to purify the Devil Gene.",
+    "poking_buttons": "Poking Buttons: 1, 2 (Punches into Izumo IZU stance), df+1 (Safe mid check), b+4,2 (Mid-high string), db+3 (Plus on hit low), f+4 (Plus on block high kick).",
+    "pressure_moves": "Pressure Moves: f+2,1+2 (Long range strike), Genjitsu Stance (GEN - b+3+4), Izumo Stance (IZU - u+1+2: safe mid and low options).",
+    "mixup_blender": "Upper/Mid/Low Mix-up (GEN & IZU): Low: GEN 4 (Low sweep with knockdown) or db+3. Mid: GEN 2 (Safe mid launcher) or IZU 1+2 (Guard crush).",
+    "trap_setup": "The Trap Setup: Harass with db+3 and 1,2 into IZU. When opponent freezes, use IZU 1+2 or command throw to break guard.",
     "job_lore_ur": "Wildlife Surveillance Officer (WWW.C); Jin ki maa jo Yakushima ke muqaddas jangal se lauti hai.",
     "poking_buttons_ur": "Poking Buttons: 1,2 (Into Izumo stance), df+1, b+4,2, db+3 (Plus on hit low), f+4 (Plus on block high).",
     "pressure_moves_ur": "Pressure Moves: ss+4 (+6 on block mid!), f+1+2 (Plus into Miare stance), 1,2,2 (+4 on block into Izumo).",
@@ -522,10 +627,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): 1,2,2 ya u+2 se Izumo stance mein jayein. Agar opponent button dabaye toh IZU 1,1 usay CH launch karega; agar chup khara rahe toh IZU 1+3 throw ya low marein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) karein taake Genjitsu (GEN) aur Izumo (IZU) transitions aur f+2 whiff ho jayein.",
-      "minus_punishable_moves_ur": "-10 to -14: f+2,1 (-13 punish), df+1,2 (-12). -15+ Launch: db+4 (-17 Stagger Launch!), can-can kicks d+3+4 (-15 Launch), Izumo 4 (-16 Launch).",
-      "bait_duck_interrupt_ur": "1,2,2 aur b+4,2 strings mein high extensions hain: duck kar ke ws+2 launcher marein! db+3 low poke ko df se low parry karein.",
-      "parry_vulnerabilities_ur": "Jun b+1+3 parry ko hold kar sakti hai! Parry todne ke liye Elbows (Paul df+1, Bryan b+1), Knees, ya Weapons chalayein."
+      "weak_side_detail": "Sidestep Left (SSL) to evade Genjitsu stance pokes and f+2 lunges.",
+      "minus_punishable_moves": "-10 to -14 Punishable: f+2,1 (-13 punish), df+1,2 (-12). -15+ Launch Punishable: db+4 (-17 Stagger Low Launch!), Can-Can kicks d+3+4 (-15 Launch), IZU 4 (-16 Launch).",
+      "bait_duck_interrupt": "1,2,2 and b+4,2 have high extensions: duck under them and launch with ws+2! Low parry db+3 with df.",
+      "parry_vulnerabilities": "Jun can hold b+1+3 to extend her active reversal window. Crush her parry using Elbows (Paul df+1, Bryan b+1), Knees, or Weapon strikes.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) to evade Genjitsu stance pokes and f+2 lunges.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: f+2,1 (-13 punish), df+1,2 (-12). -15+ Launch Punishable: db+4 (-17 Stagger Low Launch!), Can-Can kicks d+3+4 (-15 Launch), IZU 4 (-16 Launch).",
+      "bait_duck_interrupt_ur": "1,2,2 and b+4,2 have high extensions: duck under them and launch with ws+2! Low parry db+3 with df.",
+      "parry_vulnerabilities_ur": "Jun can hold b+1+3 to extend her active reversal window. Crush her parry using Elbows (Paul df+1, Bryan b+1), Knees, or Weapon strikes."
     }
   },
   {
@@ -543,6 +652,11 @@
     "avatar": "/assets/avatars/devil-jin.jpg",
     "height": "183 cm (6'0\")",
     "weight": "87 kg",
+    "job_lore": "The demonic manifestation of Jin's cursed Mishima bloodline, consumed by destructive instincts.",
+    "poking_buttons": "Poking Buttons: 1, 1 (1,1,2 knockdown string), df+1,2 (Mid check), db+2 (Ground hitting low), b+4 (Long range mid kick).",
+    "pressure_moves": "Pressure Moves: EWGF (f,n,d,df:2: +5 on block launcher!), f,f+4 (Safe mid poke), cd+3 (Long range tracking homing launcher).",
+    "mixup_blender": "Upper/Mid/Low Mix-up (Mishima Vortex): Low: Hellsweep (cd+4,4 - full knockdown sweep into combo). Mid: cd+1 (Mid launcher) or b+4.",
+    "trap_setup": "The Trap Setup: After knocking opponent down with Hellsweep, wave-dash in and mix cd+4 with fly stance mix-ups.",
     "job_lore_ur": "Jin Kazama ke andar ka Devil Gene jo mukammal tabahi chahta hai.",
     "poking_buttons_ur": "Poking Buttons: 1,1 (Confirm 1,1,2), df+1,2, db+2 (High-crushing low: +3 on hit), b+4 (Steel pedal mid).",
     "pressure_moves_ur": "Pressure Moves: EWGF (f,n,d,df:2), uf+1 (Shackles chain into Mourning Crow MC stance), f,f,f+3 (+6 on block).",
@@ -550,10 +664,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): Wave-dash se Hellsweep ka khauf paida karein. Jaise hi agla banda Hellsweep block karne ke liye neeche bethe, ff+2 ya uf+4 mar kar usay deewar tak le jayein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) karein. EWGF, b+4, aur laser scraper strings SSL par nikal jate hain. cd+3 homing se bach kar neutral rahein.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12 punish), b+1,2 (-13). -15+ Launch: Hellsweep (cd+4,4 -26 Stagger Launch!), cd+1 (-15 Launch), d+3+4 can-cans (-15 Launch).",
-      "bait_duck_interrupt_ur": "Laser attacks (1+2 ya fly 1+2) ko duck karein ya sidestep karein. Hellsweep ko db se block kar ke full combo ws launcher marein! Flying mix-up par 1 jab se float karein.",
-      "parry_vulnerabilities_ur": "Devil Jin ke lasers aur fly moves parry nahi hotay. Lekin uske normal punches/kicks standard parry se pakray ja sakte hain."
+      "weak_side_detail": "Sidestep Left (SSL) evades EWGF, b+4, and laser scrapers. Beware of cd+3 which tracks homing.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12 punish), b+1,2 (-13). -15+ Launch Punishable: Hellsweep cd+4,4 (-26 Stagger Low Launch!), cd+1 (-15 Launch), d+3+4 (-15 Launch).",
+      "bait_duck_interrupt": "Laser attacks (1+2 or fly 1+2) are high: duck or sidestep! Block Hellsweep with db and launch for 85+ damage.",
+      "parry_vulnerabilities": "Devil Jin's eye lasers and flying dives cannot be parried. Use standard parries against his standing punches and kicks.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades EWGF, b+4, and laser scrapers. Beware of cd+3 which tracks homing.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12 punish), b+1,2 (-13). -15+ Launch Punishable: Hellsweep cd+4,4 (-26 Stagger Low Launch!), cd+1 (-15 Launch), d+3+4 (-15 Launch).",
+      "bait_duck_interrupt_ur": "Laser attacks (1+2 or fly 1+2) are high: duck or sidestep! Block Hellsweep with db and launch for 85+ damage.",
+      "parry_vulnerabilities_ur": "Devil Jin's eye lasers and flying dives cannot be parried. Use standard parries against his standing punches and kicks."
     }
   },
   {
@@ -571,6 +689,11 @@
     "avatar": "/assets/avatars/lars.jpg",
     "height": "185 cm (6'1\")",
     "weight": "83 kg",
+    "job_lore": "Leader of the rebel army Yggdrasil; illegitimate son of Heihachi fighting alongside Jin to defeat Kazuya.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1 (Standard mid check), db+1,3 (Low-high string), f+1,2,3 (Rush string into Silent Entry).",
+    "pressure_moves": "Pressure Moves: Dynamic Entry (DEN - f+3), Silent Entry (SEN - df+3), b+1 (Homing mid), fb+2,1 (Long range knockdown).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: DEN 2 (Low sweep) or SEN 2. Mid: DEN 3 (Safe mid) or SEN 1 (Mid launcher).",
+    "trap_setup": "The Trap Setup: Pressure with 1,2 into SEN, conditioning with SEN 1 mid, then sweep with SEN 2 low.",
     "job_lore_ur": "Yggdrasil Rebel Army ka Commander; pehle Mishima Tekken Force ka officer tha.",
     "poking_buttons_ur": "Poking Buttons: df+1 (Ab iske extensions df+1,1 aur df+1,3 hain!), 2,1 (Safe mid-mid), db+1,3 (Fast low poke), b+4 (Knee CH).",
     "pressure_moves_ur": "Pressure Moves: Dynamic Entry (DEN - f+3), Silent Entry (SEN - f+3~f), aur Limited Entry (LEN - d+3+4). DEN 3 (Homing mid jo block par +5 deta hai aur SEN mein jata hai!).",
@@ -578,10 +701,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): DEN 3 marein (Block par +5 in SEN). Ab agla banda hila bhi toh SEN 1 (Heat engager) ya SEN 3 (Launcher) lagega. Agar woh khara raha toh SEN 2 (Low) mar dein.",
     "anti_guide": {
       "weak_side": "SSR",
-      "weak_side_detail_ur": "Sidestep Right (SSR) Lars ke khilaf bohot effective hai. Dynamic Entry (DEN) aur Silent Entry (SEN) ke attacks SSR par whiff hotay hain.",
-      "minus_punishable_moves_ur": "-10 to -14: fb+2,1 (-12 punish), f+1+2 (-12), df+2,1 (-13). -15+ Launch: db+4 (-15 Stagger Launch), DEN 2 sweep (-18 Launch), orbital kick uf+3 (-16 on block).",
-      "bait_duck_interrupt_ur": "Lars jab DEN ya SEN mein dash kare, toh foran DICKJAB (db+1) marein! Is se uski flashing movement aur high/mid mix-up foran cancel ho jata hai.",
-      "parry_vulnerabilities_ur": "Lars ke paas koi special reversal nahi hai. Uske DEN kicks aur punch strings ko easy parry kiya ja sakta hai."
+      "weak_side_detail": "Sidestep Right (SSR) is extremely effective against Lars. Both Dynamic Entry and Silent Entry attacks whiff against SSR.",
+      "minus_punishable_moves": "-10 to -14 Punishable: fb+2,1 (-12 punish), f+1+2 (-12), df+2,1 (-13). -15+ Launch Punishable: db+4 (-15 Stagger Launch), DEN 2 sweep (-18 Launch), orbital uf+3 (-16 on block).",
+      "bait_duck_interrupt": "When Lars enters DEN or SEN stance, immediately input a DICKJAB (db+1) to snuff out his flashy acrobatic mix-ups.",
+      "parry_vulnerabilities": "Lars has no reversal. His kick strings from DEN and SEN are easily parried with standard punch/kick parries.",
+      "weak_side_detail_ur": "Sidestep Right (SSR) is extremely effective against Lars. Both Dynamic Entry and Silent Entry attacks whiff against SSR.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: fb+2,1 (-12 punish), f+1+2 (-12), df+2,1 (-13). -15+ Launch Punishable: db+4 (-15 Stagger Launch), DEN 2 sweep (-18 Launch), orbital uf+3 (-16 on block).",
+      "bait_duck_interrupt_ur": "When Lars enters DEN or SEN stance, immediately input a DICKJAB (db+1) to snuff out his flashy acrobatic mix-ups.",
+      "parry_vulnerabilities_ur": "Lars has no reversal. His kick strings from DEN and SEN are easily parried with standard punch/kick parries."
     }
   },
   {
@@ -599,6 +726,11 @@
     "avatar": "/assets/avatars/lee.jpg",
     "height": "180 cm (5'11\")",
     "weight": "67 kg",
+    "job_lore": "CEO of Violet Systems and adoptive son of Heihachi; tech genius aiding Jin with combat exosuits and robotics.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1 (Fast mid check), b+4 (Keepout mid kick), d+3 (High-crushing low), f,f+3 (Long range mid).",
+    "pressure_moves": "Pressure Moves: Hitman Stance (HMS - 3+4), Acid Rain (1:3:3:3 just-frame), wr+3,4 (While running pressure).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: Slide (fc df,d,df+3) or HMS 3 (Low sweep). Mid: HMS 2 or ws+2,3 (Mid launcher).",
+    "trap_setup": "The Trap Setup: Keep out with b+4 into HMS cancel. When opponent rushes forward, launch with HMS 2 or Counter-Hit 4.",
     "job_lore_ur": "CEO of Violet Systems (Humanoid Robotics company); Heihachi ne bachpan mein adopt kiya tha.",
     "poking_buttons_ur": "Poking Buttons: df+1 (Best mid check), 2,2,3 (10f string), d+3 (High-crushing low CH launcher!), db+3+4 (Heavy low: +4 on hit).",
     "pressure_moves_ur": "Pressure Moves: f,f,f+3,4 (+3 on block into Hitman), b+3,3~f (Low-high into Mist Step: +4 on hit).",
@@ -606,10 +738,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): df+1 ya d+3 mar kar Hitman Stance (3+4) mein jayein, ya दूर se b+4 (Keep-out kick) marein. Jab agla banda gussa ho kar aage bhage, toh 4,4:4 ya b+4 se CH launch kar dein!\nB. The Main Story Heroes & Allies",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Lee ke b+4, f,f+3, aur Hitman (HMS) pokes ko aasani se evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: 1,2,4 (-13), df+1,2 (-12), b+1:1,2 (-14). -15+ Launch: Slide fc df,d,df+3 (-23 Stagger Launch!), d+4,4 (-16 Launch), HMS 3 sweep (-18 Launch).",
-      "bait_duck_interrupt_ur": "Acid Rain aur 1,2,4 ke aakhri hits high hain: duck kar ke ws launcher marein! Slide ko db se block kar ke maximum damage hopkick marein.",
-      "parry_vulnerabilities_ur": "Lee ke paas b+1+2 punch parry hai. Agar woh parry lagaye toh Knees (Bryan f+3, Lars b+4) ya Elbows marein jo Lee ki parry ko cheer deti hain."
+      "weak_side_detail": "Sidestep Left (SSL) evades Lee's b+4 keepout, f,f+3, and Hitman stance entries.",
+      "minus_punishable_moves": "-10 to -14 Punishable: 1,2,4 (-13), df+1,2 (-12), b+1:1,2 (-14). -15+ Launch Punishable: Slide fc df,d,df+3 (-23 Stagger Low Launch!), d+4,4 (-16 Launch), HMS 3 sweep (-18 Launch).",
+      "bait_duck_interrupt": "1,2,4 and Acid Rain have high extensions: duck under them and launch with ws+2! Block Slide with db and hopkick.",
+      "parry_vulnerabilities": "Lee has a b+1+2 punch parry. Crush his parry with Knees (Bryan f+3, Lars b+4) or Elbows.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Lee's b+4 keepout, f,f+3, and Hitman stance entries.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: 1,2,4 (-13), df+1,2 (-12), b+1:1,2 (-14). -15+ Launch Punishable: Slide fc df,d,df+3 (-23 Stagger Low Launch!), d+4,4 (-16 Launch), HMS 3 sweep (-18 Launch).",
+      "bait_duck_interrupt_ur": "1,2,4 and Acid Rain have high extensions: duck under them and launch with ws+2! Block Slide with db and hopkick.",
+      "parry_vulnerabilities_ur": "Lee has a b+1+2 punch parry. Crush his parry with Knees (Bryan f+3, Lars b+4) or Elbows."
     }
   },
   {
@@ -627,6 +763,11 @@
     "avatar": "/assets/avatars/xiaoyu.jpg",
     "height": "159 cm (5'2.5\")",
     "weight": "45 kg",
+    "job_lore": "Chinese martial artist dedicated to saving Jin from his self-destructive path of vengeance.",
+    "poking_buttons": "Poking Buttons: 1, d+2 (Fast low), df+1, b+1 (Fast 8-frame elbow check), f+1+2.",
+    "pressure_moves": "Pressure Moves: Art of Phoenix (AOP - d+1+2: ducks under mids), Rain Dance Stance (RDS - b+3+4), f,f+3 into RDS.",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: AOP 4 (Low sweep) or RDS d+3. Mid: AOP 1+2 (Mid launcher) or RDS 4 (Tornado launcher).",
+    "trap_setup": "The Trap Setup: Enter AOP under opponent's mid checks. When their move whiffs overhead, launch with AOP uf+3 or AOP 1+2.",
     "job_lore_ur": "High School / College Student & Amusement Park enthusiast; Jin ko bachane ke liye safar par nikalti hai.",
     "poking_buttons_ur": "Poking Buttons: df+1 (Turns her Backturned BT), d+3 (Fast low), b+2 (Into Rain Dance RDS), 1,d+2.",
     "pressure_moves_ur": "Pressure Moves: Art of Phoenix (AOP - d+1+2) – Yeh stance Xiaoyu ko itna neeche jhuka deti hai ke agle bande ke Mids bhi miss ho jate hain! f,f+3 into RDS.",
@@ -634,10 +775,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): Heat on karein aur b+3 ya f+2,1,2 se Hypnotist (HYP) stance mein jayein. Do कदम chalne ke baad HYP 2 (Mid) aur HYP 3 (Low) ka unreactable 50/50 chalayein!",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) AOP aur Rain Dance (RDS) ke sideway evasion ko track karta hai. Range 2 par safe spacing rakhein.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1 (-12 on bad spacing), 3,4 (-13). -15+ Launch: AOP 4 sweep (-17 Launch), RDS 4 (-16 Launch), Cali Roll ws+2 (-15 Launch).",
-      "bait_duck_interrupt_ur": "AOP (d+1+2) mein Xiaoyu ke niche Mids bhi nikal jate hain! AOP todne ke liye GROUND-HITTING MIDS (jaise d+2, db+2, ya low sweeps) marein.",
-      "parry_vulnerabilities_ur": "Xiaoyu ke paas b+1 parry aur evasive stances hain. Us par high punches mat phenkein; Knees aur heavy mids use karein."
+      "weak_side_detail": "Sidestep Left (SSL) tracks Xiaoyu's evasive lateral shifts. Maintain Range 2 spacing.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1 (-12 on poor spacing), 3,4 (-13). -15+ Launch Punishable: AOP 4 sweep (-17 Launch), RDS 4 (-16 Launch), Cali Roll ws+2 (-15 Launch).",
+      "bait_duck_interrupt": "AOP ducks under standard mids! Beat AOP by using GROUND-HITTING MIDS (e.g. d+2, db+2, or stomps).",
+      "parry_vulnerabilities": "Xiaoyu has evasive b+1 parries. Do not throw high punches; use Knees and heavy mids.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) tracks Xiaoyu's evasive lateral shifts. Maintain Range 2 spacing.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1 (-12 on poor spacing), 3,4 (-13). -15+ Launch Punishable: AOP 4 sweep (-17 Launch), RDS 4 (-16 Launch), Cali Roll ws+2 (-15 Launch).",
+      "bait_duck_interrupt_ur": "AOP ducks under standard mids! Beat AOP by using GROUND-HITTING MIDS (e.g. d+2, db+2, or stomps).",
+      "parry_vulnerabilities_ur": "Xiaoyu has evasive b+1 parries. Do not throw high punches; use Knees and heavy mids."
     }
   },
   {
@@ -655,6 +800,11 @@
     "avatar": "/assets/avatars/hwoarang.jpg",
     "height": "184 cm (6'0\")",
     "weight": "80 kg",
+    "job_lore": "Korean Taekwondo master and eternal rival to Jin Kazama, searching for him amidst the global conflict.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1 (Mid check), d+3,4 (Low-high into Flamingo), b+3 (Safe keepout launcher on whiff).",
+    "pressure_moves": "Pressure Moves: Left Flamingo (LFS) and Right Flamingo (RFS), Peacekeeper (f,f+4: + on block), Backlash (3~4: armored high launcher).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: RFS d+4,3 (Sweeping low kick) or d+3,4. Mid: RFS 2 or LFS 3+4 (Power mid launcher).",
+    "trap_setup": "The Trap Setup: Land d+3,4 into Right Flamingo, then mix up RFS 2 (Mid safe) with RFS d+4,3 (Low).",
     "job_lore_ur": "Street Gang Leader & Taekwondo Fighter; South Korean military se chhup kar Jin se larne aata hai.",
     "poking_buttons_ur": "Poking Buttons: 1,2,3 (Into Left Flamingo LFS), 1,2,4 (Into Right Flamingo RFS), df+1,3 (Safe mid-high into LFS), d+3,4 (Low-high natural combo into +14 on hit!).",
     "pressure_moves_ur": "Pressure Moves: Right Kick (4 / RFF) aur Flamingo Stances (LFS / RFS). RFS f+4 (8-frame fast double kick jo block par +4 deti hai!), RFS df+4 (Safe mid CH launcher).",
@@ -662,10 +812,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): d+3,4 -> RFS 2 (+5 on block!) -> RFF df+4~f (+7 on hit) -> RFS d+4,3 ya RFS b+3. Agle bande ko pata hi nahi chalega kab High aa raha hai, kab Low, aur kab Mid!",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Right Flamingo (RFS) aur Peacekeeper ko evade karta hai. Left Flamingo par sidestep na karein balke duck karein.",
-      "minus_punishable_moves_ur": "-10 to -14: b+3 (-19 on whiff, -12 on block), f+1+2 (-13). -15+ Launch: d+4,4 (-15 Launch), RFS d+4,3 (-16 Launch), backlash 3~4 (-10 pushback).",
-      "bait_duck_interrupt_ur": "d+3,4 ka pehla hit Low aur 2nd hit HIGH hai! Pehle hit ke baad foran DUCK karein aur ws+2 se launch kar dein! Flamingo loop mein DICKJAB (db+1) lagayein.",
-      "parry_vulnerabilities_ur": "Hwoarang ke d+3,4 ke low ko df se LOW PARRY karein. Uske sab kicks standard sabaki aur parries se pakray ja sakte hain."
+      "weak_side_detail": "Sidestep Left (SSL) evades Right Flamingo mix-ups and Peacekeeper f,f+4. Duck Left Flamingo moves.",
+      "minus_punishable_moves": "-10 to -14 Punishable: b+3 (-12 on block, -19 on whiff), f+1+2 (-13). -15+ Launch Punishable: d+4,4 (-15 Launch), RFS d+4,3 (-16 Launch), Backlash 3~4 (-10 duckable high).",
+      "bait_duck_interrupt": "The second hit of d+3,4 is HIGH! Duck under the 2nd kick and launch with ws+2! Interrupt Flamingo flow with a DICKJAB (db+1).",
+      "parry_vulnerabilities": "Low parry the 1st hit of d+3,4 with df. Standard kick parries catch his telegraphed high kicks.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Right Flamingo mix-ups and Peacekeeper f,f+4. Duck Left Flamingo moves.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: b+3 (-12 on block, -19 on whiff), f+1+2 (-13). -15+ Launch Punishable: d+4,4 (-15 Launch), RFS d+4,3 (-16 Launch), Backlash 3~4 (-10 duckable high).",
+      "bait_duck_interrupt_ur": "The second hit of d+3,4 is HIGH! Duck under the 2nd kick and launch with ws+2! Interrupt Flamingo flow with a DICKJAB (db+1).",
+      "parry_vulnerabilities_ur": "Low parry the 1st hit of d+3,4 with df. Standard kick parries catch his telegraphed high kicks."
     }
   },
   {
@@ -683,6 +837,11 @@
     "avatar": "/assets/avatars/claudio.jpg",
     "height": "182 cm (6'0\")",
     "weight": "77 kg",
+    "job_lore": "Leader of the Archers of Sirius, an ancient order of exorcists allied with Jin to banish the Devil Gene.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1 (Fast mid check), b+3 (Safe knee), f+3 (Long range mid).",
+    "pressure_moves": "Pressure Moves: Superman Punch wr+2 (+6 on block into Starburst STB!), f+4 (Crouch-forcing mid: +4 on block).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: db+3 or db+4,3. Mid: STB db+1+2 (Guard Break!) or uf+4 (Premier hopkick).",
+    "trap_setup": "The Trap Setup: wr+2 into Starburst, then frame-trap with STB df+1+2 or Guard Break db+1+2.",
     "job_lore_ur": "Leader of the Archers of Sirius (Vatican se jura khufiya Exorcist group jo shaitano ka shikar karta hai).",
     "poking_buttons_ur": "Poking Buttons: b+1 (Homing mid knockdown), df+3,2, ss+4 (Low poke: +6 on hit!), 1,2.",
     "pressure_moves_ur": "Pressure Moves: Superman Punch (f,f,f+2 - +6 on block aur Starburst deta hai!), b+3 (Fast safe knee), f+4 (Crouch-forcing mid: +4 on block).",
@@ -690,10 +849,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): Door se f,f,f+2 marein. Agar woh duck kare toh uf+4 (Hopkick) ya b+1 (Mid) marein. Starburst milte hi STB f+1+2,1+2 ya STB db+1+2 (Guard Break) se free wall splat lein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) wr+2 (Superman Punch) aur running kicks ko pura whiff karwa deta hai. SSR mat karein kyunki b+1 track karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: b+3 (-13), df+1,2 (-13), f+2,2 (-12). -15+ Launch: Hopkick uf+4 (-13 heavy pushback), STB d+2,2 (-15 Launch), STB f+1+2,1+2 (-15 Launch).",
-      "bait_duck_interrupt_ur": "wr+2 agar door se aaye toh SSL kar ke piche se launcher marein. Starburst (STB) active ho toh db+1+2 guard break se bachne ke liye interrupt karein.",
-      "parry_vulnerabilities_ur": "Claudio ke paas koi reversal nahi hai. Uske superman punch wr+2 ko high punch parry (Steve b+1+2, Bryan b+1+2) se pakra ja sakta hai."
+      "weak_side_detail": "Sidestep Left (SSL) completely evades wr+2 Superman Punch and running attacks. Do not SSR due to b+1 tracking.",
+      "minus_punishable_moves": "-10 to -14 Punishable: b+3 (-13), df+1,2 (-13), f+2,2 (-12). -15+ Launch Punishable: Hopkick uf+4 (-13 pushback), STB d+2,2 (-15 Launch), STB f+1+2,1+2 (-15 Launch).",
+      "bait_duck_interrupt": "When wr+2 is blocked, duck under high follow-ups. Duck his Starburst guard break db+1+2 on reaction.",
+      "parry_vulnerabilities": "Claudio has no reversal. His wr+2 punch can be caught with high punch parries (Steve b+1+2, Bryan b+1+2).",
+      "weak_side_detail_ur": "Sidestep Left (SSL) completely evades wr+2 Superman Punch and running attacks. Do not SSR due to b+1 tracking.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: b+3 (-13), df+1,2 (-13), f+2,2 (-12). -15+ Launch Punishable: Hopkick uf+4 (-13 pushback), STB d+2,2 (-15 Launch), STB f+1+2,1+2 (-15 Launch).",
+      "bait_duck_interrupt_ur": "When wr+2 is blocked, duck under high follow-ups. Duck his Starburst guard break db+1+2 on reaction.",
+      "parry_vulnerabilities_ur": "Claudio has no reversal. His wr+2 punch can be caught with high punch parries (Steve b+1+2, Bryan b+1+2)."
     }
   },
   {
@@ -711,6 +874,11 @@
     "avatar": "/assets/avatars/zafina.jpg",
     "height": "170 cm (5'7\")",
     "weight": "53 kg",
+    "job_lore": "Ancient Egyptian astrologer who sealed the spirit of the demon Azazel in her cursed left arm.",
+    "poking_buttons": "Poking Buttons: 1, 3, df+1 (Mid check), db+3 (Low kick), b+1 (Mid check).",
+    "pressure_moves": "Pressure Moves: Scarecrow (SCR - 3+4), Tarantula (TRT - d+1+2), Mantis (MNT - d+3+4).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: TRT d+1+2 (Crawling low sweep) or SCR 4. Mid: SCR 2 or MNT 1 (Safe mid launcher).",
+    "trap_setup": "The Trap Setup: Crawl in Tarantula under highs and mids, then launch with TRT 2 or trip with TRT d+1+2.",
     "job_lore_ur": "Astrologer (Najoomi) & Ancient Tomb Guardian; apne bazu mein Azazel ko qaid rakhti hai.",
     "poking_buttons_ur": "Poking Buttons: df+1,4 / df+1,2, 1,3 (Into Scarecrow SCR), 1,4 (Into Tarantula TRT), db+3 (Into Mantis MNT).",
     "pressure_moves_ur": "Pressure Moves: f,f+3 (Plus on block mid into SCR!), f,f,f+3 (Plus into MNT), b+1+2 (Azazel claw long-range low!).",
@@ -718,10 +886,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): 1,3 ya d+3~d se Scarecrow ya Mantis mein jayein. SCR 4 (Armored mid launcher!) se button mashers ko saza dein aur SCR df+4 (Low) se blockers ko torein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Scarecrow (SCR) aur Tarantula (TRT) ke straight attacks ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,4 (-12), b+1 (-13). -15+ Launch: d+3 sweep (-17 Launch), TRT d+1+2 (-18 Launch), SCR 4 (-16 Launch).",
-      "bait_duck_interrupt_ur": "TRT stance mein zameen par crawl karti hai. Aise mein High punches bilkul miss ho jayenge; d+4 low stomps ya ground-hitting mids use karein.",
-      "parry_vulnerabilities_ur": "Azazel claw attacks unparryable hain! Normal claw punches parry nahi hotay is liye block kar ke punish karein."
+      "weak_side_detail": "Sidestep Left (SSL) evades Scarecrow and Tarantula forward lunges.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,4 (-12), b+1 (-13). -15+ Launch Punishable: d+3 sweep (-17 Launch), TRT d+1+2 (-18 Launch), SCR 4 (-16 Launch).",
+      "bait_duck_interrupt": "In Tarantula stance she crawls on the floor: high strikes whiff! Use low stomps (d+4) or ground-hitting mids.",
+      "parry_vulnerabilities": "Azazel cursed claw strikes cannot be parried. Block and punish accordingly.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Scarecrow and Tarantula forward lunges.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,4 (-12), b+1 (-13). -15+ Launch Punishable: d+3 sweep (-17 Launch), TRT d+1+2 (-18 Launch), SCR 4 (-16 Launch).",
+      "bait_duck_interrupt_ur": "In Tarantula stance she crawls on the floor: high strikes whiff! Use low stomps (d+4) or ground-hitting mids.",
+      "parry_vulnerabilities_ur": "Azazel cursed claw strikes cannot be parried. Block and punish accordingly."
     }
   },
   {
@@ -739,6 +911,11 @@
     "avatar": "/assets/avatars/victor.jpg",
     "height": "188 cm (6'2\")",
     "weight": "82 kg",
+    "job_lore": "French UN commander and founder of the Raven unit, wielding dual knives, high-tech katana, and pistols.",
+    "poking_buttons": "Poking Buttons: 1, 1, df+1,1 (Mid check string), d+4 (Low poke), f+1+2.",
+    "pressure_moves": "Pressure Moves: Iai Stance (IAI - 3+4), Pistol shot (qcf+2), wr+2 (+5 on block sword slash).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: db+4 (Sliding sword sweep) or IAI 4. Mid: IAI 2 (Safe mid launcher) or IAI 1+2.",
+    "trap_setup": "The Trap Setup: Fire pistol qcf+2 to condition standing block, then dash in with IAI 4 sweep or wr+2.",
     "job_lore_ur": "United Nations Independent Forces ka Founder aur Legend Spy; pehle French Navy Commando tha.",
     "poking_buttons_ur": "Poking Buttons: 1,1,2 (10f punish into Perfumer PRF), df+1, d+2 (Sword mid poke: 0 on block!), db+4 (Long range sword low CH launcher!).",
     "pressure_moves_ur": "Pressure Moves: f,f,f+2 (Running sword slash: +5 on block aur CH launcher!), 2,2,2 (Pistol string into Iai Stance IAI).",
@@ -746,10 +923,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): f,f,f+2 ya 1,2,1 (CH trap) chalayein. Jab opponent darr jaye, d+1+2 (Perfumer stance) -> PRF 2,2 se Iai Stance mein jaa kar IAI d+2 (Low) aur IAI 2 (Mid) ka mix-up lagayein.",
     "anti_guide": {
       "weak_side": "SSR",
-      "weak_side_detail_ur": "Sidestep Right (SSR) Victor ke pistol shots, Iai stance slashes aur wr+2 ko aasani se dodges karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,1 (-12), 2,2,2 (-13), 1+2 (-14). -15+ Launch: db+4 sword sweep (-18 Launch), IAI 4 (-16 Launch), teleport slash (-15 Launch).",
-      "bait_duck_interrupt_ur": "Pistol shots (qcf+2 ya string pistol) HIGH hotay hain: DUCK kar ke ws+2 launch karein! wr+2 block karne ke baad fake pressure ko dickjab karein.",
-      "parry_vulnerabilities_ur": "Victor ki TALWAAR (Sword) aur PISTOL normal parry aur low parry se deflect NAHI hotay! Unko sirf block kar ke punish karein."
+      "weak_side_detail": "Sidestep Right (SSR) evades pistol shots, Iai stance slashes, and wr+2 approach tools.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,1 (-12), 2,2,2 (-13), 1+2 (-14). -15+ Launch Punishable: db+4 sword sweep (-18 Launch), IAI 4 (-16 Launch), teleport slash (-15 Launch).",
+      "bait_duck_interrupt": "Pistol shots are HIGH: duck under them and launch with ws+2! Interrupt fake Iai stance transitions with a dickjab (db+1).",
+      "parry_vulnerabilities": "Victor's SWORD and PISTOLS CANNOT be low-parried or caught with normal reversals! Block and punish.",
+      "weak_side_detail_ur": "Sidestep Right (SSR) evades pistol shots, Iai stance slashes, and wr+2 approach tools.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,1 (-12), 2,2,2 (-13), 1+2 (-14). -15+ Launch Punishable: db+4 sword sweep (-18 Launch), IAI 4 (-16 Launch), teleport slash (-15 Launch).",
+      "bait_duck_interrupt_ur": "Pistol shots are HIGH: duck under them and launch with ws+2! Interrupt fake Iai stance transitions with a dickjab (db+1).",
+      "parry_vulnerabilities_ur": "Victor's SWORD and PISTOLS CANNOT be low-parried or caught with normal reversals! Block and punish."
     }
   },
   {
@@ -767,6 +948,11 @@
     "avatar": "/assets/avatars/raven.jpg",
     "height": "186 cm (6'1\")",
     "weight": "86 kg",
+    "job_lore": "Top-secret intelligence agent utilizing shadow clone ninjutsu to monitor the global clash between G-Corp and Yggdrasil.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1 (Mid check), db+4 (Low sweep), 4,1 (High-mid check).",
+    "pressure_moves": "Pressure Moves: Shadow Clone dash (qcf+1+2), Soul Regalia (Heat clone rushes), b+1 (Armored clone strike).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: db+4 (Sweep into tornado) or ws+1. Mid: uf+4 (Hopkick) or Hazan ws+2 (Mid launcher).",
+    "trap_setup": "The Trap Setup: Shadow clone teleport behind the opponent, forcing a quick high-low turn check.",
     "job_lore_ur": "Master Ninja & UN Intelligence Agent; Victor ke neeche kaam karta hai.",
     "poking_buttons_ur": "Poking Buttons: df+1 (-1 on block!), b+1 (Plus on block high into Backturned BT), db+2 (Mid check into BT), d+3 (Fast low).",
     "pressure_moves_ur": "Pressure Moves: Soul Zone (SZ - d+1+2 ya attacks ke baad ~f), f,f,f+3 (Plus on block knee).",
@@ -774,10 +960,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): db+2 ya b+1 mar kar peeth ghumayein (BT). Agar agla banda attack kare toh BT b+1+3 (Teleport Parry) ya BT 1+2 (Power Crush) marein; agar block kare toh BT d+3 (Low) aur BT 3+4 (Mid) se torein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) shadow clone gap-closers aur b+2 pokes ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), 4,1 (-13). -15+ Launch: db+4 sweep (-17 Launch), Hazan ws+1 (-15 Launch), teleport dive (-16 Launch).",
-      "bait_duck_interrupt_ur": "Clone attacks par ghabrayein mat; clones high hit hotay hain jinko duck kiya ja sakta hai. Teleport dekh kar 1 jab se float combo lein.",
-      "parry_vulnerabilities_ur": "Raven ke paas b+1+2 shadow clone substitution parry hai. Multi-hit strings na lagayein, single heavy moves lagayein."
+      "weak_side_detail": "Sidestep Left (SSL) evades shadow clone rushes and linear teleport strikes.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), 4,1 (-13). -15+ Launch Punishable: db+4 sweep (-17 Launch), Hazan ws+1 (-15 Launch), teleport dive (-16 Launch).",
+      "bait_duck_interrupt": "Clone strikes have high properties: duck under clone teleports and float him out of the air with 1 jabs.",
+      "parry_vulnerabilities": "Raven has a b+1+2 shadow substitution parry. Avoid multi-hit strings; rely on single heavy hits.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades shadow clone rushes and linear teleport strikes.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), 4,1 (-13). -15+ Launch Punishable: db+4 sweep (-17 Launch), Hazan ws+1 (-15 Launch), teleport dive (-16 Launch).",
+      "bait_duck_interrupt_ur": "Clone strikes have high properties: duck under clone teleports and float him out of the air with 1 jabs.",
+      "parry_vulnerabilities_ur": "Raven has a b+1+2 shadow substitution parry. Avoid multi-hit strings; rely on single heavy hits."
     }
   },
   {
@@ -795,6 +985,11 @@
     "avatar": "/assets/avatars/alisa.jpg",
     "height": "165 cm (5'5\")",
     "weight": "~63 kg",
+    "job_lore": "Android combatant built by Dr. Bosconovitch; loyal bodyguard to Jin and Lars equipped with jet thrusters and chainsaws.",
+    "poking_buttons": "Poking Buttons: 1, 1, df+1,1 (Mid check), d+3 (Low poke), b+1 (Homing mid), wr+2 (+ on block thruster).",
+    "pressure_moves": "Pressure Moves: Dual Chainsaws (DES - 1+2), wr+3,4 (Flying dive kicks: + on block), f+1+2 (Armored thrust).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: db+3 (Low sweep) or DES d+1. Mid: DES f+1 (+3) or DES f+1+2 (Guard crush mid).",
+    "trap_setup": "The Trap Setup: Pin opponent with DES f+1 into DES d+1 low shredding. Without pushback, they cannot escape.",
     "job_lore_ur": "Dr. Bosconovitch ki banayi hui Military Android; Jin ko protect karne ke liye banayi gayi thi magar ab Lars ke sath hai.",
     "poking_buttons_ur": "Poking Buttons: df+1 (With extensions df+1,1,2 aur df+1,4), db+3 (Long range low poke), b+1 (Crouch-inducing mid), f+2 (into Chainsaws!).",
     "pressure_moves_ur": "Pressure Moves: Destructive Form (DES - Chainsaws - d+1+2). f,f,f+2 (+6 on block into f+1+2 guaranteed!).",
@@ -802,10 +997,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): Heat on karein aur f+2,1+2 ya 1,1 ke baad Chainsaws (DES) nikal lein. Ab DES f+1 (High +3), DES d+1 (Low), aur DES f+1+2 (Mid) baar-baar marein—block karte-karte hi agle ki life khatam ho jayegi!\nC. G Corporation & Rivals",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) rocket punches, b+1, aur wr+2 ko evade karta hai. SSR par DES chainsaw clip karti hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,1 (-12), b+4,4 (-13). -15+ Launch: db+3 sweep (-17 Launch), fly 3+4 dive (-18 Launch), DES d+1 (-16 Launch).",
-      "bait_duck_interrupt_ur": "Rocket punch 1+2 high hai: duck kar ke ws launch marein! Chainsaw (DES) mein f+1 block kar ke dickjab (db+1) se chainsaw band karwayein.",
-      "parry_vulnerabilities_ur": "Alisa ki CHAINSAWS (DES) normal parry se deflect nahi hotin! Unko parry karne ki koshish mat karein, armor move ya power crush se torein."
+      "weak_side_detail": "Sidestep Left (SSL) evades rocket punches, b+1, and wr+2. Avoid SSR against chainsaw mode.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,1 (-12), b+4,4 (-13). -15+ Launch Punishable: db+3 sweep (-17 Launch), fly 3+4 dive (-18 Launch), DES d+1 (-16 Launch).",
+      "bait_duck_interrupt": "Rocket punch (1+2) is high: duck and launch with ws+2! Input a dickjab (db+1) against chainsaw pokes to break her DES stance.",
+      "parry_vulnerabilities": "Alisa's CHAINSAWS CANNOT be parried! Do not attempt reversals; use Power Crush armor moves to disrupt her flow.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades rocket punches, b+1, and wr+2. Avoid SSR against chainsaw mode.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,1 (-12), b+4,4 (-13). -15+ Launch Punishable: db+3 sweep (-17 Launch), fly 3+4 dive (-18 Launch), DES d+1 (-16 Launch).",
+      "bait_duck_interrupt_ur": "Rocket punch (1+2) is high: duck and launch with ws+2! Input a dickjab (db+1) against chainsaw pokes to break her DES stance.",
+      "parry_vulnerabilities_ur": "Alisa's CHAINSAWS CANNOT be parried! Do not attempt reversals; use Power Crush armor moves to disrupt her flow."
     }
   },
   {
@@ -823,6 +1022,11 @@
     "avatar": "/assets/avatars/nina.jpg",
     "height": "174 cm (5'8.5\")",
     "weight": "57 kg",
+    "job_lore": "Legendary Irish assassin and former commander of G-Corporation's forces, armed with dual suppressed handguns.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1,2 (Mid check string), d+4,1 (Low-high poke), b+1 (Safe homing check).",
+    "pressure_moves": "Pressure Moves: Hayashida Step (qcb), Butterfly loops (uf+4,3), Wipeout cancels (db+3), qcf+1 (+ on block high).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: d+3,2 or db+3 (Wipeout low sweep). Mid: df+3,2 (Mid launcher) or geisha roll 1+2.",
+    "trap_setup": "The Trap Setup: Continuous Hayashida cancels into df+1,2. If opponent tries to press, counter-hit with b+1.",
     "job_lore_ur": "World-Class Assassin & G Corporation Commander; Anna Williams ki bari behen aur Steve Fox ki biological maa.",
     "poking_buttons_ur": "Poking Buttons: 1,2 (1,2,1,2 string), df+1,2 (Jab cancelable into sidestep df+1,2~u/d), d+3,4,3 (Low-high-mid string: +3 on block!).",
     "pressure_moves_ur": "Pressure Moves: Sidestep 1 Cancel (ss+1~b~u/d) – Yeh block par +10 tak advantage deta hai! f,f,f+1+2 (+4 on block).",
@@ -830,10 +1034,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): Bilkul qareeb chipak kar df+1,2 aur d+4,1 (Low-high) spam karein. Jab woh high duck karne ki koshish kare, df+2 (Mid launcher) ya f+1+2 (Armor) mar dein.",
     "anti_guide": {
       "weak_side": "SSR",
-      "weak_side_detail_ur": "Sidestep Right (SSR) Hayashida step aur df+1,2 ko evade karta hai. Duck d+4,1 high string.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), f+1+2 (-13). -15+ Launch: d+3,2 (-15 Launch), wipeout db+3 (-17 Launch), Geisha roll sweep (-18 Launch).",
-      "bait_duck_interrupt_ur": "d+4,1 string ka doosra hit High hai: duck kar ke ws+2 launcher marein! Hayashida cancel pressure ko dickjab (db+1) se interrupt karein.",
-      "parry_vulnerabilities_ur": "Nina ke paas b+1+3 / b+2+4 reversal hai. Usay todne ke liye Paul df+1 elbow, Bryan f+3 knee, ya Feng b+1+2 headbutt marein."
+      "weak_side_detail": "Sidestep Right (SSR) evades Hayashida step cancels and df+1,2 strings.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), f+1+2 (-13). -15+ Launch Punishable: d+3,2 (-15 Launch), Wipeout db+3 (-17 Launch), geisha roll sweep (-18 Launch).",
+      "bait_duck_interrupt": "The second hit of d+4,1 is HIGH! Duck under it and launch with ws+2. Interrupt Hayashida cancels with a dickjab (db+1).",
+      "parry_vulnerabilities": "Nina has a standard b+1+3 / b+2+4 reversal. Break her reversal using Paul's df+1 elbow, Bryan's f+3 knee, or Feng's b+1+2 headbutt.",
+      "weak_side_detail_ur": "Sidestep Right (SSR) evades Hayashida step cancels and df+1,2 strings.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), f+1+2 (-13). -15+ Launch Punishable: d+3,2 (-15 Launch), Wipeout db+3 (-17 Launch), geisha roll sweep (-18 Launch).",
+      "bait_duck_interrupt_ur": "The second hit of d+4,1 is HIGH! Duck under it and launch with ws+2. Interrupt Hayashida cancels with a dickjab (db+1).",
+      "parry_vulnerabilities_ur": "Nina has a standard b+1+3 / b+2+4 reversal. Break her reversal using Paul's df+1 elbow, Bryan's f+3 knee, or Feng's b+1+2 headbutt."
     }
   },
   {
@@ -851,6 +1059,11 @@
     "avatar": "/assets/avatars/jack-8.jpg",
     "height": "240 cm (7'10\")",
     "weight": "222 kg",
+    "job_lore": "G-Corporation's flagship military cybernetic combatant, overhauled with heavy railguns and hydraulic thrusters.",
+    "poking_buttons": "Poking Buttons: 1, 1, df+1,2 (Mid check), db+1 (Fast crouching low punch), ff+1 (Long reach mid).",
+    "pressure_moves": "Pressure Moves: Gamma Howl (GMH - 3+4), GMH 4 (+11 Guard Break!), f+1+2 (Armored double punch).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: db+2 (Machine gun low sweep) or GMH 3. Mid: GMH 1 (Mid launcher) or GMH 2.",
+    "trap_setup": "The Trap Setup: At the wall, input GMH 4 (+11 Guard Break) for guaranteed follow-up punches and wall re-splats.",
     "job_lore_ur": "Heavy Super-Killing Robot; Jane ki hifazat aur G-Corp ki front-line tabahi ke liye banaya gaya.",
     "poking_buttons_ur": "Poking Buttons: 2 (11f long-range jab!), df+1 (Mid), db+1 (12-frame machine-gun low poke: +2 on hit!), fc db+1 (Crouching low: +6 on hit!).",
     "pressure_moves_ur": "Pressure Moves: Gamma Howl Stance (GMH - 3+4). b+1,2~d या f+3~d se GMH mein jayein.",
@@ -858,10 +1071,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): db+1 -> fc db+1 (+6 on hit) -> ws+4 ya fc df+2,d,f+1 chalayein. Deewar ke paas f+3~d into GMH 4 (Guard Break) aur GMH 1 (Mid) ka un-escapable loop lagayein!",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Gamma Howl (GMH) lunges, db+1, aur ff+1 ko evade karta hai. Jack ka hit-box bara hai is liye wide combos lagte hain.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), b+1,2 (-13), f+1+2 (-14). -15+ Launch: db+2 machine gun sweep (-18 Launch), GMH 2 (-16 Launch), Megaton punch (-17 Launch).",
-      "bait_duck_interrupt_ur": "GMH 4 guard break (+11) se bachne ke liye duck karein aur ws launcher marein! db+1 fast low punch ko df se Low Parry karein.",
-      "parry_vulnerabilities_ur": "Jack-8 ke heavy punches normal parries se deflect ho sakte hain, lekin uske rocket arm moves parry nahi hotay."
+      "weak_side_detail": "Sidestep Left (SSL) evades Gamma Howl lunges, db+1, and ff+1. Jack has a massive hurtbox; utilize maximum juggles.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), b+1,2 (-13), f+1+2 (-14). -15+ Launch Punishable: db+2 sweep (-18 Launch), GMH 2 (-16 Launch), Megaton punch (-17 Launch).",
+      "bait_duck_interrupt": "Duck under GMH 4 guard break and launch with ws+2! Low parry db+1 low punch with df.",
+      "parry_vulnerabilities": "Jack's brute punches can be parried, but his hydraulic rocket thrusts pierce through reversals.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Gamma Howl lunges, db+1, and ff+1. Jack has a massive hurtbox; utilize maximum juggles.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), b+1,2 (-13), f+1+2 (-14). -15+ Launch Punishable: db+2 sweep (-18 Launch), GMH 2 (-16 Launch), Megaton punch (-17 Launch).",
+      "bait_duck_interrupt_ur": "Duck under GMH 4 guard break and launch with ws+2! Low parry db+1 low punch with df.",
+      "parry_vulnerabilities_ur": "Jack's brute punches can be parried, but his hydraulic rocket thrusts pierce through reversals."
     }
   },
   {
@@ -879,6 +1096,11 @@
     "avatar": "/assets/avatars/feng.jpg",
     "height": "187 cm (6'1.5\")",
     "weight": "88 kg",
+    "job_lore": "Chinese Kempo master seeking ancient scrolls to attain the ultimate fighting state of the God Fist Dragon.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1 (Tracks right, fast mid check), b+1 (i10 backfist check), d+2 (High-crushing low), db+3.",
+    "pressure_moves": "Pressure Moves: Kenpo Step (b+3+4), Shifting Clouds (STC - f+3+4), qcf+1 (+ on block palm strike).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: db+4 (Sweeping low kick) or STC 4. Mid: STC 1 or f+3,4 (Safe mid launcher).",
+    "trap_setup": "The Trap Setup: Retreat with Kenpo Step. When opponent whiffs their attack in pursuit, launch with Kenpo 2.",
     "job_lore_ur": "God Fist Kenpo Master; apne hi ustad ko qatal kar ke duniya ke har martial artist ko harane nikla hai.",
     "poking_buttons_ur": "Poking Buttons: df+1 (0 on block! Agla banda jab kare toh b+1 CH lagta hai!), b+4 (12f tracking mid!), d+2 (Fast low), db+3 (16f long-range high-crushing low!).",
     "pressure_moves_ur": "Pressure Moves: Shifting Clouds (STC - f+3+4), Kenpo Step (KNP - b+3+4), uf+2 (Evasive side-step punch).",
@@ -886,10 +1108,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): df+1 marein (0 on block) aur foran b+1 (10f CH palm) daba dein—agar agle ne button chhua bhi toh zameen par girega aur b+1+2 (Shoulder) free milega! Phir db+3 (Low) aur df+3 (Mid launcher) se mix karein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Kenpo step pokes, b+1, aur STC mix-up ko evade karta hai. Lekin Feng ka df+1 right track karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: b+1 (-12 punish), df+2,2 (-13), 1+2 (-14). -15+ Launch: db+4 sweep (-17 Launch), STC 4 sweep (-18 Launch), uf+4 hopkick (-13).",
-      "bait_duck_interrupt_ur": "Feng ke b+1 fast elbow ko block kar ke 12f punish dein. db+4 sweep ko db block kar ke 80+ damage ka launch karein. d+2 low poke ko df se Low Parry karein.",
-      "parry_vulnerabilities_ur": "Feng ke paas 1+2 Sabaki parry aur b+1+2 parry hai. Feng ki parry todne ke liye Knees (Bryan f+3, Lars b+4) ya Weapons use karein."
+      "weak_side_detail": "Sidestep Left (SSL) evades Kenpo lunges, b+1, and STC mix-ups. Beware of df+1 which tracks right.",
+      "minus_punishable_moves": "-10 to -14 Punishable: b+1 (-12 punish), df+2,2 (-13), 1+2 (-14). -15+ Launch Punishable: db+4 sweep (-17 Launch), STC 4 sweep (-18 Launch), hopkick uf+4 (-13).",
+      "bait_duck_interrupt": "Block db+4 sweep with db and launch for 80+ damage! Low parry d+2 low poke with df.",
+      "parry_vulnerabilities": "Feng has 1+2 Sabaki and b+1+2 parries. Beat his parries with Knees (Bryan f+3, Lars b+4) or Weapons.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Kenpo lunges, b+1, and STC mix-ups. Beware of df+1 which tracks right.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: b+1 (-12 punish), df+2,2 (-13), 1+2 (-14). -15+ Launch Punishable: db+4 sweep (-17 Launch), STC 4 sweep (-18 Launch), hopkick uf+4 (-13).",
+      "bait_duck_interrupt_ur": "Block db+4 sweep with db and launch for 80+ damage! Low parry d+2 low poke with df.",
+      "parry_vulnerabilities_ur": "Feng has 1+2 Sabaki and b+1+2 parries. Beat his parries with Knees (Bryan f+3, Lars b+4) or Weapons."
     }
   },
   {
@@ -907,6 +1133,11 @@
     "avatar": "/assets/avatars/dragunov.jpg",
     "height": "188 cm (6'2\")",
     "weight": "86 kg",
+    "job_lore": "Russian Spetsnaz commander known as the 'White Angel of Death', ruthless and silent in neutral control.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1,4 (Mid check string), d+2 (Premier high-crushing low poke), b+4,3 (Mid-high string).",
+    "pressure_moves": "Pressure Moves: Russian Assault wr+2 (+6 on block!), Sneak Stance (SNK - qcf), qcf+4 (Heavy plus-frame mid kick).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: d+2 or SNK 4 (Crouching low sweep). Mid: qcf+1 or qcf+2 (Safe mid launcher).",
+    "trap_setup": "The Trap Setup: Land wr+2 (+6 on block). If opponent presses any button, Counter-Hit with df+2 or throw with tackle.",
     "job_lore_ur": "Russian Spetsnaz Officer (\"The White Angel of Death\"); war-zone se chhutti le kar apne shauq poore kar raha hai.",
     "poking_buttons_ur": "Poking Buttons: 1,2,1 (CH launcher), df+1 (With df+1,4 extension), d+2 (Hatchet Low: -1 on hit magar dono crouch mein jate hain!), db+3+4 (Heavy low: +7 on hit!).",
     "pressure_moves_ur": "Pressure Moves: Running 2 (f,f,f+2 - +4 on block aur CH launcher!), b+1+2 (+6 on block axe handle!), Sneak Stance (SNK - qcf).",
@@ -914,10 +1145,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): f,f,f+2 ya df+3+4~df se Sneak (SNK) mein jayein -> SNK 4 marein (+7 on block!). Ab fc df+1,4 (Low-Mid into SNK) ya ws+1+2 (Mid wall-splat) marein!",
     "anti_guide": {
       "weak_side": "SSR",
-      "weak_side_detail_ur": "Sidestep Right (SSR) Dragunov ke khilaf zaroori hai! wr+2 (Russian Assault), sneak cancels, aur qcf+4 SSR par whiff ho jate hain. SSL par clip ho jayenge.",
-      "minus_punishable_moves_ur": "-10 to -14: 4,1 (-12), df+1,4 (-13), b+4,3 (-14). -15+ Launch: d+2 low poke (-14 crouching punish), qcf+2 (-15 Launch), snake edge db+3 (-26 Launch).",
-      "bait_duck_interrupt_ur": "wr+2 block hone ke baad +6 hota hai: ghalti se bhi button mat dabayein! Neutral block rakhein ya dickjab se sneak cancel torein.",
-      "parry_vulnerabilities_ur": "Dragunov ke paas b+1+3 / b+2+4 reversal hai. Usay todne ke liye Elbows (Paul df+1) ya Knees marein. Dragunov ke wr+2 ko high punch parry kiya ja sakta hai."
+      "weak_side_detail": "Sidestep Right (SSR) is MANDATORY against Dragunov! wr+2, Sneak cancels, and qcf+4 all whiff cleanly against SSR. Do NOT SSL.",
+      "minus_punishable_moves": "-10 to -14 Punishable: 4,1 (-12), df+1,4 (-13), b+4,3 (-14). -15+ Launch Punishable: d+2 (-14 crouching punish), qcf+2 (-15 Launch), snake edge db+3 (-26 Launch).",
+      "bait_duck_interrupt": "Never press buttons after blocking wr+2 (+6). Hold neutral guard or interrupt Sneak stance cancels with a dickjab (db+1).",
+      "parry_vulnerabilities": "Dragunov has a b+1+3 reversal. Break it using Elbows (Paul df+1) or Knees. wr+2 can be caught with high punch parries.",
+      "weak_side_detail_ur": "Sidestep Right (SSR) is MANDATORY against Dragunov! wr+2, Sneak cancels, and qcf+4 all whiff cleanly against SSR. Do NOT SSL.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: 4,1 (-12), df+1,4 (-13), b+4,3 (-14). -15+ Launch Punishable: d+2 (-14 crouching punish), qcf+2 (-15 Launch), snake edge db+3 (-26 Launch).",
+      "bait_duck_interrupt_ur": "Never press buttons after blocking wr+2 (+6). Hold neutral guard or interrupt Sneak stance cancels with a dickjab (db+1).",
+      "parry_vulnerabilities_ur": "Dragunov has a b+1+3 reversal. Break it using Elbows (Paul df+1) or Knees. wr+2 can be caught with high punch parries."
     }
   },
   {
@@ -935,6 +1170,11 @@
     "avatar": "/assets/avatars/bryan.jpg",
     "height": "186 cm (6'1\")",
     "weight": "90 kg",
+    "job_lore": "Cybernetic sociopath and former police detective turned anarchist, fueled by perpetual kinetic generators.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1,1,1 (Mid check), 3+4 (Premier Range 2 keepout kick), d+2 (Safe mid check), b+1 (+3 on block).",
+    "pressure_moves": "Pressure Moves: Mach Punch (ff+2), b+1 (+3 on block!), Hatchet Kick (qcb+3: +5 on hit low!), Taunt (1+3+4).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: Hatchet Kick qcb+3 or Snake Edge df+3. Mid: Jet Upper fb+2 (i14 launcher) or f+3 (Knee).",
+    "trap_setup": "The Trap Setup: Taunt (1+3+4) against walled opponents grants unblockable +16 frames into free Jet Upper or Mach Punch.",
     "job_lore_ur": "Former Interpol Officer turned Zombie Cyborg (Dr. Abel & Bosconovitch ne banaya); sirf tabahi aur khoon-kharaba chahta hai.",
     "poking_buttons_ur": "Poking Buttons: df+2,1 (Mid-high), df+1,1,1,1,2 (Machine gun mid checks), d+4 (Long range low), db+3 (High-crushing low).",
     "pressure_moves_ur": "Pressure Moves: b+1 (Chop mid: +4 on block aur CH launcher!), qcb+1 (Sway high: +5 on block aur CH launcher!), Hatchet Kick (qcb+3 - +5 on hit low!).",
@@ -942,10 +1182,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): qcb+3 (Low) ya b+1 (Block par +4) marein, aur foran f+3 (Knee) daba dein. Agar agla banda hila, toh f+3 CH launch karega aur deewar par Taunt (1+3+4) se khel khatam!",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Bryan ke Mach Punch (ff+2), 3+4 keepout, aur b+1 ko evade karta hai. SSR par Hatchet kick qcb+3 clip karti hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,1,1,1 (-13), f+4,1 (-13), 1+2 (-14). -15+ Launch: Snake Edge df+3 (-26 Massive Launch!), qcb+4 (-15 Launch), Jet Upper fb+2 (-14 on block).",
-      "bait_duck_interrupt_ur": "Snake Edge (df+3) dekhte hi db se BLOCK karein aur 90 damage ka full combo launch karein! Taunt (1+3+4) dekh kar delay wake-up karein ya jab se interrupt karein.",
-      "parry_vulnerabilities_ur": "Bryan ke paas b+1+2 punch parry hai jo mach punch counter deti hai. Us par punches mat marein, Knees (f+3) aur Kicks use karein."
+      "weak_side_detail": "Sidestep Left (SSL) evades Mach Punch ff+2, 3+4 keepout, and b+1. Beware of Hatchet Kick qcb+3 which clips SSR.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,1,1,1 (-13), f+4,1 (-13), 1+2 (-14). -15+ Launch Punishable: Snake Edge df+3 (-26 Stagger Low Launch!), qcb+4 (-15 Launch), Jet Upper fb+2 (-14 on block).",
+      "bait_duck_interrupt": "Snake Edge (df+3) is slow and reactable: block with db and launch for 90+ damage! Stay grounded against Taunt setups.",
+      "parry_vulnerabilities": "Bryan has a b+1+2 punch parry that counters with Mach Punch. Do NOT throw punches at him; use Knees (f+3) and Kicks.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Mach Punch ff+2, 3+4 keepout, and b+1. Beware of Hatchet Kick qcb+3 which clips SSR.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,1,1,1 (-13), f+4,1 (-13), 1+2 (-14). -15+ Launch Punishable: Snake Edge df+3 (-26 Stagger Low Launch!), qcb+4 (-15 Launch), Jet Upper fb+2 (-14 on block).",
+      "bait_duck_interrupt_ur": "Snake Edge (df+3) is slow and reactable: block with db and launch for 90+ damage! Stay grounded against Taunt setups.",
+      "parry_vulnerabilities_ur": "Bryan has a b+1+2 punch parry that counters with Mach Punch. Do NOT throw punches at him; use Knees (f+3) and Kicks."
     }
   },
   {
@@ -963,6 +1207,11 @@
     "avatar": "/assets/avatars/azucena.jpg",
     "height": "170 cm (5'7\")",
     "weight": "57 kg",
+    "job_lore": "Peruvian MMA champion and 'Coffee Queen', using unorthodox dance-like evasions to promote her family farm.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1,4 (Mid check string), d+3 (Low kick), 1,2,4, f+3 (Mid poke).",
+    "pressure_moves": "Pressure Moves: Running coffee charge wr+3,2 (+ on block), Libertador Stance (LIB - f+3+4: auto-evades highs/lows).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: db+3 or LIB 4 (Low sweep). Mid: LIB 1+2 (Safe mid launcher) or LIB 2.",
+    "trap_setup": "The Trap Setup: Enter Libertador stance. When opponent instinctively throws a jab or low, auto-dodge and launch with LIB 1+2.",
     "job_lore_ur": "MMA Champion, Model & Coffee Farm Owner (Ortiz Farm); apni coffee duniya bhar mein bechne ke liye larti hai.",
     "poking_buttons_ur": "Poking Buttons: df+1,4 (Mid-high with dangerous df+1,4,1 CH extension!), 1,1 (Hit-confirmable into Libertador LIB), db+4 (Low), db+3 (Plus low into Backturned BT).",
     "pressure_moves_ur": "Pressure Moves: Libertador Stance (LIB - f+3+4) – Is stance mein Highs aur Lows khud-ba-khud miss ho jate hain! f,f,f+3,2 (+2 on block).",
@@ -970,10 +1219,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): db+3 (Low hit -> BT) -> BT 3 (Low) ya BT 1,2 (LIB stance). Jab aap LIB mein hon aur agla banda jab ya low mare, Azucena hans kar dodge karegi aur aapko free counter launch milega!\nD. The Classic Tournament Veterans",
     "anti_guide": {
       "weak_side": "SSR",
-      "weak_side_detail_ur": "Sidestep Right (SSR) wr+3,2 running mix-up aur Libertador pokes ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,4 (-12), 1,2,4 (-13). -15+ Launch: db+3 sweep (-17 Launch), LIB 4 low sweep (-16 Launch), hopkick uf+4 (-13).",
-      "bait_duck_interrupt_ur": "wr+3,2 ka dusra hit high hai: DUCK kar ke ws+2 launcher marein! Libertador (LIB) stance mein auto-dodge hota hai: aise mein MIDS ya ELBOWS marein.",
-      "parry_vulnerabilities_ur": "Azucena Libertador stance mein khari ho kar Highs aur Lows auto-parry karti hai! Stance todne ke liye sirf MID BUTTONS (df+1, df+2) marein."
+      "weak_side_detail": "Sidestep Right (SSR) evades wr+3,2 running mix-ups and Libertador pokes.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,4 (-12), 1,2,4 (-13). -15+ Launch Punishable: db+3 sweep (-17 Launch), LIB 4 sweep (-16 Launch), hopkick uf+4 (-13).",
+      "bait_duck_interrupt": "The 2nd hit of wr+3,2 is HIGH! Duck under it and launch with ws+2! Use MID BUTTONS (df+1, df+2) against Libertador stance.",
+      "parry_vulnerabilities": "In Libertador stance, Azucena automatically parries Highs and Lows! ONLY attack her stance with MIDS or ELBOWS.",
+      "weak_side_detail_ur": "Sidestep Right (SSR) evades wr+3,2 running mix-ups and Libertador pokes.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,4 (-12), 1,2,4 (-13). -15+ Launch Punishable: db+3 sweep (-17 Launch), LIB 4 sweep (-16 Launch), hopkick uf+4 (-13).",
+      "bait_duck_interrupt_ur": "The 2nd hit of wr+3,2 is HIGH! Duck under it and launch with ws+2! Use MID BUTTONS (df+1, df+2) against Libertador stance.",
+      "parry_vulnerabilities_ur": "In Libertador stance, Azucena automatically parries Highs and Lows! ONLY attack her stance with MIDS or ELBOWS."
     }
   },
   {
@@ -991,6 +1244,11 @@
     "avatar": "/assets/avatars/king.jpg",
     "height": "200 cm (6'7\")",
     "weight": "147 kg",
+    "job_lore": "Mexican masked luchador fighting to fund his orphanage, wielding legendary grappling techniques and chain throws.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1 (Mid check), d+3 (Low poke), f,f+1 (Mid lunging check), b+1 (Fast counter-hit check).",
+    "pressure_moves": "Pressure Moves: Giant Swing (f,hcf+1), Shining Wizard (wr+2+4), Muscle Buster (qcb+1+2), Burning Knuckle (uf+1+2*).",
+    "mixup_blender": "The Grappler's Nightmare: Low: Ali Kicks (d+3+4) or low toe kick. Throw: Giant Swing (break 1) vs Shining Wizard (break 1+2). Mid: uf+4 hopkick.",
+    "trap_setup": "The Trap Setup: Condition opponent to stand with Giant Swing, then hopkick or crouch-grab (d+1+3) when they duck.",
     "job_lore_ur": "Pro Wrestler & Orphanage Owner (King I ki maut ke baad uska mask pehen kar yateem bachon ki parwarish karta hai).",
     "poking_buttons_ur": "Poking Buttons: 2,1 (10f mid-high), df+1,2 (Delayable mid-mid), df+2,1 (13-frame CH confirmable launcher!), d+3 (+1 on hit low), f,f,n,2 (Low smash: +7 on hit aur CH par animation throw!).",
     "pressure_moves_ur": "Pressure Moves: Jaguar Sprint (JGS - f+3+4), Muscle Armor (db+1+2 - Damage absorb kar ke + rehta hai!).\nUpper/Mid/Low & Throw Mix-up (The Grappler's Nightmare):\n1-Break Throw: Giant Swing (f,hcf+1) – 10-frame startup! Dekhne mein 1+2 break lagta hai magar 1 se tootta hai!\n1+2-Break Throw: Shining Wizard (f,f,f+2+4) ya Tijuana Twister (f,hcf+2 - 2 break).\nMid (If they duck the throws!): uf+4 (Hopkick launcher), f,f+1 (Homing mid), df+2,1.",
@@ -998,10 +1256,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): f,f,n,2 (Low) ya 1,2 marein. Jab woh khara ho kar block kare, Giant Swing (f,hcf+1) ya Shining Wizard lagayein. Jaise hi woh throw se bachne ke liye neeche bethe, uf+4 (Hopkick) ya Crouch Throw (d+1+3) mar dein!",
     "anti_guide": {
       "weak_side": "SSR",
-      "weak_side_detail_ur": "Sidestep Right (SSR) King ke df+1, f,f+1, aur Giant Swing approach ko evade karta hai. Throws se bachne ke liye duck karein.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), b+1,2 (-13), 1+2 (-14). -15+ Launch: Ali kicks d+3+4 (-18 to -26 Stagger Launch!), hopkick uf+4 (-13), db+3 (-16 Launch).",
-      "bait_duck_interrupt_ur": "Ali kicks (d+3+4,4...) ko doosre hit par df se LOW PARRY karein! Giant Swing par 1 daba kar throw break karein, Shining Wizard par 1+2 break karein.",
-      "parry_vulnerabilities_ur": "King ke paas b+1+3 (Kick parry) aur b+2+4 (Punch parry) alag hain! Kick parry se bachne ke liye Punches marein, aur Punch parry se bachne ke liye Elbows/Knees marein."
+      "weak_side_detail": "Sidestep Right (SSR) evades King's df+1, f,f+1, and running throw approaches. Duck under high throws.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), b+1,2 (-13), 1+2 (-14). -15+ Launch Punishable: Ali Kicks d+3+4 (-18 to -26 Stagger Low Launch!), hopkick uf+4 (-13), db+3 (-16 Launch).",
+      "bait_duck_interrupt": "Low parry Ali Kicks on the 2nd kick with df! Break Giant Swing with 1, Shining Wizard with 1+2, and Tombstone with 2.",
+      "parry_vulnerabilities": "King has separate parries: b+1+3 catches kicks (breaks leg); b+2+4 catches right punches (spins behind you). Use Elbows/Knees.",
+      "weak_side_detail_ur": "Sidestep Right (SSR) evades King's df+1, f,f+1, and running throw approaches. Duck under high throws.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), b+1,2 (-13), 1+2 (-14). -15+ Launch Punishable: Ali Kicks d+3+4 (-18 to -26 Stagger Low Launch!), hopkick uf+4 (-13), db+3 (-16 Launch).",
+      "bait_duck_interrupt_ur": "Low parry Ali Kicks on the 2nd kick with df! Break Giant Swing with 1, Shining Wizard with 1+2, and Tombstone with 2.",
+      "parry_vulnerabilities_ur": "King has separate parries: b+1+3 catches kicks (breaks leg); b+2+4 catches right punches (spins behind you). Use Elbows/Knees."
     }
   },
   {
@@ -1019,6 +1281,11 @@
     "avatar": "/assets/avatars/paul.jpg",
     "height": "187 cm (6'1.5\")",
     "weight": "98 kg",
+    "job_lore": "The hot-blooded American judo brawler striving to prove he is the absolute strongest fighter in the universe.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1,1 (Mid check string), d+1 (Low checking palm), b+1 (Homing high check), f+2,3.",
+    "pressure_moves": "Pressure Moves: Phoenix Smasher Deathfist (qcf+2), b+1 (+3 on block homing), wr+2 (+ on block overhead).",
+    "mixup_blender": "The 50/50 Life Deletion: Low: Demoman (d+4,2:1+2 - clean hit knockdown sweep) vs Mid: Deathfist (qcf+2 - 55+ damage) or uf+4 hopkick.",
+    "trap_setup": "The Trap Setup: After wall splat, loop Demoman against standing guard, or launch with Deathfist when they crouch.",
     "job_lore_ur": "Martial Artist, Bouncer & Former Biker; \"Toughest in the Universe\" banne ka khwab rakhta hai (hamesha garib rehta hai).",
     "poking_buttons_ur": "Poking Buttons: df+1 (df+1~b into Sway!), d+1 (Mid hammer), ss+3 (Low ankle kick: +4 on hit aur CH par b+1,2 free!), qcb+3 (Sway low).",
     "pressure_moves_ur": "Pressure Moves: f+1+2 (+3 on block overhead smash!), qcb+1 (0 on block mid!), df+1~b into Sway options.",
@@ -1026,10 +1293,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): df+1~b (Back-sway) -> qcb+4 (Homing high CH launcher: +1 on block) ya qcb+3,2 (Low-mid). Deewar ke paas Demoman aur Deathfist/Safe Mid (qcf+1+2 या d+1,2 in Heat Guard Break!) chalayein.",
     "anti_guide": {
       "weak_side": "SSR",
-      "weak_side_detail_ur": "Sidestep Right (SSR) Deathfist (qcf+2) aur df+1 ko evade karta hai. Lekin b+1 homing se bach kar neutral block rakhein.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,1 (-12), b+1,2 (-13). -15+ Launch: Demoman d+4,2:1+2 (-17 Stagger Launch on block!), Deathfist qcf+2 (-17 Launch on block without pushback), uf+4 hopkick (-13).",
-      "bait_duck_interrupt_ur": "Demoman (d+4) ko db se block kar ke ws+2 launcher marein! 3,2 high extension ko duck kar ke launch karein. Deathfist block ho toh long range launcher (f,f+2) marein.",
-      "parry_vulnerabilities_ur": "Paul ke paas b+1+3 reversal hai. Reversal todne ke liye Paul ke apne jaise Elbows (df+1) aur Knees chalayein."
+      "weak_side_detail": "Sidestep Right (SSR) evades Deathfist qcf+2 and df+1. Beware of b+1 homing which clips sidesteps.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,1 (-12), b+1,2 (-13). -15+ Launch Punishable: Demoman d+4,2:1+2 (-17 Stagger Low Launch!), Deathfist qcf+2 (-17 Launch on block without pushback), hopkick uf+4 (-13).",
+      "bait_duck_interrupt": "Block Demoman d+4 with db and launch with ws+2! The 2nd hit of 3,2 is high: duck and launch.",
+      "parry_vulnerabilities": "Paul has a b+1+3 reversal. Break it using Elbows (df+1) and Knees (Bryan f+3).",
+      "weak_side_detail_ur": "Sidestep Right (SSR) evades Deathfist qcf+2 and df+1. Beware of b+1 homing which clips sidesteps.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,1 (-12), b+1,2 (-13). -15+ Launch Punishable: Demoman d+4,2:1+2 (-17 Stagger Low Launch!), Deathfist qcf+2 (-17 Launch on block without pushback), hopkick uf+4 (-13).",
+      "bait_duck_interrupt_ur": "Block Demoman d+4 with db and launch with ws+2! The 2nd hit of 3,2 is high: duck and launch.",
+      "parry_vulnerabilities_ur": "Paul has a b+1+3 reversal. Break it using Elbows (df+1) and Knees (Bryan f+3)."
     }
   },
   {
@@ -1047,6 +1318,11 @@
     "avatar": "/assets/avatars/law.jpg",
     "height": "179 cm (5'10.5\")",
     "weight": "77 kg",
+    "job_lore": "Legendary martial arts master and chef inspired by Jeet Kune Do, competing to clear his restaurant debts.",
+    "poking_buttons": "Poking Buttons: 1, 2, 3, df+1 (Fast mid check), d+2,3 (Low-high check), b+3 (Keepout kick), db+3 (Low kick).",
+    "pressure_moves": "Pressure Moves: Dragon Sign Stance (DSS), Junkyard Dog (b+2,3,4), wr+3 (+ on block flying dragon kick).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: Dragon Tail (db+4) or slide. Mid: Flip kick (uf+3,4) or DSS f+1 (Safe mid launcher).",
+    "trap_setup": "The Trap Setup: Pressure with Junkyard string. If opponent attempts to duck, switch to DSS mid launchers.",
     "job_lore_ur": "Martial Arts Dojo Owner & Chinese Restaurant Chef; apne bete Forest ke bike accident ka qarza chuka raha hai.",
     "poking_buttons_ur": "Poking Buttons: 1,2 (1,2,3), df+1, d+1,3 (Low-high), db+3 (Fast low: +3 on hit), 4,3~f (into Dragon Sign Stance DSS).",
     "pressure_moves_ur": "Pressure Moves: f+1+2 (Dragon Hammer: +3 on block aur crouch force karta hai!), Nunchucks (1+2 in Heat - Safe Mid Launcher!), ws+4~f (+5 on block in DSS!).",
@@ -1054,10 +1330,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): db+3 ya f+1+2 marein -> ws+4~f (DSS mein +5 on block!). Agar opponent button dabaye toh DSS f+1 ya DSS 3 usay CH karega; agar chup rahe toh crouch mein jaa kar Slide mar dein!",
     "anti_guide": {
       "weak_side": "SSR",
-      "weak_side_detail_ur": "Sidestep Right (SSR) Dragon Sign pokes, 3+4, aur DSS rushes ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), b+1,2 (-13). -15+ Launch: Junkyard b+2,3,4 (2nd hit low: Low Parry karein!), Dragon Tail db+4 (-26 Stagger Launch!), flip kick uf+3,4 (-15 Launch).",
-      "bait_duck_interrupt_ur": "Junkyard Dog (b+2,3,4) ka doosra hit Low hai: foran df dba kar LOW PARRY karein! Dragon Tail ko db se block kar ke full launch combo marein.",
-      "parry_vulnerabilities_ur": "Law ke Nunchucks aur DSS weapon moves parry nahi hotay! Normal kicks aur punches parry ho sakte hain."
+      "weak_side_detail": "Sidestep Right (SSR) evades Dragon Sign pokes, 3+4, and DSS forward rushes.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), b+1,2 (-13). -15+ Launch Punishable: Dragon Tail db+4 (-26 Stagger Low Launch!), Flip Kick uf+3,4 (-15 Launch).",
+      "bait_duck_interrupt": "The 2nd hit of Junkyard Dog (b+2,3,4) is LOW: immediately input df to LOW PARRY! Block Dragon Tail with db and launch for full combo.",
+      "parry_vulnerabilities": "Law's Nunchucks and weapon moves cannot be parried. Normal kicks and punches can be deflected with standard parries.",
+      "weak_side_detail_ur": "Sidestep Right (SSR) evades Dragon Sign pokes, 3+4, and DSS forward rushes.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), b+1,2 (-13). -15+ Launch Punishable: Dragon Tail db+4 (-26 Stagger Low Launch!), Flip Kick uf+3,4 (-15 Launch).",
+      "bait_duck_interrupt_ur": "The 2nd hit of Junkyard Dog (b+2,3,4) is LOW: immediately input df to LOW PARRY! Block Dragon Tail with db and launch for full combo.",
+      "parry_vulnerabilities_ur": "Law's Nunchucks and weapon moves cannot be parried. Normal kicks and punches can be deflected with standard parries."
     }
   },
   {
@@ -1075,6 +1355,11 @@
     "avatar": "/assets/avatars/steve.jpg",
     "height": "182 cm (6'0\")",
     "weight": "79 kg",
+    "job_lore": "British boxing champion and biological son of Nina Williams, fighting to discover the truth behind his origins.",
+    "poking_buttons": "Poking Buttons: 1, 2, 1 (Fast jab strings), df+1 (Mid check), b+1 (Premier 13f Counter-Hit hook), d+1 (Low body blow).",
+    "pressure_moves": "Pressure Moves: Peekaboo Stance (PKB), Dempsey Roll (Heat), Sonic Fang (df+1+2), Ducking transitions (f+3 / f+4).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: PKB d+1 (Plus on hit low punch) or d+2. Mid: PKB 2 or Sonic Fang df+1+2.",
+    "trap_setup": "The Trap Setup: Throw b+1 hooks at Range 1. When opponent attempts to advance, b+1 scores a Counter-Hit full launch.",
     "job_lore_ur": "World Middleweight Boxing Champion; G-Corp ke laboratory experiment se Nina ke eggs se paida hua tha.",
     "poking_buttons_ur": "Poking Buttons: 1,2,1 (~f into Peekaboo PKB ya ~b into Flicker FLK), df+1, d+2,1~b (Low-mid cancel into FLK - Completely Safe!), d+1 (Low poke).",
     "pressure_moves_ur": "Pressure Moves: b+1 (13f Counter-Hit King! ~b daba kar Flicker mein safe rehta hai), Lionheart Stance (LH - db+3+4), Peekaboo (PKB - f+3+4).",
@@ -1082,10 +1367,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): 1,2,1~b ya b+1~b mar kar Flicker mein jayein, aur jaise hi agla banda punch mare, 3 ya 4 daba kar Weave (Side Dodge) karein aur 1,2 se uske munh par counter punch marein!",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Steve ke Peekaboo (PKB) jabs aur Sonic Fang (df+1+2) ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: Sonic Fang df+1+2 (-12 punish), b+1,2 (-13). -15+ Launch: d+2,1 (-15 Launch), PKB d+1 (-13), duck in 2 (-14).",
-      "bait_duck_interrupt_ur": "Steve ke zyadatar attacks High hotay hain! High hooks ko DUCK kar ke While Standing ws+2 launcher marein. b+1 CH fish karne par forward moves mat dabayein.",
-      "parry_vulnerabilities_ur": "Steve ke paas b+1+2 punch parry hai. Steve par punches ke bajaye Kicks, Knees, aur Lows use karein."
+      "weak_side_detail": "Sidestep Left (SSL) evades Peekaboo jabs and Sonic Fang df+1+2.",
+      "minus_punishable_moves": "-10 to -14 Punishable: Sonic Fang df+1+2 (-12 punish), b+1,2 (-13). -15+ Launch Punishable: d+2,1 (-15 Launch), PKB d+1 (-13), duck-in 2 (-14).",
+      "bait_duck_interrupt": "Most of Steve's moves are HIGH! Duck under high hooks and launch with While Standing ws+2. Do not press buttons into b+1.",
+      "parry_vulnerabilities": "Steve has a b+1+2 punch parry. Avoid throwing high punches; use Kicks, Knees, and Lows against him.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Peekaboo jabs and Sonic Fang df+1+2.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: Sonic Fang df+1+2 (-12 punish), b+1,2 (-13). -15+ Launch Punishable: d+2,1 (-15 Launch), PKB d+1 (-13), duck-in 2 (-14).",
+      "bait_duck_interrupt_ur": "Most of Steve's moves are HIGH! Duck under high hooks and launch with While Standing ws+2. Do not press buttons into b+1.",
+      "parry_vulnerabilities_ur": "Steve has a b+1+2 punch parry. Avoid throwing high punches; use Kicks, Knees, and Lows against him."
     }
   },
   {
@@ -1103,6 +1392,11 @@
     "avatar": "/assets/avatars/asuka.jpg",
     "height": "167 cm (5'5.5\")",
     "weight": "56 kg",
+    "job_lore": "Feisty Osaka high schooler and Kazama dojo master dedicated to keeping peace and purifying evil spirits.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1 (Mid check), d+2 (Crouching mid check), db+3 (Low kick), b+3 (Evasive mid kick).",
+    "pressure_moves": "Pressure Moves: Naniwa Gusto (Heat charge), f+4 (Plus on block high kick), 1+2 (Power crush mid).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: Leg Cutter (db+4,4) or d+1+2 sweep. Mid: f+2 (Safe launcher on whiff) or b+3.",
+    "trap_setup": "The Trap Setup: Hesitate in neutral with b+3. When opponent dashes in, launch with f+2 or bait attacks into b+1+3 parry.",
     "job_lore_ur": "High School Student & Street Peacemaker; Jin ki cousin aur Kazama dojo ki waris.",
     "poking_buttons_ur": "Poking Buttons: 1,1 / 1,3, df+1,2, d+1+2 (Low knock-down sweep!), db+3 (Long range low), b+4 (Knee CH).",
     "pressure_moves_ur": "Pressure Moves: Naniwa Gusto (NW power-up), f,f,f+1+2 (+4 on block aur NW deta hai!), NW ff+1+2 (+9 on block!), 1+2 (16-frame SAFE mid launcher!).",
@@ -1110,10 +1404,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): Pokes mar kar thora peeche hatein (b+3 Backflip ya b+2+4 Parry/Sabaki). Jaise hi agla banda josh mein aage attack kare, b+3 ya df+2 se launch kar dein!",
     "anti_guide": {
       "weak_side": "SSR",
-      "weak_side_detail_ur": "Sidestep Right (SSR) Asuka ke f+2 launcher, b+3, aur Leg Cutter db+4 ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), 2,3 (-13), f+1+2 (-13). -15+ Launch: Leg cutter db+4,4 (-18 Stagger Launch!), f+2 launcher (-18 on block!), can-can kicks d+3+4 (-15 Launch).",
-      "bait_duck_interrupt_ur": "Leg Cutter (db+4,4) ko block kar ke ws launcher marein! 1,2,4 string ka 3rd hit high hai: duck kar ke launch karein.",
-      "parry_vulnerabilities_ur": "Asuka ki b+1+3 parry bohot lambi hold hoti hai! Is par punches/kicks mat marein; ELBOWS (Paul df+1, Bryan b+1), KNEES, ya WEAPONS marein jo parry tod dete hain."
+      "weak_side_detail": "Sidestep Right (SSR) evades Asuka's f+2 launcher, b+3, and Leg Cutter db+4.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), 2,3 (-13), f+1+2 (-13). -15+ Launch Punishable: Leg Cutter db+4,4 (-18 Stagger Low Launch!), f+2 launcher (-18 on block!), Can-Can kicks d+3+4 (-15 Launch).",
+      "bait_duck_interrupt": "Block Leg Cutter db+4 with db and launch for full combo! Duck under the 3rd hit of 1,2,4.",
+      "parry_vulnerabilities": "Asuka's b+1+3 parry can be held for an extended active window! Crush her parry using ELBOWS (Paul df+1, Bryan b+1), KNEES, or WEAPONS.",
+      "weak_side_detail_ur": "Sidestep Right (SSR) evades Asuka's f+2 launcher, b+3, and Leg Cutter db+4.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), 2,3 (-13), f+1+2 (-13). -15+ Launch Punishable: Leg Cutter db+4,4 (-18 Stagger Low Launch!), f+2 launcher (-18 on block!), Can-Can kicks d+3+4 (-15 Launch).",
+      "bait_duck_interrupt_ur": "Block Leg Cutter db+4 with db and launch for full combo! Duck under the 3rd hit of 1,2,4.",
+      "parry_vulnerabilities_ur": "Asuka's b+1+3 parry can be held for an extended active window! Crush her parry using ELBOWS (Paul df+1, Bryan b+1), KNEES, or WEAPONS."
     }
   },
   {
@@ -1131,6 +1429,11 @@
     "avatar": "/assets/avatars/lili.jpg",
     "height": "180 cm (5'11\")",
     "weight": "60 kg",
+    "job_lore": "Monaco billionaire heiress who incorporates ballet and rhythmic gymnastics into street fighting, obsessed with beating Asuka.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1 (Mid check), d+3 (Low poke), f+2,3 (Mid-high string), 3,1.",
+    "pressure_moves": "Pressure Moves: Feisty Rabbit (RAB), Backturned Stance (BT), qcf+3 (Plus on block mid kick), wr+3.",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: Matterhorn (d+3+4) or BT d+3+4 (Low sweep). Mid: Edelweiss (db+4) or BT 1+2.",
+    "trap_setup": "The Trap Setup: Backturned transitions into BT d+3+4 sweep vs BT 2 mid launcher.",
     "job_lore_ur": "Billionaire Oil Magnate ki इकलौती Beti; apne walid se chhup kar street fighting ka shauq poora karti hai.",
     "poking_buttons_ur": "Poking Buttons: 1,1 (Turns Backturned BT), df+1, d+3 (Long range low), ff+4 (Root of Evil: Heavy low stomp jo +4 deta hai aur BT mein jata hai!).",
     "pressure_moves_ur": "Pressure Moves: Feisty Rabbit (FR - b+3 ya b+4), df+3 (+3 on block axe kick!), f,f,f+3 (Plus on block diving kick).",
@@ -1138,10 +1441,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): df+1 ya 1,2 mar kar Sidestep (u ya d) karein (Lili ka sidestep sabse bara hai!). Agle ka attack miss hote hi df+2 ya 3,1 marein, ya ff+4 (Low) se BT mix-up mein daal dein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Feisty Rabbit, Matterhorn (d+3+4), aur qcf+3 ko evade karta hai. Lili ka apna sidestep bohot bara hai is liye homing moves use karein.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), f+2,3 (-13). -15+ Launch: Matterhorn d+3+4 (-24 Massive Launch!), Backturned BT d+3+4 sweep (-23 Stagger Launch!), Edelweiss db+4 (-26 Launch).",
-      "bait_duck_interrupt_ur": "Matterhorn aur Edelweiss slow sweeps hain: db se BLOCK karein aur 90 damage ka full combo launch karein! BT stance mein dickjab se interrupt karein.",
-      "parry_vulnerabilities_ur": "Lili ke jumpy acrobatic attacks standard punch/kick parry se pakray ja sakte hain."
+      "weak_side_detail": "Sidestep Left (SSL) evades Feisty Rabbit, Matterhorn, and qcf+3. Lili has an immense sidestep; use homing moves.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), f+2,3 (-13). -15+ Launch Punishable: Matterhorn d+3+4 (-24 Massive Launch!), BT d+3+4 sweep (-23 Stagger Low Launch!), Edelweiss db+4 (-26 Launch).",
+      "bait_duck_interrupt": "Matterhorn and Edelweiss are slow, telegraphed sweeps: block with db and launch for 90+ damage! Interrupt BT stance with dickjabs.",
+      "parry_vulnerabilities": "Lili's acrobatic kicks can be deflected with standard punch/kick parries.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Feisty Rabbit, Matterhorn, and qcf+3. Lili has an immense sidestep; use homing moves.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), f+2,3 (-13). -15+ Launch Punishable: Matterhorn d+3+4 (-24 Massive Launch!), BT d+3+4 sweep (-23 Stagger Low Launch!), Edelweiss db+4 (-26 Launch).",
+      "bait_duck_interrupt_ur": "Matterhorn and Edelweiss are slow, telegraphed sweeps: block with db and launch for 90+ damage! Interrupt BT stance with dickjabs.",
+      "parry_vulnerabilities_ur": "Lili's acrobatic kicks can be deflected with standard punch/kick parries."
     }
   },
   {
@@ -1159,6 +1466,11 @@
     "avatar": "/assets/avatars/leo.jpg",
     "height": "176 cm (5'9\")",
     "weight": "63 kg",
+    "job_lore": "German Bajiquan spelunker investigating G-Corporation and Kazuya to uncover the truth behind their mother's death.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1 (Fast mid check), db+4 (Low sweep), b+1,4 (Mid-high string), f+4.",
+    "pressure_moves": "Pressure Moves: Fo Bu Stance (BOK - d+1+2), Jin Gang Stance (KNK), ff+2 (+ on block elbow).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: db+4 or BOK 2 (Low sweep). Mid: BOK 1+2 or KNK 3,4 (Mid launcher).",
+    "trap_setup": "The Trap Setup: Transition into BOK stance. If opponent ducks expecting BOK 2, launch with BOK 1+2.",
     "job_lore_ur": "Spelunker (Cave Explorer) & Archeologist's Apprentice; apni maa Emma Kliesen (G-Corp scientist) ke qatil Kazuya ki talash mein hai.",
     "poking_buttons_ur": "Poking Buttons: df+1, d+4 (Fast low), db+4,1 (High-crushing low sweep!), b+1,4 (Knee string into Jin Ji Du Li KNK stance!).",
     "pressure_moves_ur": "Pressure Moves: b+1,4 (Knee into KNK), f+4 (Direct KNK entry: + on block!), Bokuden Stance (BOK - d+1+2 - Highs ke neeche se nikal jata hai!).",
@@ -1166,10 +1478,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): Deewar ke paas b+1,4 -> KNK 3+4 या KNK 4 (Low) chalayein. Agar agla banda jab se rokne ki koshish kare, d+1+2 (BOK stance) daba kar uske punch ke neeche se nikal jayein aur BOK 2 se aasman mein ura dein!",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) BOK stance lunges, df+1, aur ff+2 ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), b+1,4 (-13). -15+ Launch: db+4 sweep (-17 Launch), BOK 2 sweep (-18 Launch), hopkick uf+4 (-13).",
-      "bait_duck_interrupt_ur": "b+1,4 ka doosra hit high hai: duck kar ke ws+2 launcher marein! BOK stance mein aate hi dickjab (db+1) se attack interrupt karein.",
-      "parry_vulnerabilities_ur": "Leo ke paas b+1+3 / b+2+4 punch sabakis hain. Bajiquan elbows parry nahi hotin, is liye Leo ke khilaf elbows use karein."
+      "weak_side_detail": "Sidestep Left (SSL) evades BOK stance lunges, df+1, and ff+2.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), b+1,4 (-13). -15+ Launch Punishable: db+4 sweep (-17 Launch), BOK 2 sweep (-18 Launch), hopkick uf+4 (-13).",
+      "bait_duck_interrupt": "The 2nd hit of b+1,4 is high: duck and launch with ws+2! Interrupt BOK stance with a dickjab (db+1).",
+      "parry_vulnerabilities": "Leo has b+1+3 / b+2+4 punch sabakis. Bajiquan elbows cannot be parried; use elbows against Leo.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades BOK stance lunges, df+1, and ff+2.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), b+1,4 (-13). -15+ Launch Punishable: db+4 sweep (-17 Launch), BOK 2 sweep (-18 Launch), hopkick uf+4 (-13).",
+      "bait_duck_interrupt_ur": "The 2nd hit of b+1,4 is high: duck and launch with ws+2! Interrupt BOK stance with a dickjab (db+1).",
+      "parry_vulnerabilities_ur": "Leo has b+1+3 / b+2+4 punch sabakis. Bajiquan elbows cannot be parried; use elbows against Leo."
     }
   },
   {
@@ -1187,6 +1503,11 @@
     "avatar": "/assets/avatars/shaheen.jpg",
     "height": "185 cm (6'1\")",
     "weight": "83 kg",
+    "job_lore": "Saudi military security specialist leading a private PMC, seeking justice for a friend assassinated by G-Corp.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1 (Mid check), 4,1 (High-high counter check), db+2 (Low poke), d+4.",
+    "pressure_moves": "Pressure Moves: Stealth Dash (SNK - df+3), Slide (fc df,d,df+3), wr+2 (+ on block overhead).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: Slide fc df,d,df+3 or db+4. Mid: uf+4 (Hopkick) or SNK 2 (Safe mid launcher).",
+    "trap_setup": "The Trap Setup: Slide mix-up from full crouch. When opponent anticipates the slide and ducks, launch with uf+4.",
     "job_lore_ur": "Private Military Bodyguard Specialist; apne dost Salim (oil industry head) ke qatal ka badla Kazuya se lene aata hai.",
     "poking_buttons_ur": "Poking Buttons: 1,2,2 (CH string), df+1 (3-frame sidestep friendly mid), d+3 (Low into Stealth Step SNK!), d+4 (Low).",
     "pressure_moves_ur": "Pressure Moves: f,f,f+2 (+5 on block!), uf+1 (Jumping mid punch cancelable into SNK: +3 on block!), Guard Break (SNK 1+2 in Heat - +12 on block!).",
@@ -1194,10 +1515,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): d+3~df (Low into crouch) ya df+4,1~df se crouch mein jayein. Ab agle ko Slide (Low) aur ws+2 (Mid Launcher) ke 50/50 mein daal dein. Heat mein SNK 1+2 (Guard Break) se free launcher lein!",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Stealth Dash, 4,1, aur df+1 ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1 (-12 on spacing), 4,1 (-13), fb+2 (-14). -15+ Launch: Slide fc df,d,df+3 (-23 Stagger Launch!), hopkick uf+4 (-13), db+4 (-16 Launch).",
-      "bait_duck_interrupt_ur": "Slide ko db se block kar ke hopkick launch marein! 4,1 string ka 2nd hit high hai: duck kar ke ws launcher marein.",
-      "parry_vulnerabilities_ur": "Shaheen ke paas koi special reversal nahi hai. Uske kicks aur pokes standard parry se pakray ja sakte hain."
+      "weak_side_detail": "Sidestep Left (SSL) evades Stealth Dash, 4,1 strings, and df+1.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1 (-12 on spacing), 4,1 (-13), fb+2 (-14). -15+ Launch Punishable: Slide fc df,d,df+3 (-23 Stagger Low Launch!), hopkick uf+4 (-13), db+4 (-16 Launch).",
+      "bait_duck_interrupt": "Block Slide with db and launch with maximum damage hopkicks! The 2nd hit of 4,1 is high: duck and launch.",
+      "parry_vulnerabilities": "Shaheen has no special reversal. His kicks and pokes can be caught with standard parries.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Stealth Dash, 4,1 strings, and df+1.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1 (-12 on spacing), 4,1 (-13), fb+2 (-14). -15+ Launch Punishable: Slide fc df,d,df+3 (-23 Stagger Low Launch!), hopkick uf+4 (-13), db+4 (-16 Launch).",
+      "bait_duck_interrupt_ur": "Block Slide with db and launch with maximum damage hopkicks! The 2nd hit of 4,1 is high: duck and launch.",
+      "parry_vulnerabilities_ur": "Shaheen has no special reversal. His kicks and pokes can be caught with standard parries."
     }
   },
   {
@@ -1215,6 +1540,11 @@
     "avatar": "/assets/avatars/leroy.jpg",
     "height": "181 cm (5'11\")",
     "weight": "79 kg",
+    "job_lore": "New York Wing Chun grandmaster who returned to take down the Mishima Zaibatsu and G-Corp alongside his pitbull Sugar.",
+    "poking_buttons": "Poking Buttons: 1, 2, df+1,4 (Mid check string), d+3,2 (Low-mid check), b+3 (Mid kick), db+3.",
+    "pressure_moves": "Pressure Moves: Hermit Stance (HRM - 3+4), Twin Dragon Gate b+2 (Universal parry), wr+3.",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: db+3 or HRM 4 (Low sweep). Mid: HRM 1 or HRM 2 (Mid launcher).",
+    "trap_setup": "The Trap Setup: Enter Hermit stance with frame advantage. If opponent attacks, b+2 parries everything.",
     "job_lore_ur": "Wing Chun Grandmaster; 50 saal baad New York ke gangs aur Mishima Zaibatsu ko saaf karne wapas aaya tha.",
     "poking_buttons_ur": "Poking Buttons: 1,2 / 1,1, df+1, d+3,2 (Fast low-high natural combo into Hermit Stance HRM at +8!), db+3 (Sweeping low).",
     "pressure_moves_ur": "Pressure Moves: Hermit Stance (HRM - 3+4) – Is stance mein Leroy Low attacks ko automatically parry kar leta hai! b+2 (Twin Dragon Gate Parry - Kisi bhi punch ya kick ko parry karta hai!).",
@@ -1222,10 +1552,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): d+3,2 marein. Yeh hit hone par aap HRM mein +8 hain! Agla banda button dabayega toh HRM 1 (Parry punch) ya HRM 2 usay CH karega. Agar woh normal stance mein attack kare toh b+2 (Parry) daba kar uska har attack wapas mor dein!",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Hermit (HRM) stance transitions aur b+3 ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,4 (-12), b+3 (-13). -15+ Launch: db+3 sweep (-17 Launch), HRM 4 sweep (-18 Launch), d+3,2 (-15 Launch).",
-      "bait_duck_interrupt_ur": "Hermit stance mein jab lero aik tang par khara ho, toh foran DICKJAB (db+1) marein! HRM mein woh block nahi kar sakta.",
-      "parry_vulnerabilities_ur": "Leroy ki b+2 Twin Dragon Gate sab kuch (elbows, knees, punches) deflect karti hai! Is se bachne ke liye LOWS chalayein (b+2 lows deflect nahi karti) ya WEAPONS use karein."
+      "weak_side_detail": "Sidestep Left (SSL) evades Hermit stance forward pokes and b+3.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,4 (-12), b+3 (-13). -15+ Launch Punishable: db+3 sweep (-17 Launch), HRM 4 sweep (-18 Launch), d+3,2 (-15 Launch).",
+      "bait_duck_interrupt": "When Leroy enters Hermit stance (standing on one leg), immediately input a DICKJAB (db+1) to knock him out of stance.",
+      "parry_vulnerabilities": "Leroy's b+2 Twin Dragon Gate deflects punches, kicks, elbows, and knees! Bypass it using LOW ATTACKS or WEAPONS.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Hermit stance forward pokes and b+3.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,4 (-12), b+3 (-13). -15+ Launch Punishable: db+3 sweep (-17 Launch), HRM 4 sweep (-18 Launch), d+3,2 (-15 Launch).",
+      "bait_duck_interrupt_ur": "When Leroy enters Hermit stance (standing on one leg), immediately input a DICKJAB (db+1) to knock him out of stance.",
+      "parry_vulnerabilities_ur": "Leroy's b+2 Twin Dragon Gate deflects punches, kicks, elbows, and knees! Bypass it using LOW ATTACKS or WEAPONS."
     }
   },
   {
@@ -1243,6 +1577,11 @@
     "avatar": "/assets/avatars/yoshimitsu.jpg",
     "height": "178 cm (5'10\")",
     "weight": "63 kg",
+    "job_lore": "Mechanized leader of the chivalrous Manji Clan, wielding dual cursed katanas to redistribute wealth to the poor.",
+    "poking_buttons": "Poking Buttons: 1, 1, df+1,2 (Mid check), d+2,2 (Mid low check), db+3,3,3 (Spinning low sweeps).",
+    "pressure_moves": "Pressure Moves: Flash (1+4: 6-frame parry hitbox!), Dragonfly (DGF - u+1+2), Kincho (KIN - 1+2), Bad Stomach poison.",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: fc df+1 (Unblockable sword sweep) or db+3. Mid: ws+2,1 (Tornado launcher) or KIN 2.",
+    "trap_setup": "The Trap Setup: Flash (1+4) interrupts any opponent pressure at minus frames, converting into full launch.",
     "job_lore_ur": "Leader of the Manji Clan (Chori kar ke garibon mein baantne wale Robin-Hood ninjas); apni shaitani talwar Yoshimitsu ko qaboo rakhta hai.",
     "poking_buttons_ur": "Poking Buttons: df+1, 1,1 (CH confirm), d+2,2 (Mid string), db+3,3,3 (Spinning low kicks), b+2,2 (Sword slash Heat Engager).",
     "pressure_moves_ur": "Pressure Moves: Flash (1+4 - 6-Frame Launcher! Jab aap NSS No-Sword Stance mein hon toh 8-frame aur zyada range!), Dragonfly (DGF - u+1+2 Helicopter).\nUpper/Mid/Low & Unblockable Mix-up:\nUnblockable Low: fc df+1 (Sword Sweep!) – Yeh block nahi hota, seedha launch karta hai! (Sirf low-parry ya jump se bacha ja sakta hai).\nMid: ws+2,1 (Mid tornado launcher from crouch!) ya df+2 (Safe launcher).\nUnblockable High: DGF 3+4 (Helicopter grab).",
@@ -1250,10 +1589,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): Jab agla banda aap par Plus frames (+1 se +4) le kar attack karne lage, toh block karne ke bajaye 1+4 (Flash) daba dein—6 frames mein agla banda hawa mein ur jayega! Crouch mein jaa kar Unblockable Low (fc df+1) aur ws+2,1 (Mid) ka mix-up lagayein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Dragonfly (DGF) aur Kincho (KIN) dashes ko evade karta hai. Qareeb mein minus frames par button dabane se bachein warna 1+4 Flash lag jayega!",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), b+2,2 (-13). -15+ Launch: fc df+1 sword sweep (-23 Stagger Launch!), kangaroo kick 4~3 (-20 Launch), flash 1+4 whiff/block (-15 Launch).",
-      "bait_duck_interrupt_ur": "fc df+1 unblockable sword sweep ko jump kar ke hopkick marein ya interrupt karein! Poison breath b+1+4 duckable hai.",
-      "parry_vulnerabilities_ur": "Yoshimitsu ki TALWAAR (Sword) normal parry se deflect nahi hoti! Sword moves ko sirf block karein ya Flash se door spacing banayein."
+      "weak_side_detail": "Sidestep Left (SSL) evades Dragonfly and Kincho forward lunges. Never press buttons at -frames against Flash!",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), b+2,2 (-13). -15+ Launch Punishable: fc df+1 sword sweep (-23 Stagger Low Launch!), kangaroo kick 4~3 (-20 Launch), Flash 1+4 on block (-15 Launch).",
+      "bait_duck_interrupt": "Jump or hopkick over unblockable fc df+1 sword sweep! Poison breath b+1+4 is high and duckable.",
+      "parry_vulnerabilities": "Yoshimitsu's SWORD CANNOT be parried! Sword strikes ignore reversals completely; maintain spacing.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Dragonfly and Kincho forward lunges. Never press buttons at -frames against Flash!",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), b+2,2 (-13). -15+ Launch Punishable: fc df+1 sword sweep (-23 Stagger Low Launch!), kangaroo kick 4~3 (-20 Launch), Flash 1+4 on block (-15 Launch).",
+      "bait_duck_interrupt_ur": "Jump or hopkick over unblockable fc df+1 sword sweep! Poison breath b+1+4 is high and duckable.",
+      "parry_vulnerabilities_ur": "Yoshimitsu's SWORD CANNOT be parried! Sword strikes ignore reversals completely; maintain spacing."
     }
   },
   {
@@ -1271,6 +1614,11 @@
     "avatar": "/assets/avatars/kuma.jpg",
     "height": "290 cm (9'6\" - Standing)",
     "weight": "360 kg",
+    "job_lore": "Heihachi Mishima's loyal bodyguard and pet bear; learned Mishima style karate to avenge his fallen master.",
+    "poking_buttons": "Poking Buttons: 2, 1 (10f string), df+1,2 (Mid check), db+2 (Fast low claw: +1 on hit), b+1 (Power crush mid).",
+    "pressure_moves": "Pressure Moves: Hunting Bear Stance (HBS - 3+4), f,f,f+1+2 (+5 on block into HBS!), Kuma Heat Electric (11f mid launcher in Heat!).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: HBS d+1+2 (Double low claw: +5 on hit) or HBS 2 (Roll). Mid: HBS 1+2 (Launcher). Throw: HBS f+1+2 (Bear bite).",
+    "trap_setup": "The Trap Setup: f,f,f+1+2 into Hunting Stance. Mix HBS d+1+2 low with HBS 1+2 mid launcher.",
     "job_lore_ur": "Kuma Heihachi ka wafadar bodyguard aur pet hai; Heihachi ke marne ke baad Mishima style karate seekh kar Kazuya se badla lene aaya hai.",
     "poking_buttons_ur": "Poking Buttons: 2,1 (10f string), df+1,2, db+2 (Fast low claw: +1 on hit), b+1 (Power Crush mid).",
     "pressure_moves_ur": "Pressure Moves: Hunting Bear Stance (HBS - 3+4), f,f,f+1+2 (+5 on block into HBS!), Kuma's Heat Electric (f,n,d,df+2 - 11-frame mid launcher in Heat!).",
@@ -1278,10 +1626,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): f,f,f+1+2 ya db+2 se Hunting Stance (HBS) mein jayein (is mein Highs aur kuch Mids miss ho jate hain). Wahan se HBS d+1+2 (Low), HBS 1+2 (Mid), aur HBS f+1+2 (Bite Throw) chalayein.\nE. Season 1, 2 & 3 DLC Fighters",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Hunting Bear Stance (HBS) lunges aur Bear Godfist ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: 2,1 (-12), df+1,2 (-12). -15+ Launch: db+2 (-15 Launch), HBS 2 roll (-18 Launch), d+1+2 bear sweep (-20 Launch).",
-      "bait_duck_interrupt_ur": "Hunting Stance (HBS) mein Kuma chaar taangon par crawl karta hai: High attacks miss ho jayenge! Ground-hitting mids (d+2, df+2) marein. Bear bite throw f+1+2 ko 1+2 se break karein.",
-      "parry_vulnerabilities_ur": "Kuma ke claw attacks parry ho sakte hain, lekin uske Headbutt aur Belly attacks normal reversal se deflect nahi hotay!"
+      "weak_side_detail": "Sidestep Left (SSL) evades Hunting Bear Stance rushes and Bear Godfist.",
+      "minus_punishable_moves": "-10 to -14 Punishable: 2,1 (-12), df+1,2 (-12). -15+ Launch Punishable: db+2 (-15 Launch), HBS 2 roll (-18 Launch), d+1+2 bear sweep (-20 Launch).",
+      "bait_duck_interrupt": "Kuma crawls on all fours in HBS: high punches whiff! Use ground-hitting mids (d+2, df+2). Break bear bite with 1+2.",
+      "parry_vulnerabilities": "Kuma's headbutt and belly attacks cannot be parried. Claw attacks can be deflected.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Hunting Bear Stance rushes and Bear Godfist.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: 2,1 (-12), df+1,2 (-12). -15+ Launch Punishable: db+2 (-15 Launch), HBS 2 roll (-18 Launch), d+1+2 bear sweep (-20 Launch).",
+      "bait_duck_interrupt_ur": "Kuma crawls on all fours in HBS: high punches whiff! Use ground-hitting mids (d+2, df+2). Break bear bite with 1+2.",
+      "parry_vulnerabilities_ur": "Kuma's headbutt and belly attacks cannot be parried. Claw attacks can be deflected."
     }
   },
   {
@@ -1299,6 +1651,11 @@
     "avatar": "/assets/avatars/panda.jpg",
     "height": "290 cm (9'6\" - Standing)",
     "weight": "300 kg",
+    "job_lore": "Ling Xiaoyu's dedicated bodyguard and best friend; protects Xiaoyu as they search for Jin across the globe.",
+    "poking_buttons": "Poking Buttons: 2, 1 (10f string), df+1,2 (Mid check), db+2 (Low claw), b+1 (Power crush).",
+    "pressure_moves": "Pressure Moves: Hunting Bear Stance (HBS - 3+4), f,f,f+1+2 (+5 on block into HBS!), Shochiku rolls.",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: HBS d+1+2 (Double claw low) or HBS 2. Mid: HBS 1+2 (Launcher). Throw: HBS f+1+2 (Bite throw).",
+    "trap_setup": "The Trap Setup: Enter HBS stance with frame advantage. Opponent highs whiff over Panda's head; launch with HBS 1+2.",
     "job_lore_ur": "Ling Xiaoyu ki bodyguard aur best friend hai; Xiaoyu ki hifazat karte hue Jin ko dhoondne mein uski madad karti hai.",
     "poking_buttons_ur": "Poking Buttons: 2,1 (10f string), df+1,2, db+2 (Fast low claw: +1 on hit), b+1 (Power Crush mid).",
     "pressure_moves_ur": "Pressure Moves: Hunting Bear Stance (HBS - 3+4), f,f,f+1+2 (+5 on block into HBS!), Kuma's Heat Electric (f,n,d,df+2 - 11-frame mid launcher in Heat!).",
@@ -1306,10 +1663,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): f,f,f+1+2 ya db+2 se Hunting Stance (HBS) mein jayein (is mein Highs aur kuch Mids miss ho jate hain). Wahan se HBS d+1+2 (Low), HBS 1+2 (Mid), aur HBS f+1+2 (Bite Throw) chalayein.\nE. Season 1, 2 & 3 DLC Fighters",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Hunting Bear Stance (HBS) lunges aur Shochiku rolls ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: 2,1 (-12), df+1,2 (-12). -15+ Launch: db+2 (-15 Launch), HBS 2 roll (-18 Launch), d+1+2 panda sweep (-20 Launch).",
-      "bait_duck_interrupt_ur": "Panda ke HBS stance mein high attacks na phenkein; mid launchers se punish karein. Panda bite throw f+1+2 ko 1+2 se break karein.",
-      "parry_vulnerabilities_ur": "Panda ke pet (belly) aur tail attacks parry nahi hotay. Claws parry ho sakti hain."
+      "weak_side_detail": "Sidestep Left (SSL) evades HBS rushes and Shochiku rolls.",
+      "minus_punishable_moves": "-10 to -14 Punishable: 2,1 (-12), df+1,2 (-12). -15+ Launch Punishable: db+2 (-15 Launch), HBS 2 roll (-18 Launch), d+1+2 sweep (-20 Launch).",
+      "bait_duck_interrupt": "Do not throw highs at Panda in HBS stance; punish with mid launchers. Break bite throw with 1+2.",
+      "parry_vulnerabilities": "Panda's belly flops and tail attacks cannot be parried. Claws can be deflected.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades HBS rushes and Shochiku rolls.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: 2,1 (-12), df+1,2 (-12). -15+ Launch Punishable: db+2 (-15 Launch), HBS 2 roll (-18 Launch), d+1+2 sweep (-20 Launch).",
+      "bait_duck_interrupt_ur": "Do not throw highs at Panda in HBS stance; punish with mid launchers. Break bite throw with 1+2.",
+      "parry_vulnerabilities_ur": "Panda's belly flops and tail attacks cannot be parried. Claws can be deflected."
     }
   },
   {
@@ -1327,6 +1688,11 @@
     "avatar": "/assets/avatars/heihachi.jpg",
     "height": "179 cm (5'10\")",
     "weight": "84 kg",
+    "job_lore": "The legendary patriarch of the Mishima Zaibatsu; resurrected through mystical monks to reclaim his iron throne.",
+    "poking_buttons": "Poking Buttons: 1, b+2 (-2 on block safe jab string), df+1 (Confirmable into df+1,2), f+3 (Fast mid knee).",
+    "pressure_moves": "Pressure Moves: EWGF (f,n,d,df:2: +5 on block high launcher!), f,f+2 (Demon Paw: safe mid gap-closer), 1,b+2.",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: Hellsweep (cd+4,n,4) or db+2. Mid: EWGF or f,f+2 Demon Paw.",
+    "trap_setup": "The Trap Setup: Pressure with 1,b+2 into EWGF. If opponent attempts to challenge, Counter-Hit launch with f+3.",
     "job_lore_ur": "Former Zaibatsu Leader; Tekken Monks ke zariye bacha aur wapas \"King of Iron Fist\" banne lauta hai.",
     "poking_buttons_ur": "Poking Buttons: 1,b+2 (-2 on block!), df+1 (Confirm into df+1,2), f+3 (Fast mid knee).",
     "pressure_moves_ur": "Pressure Moves: f+4 (+4 on block; crouching opponent ko guaranteed df+1,2 deta hai!), uf+3,4 (Hunting Hawk: +5 on block).",
@@ -1334,10 +1700,14 @@
     "trap_setup_ur": "Jaal (Trap Setup): f+4 mar kar agle bande ko duck karne se darayein, phir Raijin Stance (b+1+2) ya Fujin Stance (d+1+2) se guard-breaks aur plus frames ki barish kar dein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) EWGF, f,f+2 Demon Paw, aur 1,b+2 ko evade karta hai. b+4 homing move se bachne ke liye neutral block karein.",
-      "minus_punishable_moves_ur": "-10 to -14: 1,b+2 (-2 on block safe), df+1,2 (-13). -15+ Launch: Hellsweep cd+4,n,4 (-16 Launch), f,f+2 (-16 on block), uf+4 hopkick (-13).",
-      "bait_duck_interrupt_ur": "Hellsweep ko db se block kar ke full combo ws launcher marein! 1,b+2 block kar ke jaldi mein counter na karein kyunki Heihachi ka recovery fast hai.",
-      "parry_vulnerabilities_ur": "Heihachi f+1+2 headbutt aur b+1+2 parry karta hai. Uske headbutts unparryable hain, is liye elbows aur knees se uski parry torein."
+      "weak_side_detail": "Sidestep Left (SSL) evades EWGF, f,f+2 Demon Paw, and 1,b+2. Beware of b+4 homing kick.",
+      "minus_punishable_moves": "-10 to -14 Punishable: 1,b+2 (-2 on block safe), df+1,2 (-13). -15+ Launch Punishable: Hellsweep cd+4,n,4 (-16 Launch), f,f+2 (-16 on block), hopkick uf+4 (-13).",
+      "bait_duck_interrupt": "Block Hellsweep with db and launch for full combo! Do not counter hastily after 1,b+2.",
+      "parry_vulnerabilities": "Heihachi has f+1+2 headbutt and b+1+2 parries. His headbutts are unparryable; use elbows and knees to break his parries.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades EWGF, f,f+2 Demon Paw, and 1,b+2. Beware of b+4 homing kick.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: 1,b+2 (-2 on block safe), df+1,2 (-13). -15+ Launch Punishable: Hellsweep cd+4,n,4 (-16 Launch), f,f+2 (-16 on block), hopkick uf+4 (-13).",
+      "bait_duck_interrupt_ur": "Block Hellsweep with db and launch for full combo! Do not counter hastily after 1,b+2.",
+      "parry_vulnerabilities_ur": "Heihachi has f+1+2 headbutt and b+1+2 parries. His headbutts are unparryable; use elbows and knees to break his parries."
     }
   },
   {
@@ -1355,6 +1725,11 @@
     "avatar": "/assets/avatars/eddy.jpg",
     "height": "188 cm (6'2\")",
     "weight": "85 kg",
+    "job_lore": "Capoeira prodigy who allied with Tekken Monks to atone for past misdeeds committed under G-Corporation.",
+    "poking_buttons": "Poking Buttons: df+1,3, d+3 (Low into Negativa RLX), f,f+3 (Low kick into Handstand HSP + Mandinga level), 3,3,3,3.",
+    "pressure_moves": "Pressure Moves: Negativa Stance (RLX), Handstand Stance (HSP), Mandinga Level 2 empowerment.",
+    "mixup_blender": "Upper/Mid/Low Mix-up (RLX Negativa): Low: RLX 3,3 (50/50 low launcher at Mandinga Lv2!). Mid: RLX 4,3 (Safe mid tornado launcher!).",
+    "trap_setup": "The Trap Setup: Land f,f+3 to enter Handstand, build Mandinga level, then force 50/50 RLX 3,3 low vs RLX 4,3 mid.",
     "job_lore_ur": "Capoeira Master; G-Corp se apni ghaltiyon ka kaffara ada karne ke liye Tekken Monks ke sath milta hai.",
     "poking_buttons_ur": "Poking & Pressure: df+1,3, d+3 (Low into Negativa RLX), f,f+3 (Low kick into Handstand HSP + Mandinga level!), 3,3,3,3 (Beginner-friendly pressure string into stances).",
     "pressure_moves_ur": "Pressure & Stance Flows: df+1,3, d+3 (Low into Negativa RLX), f,f+3 (Low kick into Handstand HSP + Mandinga level!), 3,3,3,3 (Beginner-friendly pressure string into stances).",
@@ -1362,10 +1737,14 @@
     "trap_setup_ur": "Trap & Setup (Jaal): Mix-up (RLX Negativa Stance): Low: RLX 3,3 (Mandinga Level 2 par 50/50 low launcher!) | Mid: RLX 4,3 (Safe mid tornado launcher!).\nMix-up aur pressure se opponent ko corner karein aur Counter-Hit trap lagayein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Bananeira (HSP handstand) aur Negativa (RLX) transitions ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,3 (-13), 3,3,3,3 string ender (-12). -15+ Launch: RLX 3,3 Mandinga low launcher (-18 Launch), HSP 4 sweep (-17 Launch), b+3,3 (-16 Launch).",
-      "bait_duck_interrupt_ur": "Eddy jab RLX zameen par baithe ya HSP handstand par jaye, toh foran DICKJAB (db+1) marein! Yeh uske flow ko wahi rok deta hai. 3,3,3,3 beginner string ko duck kar ke launch karein.",
-      "parry_vulnerabilities_ur": "Eddy ke RLX ground kicks ko df se LOW PARRY karein. Uske acrobatic kicks standard kick parry se pakray ja sakte hain."
+      "weak_side_detail": "Sidestep Left (SSL) evades Bananeira (HSP handstand) and Negativa (RLX) forward transitions.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,3 (-13), 3,3,3,3 string ender (-12). -15+ Launch Punishable: RLX 3,3 Mandinga low launcher (-18 Launch), HSP 4 sweep (-17 Launch), b+3,3 (-16 Launch).",
+      "bait_duck_interrupt": "When Eddy sits in RLX or enters HSP handstand, immediately input a DICKJAB (db+1) to stop his flow! Duck under 3,3,3,3.",
+      "parry_vulnerabilities": "Low parry Eddy's RLX ground kicks with df. Standard kick parries catch his acrobatic strikes.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Bananeira (HSP handstand) and Negativa (RLX) forward transitions.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,3 (-13), 3,3,3,3 string ender (-12). -15+ Launch Punishable: RLX 3,3 Mandinga low launcher (-18 Launch), HSP 4 sweep (-17 Launch), b+3,3 (-16 Launch).",
+      "bait_duck_interrupt_ur": "When Eddy sits in RLX or enters HSP handstand, immediately input a DICKJAB (db+1) to stop his flow! Duck under 3,3,3,3.",
+      "parry_vulnerabilities_ur": "Low parry Eddy's RLX ground kicks with df. Standard kick parries catch his acrobatic strikes."
     }
   },
   {
@@ -1383,6 +1762,11 @@
     "avatar": "/assets/avatars/lidia.jpg",
     "height": "172 cm (5'7.5\")",
     "weight": "62 kg",
+    "job_lore": "Prime Minister of Poland and traditional karate world champion, fighting to defend her homeland from Kazuya.",
+    "poking_buttons": "Poking Buttons: 1, 2, 2 (Into Cat Stance), df+2 (Mid check into Horse Stance HRS), ff+2 (+5 on block into HRS!), db+3.",
+    "pressure_moves": "Pressure Moves: Horse Stance (HRS), Cat Stance (CAT), Heaven and Earth Stance (HAE in Heat: +12 Guard Break!).",
+    "mixup_blender": "Upper/Mid/Low Mix-up (HAE Stance in Heat): Unblockable High: HAE 1 (+12 guard break!). Mid: HAE 2 (+6 on block mid smash!).",
+    "trap_setup": "The Trap Setup: ff+2 (+5 on block) into HRS 2 mid or HRS 3 low sweep. In Heat, activate HAE 1 for guaranteed follow-up.",
     "job_lore_ur": "Prime Minister of Poland & Traditional Karate World Champion; apne mulk aur duniya ko Kazuya se bachane nikli hai.",
     "poking_buttons_ur": "Poking & Pressure: 1,2,2 (Into Cat Stance), df+2 (Mid check into Horse Stance HRS), ff+2 (+5 on block into HRS!), db+3 (Clean hit knockdown low!).",
     "pressure_moves_ur": "Pressure & Stance Flows: 1,2,2 (Into Cat Stance), df+2 (Mid check into Horse Stance HRS), ff+2 (+5 on block into HRS!), db+3 (Clean hit knockdown low!).",
@@ -1390,10 +1774,14 @@
     "trap_setup_ur": "Trap & Setup (Jaal): Mix-up (Heat Heaven and Earth HAE Stance): Unblockable High: HAE 1 (+12 guard break!) | Mid: HAE 2 (+6 on block mid smash!).\nMix-up aur pressure se opponent ko corner karein aur Counter-Hit trap lagayein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) ff+2, Horse Stance (HRS), aur Cat Stance (CAT) pokes ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: 1,2,2 (-12), df+2 (-13). -15+ Launch: db+3 sweep (-17 Launch), HRS 4 sweep (-18 Launch), ff+2 (-14 pushback).",
-      "bait_duck_interrupt_ur": "HAE 1 unblockable guard break high hai: DUCK kar ke ws launcher marein! Cat Stance mein aate hi dickjab (db+1) se attack interrupt karein.",
-      "parry_vulnerabilities_ur": "Lidia ke traditional karate punches parry ho sakte hain. Lidia ki apni parry todne ke liye Elbows aur Knees use karein."
+      "weak_side_detail": "Sidestep Left (SSL) evades ff+2, Horse Stance, and Cat Stance forward lunges.",
+      "minus_punishable_moves": "-10 to -14 Punishable: 1,2,2 (-12), df+2 (-13). -15+ Launch Punishable: db+3 sweep (-17 Launch), HRS 4 sweep (-18 Launch), ff+2 (-14 pushback).",
+      "bait_duck_interrupt": "HAE 1 guard break is high: DUCK under it and launch with ws+2! Interrupt Cat Stance with a dickjab (db+1).",
+      "parry_vulnerabilities": "Lidia's traditional karate punches can be parried. Crush her own defensive parries using Elbows and Knees.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades ff+2, Horse Stance, and Cat Stance forward lunges.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: 1,2,2 (-12), df+2 (-13). -15+ Launch Punishable: db+3 sweep (-17 Launch), HRS 4 sweep (-18 Launch), ff+2 (-14 pushback).",
+      "bait_duck_interrupt_ur": "HAE 1 guard break is high: DUCK under it and launch with ws+2! Interrupt Cat Stance with a dickjab (db+1).",
+      "parry_vulnerabilities_ur": "Lidia's traditional karate punches can be parried. Crush her own defensive parries using Elbows and Knees."
     }
   },
   {
@@ -1411,6 +1799,11 @@
     "avatar": "/assets/avatars/clive.jpg",
     "height": "~185 cm (6'1\")",
     "weight": "~82 kg",
+    "job_lore": "First Shield of Rosaria and Dominant of Ifrit (Final Fantasy XVI); master swordsman wielding Eikonic fire and steel.",
+    "poking_buttons": "Poking Buttons: f+1+2 (Prominence: half-screen safe mid!), 1, 1, df+1,2, d+1 (Long range low sword poke).",
+    "pressure_moves": "Pressure Moves: Phoenix Shift (PHX - f+4), Titan Strike, Zantetsuken blade charges.",
+    "mixup_blender": "Upper/Mid/Low Mix-up (PHX Dash): Low: PHX 3 (Sliding sword sweep). Mid: PHX 2 / PHX 1+2 (Mid launcher). Throw: PHX 1+3 (Titan grab).",
+    "trap_setup": "The Trap Setup: Harass at mid-range with f+1+2 Prominence, then Phoenix Shift in with PHX 3 sweep or Titan grab.",
     "job_lore_ur": "First Shield of Rosaria & Dominant of Ifrit.",
     "poking_buttons_ur": "Poking & Pressure: f+1+2 (Prominence - Half-screen safe mid!), 1,1 / df+1,2, d+1 (Long-range sword low), Phoenix Shift (PHX - f+4).",
     "pressure_moves_ur": "Pressure & Stance Flows: f+1+2 (Prominence - Half-screen safe mid!), 1,1 / df+1,2, d+1 (Long-range sword low), Phoenix Shift (PHX - f+4).",
@@ -1418,10 +1811,14 @@
     "trap_setup_ur": "Trap & Setup (Jaal): Mix-up (PHX Dash): Low: PHX 3 (Sliding sword sweep build Zantetsuken meter!) | Mid: PHX 2 / PHX 1+2 (Mid sword launcher) | Throw: PHX 1+3 (Titan grab).\nMix-up aur pressure se opponent ko corner karein aur Counter-Hit trap lagayein.",
     "anti_guide": {
       "weak_side": "SSR",
-      "weak_side_detail_ur": "Sidestep Right (SSR) Phoenix Shift dash (PHX), Prominence (f+1+2), aur Titan slashes ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), 1,1 (-12). -15+ Launch: PHX 3 sliding sweep (-18 Launch), Prominence f+1+2 (-14 pushback), Titan smash (-16 Launch).",
-      "bait_duck_interrupt_ur": "PHX dash se aane wale low sword sweep ko db se block kar ke launch karein! Clive ke long range projectile f+2 ko duck karein.",
-      "parry_vulnerabilities_ur": "Clive ki TALWAAR (Invictus Sword) normal parry aur low parry se deflect NAHI hoti! Sword slashes ko sirf block kar ke punish karein."
+      "weak_side_detail": "Sidestep Right (SSR) evades Phoenix Shift dashes, Prominence f+1+2, and Titan slashes.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), 1,1 (-12). -15+ Launch Punishable: PHX 3 sliding sweep (-18 Launch), Prominence f+1+2 (-14 pushback), Titan smash (-16 Launch).",
+      "bait_duck_interrupt": "Block PHX 3 low sliding sword sweep with db and launch! Duck under long range sword projectile attacks.",
+      "parry_vulnerabilities": "Clive's INVICTUS SWORD CANNOT be low parried or caught with standard reversals! Block and punish.",
+      "weak_side_detail_ur": "Sidestep Right (SSR) evades Phoenix Shift dashes, Prominence f+1+2, and Titan slashes.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), 1,1 (-12). -15+ Launch Punishable: PHX 3 sliding sweep (-18 Launch), Prominence f+1+2 (-14 pushback), Titan smash (-16 Launch).",
+      "bait_duck_interrupt_ur": "Block PHX 3 low sliding sword sweep with db and launch! Duck under long range sword projectile attacks.",
+      "parry_vulnerabilities_ur": "Clive's INVICTUS SWORD CANNOT be low parried or caught with standard reversals! Block and punish."
     }
   },
   {
@@ -1439,6 +1836,11 @@
     "avatar": "/assets/avatars/anna.jpg",
     "height": "171 cm (5'7\")",
     "weight": "56 kg",
+    "job_lore": "Deadly assassin and former G-Corporation commander, locked in lifelong rivalry with her sister Nina.",
+    "poking_buttons": "Poking Buttons: df+1,2 (Mid check string), d+4,1 (Low-high poke), qcf+1 (+ on block high CH launcher), b+2.",
+    "pressure_moves": "Pressure Moves: Chaos Judgment Stance (CJM - b+3: auto low reversals!), Full Crouch (FC) 50/50 cancels.",
+    "mixup_blender": "Full Crouch 50/50 Queen: Low: fc df+2 (Cold Blade: devastating low launcher!) vs Mid: ws+2 (15f mid launcher) or uf+1,3,3+4.",
+    "trap_setup": "The Trap Setup: Crouch into FC 50/50. Opponents cannot react between Cold Blade low launch and ws+2 mid launch.",
     "job_lore_ur": "Assassin, Former G-Corp Commander & Nina ki choti behen / rival.",
     "poking_buttons_ur": "Poking & Pressure: df+1,2, d+4,1 (Low-high), qcf+1 (+ on block high CH launcher), Chaos Judgment Stance (CJM - b+3 - Auto-low reversals!).",
     "pressure_moves_ur": "Pressure & Stance Flows: df+1,2, d+4,1 (Low-high), qcf+1 (+ on block high CH launcher), Chaos Judgment Stance (CJM - b+3 - Auto-low reversals!).",
@@ -1446,10 +1848,14 @@
     "trap_setup_ur": "Trap & Setup (Jaal): Mix-up (Full Crouch 50/50 Queen): Low: fc df+2 (Cold Blade - Half-life low launcher!) | Mid: ws+2 (15f Mid Launcher) ya uf+1,3,3+4 (Mid knockdown).\nMix-up aur pressure se opponent ko corner karein aur Counter-Hit trap lagayein.",
     "anti_guide": {
       "weak_side": "SSR",
-      "weak_side_detail_ur": "Sidestep Right (SSR) Chaos Judgment (CJM) stance entries, qcf+1, aur df+1,2 ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), f+1+2 (-13). -15+ Launch: Cold Blade fc df+2 (-18 Massive Launch!), d+4,1 (-13), ws+2 (-15 Launch).",
-      "bait_duck_interrupt_ur": "d+4,1 string ka doosra hit High hai: duck kar ke ws+2 launcher marein! Full Crouch (FC) 50/50 mein Cold Blade ko db se block kar ke full combo lein.",
-      "parry_vulnerabilities_ur": "Anna CJM stance (b+3) mein auto-low reversal karti hai! CJM mein low attacks mat marein, sirf MIDS ya ELBOWS chalayein."
+      "weak_side_detail": "Sidestep Right (SSR) evades Chaos Judgment stance entries, qcf+1, and df+1,2.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), f+1+2 (-13). -15+ Launch Punishable: Cold Blade fc df+2 (-18 Massive Launch!), d+4,1 (-13), ws+2 (-15 Launch).",
+      "bait_duck_interrupt": "The 2nd hit of d+4,1 is high: duck and launch with ws+2! Block Cold Blade with db and launch for full combo.",
+      "parry_vulnerabilities": "Anna auto-reverses low attacks in CJM stance (b+3)! Do NOT attack her stance with lows; use MIDS or ELBOWS.",
+      "weak_side_detail_ur": "Sidestep Right (SSR) evades Chaos Judgment stance entries, qcf+1, and df+1,2.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), f+1+2 (-13). -15+ Launch Punishable: Cold Blade fc df+2 (-18 Massive Launch!), d+4,1 (-13), ws+2 (-15 Launch).",
+      "bait_duck_interrupt_ur": "The 2nd hit of d+4,1 is high: duck and launch with ws+2! Block Cold Blade with db and launch for full combo.",
+      "parry_vulnerabilities_ur": "Anna auto-reverses low attacks in CJM stance (b+3)! Do NOT attack her stance with lows; use MIDS or ELBOWS."
     }
   },
   {
@@ -1467,6 +1873,11 @@
     "avatar": "/assets/avatars/fahkumram.jpg",
     "height": "215 cm (7'0.5\")",
     "weight": "130 kg",
+    "job_lore": "Legendary Muay Thai champion coerced into combat by the military to protect his captive family.",
+    "poking_buttons": "Poking Buttons: bf+4 (Jet Kick: +6 on block!), 3 (Long range mid check with 3,1 and 3,4 extensions), d+4 (Fast shin low).",
+    "pressure_moves": "Pressure Moves: Charged strike strings (3,4~4* or f+3,2,4~3*: charged kick causes wall crush on block!), Ramasoon.",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: 3,4~3 (Low kick sweep) vs Mid: 3,4~4* (Charged kick guard break).",
+    "trap_setup": "The Trap Setup: Push opponent to the wall, charge 3,4~4* for guaranteed wall crush, then follow with heavy mid combo.",
     "job_lore_ur": "Legendary Muay Thai Champion; Thai Military ne uski biwi aur beti ko bandhi bana kar usay larne par majboor kiya hai.",
     "poking_buttons_ur": "Poking & Pressure: bf+4 (Jet Kick: +6 on block!), 3 (Long range mid poke with 3,1 aur 3,4 extensions), d+4 (Fast shin low).",
     "pressure_moves_ur": "Pressure & Stance Flows: bf+4 (Jet Kick: +6 on block!), 3 (Long range mid poke with 3,1 aur 3,4 extensions), d+4 (Fast shin low).",
@@ -1474,10 +1885,14 @@
     "trap_setup_ur": "Trap & Setup (Jaal): Mix-up (String Charge Guard-Breaks): 3,4~4* ya f+3,2,4~3* (Charged Kick jo block karne wale ko deewar par चिपका deta hai!) vs 3,4~3 (Low kick).\nMix-up aur pressure se opponent ko corner karein aur Counter-Hit trap lagayein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Jet Kick (bf+4), long range knee pokes, aur string extensions ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: 3,1 (-12), df+1,2 (-13). -15+ Launch: 3,4~3 low kick (-16 Launch), db+4 (-17 Launch), charged kick 3,4~4* (-14 on duck).",
-      "bait_duck_interrupt_ur": "Charged kick 3,4~4* ko charge hote dekh kar DUCK karein aur ws+2 se launch karein! 3,1 string ka second hit high hai: duck karein.",
-      "parry_vulnerabilities_ur": "Fahkumram ke Elbows aur Knees normal reversal se deflect nahi hotay! Normal kicks ko df se low parry karein."
+      "weak_side_detail": "Sidestep Left (SSL) evades Jet Kick bf+4, long range kicks, and charged guard breaks.",
+      "minus_punishable_moves": "-10 to -14 Punishable: 3,1 (-12), df+1,2 (-13). -15+ Launch Punishable: 3,4~3 low kick (-16 Launch), db+4 (-17 Launch), charged kick 3,4~4* (-14 on duck).",
+      "bait_duck_interrupt": "Duck under charged kick 3,4~4* as it winds up and launch with ws+2! The 2nd hit of 3,1 is high: duck under it.",
+      "parry_vulnerabilities": "Fahkumram's Muay Thai Elbows and Knees cannot be reversed! Low parry standard kicks with df.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Jet Kick bf+4, long range kicks, and charged guard breaks.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: 3,1 (-12), df+1,2 (-13). -15+ Launch Punishable: 3,4~3 low kick (-16 Launch), db+4 (-17 Launch), charged kick 3,4~4* (-14 on duck).",
+      "bait_duck_interrupt_ur": "Duck under charged kick 3,4~4* as it winds up and launch with ws+2! The 2nd hit of 3,1 is high: duck under it.",
+      "parry_vulnerabilities_ur": "Fahkumram's Muay Thai Elbows and Knees cannot be reversed! Low parry standard kicks with df."
     }
   },
   {
@@ -1495,6 +1910,11 @@
     "avatar": "/assets/avatars/armor-king.jpg",
     "height": "200 cm (6'7\")",
     "weight": "148 kg",
+    "job_lore": "Black Jaguar lucha libre wrestler seeking vengeance and personal score-settling against Marduk and King.",
+    "poking_buttons": "Poking Buttons: df+1 (Premier grappler mid poke), d+3 (+1 on hit low), b+1 (12f CH launcher!), Dark Upper (cd+2), f,f,n,2.",
+    "pressure_moves": "Pressure Moves: Wave-dash into Giant Swing (f,hcf+1), Tombstone (db,f+2+4), Shining Black (wr+2+4), Dark Upper.",
+    "mixup_blender": "Wave-dash Grab/Mid Vortex: Wave-dash forward: mix Giant Swing / Tombstone grabs with Dark Upper (cd+2) or ws+1 mid launcher.",
+    "trap_setup": "The Trap Setup: Knock opponent down, wave-dash over their body, and mix f,f,n,2 low stun with Dark Upper.",
     "job_lore_ur": "Black Jaguar Pro-Wrestler (Armor King I ka chota bhai jo Marduk aur King se hisab barabar rakhta hai).",
     "poking_buttons_ur": "Poking & Pressure: df+1 (Best grappler poke), d+3 (+1 on hit low), b+1 (12f CH launcher!), Dark Upper (f,n,d,df+2), f,f,n,2 (Stun low).",
     "pressure_moves_ur": "Pressure & Stance Flows: df+1 (Best grappler poke), d+3 (+1 on hit low), b+1 (12f CH launcher!), Dark Upper (f,n,d,df+2), f,f,n,2 (Stun low).",
@@ -1502,10 +1922,14 @@
     "trap_setup_ur": "Trap & Setup (Jaal): Mix-up (Wave-dash Grab/Mid Vortex): Wave-dash (f,n,d,df...) se Giant Swing (f,hcf+1), Tombstone (db,f+2+4), aur Shining Black (f,f,f+2+4) lagayein; duck karne par Dark Upper (cd+2) ya ws+1 mar kar launch kar dein!\nMix-up aur pressure se opponent ko corner karein aur Counter-Hit trap lagayein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Dark Upper (cd+2), df+1, aur f,f,n,2 ko evade karta hai. Throws se bachne ke liye tech ya duck karein.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), b+1,2 (-13). -15+ Launch: Dark Upper cd+2 (-15 Launch on block!), f,f,n,2 low stun (-18 Launch), hopkick uf+4 (-13).",
-      "bait_duck_interrupt_ur": "f,f,n,2 low ko db block kar ke ws launcher marein! Giant Swing par 1 break karein, Tombstone par 2 break karein, Shining Black par 1+2 break karein.",
-      "parry_vulnerabilities_ur": "Armor King ke paas b+1+3 / b+2+4 reversal hai. Usay todne ke liye Elbows (Paul df+1) ya Knees (Bryan f+3) use karein."
+      "weak_side_detail": "Sidestep Left (SSL) evades Dark Upper cd+2, df+1, and f,f,n,2 low strikes. Tech or duck grabs.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), b+1,2 (-13). -15+ Launch Punishable: Dark Upper cd+2 (-15 Launch on block!), f,f,n,2 low stun (-18 Launch), hopkick uf+4 (-13).",
+      "bait_duck_interrupt": "Block f,f,n,2 with db and launch! Break Giant Swing with 1, Tombstone with 2, and Shining Black with 1+2.",
+      "parry_vulnerabilities": "Armor King has a b+1+3 / b+2+4 reversal. Break through his guard using Elbows (Paul df+1) or Knees (Bryan f+3).",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Dark Upper cd+2, df+1, and f,f,n,2 low strikes. Tech or duck grabs.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), b+1,2 (-13). -15+ Launch Punishable: Dark Upper cd+2 (-15 Launch on block!), f,f,n,2 low stun (-18 Launch), hopkick uf+4 (-13).",
+      "bait_duck_interrupt_ur": "Block f,f,n,2 with db and launch! Break Giant Swing with 1, Tombstone with 2, and Shining Black with 1+2.",
+      "parry_vulnerabilities_ur": "Armor King has a b+1+3 / b+2+4 reversal. Break through his guard using Elbows (Paul df+1) or Knees (Bryan f+3)."
     }
   },
   {
@@ -1523,6 +1947,11 @@
     "avatar": "/assets/avatars/miary-zo.jpg",
     "height": "~174 cm (5'8.5\")",
     "weight": "~62 kg",
+    "job_lore": "Madagascan spiritual guardian fighting with traditional Morengy martial arts, channeling ancient primal energy.",
+    "poking_buttons": "Poking Buttons: 1, 2, 4, df+1 (Mid check), d+3 (Fast low poke), f,f+3 (+ on block spiritual leap).",
+    "pressure_moves": "Pressure Moves: Primal Stance (PRM - d+3+4), Spiritual Leap (f,f+3), Ogre-style ancient guard break (PRM 1+2).",
+    "mixup_blender": "Upper/Mid/Low Mix-up (PRM Stance): Low: PRM 3 (Sweeping tail/leg low). Mid: PRM 2 (Mid launcher). Unblockable: PRM 1+2.",
+    "trap_setup": "The Trap Setup: Leap in with f,f+3 (+ on block) into Primal Stance, forcing 50/50 PRM 3 low vs PRM 2 mid.",
     "job_lore_ur": "Morengy Fighter & Spiritual Guardian (\"Fighting God Reborn\" connected to Ogre's ancient power).",
     "poking_buttons_ur": "Poking & Pressure: 1,2,4, df+1, d+3 (Fast low), f,f+3 (Plus on block spiritual leap), Primal Stance (PRM - d+3+4).",
     "pressure_moves_ur": "Pressure & Stance Flows: 1,2,4, df+1, d+3 (Fast low), f,f+3 (Plus on block spiritual leap), Primal Stance (PRM - d+3+4).",
@@ -1530,10 +1959,14 @@
     "trap_setup_ur": "Trap & Setup (Jaal): Mix-up (PRM Stance): Low: PRM 3 (Sweeping tail/leg low) | Mid: PRM 2 (Mid launcher) | Unblockable: PRM 1+2 (Ogre-style ancient guard break!).\nMix-up aur pressure se opponent ko corner karein aur Counter-Hit trap lagayein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Primal Stance (PRM) lunges aur spiritual leaps (f,f+3) ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), 1,2,4 (-13). -15+ Launch: PRM 3 sweeping tail/leg low (-18 Launch), PRM 1+2 guard break (-15 on duck), f,f+3 (-12).",
-      "bait_duck_interrupt_ur": "PRM 1+2 ancient guard break high hai: duck kar ke ws launcher marein! PRM 3 tail sweep ko db block kar ke full combo lein.",
-      "parry_vulnerabilities_ur": "Miary Zo ke spiritual energy attacks aur tail moves low parry nahi hotay! Normal punches/kicks parry ho sakti hain."
+      "weak_side_detail": "Sidestep Left (SSL) evades Primal Stance lunges and spiritual leaps f,f+3.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), 1,2,4 (-13). -15+ Launch Punishable: PRM 3 sweeping tail/leg low (-18 Launch), PRM 1+2 guard break (-15 on duck), f,f+3 (-12).",
+      "bait_duck_interrupt": "PRM 1+2 ancient guard break is high: duck and launch with ws+2! Block PRM 3 tail sweep with db and launch.",
+      "parry_vulnerabilities": "Miary Zo's spiritual tail sweeps cannot be low parried. Standard punches and kicks can be deflected.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Primal Stance lunges and spiritual leaps f,f+3.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), 1,2,4 (-13). -15+ Launch Punishable: PRM 3 sweeping tail/leg low (-18 Launch), PRM 1+2 guard break (-15 on duck), f,f+3 (-12).",
+      "bait_duck_interrupt_ur": "PRM 1+2 ancient guard break is high: duck and launch with ws+2! Block PRM 3 tail sweep with db and launch.",
+      "parry_vulnerabilities_ur": "Miary Zo's spiritual tail sweeps cannot be low parried. Standard punches and kicks can be deflected."
     }
   },
   {
@@ -1551,6 +1984,11 @@
     "avatar": "/assets/avatars/kunimitsu.jpg",
     "height": "162 cm (5'4\")",
     "weight": "50 kg",
+    "job_lore": "Fox-masked kunoichi and ninja thief, daughter of Kunimitsu I, continuing her family's treasure-hunting legacy.",
+    "poking_buttons": "Poking Buttons: 2, 2, 2, 2 (Fast string into Setsuna SET dash), qcf+1 (Full-screen kunai throw!), df+1, db+3,3.",
+    "pressure_moves": "Pressure Moves: Setsuna Stance (SET), qcf+1 (Kunai throw), uf+3,4 (Acrobatic launcher), ws+3.",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: SET 3 (Sliding low) or fc df+3 (Sweep launcher!). Mid: SET 2 (Safe mid) or ws+3 (Mid launcher).",
+    "trap_setup": "The Trap Setup: Fire qcf+1 kunai from full screen. If opponent blocks or hesitates, dash in with SET 3 low sweep.",
     "job_lore_ur": "Thief & Ninja Assassin (Kunimitsu I ki beti jo family business aage barha rahi hai).",
     "poking_buttons_ur": "Poking & Pressure: 2,2,2,2 (Fast string into Setsuna SET dash), qcf+1 (Full-screen Kunai Throw!), df+1, db+3,3 (Low).",
     "pressure_moves_ur": "Pressure & Stance Flows: 2,2,2,2 (Fast string into Setsuna SET dash), qcf+1 (Full-screen Kunai Throw!), df+1, db+3,3 (Low).",
@@ -1558,10 +1996,14 @@
     "trap_setup_ur": "Trap & Setup (Jaal): Mix-up (SET Dash & Crouch): Low: SET 3 (Sliding low) ya fc df+3 (Sweep launcher!) | Mid: SET 2 (Safe mid) ya ws+3 (Mid launcher).\nMix-up aur pressure se opponent ko corner karein aur Counter-Hit trap lagayein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Setsuna (SET) dash aur Kunai throws (qcf+1) ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), 2,2,2,2 (-13). -15+ Launch: fc df+3 sweep (-20 Launch), SET 3 sliding low (-17 Launch), qcf+2 (-15 Launch).",
-      "bait_duck_interrupt_ur": "qcf+1 Kunai Throw high hai: full screen par duck karein aur dash in karein! SET dash par dickjab (db+1) se mix-up torein.",
-      "parry_vulnerabilities_ur": "Kunimitsu ke KUNAI (Daggers) projectiles normal parry se deflect nahi hotay! Sword slashes ko block karein."
+      "weak_side_detail": "Sidestep Left (SSL) evades Setsuna SET dash and qcf+1 kunai throws.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), 2,2,2,2 (-13). -15+ Launch Punishable: fc df+3 sweep (-20 Launch), SET 3 sliding low (-17 Launch), qcf+2 (-15 Launch).",
+      "bait_duck_interrupt": "qcf+1 Kunai Throw is high: duck under it at full screen and dash in! Interrupt SET dash with a dickjab (db+1).",
+      "parry_vulnerabilities": "Kunimitsu's thrown KUNAI DAGGER cannot be parried! Sword slashes bypass reversals; block and punish.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Setsuna SET dash and qcf+1 kunai throws.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), 2,2,2,2 (-13). -15+ Launch Punishable: fc df+3 sweep (-20 Launch), SET 3 sliding low (-17 Launch), qcf+2 (-15 Launch).",
+      "bait_duck_interrupt_ur": "qcf+1 Kunai Throw is high: duck under it at full screen and dash in! Interrupt SET dash with a dickjab (db+1).",
+      "parry_vulnerabilities_ur": "Kunimitsu's thrown KUNAI DAGGER cannot be parried! Sword slashes bypass reversals; block and punish."
     }
   },
   {
@@ -1579,6 +2021,11 @@
     "avatar": "/assets/avatars/bob.jpg",
     "height": "186 cm (6'1\")",
     "weight": "152 kg",
+    "job_lore": "Freestyle karate bounty hunter who intentionally gained massive weight to achieve the ultimate blend of speed and mass.",
+    "poking_buttons": "Poking Buttons: df+1 (Fast mid check), b+2,2, d+3+4 (Fast double low kicks), cd+1 (+ on block wave-dash high).",
+    "pressure_moves": "Pressure Moves: Spinner Ball Stance (BAL - f+3+4), Wave-dash, cd+1 (+ on block high punch).",
+    "mixup_blender": "Wave-dash 50/50: Low: cd+4,1+2 (Belly Hellsweep!) or db+3+4. Mid: uf+1+2,4 (Safe mid) or cd+2 (Mid launcher).",
+    "trap_setup": "The Trap Setup: Wave-dash into opponent's face: loop cd+4 Belly Hellsweep until they duck, then launch with cd+2.",
     "job_lore_ur": "Freestyle Karate Bounty Hunter (\"Speed and Weight\" philosophy ke liye apna wazan barhaya).",
     "poking_buttons_ur": "Poking & Pressure: df+1, b+2,2, d+3+4 (Fast double low), Spinner Ball (BAL - f+3+4), cd+1 (Wave-dash high: + on block).",
     "pressure_moves_ur": "Pressure & Stance Flows: df+1, b+2,2, d+3+4 (Fast double low), Spinner Ball (BAL - f+3+4), cd+1 (Wave-dash high: + on block).",
@@ -1586,10 +2033,14 @@
     "trap_setup_ur": "Trap & Setup (Jaal): Mix-up (Wave-dash 50/50): Low: cd+4,1+2 (Belly Hellsweep!) ya db+3+4 | Mid: uf+1+2,4 (Safe mid) ya cd+2 (Mid launcher).\nMix-up aur pressure se opponent ko corner karein aur Counter-Hit trap lagayein.",
     "anti_guide": {
       "weak_side": "SSR",
-      "weak_side_detail_ur": "Sidestep Right (SSR) Spinner Ball (BAL), cd+1, aur Belly Hellsweep (cd+4) ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), b+2,2 (-13). -15+ Launch: Belly Hellsweep cd+4,1+2 (-23 Stagger Launch!), db+3+4 (-17 Launch), BAL 3 (-16 Launch).",
-      "bait_duck_interrupt_ur": "Wave-dash par db se BLOCK karein aur Belly Hellsweep ko ws+2 se full launch marein! Spinner Ball par 1 jab se float karein.",
-      "parry_vulnerabilities_ur": "Bob ke Belly stomps aur heavy shoulder attacks normal parry se deflect nahi hotay. Pokes parry ho sakte hain."
+      "weak_side_detail": "Sidestep Right (SSR) evades Spinner Ball BAL, cd+1, and Belly Hellsweep cd+4.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), b+2,2 (-13). -15+ Launch Punishable: Belly Hellsweep cd+4,1+2 (-23 Stagger Low Launch!), db+3+4 (-17 Launch), BAL 3 (-16 Launch).",
+      "bait_duck_interrupt": "Block Belly Hellsweep with db and launch for 85+ damage! Float Spinner Ball rolls out of the air with 1 jabs.",
+      "parry_vulnerabilities": "Bob's heavy belly flops and shoulder tackles cannot be parried. Pokes can be deflected.",
+      "weak_side_detail_ur": "Sidestep Right (SSR) evades Spinner Ball BAL, cd+1, and Belly Hellsweep cd+4.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), b+2,2 (-13). -15+ Launch Punishable: Belly Hellsweep cd+4,1+2 (-23 Stagger Low Launch!), db+3+4 (-17 Launch), BAL 3 (-16 Launch).",
+      "bait_duck_interrupt_ur": "Block Belly Hellsweep with db and launch for 85+ damage! Float Spinner Ball rolls out of the air with 1 jabs.",
+      "parry_vulnerabilities_ur": "Bob's heavy belly flops and shoulder tackles cannot be parried. Pokes can be deflected."
     }
   },
   {
@@ -1607,6 +2058,11 @@
     "avatar": "/assets/avatars/roger-jr.jpg",
     "height": "160 cm (5'3\")",
     "weight": "85 kg",
+    "job_lore": "Genetically modified boxing kangaroo created in G-Corp laboratories; fights alongside his mother from her pouch.",
+    "poking_buttons": "Poking Buttons: 1, 2, 1 (Boxing jabs), d+3+4 (Tail low sweep), f,f+2 (Mid punch), b+1.",
+    "pressure_moves": "Pressure Moves: Animal Stance (ANM - b+3+4), Giant Swing (f,hcf+1), Animal Kicks (ANM 3,3,3).",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: ANM 4 (Low sweep) or d+3+4 tail sweep. Mid: ANM 3,3,3 (Mid kick string) or Giant Swing.",
+    "trap_setup": "The Trap Setup: Mix up Giant Swing command grab with ANM 3,3,3 mid kicks against ducking opponents.",
     "job_lore_ur": "Genetically Modified Boxing Kangaroo (Roger ki biwi aur uska beta jo pouch mein beth kar larta hai).",
     "poking_buttons_ur": "Poking & Pressure: 1,2,1 (Boxing jabs), d+3+4 (Tail low sweep), f,f+2 (Mid punch), Animal Stance (ANM - b+3+4).",
     "pressure_moves_ur": "Pressure & Stance Flows: 1,2,1 (Boxing jabs), d+3+4 (Tail low sweep), f,f+2 (Mid punch), Animal Stance (ANM - b+3+4).",
@@ -1614,10 +2070,14 @@
     "trap_setup_ur": "Trap & Setup (Jaal): Mix-up: King की तरह Giant Swing (f,hcf+1) और Animal Kick (ANM 3,3,3 Mid vs ANM 4 Low) का खतरनाक इस्तेमाल।\nMix-up aur pressure se opponent ko corner karein aur Counter-Hit trap lagayein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Animal Stance (ANM) charges aur tail sweeps ko evade karta hai.",
-      "minus_punishable_moves_ur": "-10 to -14: 1,2,1 (-12), f,f+2 (-13). -15+ Launch: d+3+4 tail low sweep (-20 Launch), ANM 4 sweep (-18 Launch), hopkick uf+4 (-13).",
-      "bait_duck_interrupt_ur": "d+3+4 tail sweep ko db block kar ke ws launcher marein! Giant Swing throw par 1 daba kar break karein.",
-      "parry_vulnerabilities_ur": "Roger Jr. ki DUM (Tail) aur Kangaroo kicks low parry nahi hotin! Normal boxing punches standard punch parry se pakray ja sakte hain."
+      "weak_side_detail": "Sidestep Left (SSL) evades Animal Stance charges and tail sweeps.",
+      "minus_punishable_moves": "-10 to -14 Punishable: 1,2,1 (-12), f,f+2 (-13). -15+ Launch Punishable: d+3+4 tail low sweep (-20 Launch), ANM 4 sweep (-18 Launch), hopkick uf+4 (-13).",
+      "bait_duck_interrupt": "Block d+3+4 tail sweep with db and launch with ws+2! Break Giant Swing throw with 1.",
+      "parry_vulnerabilities": "Roger Jr.'s TAIL and marsupial kicks cannot be low parried! Boxing punches can be deflected.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Animal Stance charges and tail sweeps.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: 1,2,1 (-12), f,f+2 (-13). -15+ Launch Punishable: d+3+4 tail low sweep (-20 Launch), ANM 4 sweep (-18 Launch), hopkick uf+4 (-13).",
+      "bait_duck_interrupt_ur": "Block d+3+4 tail sweep with db and launch with ws+2! Break Giant Swing throw with 1.",
+      "parry_vulnerabilities_ur": "Roger Jr.'s TAIL and marsupial kicks cannot be low parried! Boxing punches can be deflected."
     }
   },
   {
@@ -1635,6 +2095,11 @@
     "avatar": "/assets/avatars/yujiro.jpg",
     "height": "190 cm (6'3\")",
     "weight": "120 kg",
+    "job_lore": "'The Strongest Creature on Earth' (The Ogre from Baki); invincible martial artist who defeated modern armies barehanded.",
+    "poking_buttons": "Poking Buttons: df+1 (Brute mid check), b+1 (Heavy chop: +5 on block!), d+2 (Crushing low punch), f+2.",
+    "pressure_moves": "Pressure Moves: Demon Back Awakening (Heat), Ear-drum slap (f,f+1+2*: Guard break -> Free combo!), b+1.",
+    "mixup_blender": "Upper/Mid/Low Mix-up: Low: db+4 (Leg-breaker sweep). Mid: df+2 / uf+2 (Brutal mid smash). Guard Break: f,f+1+2*.",
+    "trap_setup": "The Trap Setup: Push opponent to the wall, charge f,f+1+2* ear-drum slap for guard break into guaranteed full combo.",
     "job_lore_ur": "\"The Strongest Creature on Earth\" (The Ogre); bina kisi weapon ya rule ke duniya ki fauj ko akele harane wala shaitan.",
     "poking_buttons_ur": "Poking & Pressure: df+1, b+1 (Heavy chop: +5 on block!), d+2 (Crushing low punch), Demon Back Awakening (1+2+3+4 in Heat).",
     "pressure_moves_ur": "Pressure & Stance Flows: df+1, b+1 (Heavy chop: +5 on block!), d+2 (Crushing low punch), Demon Back Awakening (1+2+3+4 in Heat).",
@@ -1642,15 +2107,18 @@
     "trap_setup_ur": "Trap & Setup (Jaal): Mix-up: Guard Break: f,f+1+2* (Ear-drum slap / Guard Break -> Free combo!) | Low: db+4 (Leg-breaker sweep) | Mid: df+2 / uf+2 (Brutal mid smash).\nMix-up aur pressure se opponent ko corner karein aur Counter-Hit trap lagayein.",
     "anti_guide": {
       "weak_side": "SSL",
-      "weak_side_detail_ur": "Sidestep Left (SSL) Heavy Chop (b+1) aur brute punches ko evade karta hai. Distance maintain rakhein.",
-      "minus_punishable_moves_ur": "-10 to -14: df+1,2 (-12), b+1 (-13). -15+ Launch: db+4 leg-breaker sweep (-24 Stagger Launch!), f,f+1+2* ear-slap guard break (-16 on duck), df+2 (-15 Launch).",
-      "bait_duck_interrupt_ur": "f,f+1+2* Ear-drum slap high guard break hai: dekhte hi DUCK karein aur ws+2 se launch kar dein! db+4 sweep ko db block kar ke 85+ damage lein.",
-      "parry_vulnerabilities_ur": "Yujiro ka Demon Back awakening unblockable brute attacks deta hai jo normal reversal ko tor dete hain! Us par defensive parry ki koshish mat karein."
+      "weak_side_detail": "Sidestep Left (SSL) evades Heavy Chop b+1 and brute punches. Maintain safe distance.",
+      "minus_punishable_moves": "-10 to -14 Punishable: df+1,2 (-12), b+1 (-13). -15+ Launch Punishable: db+4 leg-breaker sweep (-24 Stagger Low Launch!), f,f+1+2* ear-slap (-16 on duck), df+2 (-15 Launch).",
+      "bait_duck_interrupt": "f,f+1+2* Ear-drum slap is a high guard break: DUCK as it winds up and launch with ws+2! Block db+4 sweep with db.",
+      "parry_vulnerabilities": "Yujiro's brute force strikes pierce through standard reversals! Do not attempt defensive parries against him.",
+      "weak_side_detail_ur": "Sidestep Left (SSL) evades Heavy Chop b+1 and brute punches. Maintain safe distance.",
+      "minus_punishable_moves_ur": "-10 to -14 Punishable: df+1,2 (-12), b+1 (-13). -15+ Launch Punishable: db+4 leg-breaker sweep (-24 Stagger Low Launch!), f,f+1+2* ear-slap (-16 on duck), df+2 (-15 Launch).",
+      "bait_duck_interrupt_ur": "f,f+1+2* Ear-drum slap is a high guard break: DUCK as it winds up and launch with ws+2! Block db+4 sweep with db.",
+      "parry_vulnerabilities_ur": "Yujiro's brute force strikes pierce through standard reversals! Do not attempt defensive parries against him."
     }
   }
 ];
 
-  // Expose on global window object
   window.TEKKEN8_MASTER_DATA = {
     universal: UNIVERSAL_MECHANICS,
     roster: ROSTER_DATA,
@@ -1678,5 +2146,5 @@
     }
   };
 
-  console.log('✅ Tekken 8 Master Strategy Hub Data Layer Loaded: 44 Characters & Universal Mechanics.');
+  console.log('✅ Tekken 8 Master Strategy Hub Data Layer Loaded: 44 Characters & Universal Mechanics (English Default).');
 })();
