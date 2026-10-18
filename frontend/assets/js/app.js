@@ -9957,6 +9957,53 @@ function setBlenderScenarioFilter(filterType) {
 }
 window.setBlenderScenarioFilter = setBlenderScenarioFilter;
 
+function setTenHitViewMode(mode) {
+  if (!window.tacticsState) window.tacticsState = {};
+  window.tacticsState.tenHitView = mode;
+  playSfx('click');
+  const cachedData = window.tacticsState.cache?.['ten-hit'];
+  const searchInput = document.getElementById('tacticsCompendiumSearch');
+  const query = searchInput ? searchInput.value.trim() : '';
+  if (cachedData) {
+    renderTacticsUI('ten-hit', cachedData, query);
+  }
+}
+window.setTenHitViewMode = setTenHitViewMode;
+
+function setBlenderViewMode(mode) {
+  if (!window.tacticsState) window.tacticsState = {};
+  window.tacticsState.blenderView = mode;
+  playSfx('click');
+  const cachedData = window.tacticsState.cache?.['emergency'];
+  const searchInput = document.getElementById('tacticsCompendiumSearch');
+  const query = searchInput ? searchInput.value.trim() : '';
+  if (cachedData) {
+    renderTacticsUI('emergency', cachedData, query);
+  }
+}
+window.setBlenderViewMode = setBlenderViewMode;
+
+function copyDrillToClipboard(drillText, btnElement) {
+  if (!drillText) return;
+  playSfx('click');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(drillText).then(() => {
+      if (btnElement) {
+        const orig = btnElement.innerHTML;
+        btnElement.innerHTML = '✅ Copied!';
+        btnElement.style.background = '#22c55e';
+        btnElement.style.color = '#000';
+        setTimeout(() => {
+          btnElement.innerHTML = orig;
+          btnElement.style.background = '';
+          btnElement.style.color = '';
+        }, 1500);
+      }
+    }).catch(() => {});
+  }
+}
+window.copyDrillToClipboard = copyDrillToClipboard;
+
 function renderHitSequenceBadges(seqStr) {
   if (!seqStr || typeof seqStr !== 'string') return '—';
   const hits = seqStr.split(',').map(h => h.trim().toLowerCase()).filter(Boolean);
@@ -10397,6 +10444,7 @@ function renderTacticsUI(tabName, rawData, query = '') {
       </table>
     `;
   } else if (tabName === 'ten-hit') {
+    const activeTenHitView = window.tacticsState?.tenHitView || 'stepper';
     const banner = isUrdu ? `
       <div style="padding:0.85rem 1.1rem; background:rgba(237,104,35,0.12); border-left:4px solid var(--accent-orange); border-radius:6px; margin-bottom:1.1rem; font-size:0.82rem; line-height:1.6;">
         <strong style="color:var(--accent-orange);">💡 10-Hit Todne Ke 4 Golden Rules:</strong><br>
@@ -10415,20 +10463,24 @@ function renderTacticsUI(tabName, rawData, query = '') {
       </div>
     `;
 
-    container.innerHTML = `
-      ${banner}
-      <table class="analyzer-table tactics-table">
-        <thead>
-          <tr>
-            <th>${isUrdu ? 'Fighter' : 'Character'}</th>
-            <th>${isUrdu ? '10-Hit String Input' : '10-Hit Sequence Input'}</th>
-            <th>${isUrdu ? 'Hit Sequence (H/M/L)' : 'Hit Sequence (H/M/L)'}</th>
-            <th>${isUrdu ? 'Kahan Rokein? (Exact Weak Point)' : 'Where to Duck / Parry (Weak Point)'}</th>
-            <th>${isUrdu ? 'Interrupt Gap (i10 / Power Crush)' : 'Interrupt Gap (i10 / Crush)'}</th>
-            <th>${isUrdu ? 'Exact Counter Action' : 'Optimal Counter Action'}</th>
-          </tr>
-        </thead>
-        <tbody>
+    const subFilterBar = `
+      <div class="tactics-subfilter-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:1rem;">
+        <div style="display:flex; gap:6px; align-items:center;">
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">${isUrdu ? '10-Hit Strings:' : '10-Hit Strings:'}</span>
+          <span class="badge" style="background:rgba(0,229,255,0.18); color:var(--accent-cyan); font-weight:800; font-size:0.75rem;">${filtered.length} Fighters</span>
+        </div>
+        <div class="tactics-view-switcher">
+          <button type="button" class="tactics-view-btn ${activeTenHitView === 'stepper' ? 'active' : ''}" onclick="setTenHitViewMode('stepper')">⚡ ${isUrdu ? 'Visual Stepper Track' : 'Visual Stepper Track'}</button>
+          <button type="button" class="tactics-view-btn ${activeTenHitView === 'table' ? 'active' : ''}" onclick="setTenHitViewMode('table')">📋 ${isUrdu ? 'Data Matrix Table' : 'Data Matrix Table'}</button>
+        </div>
+      </div>
+    `;
+
+    if (activeTenHitView === 'stepper') {
+      container.innerHTML = `
+        ${banner}
+        ${subFilterBar}
+        <div class="tenhit-cards-grid">
           ${filtered.map(row => {
             const where = isUrdu 
               ? (row.where_to_duck_parry_ur || row.where_to_duck_parry) 
@@ -10439,20 +10491,125 @@ function renderTacticsUI(tabName, rawData, query = '') {
             const opt = isUrdu 
               ? (row.optimal_punish_ur || row.optimal_punish || row.how_to_counter) 
               : (row.optimal_punish_en || row.optimal_punish || row.how_to_counter);
+
+            // Parse inputs and hit levels
+            const rawInputs = (row.combo_input || '').split(',').map(s => s.trim()).filter(Boolean);
+            const rawLevels = (row.hit_sequence_breakdown || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+            const count = Math.max(rawInputs.length, rawLevels.length, 10);
+
+            let stepsHtml = '';
+            for (let i = 0; i < count; i++) {
+              const inp = rawInputs[i] || `${i + 1}`;
+              const lvl = rawLevels[i] || 'm';
+              let badgeCls = 'mid';
+              let lvlLabel = 'M';
+              if (lvl.includes('h')) { badgeCls = 'high'; lvlLabel = 'H'; }
+              else if (lvl.includes('l')) { badgeCls = 'low'; lvlLabel = 'L'; }
+              else if (lvl.includes('u')) { badgeCls = 'high'; lvlLabel = 'U!'; }
+              else if (lvl.includes('s')) { badgeCls = 'spl'; lvlLabel = 'SM'; }
+
+              const hitNumStr = `hit ${i + 1}`;
+              const isParryPoint = lvl.includes('l') || (where && where.toLowerCase().includes(hitNumStr));
+              const isGapPoint = gap && gap.toLowerCase().includes(hitNumStr);
+
+              let nodeExtraCls = '';
+              let alertBadge = '';
+              if (isParryPoint) {
+                nodeExtraCls = 'weak-point';
+                alertBadge = `<span class="th-node-alert parry">⚠️ PARRY</span>`;
+              } else if (isGapPoint) {
+                nodeExtraCls = 'gap-point';
+                alertBadge = `<span class="th-node-alert gap">🛑 GAP</span>`;
+              }
+
+              stepsHtml += `
+                <div class="th-step-node ${nodeExtraCls}">
+                  ${alertBadge}
+                  <span class="th-step-num">Hit ${i + 1}</span>
+                  <span class="th-step-input">${formatTekkenNotation(inp)}</span>
+                  <span class="th-step-badge ${badgeCls}">${lvlLabel}</span>
+                </div>
+              `;
+            }
+
             return `
-              <tr>
-                <td><strong>${escapeHtml(row.character)}</strong></td>
-                <td><code>${formatTekkenNotation(row.combo_input || row.ten_hit_name || '')}</code></td>
-                <td>${renderHitSequenceBadges(row.hit_sequence_breakdown)}</td>
-                <td><span style="color:var(--accent-gold); font-weight:700;">${escapeHtml(where || '')}</span></td>
-                <td><span style="color:var(--accent-cyan); font-size:0.8rem; font-weight:600;">${escapeHtml(gap || 'Gap available')}</span></td>
-                <td><span class="break-subtag" style="background:rgba(34,197,94,0.15); color:var(--accent-green); border:1px solid rgba(34,197,94,0.3); font-size:0.8rem; font-weight:700; padding:3px 8px; border-radius:4px;">${escapeHtml(opt || '')}</span></td>
-              </tr>
+              <div class="tenhit-stepper-card">
+                <div class="th-card-header">
+                  <div class="th-char-info">
+                    <span class="th-char-name">${escapeHtml(row.character)}</span>
+                    <span class="badge" style="background:rgba(255,255,255,0.08); color:#f1f5f9; font-size:0.75rem;">10-Hit String</span>
+                  </div>
+                  <div class="th-meta-tags">
+                    <span class="badge" style="background:rgba(255,190,11,0.2); color:var(--accent-gold); border:1px solid rgba(255,190,11,0.4); font-weight:800; font-size:0.75rem;">
+                      🎯 Weak Point: ${escapeHtml(where || 'Hit 4 or 5')}
+                    </span>
+                    <span class="badge" style="background:rgba(0,229,255,0.18); color:var(--accent-cyan); border:1px solid rgba(0,229,255,0.35); font-weight:700; font-size:0.75rem;">
+                      ⚡ Gap: ${escapeHtml(gap || 'Gap available')}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="th-sequence-track">
+                  ${stepsHtml}
+                </div>
+
+                <div class="th-tactical-chamber">
+                  <div class="th-chamber-box punish">
+                    <div class="th-chamber-label punish">🛡️ ${isUrdu ? 'Verified Optimal Counter Action' : 'Optimal Counter Action'}</div>
+                    <div class="th-chamber-text">${escapeHtml(opt || 'Hold df for auto Low Parry launch')}</div>
+                  </div>
+                  <div class="th-chamber-box gap">
+                    <div class="th-chamber-label gap">⚡ ${isUrdu ? 'Duck / Parry Window Timing' : 'Duck / Parry Window & Gap'}</div>
+                    <div class="th-chamber-text">${escapeHtml(where || '')}${gap ? ` • ${escapeHtml(gap)}` : ''}</div>
+                  </div>
+                </div>
+              </div>
             `;
           }).join('')}
-        </tbody>
-      </table>
-    `;
+        </div>
+      `;
+    } else {
+      // Data Matrix Table Mode
+      container.innerHTML = `
+        ${banner}
+        ${subFilterBar}
+        <table class="analyzer-table tactics-table">
+          <thead>
+            <tr>
+              <th>${isUrdu ? 'Fighter' : 'Character'}</th>
+              <th>${isUrdu ? '10-Hit String Input' : '10-Hit Sequence Input'}</th>
+              <th>${isUrdu ? 'Hit Sequence (H/M/L)' : 'Hit Sequence (H/M/L)'}</th>
+              <th>${isUrdu ? 'Kahan Rokein? (Exact Weak Point)' : 'Where to Duck / Parry (Weak Point)'}</th>
+              <th>${isUrdu ? 'Interrupt Gap (i10 / Power Crush)' : 'Interrupt Gap (i10 / Crush)'}</th>
+              <th>${isUrdu ? 'Exact Counter Action' : 'Optimal Counter Action'}</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filtered.map(row => {
+              const where = isUrdu 
+                ? (row.where_to_duck_parry_ur || row.where_to_duck_parry) 
+                : (row.where_to_duck_parry_en || row.where_to_duck_parry);
+              const gap = isUrdu
+                ? (row.interrupt_gap_ur || row.interrupt_gap)
+                : (row.interrupt_gap_en || row.interrupt_gap);
+              const opt = isUrdu 
+                ? (row.optimal_punish_ur || row.optimal_punish || row.how_to_counter) 
+                : (row.optimal_punish_en || row.optimal_punish || row.how_to_counter);
+              return `
+                <tr>
+                  <td><strong>${escapeHtml(row.character)}</strong></td>
+                  <td><code>${formatTekkenNotation(row.combo_input || row.ten_hit_name || '')}</code></td>
+                  <td>${renderHitSequenceBadges(row.hit_sequence_breakdown)}</td>
+                  <td><span style="color:var(--accent-gold); font-weight:700;">${escapeHtml(where || '')}</span></td>
+                  <td><span style="color:var(--accent-cyan); font-size:0.8rem; font-weight:600;">${escapeHtml(gap || 'Gap available')}</span></td>
+                  <td><span class="break-subtag" style="background:rgba(34,197,94,0.15); color:var(--accent-green); border:1px solid rgba(34,197,94,0.3); font-size:0.8rem; font-weight:700; padding:3px 8px; border-radius:4px;">${escapeHtml(opt || '')}</span></td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
   } else if (tabName === 'heat-smashes') {
     const subFilterBar = `
       <div class="tactics-subfilter-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
@@ -10691,28 +10848,41 @@ function renderTacticsUI(tabName, rawData, query = '') {
     `;
   } else if (tabName === 'emergency') {
     const activeBlenderFilter = window.tacticsState?.blenderFilter || 'ALL';
-    container.innerHTML = `
-      <div class="tactics-subfilter-bar">
-        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-right:4px;">${isUrdu ? 'Scenario Type:' : 'Scenario Filter:'}</span>
-        <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'ALL' ? 'active' : ''}" onclick="setBlenderScenarioFilter('ALL')">${isUrdu ? 'Tamam Scenarios' : 'All Scenarios'} (${rawData.length})</button>
-        <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'VORTEX' ? 'active' : ''}" onclick="setBlenderScenarioFilter('VORTEX')">🌀 ${isUrdu ? '50/50 Stance Vortex' : '50/50 Stance Vortex'}</button>
-        <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'OKI' ? 'active' : ''}" onclick="setBlenderScenarioFilter('OKI')">🤼 ${isUrdu ? 'Ground Oki & Throws' : 'Ground Oki & Throws'}</button>
-        <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'PLUS_TRAP' ? 'active' : ''}" onclick="setBlenderScenarioFilter('PLUS_TRAP')">⚡ ${isUrdu ? 'Plus Frame Traps' : 'Plus Frame Traps'}</button>
-        <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'UNIVERSAL' ? 'active' : ''}" onclick="setBlenderScenarioFilter('UNIVERSAL')">🚨 ${isUrdu ? 'Universal Panic Counterplay' : 'Universal Panic Counterplay'}</button>
-      </div>
+    const activeBlenderView = window.tacticsState?.blenderView || 'cards';
 
-      <table class="analyzer-table tactics-table blender-table">
-        <thead>
-          <tr>
-            <th style="min-width:180px;">${isUrdu ? 'Fighter & Blender Scenario' : 'Character & Blender Scenario'}</th>
-            <th style="min-width:140px;">${isUrdu ? 'Frame Situation' : 'Frame Situation'}</th>
-            <th style="min-width:220px;">${isUrdu ? 'Panic Trigger (Kya HARGIZ Na Karein)' : 'Panic Trigger (What NOT To Do)'}</th>
-            <th style="min-width:250px;">${isUrdu ? 'Verified Safe Response (Exact Frame Solution)' : 'Verified Safe Response (Exact Frame Solution)'}</th>
-            <th style="min-width:130px;">${isUrdu ? 'Risk / Reward' : 'Risk / Reward'}</th>
-            <th style="min-width:180px;">${isUrdu ? 'Practice Mode Drill' : 'Practice Drill Setup'}</th>
-          </tr>
-        </thead>
-        <tbody>
+    const subFilterBar = `
+      <div class="tactics-subfilter-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:1rem;">
+        <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-right:4px;">${isUrdu ? 'Scenario Filter:' : 'Scenario Filter:'}</span>
+          <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'ALL' ? 'active' : ''}" onclick="setBlenderScenarioFilter('ALL')">${isUrdu ? 'Tamam Scenarios' : 'All Scenarios'} (${rawData.length})</button>
+          <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'VORTEX' ? 'active' : ''}" onclick="setBlenderScenarioFilter('VORTEX')">🌀 ${isUrdu ? '50/50 Stance Vortex' : '50/50 Stance Vortex'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'OKI' ? 'active' : ''}" onclick="setBlenderScenarioFilter('OKI')">🤼 ${isUrdu ? 'Ground Oki & Throws' : 'Ground Oki & Throws'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'PLUS_TRAP' ? 'active' : ''}" onclick="setBlenderScenarioFilter('PLUS_TRAP')">⚡ ${isUrdu ? 'Plus Frame Traps' : 'Plus Frame Traps'}</button>
+          <button type="button" class="tactics-subfilter-btn ${activeBlenderFilter === 'UNIVERSAL' ? 'active' : ''}" onclick="setBlenderScenarioFilter('UNIVERSAL')">🚨 ${isUrdu ? 'Universal Panic Counterplay' : 'Universal Panic Counterplay'}</button>
+        </div>
+        <div class="tactics-view-switcher">
+          <button type="button" class="tactics-view-btn ${activeBlenderView === 'cards' ? 'active' : ''}" onclick="setBlenderViewMode('cards')">🚨 ${isUrdu ? 'Tactical Decision Cards' : 'Tactical Decision Cards'}</button>
+          <button type="button" class="tactics-view-btn ${activeBlenderView === 'table' ? 'active' : ''}" onclick="setBlenderViewMode('table')">📋 ${isUrdu ? 'Data Matrix Table' : 'Data Matrix Table'}</button>
+        </div>
+      </div>
+    `;
+
+    if (activeBlenderView === 'cards') {
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          ${subFilterBar}
+          <div class="empty-state-card" style="margin:2rem auto;">
+            <div class="empty-icon">🔍</div>
+            <h4 class="empty-title">${isUrdu ? 'Koi matching scenario nahi mila' : 'No matching scenarios found'}</h4>
+            <p class="empty-desc">${isUrdu ? 'Search ya category filter change karke check karein.' : 'Try adjusting your search or category filter.'}</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        ${subFilterBar}
+        <div class="blender-cards-grid">
           ${filtered.map(row => {
             const scen = isUrdu ? (row.scenario_ur || row.scenario_title_ur || row.scenario) : (row.scenario_en || row.scenario_title_en || row.scenario);
             const sit = isUrdu ? (row.situation_ur || row.frame_situation_ur || row.situation) : (row.situation_en || row.frame_situation_en || row.situation);
@@ -10722,6 +10892,8 @@ function renderTacticsUI(tabName, rawData, query = '') {
               : (row.verified_safe_response_en || row.action_en || row.verified_safe_response || row.action);
             const risk = isUrdu ? (row.risk_reward_ur || row.risk_reward_rating_ur || row.risk_reward) : (row.risk_reward_en || row.risk_reward_rating_en || row.risk_reward);
             const drill = row.practice_drill_input || row.drill || '';
+            const urgency = (row.urgency || 'HIGH').toUpperCase();
+            const isCritical = urgency === 'CRITICAL';
 
             let riskBadgeStyle = 'background:rgba(34,197,94,0.15); color:var(--accent-green); border:1px solid rgba(34,197,94,0.3);';
             if ((risk || '').toLowerCase().includes('high risk') || (risk || '').toLowerCase().includes('50/50')) {
@@ -10731,38 +10903,114 @@ function renderTacticsUI(tabName, rawData, query = '') {
             }
 
             return `
-              <tr>
-                <td>
-                  <strong>${escapeHtml(row.character || row.character_name || '')}</strong>
-                  <div style="font-size:0.82rem; color:var(--accent-red); font-weight:800; margin-top:2px;">${escapeHtml(scen || '')}</div>
-                </td>
-                <td>
-                  <span class="badge" style="background:rgba(237,104,35,0.18); color:var(--accent-orange); font-size:0.75rem; font-weight:700; font-family:var(--font-mono);">${escapeHtml(sit || '')}</span>
-                </td>
-                <td>
-                  <div class="blender-panic-box">
-                    <span class="panic-x">❌</span>
-                    <span>${escapeHtml(panic || '')}</span>
+              <div class="blender-tactic-card">
+                <div class="btc-header">
+                  <span class="btc-char">${escapeHtml(row.character || row.character_name || 'Universal')}</span>
+                  <span class="btc-urgency-badge ${isCritical ? 'critical' : 'high'}">${isCritical ? '🚨 CRITICAL' : '⚡ HIGH'}</span>
+                </div>
+
+                <div class="btc-scenario-title">${escapeHtml(scen || '')}</div>
+                <div class="btc-situation-pill">
+                  <span>⏱️ ${escapeHtml(sit || 'Knockdown Frame Trap')}</span>
+                </div>
+
+                <div class="btc-split-panel">
+                  <div class="blender-panic-block">
+                    <div class="bp-title">❌ ${isUrdu ? 'FATAL MISTAKE (Hargiz Yeh Na Karein)' : 'FATAL MISTAKE (DO NOT DO THIS)'}</div>
+                    <div class="bp-content">${escapeHtml(panic || '')}</div>
                   </div>
-                </td>
-                <td>
-                  <div class="blender-safe-box">
-                    <span class="safe-shield">🛡️</span>
-                    <div>${escapeHtml(safeResp || '')}</div>
+
+                  <div class="blender-safe-block">
+                    <div class="bs-title">🛡️ ${isUrdu ? 'VERIFIED TOURNAMENT ESCAPE' : 'VERIFIED TOURNAMENT ESCAPE'}</div>
+                    <div class="bs-content">${escapeHtml(safeResp || '')}</div>
                   </div>
-                </td>
-                <td>
-                  <span class="badge" style="font-size:0.74rem; font-weight:800; padding:2px 8px; border-radius:4px; ${riskBadgeStyle}">${escapeHtml(risk || 'Verified Safe')}</span>
-                </td>
-                <td>
-                  ${drill ? `<code>${formatTekkenNotation(drill)}</code>` : '<span style="color:var(--text-muted); font-size:0.75rem;">—</span>'}
-                </td>
-              </tr>
+                </div>
+
+                <div class="btc-footer">
+                  <div class="btc-risk-row">
+                    <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">${isUrdu ? 'Risk / Reward Ratio:' : 'Risk / Reward:'}</span>
+                    <span class="badge" style="font-size:0.74rem; font-weight:800; padding:2px 8px; border-radius:4px; ${riskBadgeStyle}">${escapeHtml(risk || 'Verified Safe')}</span>
+                  </div>
+
+                  ${drill ? `
+                    <div class="btc-drill-box">
+                      <span class="btc-drill-code" title="${escapeHtml(drill)}">🕹️ ${formatTekkenNotation(drill)}</span>
+                      <button type="button" class="btn-btc-copy" onclick="copyDrillToClipboard('${escapeHtml(drill).replace(/'/g, "\\'")}', this)">📋 ${isUrdu ? 'Copy Drill' : 'Copy Drill'}</button>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
             `;
           }).join('')}
-        </tbody>
-      </table>
-    `;
+        </div>
+      `;
+    } else {
+      // Data Matrix Table Mode
+      container.innerHTML = `
+        ${subFilterBar}
+        <table class="analyzer-table tactics-table blender-table">
+          <thead>
+            <tr>
+              <th style="min-width:180px;">${isUrdu ? 'Fighter & Blender Scenario' : 'Character & Blender Scenario'}</th>
+              <th style="min-width:140px;">${isUrdu ? 'Frame Situation' : 'Frame Situation'}</th>
+              <th style="min-width:220px;">${isUrdu ? 'Panic Trigger (Kya HARGIZ Na Karein)' : 'Panic Trigger (What NOT To Do)'}</th>
+              <th style="min-width:250px;">${isUrdu ? 'Verified Safe Response (Exact Frame Solution)' : 'Verified Safe Response (Exact Frame Solution)'}</th>
+              <th style="min-width:130px;">${isUrdu ? 'Risk / Reward' : 'Risk / Reward'}</th>
+              <th style="min-width:180px;">${isUrdu ? 'Practice Mode Drill' : 'Practice Drill Setup'}</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filtered.map(row => {
+              const scen = isUrdu ? (row.scenario_ur || row.scenario_title_ur || row.scenario) : (row.scenario_en || row.scenario_title_en || row.scenario);
+              const sit = isUrdu ? (row.situation_ur || row.frame_situation_ur || row.situation) : (row.situation_en || row.frame_situation_en || row.situation);
+              const panic = isUrdu ? (row.panic_trigger_ur || row.panic_trigger) : (row.panic_trigger_en || row.panic_trigger);
+              const safeResp = isUrdu 
+                ? (row.verified_safe_response_ur || row.action_ur || row.verified_safe_response || row.action) 
+                : (row.verified_safe_response_en || row.action_en || row.verified_safe_response || row.action);
+              const risk = isUrdu ? (row.risk_reward_ur || row.risk_reward_rating_ur || row.risk_reward) : (row.risk_reward_en || row.risk_reward_rating_en || row.risk_reward);
+              const drill = row.practice_drill_input || row.drill || '';
+
+              let riskBadgeStyle = 'background:rgba(34,197,94,0.15); color:var(--accent-green); border:1px solid rgba(34,197,94,0.3);';
+              if ((risk || '').toLowerCase().includes('high risk') || (risk || '').toLowerCase().includes('50/50')) {
+                riskBadgeStyle = 'background:rgba(239,68,68,0.2); color:#f87171; border:1px solid rgba(239,68,68,0.4);';
+              } else if ((risk || '').toLowerCase().includes('medium')) {
+                riskBadgeStyle = 'background:rgba(234,179,8,0.2); color:var(--accent-gold); border:1px solid rgba(234,179,8,0.4);';
+              }
+
+              return `
+                <tr>
+                  <td>
+                    <strong>${escapeHtml(row.character || row.character_name || '')}</strong>
+                    <div style="font-size:0.82rem; color:var(--accent-red); font-weight:800; margin-top:2px;">${escapeHtml(scen || '')}</div>
+                  </td>
+                  <td>
+                    <span class="badge" style="background:rgba(237,104,35,0.18); color:var(--accent-orange); font-size:0.75rem; font-weight:700; font-family:var(--font-mono);">${escapeHtml(sit || '')}</span>
+                  </td>
+                  <td>
+                    <div class="blender-panic-box">
+                      <span class="panic-x">❌</span>
+                      <span>${escapeHtml(panic || '')}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="blender-safe-box">
+                      <span class="safe-shield">🛡️</span>
+                      <div>${escapeHtml(safeResp || '')}</div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge" style="font-size:0.74rem; font-weight:800; padding:2px 8px; border-radius:4px; ${riskBadgeStyle}">${escapeHtml(risk || 'Verified Safe')}</span>
+                  </td>
+                  <td>
+                    ${drill ? `<code>${formatTekkenNotation(drill)}</code>` : '<span style="color:var(--text-muted); font-size:0.75rem;">—</span>'}
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
   }
 }
 
