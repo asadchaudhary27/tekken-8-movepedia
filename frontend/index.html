@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tekken 8 Movepedia — Frame Data, Notation & Training Assistant</title>
   <meta name="description" content="Professional Tekken 8 frame data reference, 4-mode notation visualization, and training assistant.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,600;0,700;1,700&family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
   <link rel="icon" type="image/png" href="/assets/avatars/jin-brand-256-C1-oe_x3.webp">
 </head>
@@ -1908,34 +1911,36 @@
           </div>
         </div>
 
-        <!-- Stage Hazard Filter Pills -->
-        <div class="stage-filter-pills-row" id="stageFilterPills">
-          <button type="button" class="stage-f-pill active" data-stage-filter="ALL">ALL (16)</button>
-          <button type="button" class="stage-f-pill" data-stage-filter="WALL">WALL ARENAS</button>
-          <button type="button" class="stage-f-pill" data-stage-filter="WALL_BREAK">WALL BREAK</button>
-          <button type="button" class="stage-f-pill" data-stage-filter="FLOOR_BREAK">FLOOR BREAK</button>
-          <button type="button" class="stage-f-pill" data-stage-filter="BALCONY_BREAK">BALCONY BREAK</button>
-          <button type="button" class="stage-f-pill" data-stage-filter="FLOOR_BLAST">FLOOR BLAST</button>
-          <button type="button" class="stage-f-pill" data-stage-filter="INFINITE">INFINITE / OPEN</button>
-        </div>
-
-        <!-- Split Command View: Left = 16 Stages Grid; Right = Tactical Inspector Command Center -->
-        <div class="stages-split-layout">
-          <!-- Left: 16 Stage Selection Grid -->
-          <div class="stages-selector-column">
-            <div class="stages-selector-header">
-              <span class="stg-sec-label">SELECT BATTLEGROUND (<span id="stgFilterCount">16</span>)</span>
-            </div>
-            <div class="stages-grid" id="stagesGrid">
-              <!-- Rendered dynamically -->
+        <!-- Beautiful Stage Selector Bar (Dropdown + Filter Pills, Sidebar removed) -->
+        <div class="stage-selector-bar-card">
+          <div class="stage-dropdown-select-group">
+            <label for="stageSelectDropdown" class="stg-dropdown-label">
+              <span class="stg-radar-pulse"></span>
+              <span>SELECT BATTLEGROUND ARENA:</span>
+            </label>
+            <div class="stg-dropdown-select-wrapper">
+              <select id="stageSelectDropdown" class="stg-cyber-dropdown" onchange="inspectStage(this.value)">
+                <!-- Dynamically populated with all arenas -->
+              </select>
             </div>
           </div>
 
-          <!-- Right: Tactical Inspector Command Center Panel -->
-          <div class="stages-inspector-column">
-            <div class="stage-inspector-panel" id="stageInspectorPanel">
-              <!-- Rendered dynamically by inspectStage() -->
-            </div>
+          <!-- Stage Hazard Filter Pills -->
+          <div class="stage-filter-pills-row" id="stageFilterPills">
+            <button type="button" class="stage-f-pill active" data-stage-filter="ALL">ALL ARENAS</button>
+            <button type="button" class="stage-f-pill" data-stage-filter="WALL">WALL ARENAS</button>
+            <button type="button" class="stage-f-pill" data-stage-filter="WALL_BREAK">WALL BREAK</button>
+            <button type="button" class="stage-f-pill" data-stage-filter="FLOOR_BREAK">FLOOR BREAK</button>
+            <button type="button" class="stage-f-pill" data-stage-filter="BALCONY_BREAK">BALCONY BREAK</button>
+            <button type="button" class="stage-f-pill" data-stage-filter="FLOOR_BLAST">FLOOR BLAST</button>
+            <button type="button" class="stage-f-pill" data-stage-filter="INFINITE">INFINITE / OPEN</button>
+          </div>
+        </div>
+
+        <!-- Full-Width Tactical Inspector Command Center (No Sidebar, No Inner Scroll) -->
+        <div class="stages-inspector-column stage-inspector-fullwidth">
+          <div class="stage-inspector-panel" id="stageInspectorPanel">
+            <!-- Rendered dynamically by inspectStage() -->
           </div>
         </div>
       </section>
@@ -2356,8 +2361,35 @@
         <div class="cp-tab-panel active" id="cp-tab-overview">
           <!-- Section 1: Overview / Bio & Playstyle -->
           <div class="cp-section-card">
-            <h4 class="cp-sec-title">SECTION 1: FIGHTER IDENTITY &amp; COMBAT PLAYSTYLE</h4>
-            <p id="cpBioText" class="cp-text-block">Loading character combat philosophy...</p>
+            <div class="cp-story-banner-header">
+              <h4 class="cp-sec-title">SECTION 1: CANONICAL STORY &amp; COMBAT PLAYSTYLE (THE DARK AWAKENS)</h4>
+              <div id="cpAllianceBadge" class="cp-alliance-pill">⚔️ Yggdrasil Resistance</div>
+            </div>
+            
+            <!-- Bilingual Narrative (English & Roman Urdu) -->
+            <div class="cp-story-container">
+              <div class="cp-story-subhead">📖 CANONICAL LORE &amp; COMBAT OVERVIEW</div>
+              <p id="cpBioText" class="cp-text-block">Loading character combat philosophy...</p>
+              
+              <div class="cp-story-urdu-box">
+                <div class="cp-story-urdu-header">
+                  <span>🇵🇰 TEKKEN 8 STORY (ROMAN URDU)</span>
+                </div>
+                <p id="cpStoryUrduText" class="cp-story-urdu-text"></p>
+              </div>
+
+              <!-- Taqat & Kamzoriyan from Story DOCX -->
+              <div class="cp-story-tactics-grid">
+                <div class="cp-story-taqat-card">
+                  <div class="cp-st-tag green">⚔️ TAQAT &amp; FIGHTING STYLE (STRENGTHS)</div>
+                  <p id="cpStoryStrengthsText" class="cp-st-desc"></p>
+                </div>
+                <div class="cp-story-kamzori-card">
+                  <div class="cp-st-tag red">⚠️ KAMZORIYAN (WEAKNESSES &amp; COUNTERS)</div>
+                  <p id="cpStoryWeaknessesText" class="cp-st-desc"></p>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Section 2: Beginner Quick Start Guide -->

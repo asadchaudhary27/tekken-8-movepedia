@@ -10,6 +10,10 @@
   const DOSSIERS = {
     jin: {
       name: "Jin Kazama",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Apne baap Kazuya ko rokne aur duniya se Devil Gene khatam karne ke liye Lars aur Lee ke sath milta hai. Akhir mein apni maa Jun ki yaadon se \"Angel Jin\" ban jata hai.",
+      strengths_ur: "Karate (Kazama + Mishima). Har cheez mein balanced (All-rounder), behtareen pokes, strong lows (d+2), easy electrics in Heat.",
+      weaknesses_ur: "Koi bari kamzori nahi, lekin top-level par iske kuch stances predictable ho sakte hain agar opponent parhna janta ho.",
       title: "The Lightning of Fate",
       japanese_name: "風間 仁",
       country: "Japan",
@@ -58,6 +62,10 @@
 
     kazuya: {
       name: "Kazuya Mishima",
+      alliance: "G Corporation Global Strike Force (Kazuya's Army)",
+      story_ur: "G-Corp ka boss jo Azazel ko absorb kar ke \"True Devil Kazuya\" ban jata hai. Duniya ke kamzor mulkon ko tabah karne ke liye tournament rakhta hai.",
+      strengths_ur: "Mishima Style Karate. Game ka sabse khatarnak 50/50 vortex (Hellsweep vs ff+3), Electric Wind God Fist (EWGF), aur zabardast punishment.",
+      weaknesses_ur: "No standard 15f hopkick/df+2 launcher. Sidestep (Left/SSL) ke khilaf kamzor hai, aur execution bohat mushkil hai.",
       title: "The Cold-Blooded Oppressor",
       japanese_name: "三島 一八",
       country: "Japan",
@@ -105,6 +113,10 @@
 
     reina: {
       name: "Reina",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Heihachi Mishima ki khufiya beti. Jin ki madad is liye karti hai taake Kazuya ki near-death beam kha kar apna Devil Gene jaga sake.",
+      strengths_ur: "Taido + Mishima Karate. Bohat tez movement, Sentai stance mix-ups, oppressive pressure, aur EWGF.",
+      weaknesses_ur: "Weak Lows: Iske paas Kazuya jaisa strong Hellsweep nahi hai, aur iske stance transitions ko jab ya duck se interrupt kiya ja sakta hai.",
       title: "The Dusky Thunder",
       japanese_name: "麗奈",
       country: "Japan",
@@ -151,6 +163,10 @@
 
     jun: {
       name: "Jun Kazama",
+      alliance: "Independent Combatant",
+      story_ur: "Jin ki maa jo Ogre ke hamle ke baad zinda bachi aur Yakushima ke paharon mein chhupi rahi. Woh Jin aur Kazuya dono ko bacha kar unke gunah dhona chahti hai.",
+      strengths_ur: "Kazama Style Traditional Martial Arts. Sabse behtareen defense, strong punishment, aur Heat mein health recover karne ki salahiyat.",
+      weaknesses_ur: "Self-Damage: Iske sabse taqatwar moves iski apni health kam karte hain; lows thore risky hain.",
       title: "The Light of Hope",
       japanese_name: "風間 準",
       country: "Japan",
@@ -199,6 +215,10 @@
 
     king: {
       name: "King",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Yateem-khane (Orphanage) ke liye paise jama karne larta hai; final war mein Jin ke sath.",
+      strengths_ur: "Pro Wrestling. Game ka sabse khatarnak Grappler (Giant Swing, Shining Wizard), armor moves, aur Muscle Armor.",
+      weaknesses_ur: "Agar opponent throws break karna janta ho aur King ke linear approaches ko sidestep kare toh King phans jata hai.",
       title: "The Beast Priest",
       japanese_name: "キング",
       country: "Mexico",
@@ -245,6 +265,10 @@
 
     paul: {
       name: "Paul Phoenix",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Universe ka sabse strong fighter banne aata hai (Law ke sath); Jin ke sath final battle mein larta hai.",
+      strengths_ur: "Judo + Karate. Deathfist aur Demoman (50/50 massive damage), ultimate comeback character.",
+      weaknesses_ur: "Approach tools slow hain; Demoman sirf bilkul qareeb (clean hit) par kaam karta hai, warna launch punish hota hai.",
       title: "The Hot-Blooded Fighter",
       japanese_name: "ポール・フェニックス",
       country: "USA",
@@ -293,6 +317,10 @@
 
     hwoarang: {
       name: "Hwoarang",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Jin ka sabse bara rival aur dost. Jin ko hosla dene aur uske sath muqabla karne ke liye Yggdrasil ki taraf se larta hai.",
+      strengths_ur: "Taekwondo. Flamingo Stances ke zariye na rukne wala pressure (Rushdown monster) aur plus-frames.",
+      weaknesses_ur: "Defense kamzor hai: Jab yeh khud pressure mein aata hai toh nikalna mushkil hota hai; Dickjab (db+1) aur sidestep iska flow tor dete hain.",
       title: "Blood Talon",
       japanese_name: "ファラン",
       country: "South Korea",
@@ -340,6 +368,10 @@
 
     alisa: {
       name: "Alisa Bosconovitch",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Dr. Bosconovitch ki banayi hui android jo Lars se pyar karti hai aur Yggdrasil ki main bodyguard hai.",
+      strengths_ur: "Thruster & Chainsaw Robotics. Destructive Form (Chainsaws) mein zabardast chip damage aur plus-frames; best backdash/movement.",
+      weaknesses_ur: "Chainsaws ke baghair damage thora kam hai; flying moves ko sidestep ya float karna aasan hai.",
       title: "The Destroying Automaton",
       japanese_name: "アリサ・ボスコノビッチ",
       country: "Russia",
@@ -388,6 +420,10 @@
 
     asuka: {
       name: "Asuka Kazama",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Jin's Ally: Jin ki cousin (lekin main story ke bajaye Lili ke sath apni rivalry mein busy rehti hai).",
+      strengths_ur: "Kazama Martial Arts. Defensive monster: sabse best whiff punishment (f+2), parries, sabres, aur Naniwa Gusto power-up.",
+      weaknesses_ur: "Offense aur Jab range kamzor hai: Agar opponent sabar se khele aur attack na kare, toh Asuka ko kholna mushkil hota hai.",
       title: "The Spirited Peacemaker",
       japanese_name: "風間 飛鳥",
       country: "Japan",
@@ -435,6 +471,10 @@
 
     azucena: {
       name: "Azucena Milagros",
+      alliance: "G Corporation Global Strike Force (Kazuya's Army)",
+      story_ur: "Kazuya's Ally: Peru ki MMA fighter aur \"Coffee Queen\" jo apne Ortiz Farm ki mashhoori ke liye G-Corp join karti hai.",
+      strengths_ur: "MMA (Striker). Libertador Stance jo highs aur lows ko automatically dodge karti hai! Strong counter-hits.",
+      weaknesses_ur: "Nerfs ke baad wr+3,2 ko step karna asaan ho gaya hai; Libertador stance mein Mids khane par bara nuksan uthati hai.",
       title: "The Perfect Blend / Coffee Queen",
       japanese_name: "アズセナ",
       country: "Peru",
@@ -483,6 +523,10 @@
 
     bryan: {
       name: "Bryan Fury",
+      alliance: "Wildcard / Independent Rogue",
+      story_ur: "Neutral/Chaotic: Kisi ka dost nahi, sirf gole-barood aur tabahi ke maze lene aata hai.",
+      strengths_ur: "Kickboxing. Taunt (Unblockable) setups, Snake Eyes power-up, aur poori game ka sabse zyada Counter-Hit aur Wall damage.",
+      weaknesses_ur: "No easy 15f panic launcher, pokes slow hain, aur Taunt Jet Upper (TJU) ke liye extreme skill chahiye.",
       title: "The Harbinger of Chaos",
       japanese_name: "ブライアン・フューリー",
       country: "USA",
@@ -530,6 +574,10 @@
 
     claudio: {
       name: "Claudio Serafino",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Archers of Sirius ka leader (Exorcist). Zafina aur Jin ki madad karta hai aur Kazuya ko rokte hue apni jaan qurban kar deta hai (baad mein zinda bachne ke isharay milte hain).",
+      strengths_ur: "Sirius-style Exorcism Sorcery. Starburst power-up, game ka best running move (wr+2), aur best hopkick (uf+4).",
+      weaknesses_ur: "Weak Lows: Starburst ke baghair lows bohat kamzor hain; command grabs nahi hain.",
       title: "The Purifier of Shadows",
       japanese_name: "クラウディオ・セラフィーノ",
       country: "Italy",
@@ -576,6 +624,10 @@
 
     "devil-jin": {
       name: "Devil Jin",
+      alliance: "Independent Combatant",
+      story_ur: "Jin ka andaruni shaitan jo usay darata hai. Story mein Jin isay qaboo kar ke apna hissa bana leta hai.",
+      strengths_ur: "Devil Mishima Karate. Unblockable setups, lasers, flying stances (Mourning Crow), aur high combo damage.",
+      weaknesses_ur: "Mid-range pokes kamzor hain, Hellsweep block hone par maut pakki hai, aur neutral game mein kafi nerfs mile hain.",
       title: "The Black Wings of Ruin",
       japanese_name: "デビル仁",
       country: "Japan",
@@ -622,6 +674,10 @@
 
     dragunov: {
       name: "Sergei Dragunov",
+      alliance: "G Corporation Global Strike Force (Kazuya's Army)",
+      story_ur: "G-Corp / Independent: Chhutti par hai lekin apni \"sneaking\" aur combat aadat se majboor ho kar maidan mein utarta hai.",
+      strengths_ur: "Commando Sambo. Running 2 (wr+2), Hatchet Kick (d+2), unbreakable tackle throws, aur deadly wall pressure.",
+      weaknesses_ur: "Patches ke baad tracking kam kar di gayi hai; Sidestep Right (SSR) se iske main moves miss ho jate hain.",
       title: "The White Reaper",
       japanese_name: "セルゲイ・ドラグノフ",
       country: "Russia",
@@ -670,6 +726,10 @@
 
     feng: {
       name: "Feng Wei",
+      alliance: "G Corporation Global Strike Force (Kazuya's Army)",
+      story_ur: "Kazuya's Mercenary: Leroy aur har strong bande ko hara kar \"Dragon God\" banna chahta hai.",
+      strengths_ur: "Taijiquan / Kenpo. Evasive stances (Kenpo step, Shifting Clouds), sabse behtareen lows (db+3), aur har situation ka jawab.",
+      weaknesses_ur: "Combo wall carry doosre characters ke muqable mein thora chota hai.",
       title: "The God of Fist",
       japanese_name: "フェン・ウェイ",
       country: "China",
@@ -717,6 +777,10 @@
 
     "jack-8": {
       name: "Jack-8",
+      alliance: "G Corporation Global Strike Force (Kazuya's Army)",
+      story_ur: "Kazuya ki Ally: G-Corp ka naya advanced robot model (Jane ne banaya).",
+      strengths_ur: "Brute Force. Sabse lambi reach (arms), Gamma Howl stance (armor + guard breaks), aur top-tier poking (db+1).",
+      weaknesses_ur: "Zero Sidestep: Bohat bara jism hai, sidestep bilkul kaam nahi karta aur rushdown ke khilaf phans jata hai.",
       title: "The Absolute Heavy Armament",
       japanese_name: "ジャック8",
       country: "Global (G-Corp)",
@@ -764,6 +828,10 @@
 
     lars: {
       name: "Lars Alexandersson",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Heihachi ka najayaz beta aur Yggdrasil ka commander. Jin ka sabse bara dost aur ally jo poori jang plan karta hai.",
+      strengths_ur: "Tekken Force Martial Arts. Bohat lambi range, dynamic stances, zabardast wall carry aur combo damage.",
+      weaknesses_ur: "Stances mein jane par unsafe ho jata hai; opponent fast mid pokes se iski stances tor sakta hai.",
       title: "The Iron Lion of Yggdrasil",
       japanese_name: "ラース・アレクサンダーソン",
       country: "Sweden",
@@ -811,6 +879,10 @@
 
     law: {
       name: "Marshall Law",
+      alliance: "Independent Combatant",
+      story_ur: "Apne bete Forest ke accident ka qarza utarne ke liye paise ke peeche bhagta hai (Paul ko dhooka bhi deta hai).",
+      strengths_ur: "Jeet Kune Do. Super fast frames, Nunchucks in Heat, Dragon Charge slide mix-ups, aur DSS pressure.",
+      weaknesses_ur: "High execution (DSS transitions); range thori choti hai aur slide block hone par float punish hota hai.",
       title: "The Legendary Dragon",
       japanese_name: "マーシャル・ロウ",
       country: "USA",
@@ -859,6 +931,10 @@
 
     lee: {
       name: "Lee Chaolan",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Heihachi ka le-palak (adopted) beta aur Lars/Jin ka tech partner (Violet Systems). Apne \"Marvelous\" battlesuit ke sath jang mein utarta hai.",
+      strengths_ur: "Martial Arts (Jeet Kune Do style). Counter-hit (CH) king, behtareen keep-out (b+4), aur blazing fast pokes.",
+      weaknesses_ur: "High Execution: Just-frame moves (Acid Rain, Mist Step) ke baghair damage nikalna mushkil hai; linear moves sidestep ho jate hain.",
       title: "The Silver Demon",
       japanese_name: "李 超狼",
       country: "Japan",
@@ -907,6 +983,10 @@
 
     leo: {
       name: "Leo Kliesen",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Jin's Ally: Apne walid Niklas Kliesen (archeologist) ke sath Azazel aur Devil Gene ka raaz dhoondta hai.",
+      strengths_ur: "Bajiquan. Mukammal balanced fighter: stances (BOK, KNK), strong wall game, evasive hopkick, aur mix-ups.",
+      weaknesses_ur: "Har kaam mein acha hai magar kisi ek cheez mein \"broken\" nahi (Jack of all trades, master of none).",
       title: "The Seeker of Truth",
       japanese_name: "レオ・クリーゼン",
       country: "Germany",
@@ -955,6 +1035,10 @@
 
     leroy: {
       name: "Leroy Smith",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Jin's Ally: New York ka hero jo Feng Wei ko tameez sikhane aur duniya bachane aata hai.",
+      strengths_ur: "Wing Chun. Hermit Stance, sabse asaan parries (b+2), fast counter-hits, aur once-per-match Cane (chhari) attack.",
+      weaknesses_ur: "Neutral pokes ki range choti hai aur Hermit stance mein khud ko lock kar leta hai.",
       title: "The Grandmaster of Drip",
       japanese_name: "リロイ・スミス",
       country: "USA",
@@ -1003,6 +1087,10 @@
 
     lili: {
       name: "Lili (Emilie De Rochefort)",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Jin's Ally: Asuka ko apne ghar rakh kar uske sath larti hai aur Yggdrasil ko apna private jet deti hai.",
+      strengths_ur: "Street Fighting + Gymnastics. Game ka sabse best Sidestep, Backturned (BT) mix-ups, aur Matterhorn evasion.",
+      weaknesses_ur: "Bohat zyada Linear hai; agar opponent sidestep kare toh Lili ke moves hawa mein nikal jate hain.",
       title: "The Radiant Aristocrat",
       japanese_name: "リリ",
       country: "Monaco",
@@ -1051,6 +1139,10 @@
 
     nina: {
       name: "Nina Williams",
+      alliance: "G Corporation Global Strike Force (Kazuya's Army)",
+      story_ur: "Kazuya ki Ally: G-Corp ki commander jo Kazuya ki army lead karti hai.",
+      strengths_ur: "Assassination Arts + Dual Pistols. Close-range rushdown (ss+1 cancels), throws, aur Heat mein guns se chip damage.",
+      weaknesses_ur: "Range choti hai; long-range se approach karna mushkil hai aur high execution mangti hai.",
       title: "The Silent Assassin",
       japanese_name: "ニーナ・ウィリアムズ",
       country: "Ireland",
@@ -1099,6 +1191,10 @@
 
     panda: {
       name: "Panda",
+      alliance: "Independent Combatant",
+      story_ur: "Xiaoyu ki bodyguard aur pet jo uske sath har jang mein jati hai.",
+      strengths_ur: "Heihachi-Style Kuma Shinken. Shooting Star stance aur lambi range.",
+      weaknesses_ur: "Kuma ki tarah bara hitbox hai, lekin Kuma ka \"Bear Electric\" iske paas nahi hai (Kuma se thori kamzor).",
       title: "The Faithful Protector",
       japanese_name: "パンダ",
       country: "China",
@@ -1146,6 +1242,10 @@
 
     kuma: {
       name: "Kuma",
+      alliance: "Independent Combatant",
+      story_ur: "Heihachi ka paltoo reechh (bear). Heihachi ki \"maut\" ke baad uska headband aur jacket pehen kar uski yaad mein larta hai.",
+      strengths_ur: "Heihachi-style Kuma Shinken. Heat mein \"Bear Electric\" (sabse fast launcher), massive chip damage aur crazy range.",
+      weaknesses_ur: "Big Body: Bohat bara size hone ki wajah se is par har character ke special high-damage combos lagte hain; sidestep bekar hai.",
       title: "The Roaring Bear",
       japanese_name: "クマ",
       country: "Japan",
@@ -1193,6 +1293,10 @@
 
     raven: {
       name: "Raven",
+      alliance: "Independent Combatant",
+      story_ur: "UN ka master ninja jo shadow clones seekh kar wapas aata hai aur Victor ke neeche Jin ki army ka sath deta hai.",
+      strengths_ur: "Ninjutsu. Soul Zone stance aur shadow clones se mind-games aur mix-ups banata hai.",
+      weaknesses_ur: "Risky play-style; iske clones block hone par opponent ko free punish milta hai; standard 15f standing launcher nahi hai.",
       title: "The Shadow Agent",
       japanese_name: "レイヴン",
       country: "Global (UN Intelligence)",
@@ -1241,6 +1345,10 @@
 
     shaheen: {
       name: "Shaheen",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Jin's Ally: Apne dost Salim ke qatil Kazuya se badla lene ke liye Yggdrasil ka sath deta hai.",
+      strengths_ur: "Military Close-Quarter Combat. Fundamental Tekken: Crouch-dash Slide mix-up, Guard break in Heat, aur fast hopkick.",
+      weaknesses_ur: "Move list choti hai; agar opponent aapke slide mix-ups parh le toh Shaheen basic ho jata hai.",
       title: "The Desert Falcon",
       japanese_name: "シャヒーン",
       country: "Saudi Arabia",
@@ -1289,6 +1397,10 @@
 
     steve: {
       name: "Steve Fox",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Jin's Ally: Nina ka biological beta (test-tube). King aur Paul ke sath training karta hai aur final war mein larta hai.",
+      strengths_ur: "Boxing. Kicks ke buttons Weave/Sway (Dodging) karte hain; b+1 counter-hit launcher aur Lionheart stance.",
+      weaknesses_ur: "No Kicks & Weak Lows: Standing 15f launcher nahi hai (jab tak Heat mein na ho) aur lows se darana mushkil hai.",
       title: "The Counter-Punching Genius",
       japanese_name: "スティーブ・フォックス",
       country: "United Kingdom",
@@ -1337,6 +1449,10 @@
 
     victor: {
       name: "Victor Chevalier",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "UN Forces ka founder aur Raven ka boss. France ka stylish super-spy jo Jin aur Lars ko military support deta hai.",
+      strengths_ur: "Super Spy CQB (Pistol, Knife, Teleport Sword). Bohat aasan combos, long-range sword attacks, aur teleportation evasion.",
+      weaknesses_ur: "Ziyada tar flashy aur teleport moves bohat unsafe (-14 se -20) hain ya sidestep/duck ho jate hain.",
       title: "The Refined Vanguard",
       japanese_name: "ヴィクター・シュヴァリエ",
       country: "France",
@@ -1384,6 +1500,10 @@
 
     xiaoyu: {
       name: "Ling Xiaoyu",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Jin se mohabbat karti hai aur usay dhoondne aur bachane ke liye Yggdrasil aur Panda ke sath jang mein kood parti hai.",
+      strengths_ur: "Baguazhang & Piguaquan. Art of Phoenix (AOP) stance se mids aur highs ke neeche se nikal jati hai; deadly 50/50s in Heat.",
+      weaknesses_ur: "Range choti hai (stubby limbs) aur seedha (direct) damage dene ke bajaye setups par depend karti hai.",
       title: "The Dancing Phoenix",
       japanese_name: "凌 暁雨",
       country: "China",
@@ -1432,6 +1552,10 @@
 
     yoshimitsu: {
       name: "Yoshimitsu",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Jin's Ally: Manji Clan ka leader jo apni cursed talwar ki bhook mitane ke liye shaitani taqaton ko kaatna chahta hai.",
+      strengths_ur: "Manji Ninjutsu. Flash (6-frame launcher!), unblockable sword sweeps, health regeneration, aur 100% unpredictable stances.",
+      weaknesses_ur: "Regular pokes ka damage kam hai; agar Flash miss ho jaye toh Yoshimitsu khud launch ho jata hai.",
       title: "The Mechanical Space Ninja",
       japanese_name: "吉光",
       country: "Japan",
@@ -1480,6 +1604,10 @@
 
     zafina: {
       name: "Zafina",
+      alliance: "Independent Combatant",
+      story_ur: "Apne bazu mein band Azazel ko roke hue hai. Kazuya uska bazu cheer kar Azazel ko nikal leta hai, jis se woh marne ke qareeb pohanch jati hai.",
+      strengths_ur: "Ancient Assassination Arts. Ajeeb stances (Scarecrow, Mantis, Tarantula) jo opponent ko confuse kar deti hain.",
+      weaknesses_ur: "Azazel ke moves iski apni health kha jate hain; block punishment kafi kamzor hai.",
       title: "The Mystic Astrologer",
       japanese_name: "ザフィーナ",
       country: "Egypt",
@@ -1527,6 +1655,10 @@
 
     eddy: {
       name: "Eddy Gordo",
+      alliance: "G Corporation Global Strike Force (Kazuya's Army)",
+      story_ur: "Eddy Gordo (Ally: Jin / Lidia): Kazuya ki G-Corp forces ke hathon apne shagirdon ki maut ke baad Lidia aur Tekken Monks ke sath mil kar redemption hasil karta hai.",
+      strengths_ur: "Capoeira stances (Negativa, Handstand) aur Mandinga power-up se crazy 50/50 lows.",
+      weaknesses_ur: "Stances mein block nahi kar sakta; mid-hitting launchers Eddy ko hawa mein ura dete hain.",
       title: "The Rhythmic Capoeirista",
       japanese_name: "エディ・ゴルド",
       country: "Brazil",
@@ -1574,6 +1706,10 @@
 
     lidia: {
       name: "Lidia Sobieska",
+      alliance: "G Corporation Global Strike Force (Kazuya's Army)",
+      story_ur: "Lidia Sobieska (Ally: Jin / Tekken Monks): Poland ki Prime Minister jo Tekken Monks ke temple par Kazuya ke khilaf ittehad banati hai.",
+      strengths_ur: "Traditional Karate; 4 stances aur Heat mein Heaven and Earth stance (unblockable/plus-frame pressure).",
+      weaknesses_ur: "Bohat linear hai (Sidestep Left se mar khati hai) aur lows kamzor hain.",
       title: "The Warrior Prime Minister",
       japanese_name: "リディア・ソビエスカ",
       country: "Poland",
@@ -1622,6 +1758,10 @@
 
     heihachi: {
       name: "Heihachi Mishima",
+      alliance: "Yggdrasil Rebel Army & Violet Systems (Jin's Alliance)",
+      story_ur: "Heihachi Mishima ki khufiya beti. Jin ki madad is liye karti hai taake Kazuya ki near-death beam kha kar apna Devil Gene jaga sake.",
+      strengths_ur: "",
+      weaknesses_ur: "",
       title: "The King of Iron Fist",
       japanese_name: "三島 平八",
       country: "Japan",
@@ -1670,6 +1810,10 @@
 
     clive: {
       name: "Clive Rosfield",
+      alliance: "Independent Combatant",
+      story_ur: "Clive Rosfield (Guest Fighter - Final Fantasy XVI): Ifrit aur Phoenix ki taqat aur apne bheriye Torgal ke sath doosri duniya se aata hai.",
+      strengths_ur: "Talwar aur Magic ki wajah se full-screen reach, Zantetsuken meter build-up, aur easy high-damage combos.",
+      weaknesses_ur: "Frame data slow hai; close-range rushdown fighters isay daboch lete hain aur talwar ke bare swings punishable hain.",
       title: "The First Shield of Rosaria",
       japanese_name: "クライヴ・ロズフィールド",
       country: "Valisthea / UK",
@@ -1717,6 +1861,10 @@
 
     anna: {
       name: "Anna Williams",
+      alliance: "Wildcard / Independent Rogue",
+      story_ur: "Anna Williams (Kazuya / Independent): Nina ki choti behen jo us se apna purana hisab chukane aur apni bazooka/assassination skills dikhane wapas aati hai.",
+      strengths_ur: "Chaos Judgment Stance aur full-crouch 50/50 mix-ups; high-risk, high-reward monster.",
+      weaknesses_ur: "Iska har bara low aur mid mix-up block hone par launch punishable (-15 ya us se zyada) hai; punishment kamzor hai.",
       title: "The Scarlet Lightning",
       japanese_name: "アンナ・ウィリアムズ",
       country: "Ireland",
@@ -1764,6 +1912,10 @@
 
     "armor-king": {
       name: "Armor King",
+      alliance: "Wildcard / Independent Rogue",
+      story_ur: "Armor King (Neutral / Revenge): King ka ustad/rival aur Marduk ka dushman jo apne bhai ka badla lene ke liye ring mein utarta hai.",
+      strengths_ur: "Pro Wrestling + Mishima Wave-dash (Dark Upper!); Bad Jaguar stance, Shining Black, aur King jaisi throws ke sath बेहतर poking.",
+      weaknesses_ur: "King ki tarah armor/gimmicks kam hain; wave-dash aur Dark Upper ke liye execution chahiye.",
       title: "The Dark Champion",
       japanese_name: "アーマーキング",
       country: "Mexico",
@@ -1811,6 +1963,10 @@
 
     bob: {
       name: "Bob Richards",
+      alliance: "Independent Combatant",
+      story_ur: "Bob (Richards) (Ally / Hero): \"Speed and Weight!\" — Amreeki martial artist jisne taqat aur raftaar ka balance paane ke liye apna wazan barhaya.",
+      strengths_ur: "Freestyle Karate; Mishima-style wave-dash mix-ups bina mushkil execution ke, fast pokes aur rolling stances.",
+      weaknesses_ur: "15-frame standing launcher nahi hai (Hopkick/df+2 launch nahi karta), is liye block punishment mein peeche reh jata hai.",
       title: "Freestyle Karate Perfection",
       japanese_name: "ボブ",
       country: "USA",
@@ -1858,6 +2014,10 @@
 
     fahkumram: {
       name: "Fahkumram",
+      alliance: "Independent Combatant",
+      story_ur: "Fahkumram (Forced Fighter): Thailand ka Muay Thai champion jiski family ko military ne qaid rakha hai.",
+      strengths_ur: "Muay Thai; لمبی ٹانگیں (massive range), Guard-breaks (wall splat on block!), aur darawna damage.",
+      weaknesses_ur: "Kuma/Jack ki tarah bara hitbox hai, sidestep kamzor hai, aur close-range mein fast pokers isay tang karte hain.",
       title: "The Muay Thai Titan",
       japanese_name: "ファカムラム",
       country: "Thailand",
@@ -1905,6 +2065,10 @@
 
     kunimitsu: {
       name: "Kunimitsu",
+      alliance: "Wildcard / Independent Rogue",
+      story_ur: "Kunimitsu II (Neutral Thief): Pehli Kunimitsu ki beti jo Yoshimitsu ki talwar chori karne ke chakar mein rehti hai.",
+      strengths_ur: "Manji Ninjutsu & Tantojutsu; kunai throw (full screen projectile), Set-stance speed, aur tricky mix-ups.",
+      weaknesses_ur: "Lows risky hain aur Set-stance transitions ko experienced players interrupt kar lete hain.",
       title: "The Fox Blade",
       japanese_name: "州光",
       country: "Japan",
@@ -1952,6 +2116,10 @@
 
     "miary-zo": {
       name: "Miary Zo",
+      alliance: "Independent Combatant",
+      story_ur: "Miary Zo (Newcomer - Lore Boss Connection): Madagascar ki nayi fighter jise \"Fighting God Reborn\" kaha jata hai (Tekken 3 ke Ogre ki roohani waris).",
+      strengths_ur: "Morengy (Madagascan Martial Art); wildlife/spiritual summons aur tez rushdown combos.",
+      weaknesses_ur: "Unorthodox stances jin mein defensive options mehdood hain.",
       title: "The Malagasy Gale",
       japanese_name: "ミアリ・ゾ",
       country: "Madagascar",
@@ -1999,6 +2167,10 @@
 
     "roger-jr": {
       name: "Roger Jr.",
+      alliance: "G Corporation Global Strike Force (Kazuya's Army)",
+      story_ur: "Roger Jr. (Wildcard Animal): G-Corp ke labs se bhaaga hua boxing Kangaroo (maa aur bacha mil kar larte hain).",
+      strengths_ur: "Commando Wrestling; ajeeb hitbox (chota qad aur dum ke attacks) aur Animal stances jo opponent ki timing kharab karti hain.",
+      weaknesses_ur: "Limbs (bazu) bohat chote hain; keep-out characters (Lee, Bryan) isay qareeb nahi aane dete.",
       title: "The Bounding Brawler",
       japanese_name: "ロジャーJr.",
       country: "Australia",

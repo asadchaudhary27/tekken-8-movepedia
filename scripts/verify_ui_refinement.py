@@ -14,7 +14,7 @@ def verify():
         'rosterGrid', 'rosterGridContainer', 'carouselTrack', 'carouselPrevBtn', 'carouselNextBtn',
         'navControllerToggle', 'topNavbar', 'heroBannerSection', 'viewModeGridBtn', 'viewModeRibbonBtn',
         'rosterSearchInput', 'rosterSortSelect', 'movesTableBody', 'movesPaginationBar',
-        'coreWeaponsGrid', 'comboInputLegendHud', 'stagesGrid'
+        'coreWeaponsGrid', 'comboInputLegendHud', 'stageSelectDropdown'
     ]
 
     missing = [i for i in ids if f'id="{i}"' not in html]

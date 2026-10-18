@@ -2584,13 +2584,32 @@ function selectStage(stageId) {
 }
 
 function renderStages() {
-  const container = document.getElementById('stagesGrid');
-  if (!container || !state.stages) return;
+  if (!state.stages || !Array.isArray(state.stages)) return;
 
   const countBadge = document.getElementById('stgFilterCount');
   if (countBadge) countBadge.textContent = state.stages.length;
 
   const activeStageId = state.selectedStageId || 1;
+
+  // Synchronize Beautiful Cyber Dropdown
+  const dropdown = document.getElementById('stageSelectDropdown');
+  if (dropdown) {
+    dropdown.innerHTML = state.stages.map(s => {
+      const hazardBadges = [];
+      if (!s.has_walls) hazardBadges.push('INFINITE');
+      if (s.wall_break) hazardBadges.push('WALL BREAK');
+      if (s.floor_break) hazardBadges.push('FLOOR BREAK');
+      if (s.balcony_break) hazardBadges.push('BALCONY');
+      if (s.floor_blast) hazardBadges.push('FLOOR BLAST');
+      const tagStr = hazardBadges.length > 0 ? ` [${hazardBadges.join(' • ')}]` : (s.has_walls ? ' [WALLED]' : '');
+      const locationStr = s.location || 'Official Arena';
+      return `<option value="${s.id}" ${String(s.id) === String(activeStageId) ? 'selected' : ''}>${s.name} (${locationStr})${tagStr}</option>`;
+    }).join('');
+    dropdown.value = activeStageId;
+  }
+
+  const container = document.getElementById('stagesGrid');
+  if (!container) return;
 
   container.innerHTML = state.stages.map(s => {
     const hazardsList = s.hazards || [];
@@ -7785,8 +7804,7 @@ function setupStageFilters() {
 }
 
 function filterStagesGrid(filter = 'ALL') {
-  const container = document.getElementById('stagesGrid');
-  if (!container || !state.stages) return;
+  if (!state.stages || !Array.isArray(state.stages)) return;
 
   let list = [...state.stages];
   if (filter === 'WALL') {
@@ -7807,6 +7825,33 @@ function filterStagesGrid(filter = 'ALL') {
   if (countBadge) countBadge.textContent = list.length;
 
   const activeStageId = state.selectedStageId || 1;
+
+  // Synchronize Dropdown with filtered options
+  const dropdown = document.getElementById('stageSelectDropdown');
+  if (dropdown) {
+    dropdown.innerHTML = list.map(s => {
+      const hazardBadges = [];
+      if (!s.has_walls) hazardBadges.push('INFINITE');
+      if (s.wall_break) hazardBadges.push('WALL BREAK');
+      if (s.floor_break) hazardBadges.push('FLOOR BREAK');
+      if (s.balcony_break) hazardBadges.push('BALCONY');
+      if (s.floor_blast) hazardBadges.push('FLOOR BLAST');
+      const tagStr = hazardBadges.length > 0 ? ` [${hazardBadges.join(' • ')}]` : (s.has_walls ? ' [WALLED]' : '');
+      const locationStr = s.location || 'Official Arena';
+      return `<option value="${s.id}" ${String(s.id) === String(activeStageId) ? 'selected' : ''}>${s.name} (${locationStr})${tagStr}</option>`;
+    }).join('');
+    
+    // Auto-inspect first match or keep current if still matching
+    if (list.some(s => String(s.id) === String(activeStageId))) {
+      dropdown.value = activeStageId;
+    } else if (list.length > 0) {
+      dropdown.value = list[0].id;
+      inspectStage(list[0].id, { skipScroll: true });
+    }
+  }
+
+  const container = document.getElementById('stagesGrid');
+  if (!container) return;
 
   container.innerHTML = list.map(s => {
     const hazardsList = s.hazards || [];
@@ -7888,6 +7933,12 @@ function inspectStage(stageIdOrSlug, options = {}) {
   // 2. Sync background global state without navigating away
   setGlobalStage(activeId, { skipComboLabRefresh: false, skipScroll: true });
 
+  // 2b. Sync dropdown selection
+  const dropdown = document.getElementById('stageSelectDropdown');
+  if (dropdown && String(dropdown.value) !== String(activeId)) {
+    dropdown.value = activeId;
+  }
+
   // 3. Render Inspector Panel in Split View
   renderStageInspectorPanel(dossier, stageObj);
 
@@ -7910,6 +7961,28 @@ function inspectStage(stageIdOrSlug, options = {}) {
   if (options.openModal) {
     const modal = document.getElementById('stageDetailModal');
     if (modal) modal.style.display = 'flex';
+  }
+}
+
+function toggleStageImageExpand() {
+  playSfx('click');
+  const hero = document.querySelector('.stg-insp-hero');
+  const img = document.querySelector('.stg-insp-bg');
+  const btn = document.getElementById('btnToggleStageFit');
+  if (!hero || !img) return;
+  const isFull = hero.classList.toggle('is-full-view');
+  if (isFull) {
+    img.style.objectFit = 'contain';
+    img.style.backgroundColor = '#05070c';
+    hero.style.height = 'auto';
+    hero.style.maxHeight = '650px';
+    if (btn) btn.innerHTML = '🔍 Cinematic View';
+  } else {
+    img.style.objectFit = 'cover';
+    img.style.backgroundColor = 'transparent';
+    hero.style.height = '';
+    hero.style.maxHeight = '';
+    if (btn) btn.innerHTML = '🖼️ Full Arena Image';
   }
 }
 
@@ -7966,6 +8039,9 @@ function renderStageInspectorPanel(dossier, stageObj) {
           <div class="stg-insp-location">📍 ${dossier.location || 'Official Arena'}</div>
         </div>
         <div class="stg-insp-actions-top">
+          <button type="button" class="btn-stg-action" onclick="toggleStageImageExpand()" id="btnToggleStageFit" title="Toggle full uncropped image">
+            🖼️ Full Arena Image
+          </button>
           <button type="button" class="btn-stg-action primary" onclick="selectStageAsBattleground()">
             ⚔️ Set Active Arena
           </button>
@@ -8680,12 +8756,37 @@ function populateProfileSections(char) {
   const diffEl = document.getElementById('cpDifficultyVal');
   if (diffEl) diffEl.textContent = dossier.difficulty || 'Intermediate ★★★☆☆';
 
-  // 3. Lore Summary
+  // 3. Lore & Canonical Story (The Dark Awakens)
+  const allianceBadge = document.getElementById('cpAllianceBadge');
+  if (allianceBadge) {
+    allianceBadge.textContent = dossier.alliance ? `🛡️ ${dossier.alliance}` : '⚔️ Independent Fighter';
+  }
+
   const loreShort = document.getElementById('cpBioTextShort');
-  if (loreShort) loreShort.textContent = dossier.lore || `${char.name} is an elite Tekken 8 combatant with formidable neutral command and crushing Heat dynamics.`;
+  if (loreShort) {
+    const alliancePrefix = dossier.alliance ? `[${dossier.alliance}] ` : '';
+    loreShort.textContent = alliancePrefix + (dossier.lore || `${char.name} is an elite Tekken 8 combatant with formidable neutral command and crushing Heat dynamics.`);
+  }
 
   const loreFull = document.getElementById('cpBioText');
-  if (loreFull) loreFull.textContent = dossier.lore || `${char.name} commands authoritative presence in the Tekken 8 roster.`;
+  if (loreFull) {
+    loreFull.textContent = dossier.lore || `${char.name} commands authoritative presence in the Tekken 8 roster.`;
+  }
+
+  const storyUrdu = document.getElementById('cpStoryUrduText');
+  if (storyUrdu) {
+    storyUrdu.textContent = dossier.story_ur || `${char.name} Tekken 8 The Dark Awakens story arc mein tournament ka ahem tareen kirdar hai.`;
+  }
+
+  const strengthsUrdu = document.getElementById('cpStoryStrengthsText');
+  if (strengthsUrdu) {
+    strengthsUrdu.textContent = dossier.strengths_ur || (dossier.pros ? dossier.pros.join('. ') : 'High damage and strong neutral pokes.');
+  }
+
+  const weaknessesUrdu = document.getElementById('cpStoryWeaknessesText');
+  if (weaknessesUrdu) {
+    weaknessesUrdu.textContent = dossier.weaknesses_ur || (dossier.cons ? dossier.cons.join('. ') : 'Requires disciplined spacing against sidestepping.');
+  }
 
   // 4. Tactical Pros & Cons Chips
   const prosConsRow = document.getElementById('cpProsConsRow');

@@ -22,17 +22,23 @@
 | `ac9957d` | Oct 18, 2026 | **feat(ui-kinetic-blob):** Integrated user-requested kinetic roll flip buttons (`border-radius: 2rem`, `#3653f8` royal blue, staggered cascading `.span-mother` / `.span-mother2` letter roll) across hero CTAs and fighter action buttons. Implemented animated plasma blob bounce card architecture (`@keyframes blob-bounce 5s infinite ease`, `border-radius: 14px`, backdrop-filtered `.bg` plate with moving crimson/blue aura perimeter) across all 43 fighter roster cards. Set move cards to full width (1 per line). Removed Guide & right-side buttons from navbar. Zero-scroll 2-column stage selector. 148/148 tests passing. |
 | `a49bf32` | Oct 18, 2026 | **feat(ui-notation-icons-ribbon):** Integrated authentic fighting game SVG icons (`1.svg`, `2.svg`, `3.svg`, `4.svg`, combinations `1+2`, `1+3`, `1+4`, `2+3`, `2+4`, `3+4`, `1+2+3+4`, directions `f`, `d`, `b`, `u`, diagonals `df`, `db`, `uf`, `ub`, `n` neutral star, `tornado`, `heat`, `power-crush`, `rage-art`, `follow.svg` step chevrons, and PS/Xbox controller icons) into notation engine and Combo Input Guide HUD. Zero mapping error constraint strictly verified. Enlarged Quick Ribbon cards (`.carousel-fighter-card` min-width 110px, avatar 82px x 82px, smooth hover transitions, clear archetype style subtitles, full responsive visibility). 148/148 tests passing. |
 | `20b47fd` | Oct 18, 2026 | **refactor(ui):** Comprehensive platform button audit. Retained all 198 functional interactive buttons (roster, moves explorer, combo lab, matchup combat lab, reaction trainer, character dossiers, blueprints, compendium). Pruned 17 unattached dead buttons across 4 orphaned modals (`#favoritesModal`, `#settingsModal`, `#notationGuideModal`, `#practiceNotesModal`) whose navbar triggers were removed previously. 148/148 tests passing. |
+| `pending` | Oct 19, 2026 | **feat(story-stages-typography):** Ingested all 43 fighter stories, alliances, combat strengths (taqat), and weaknesses (kamzoriyan) from `story.docx` into character profiles and dossiers. Re-architected Battle Stages: eliminated sidebar column, introduced glowing cyber dropdown selection at section top, expanded arena imagery to full responsive scale with cinematic toggle, and removed internal scrolling constraints for 100% visible stage intelligence. Replaced entire site typography with Google Fonts `Plus Jakarta Sans`, `Chakra Petch`, and `JetBrains Mono` for maximum readability. 148/148 tests passing. |
 
 ---
 
 ## 2. Current Session Task
 
-- **Task Name:** Platform-Wide Button Audit & Dead Button Pruning.
-- **Objective:** Audit all `<button>` elements across the entire platform. Retain every single button that has real, active functionality attached. Remove all placeholder or unattached buttons whose parent entrypoints were disconnected, and provide a transparent, itemized report detailing each button removed by name and parent section.
+- **Task Name:** Canonical Story Integration, Stage Showcase Modernization & Professional Typography Overhaul.
+- **Objective:**
+  1. Extract and map character stories, alliances, strengths (taqat), and weaknesses (kamzoriyan) from `story.docx` to all 43 fighters' profiles.
+  2. Overhaul Stage Blueprints section: remove sidebar column, provide a top cyber dropdown for arena selection, show full arena imagery, and ensure zero-scroll visibility for all stage details.
+  3. Replace all fonts across the website with professional, readable Google Fonts (`Plus Jakarta Sans`, `Chakra Petch`, `JetBrains Mono`).
 - **Deliverables:**
-  1. `frontend/index.html` (pruned 17 unattached buttons across 4 disconnected modals)
-  2. `index.html` (100% synchronized with frontend/index.html)
-  3. `docs/WORKLOG.md` (updated operational log)
+  1. `frontend/assets/js/dossiers.js` (canonical story, alliance, and tactical strengths/weaknesses for all 43 fighters)
+  2. `frontend/assets/js/app.js` (profile modal story wiring, stage dropdown control, image toggle)
+  3. `frontend/assets/css/style.css` (cyber dropdown, full-view hero image, zero-scroll inspector, typography overhaul)
+  4. `frontend/index.html` & `index.html` (Google Fonts imports, story container markup, stage dropdown control bar)
+  5. `docs/WORKLOG.md` (updated operational log)
 - **Execution Mode:** 100% Native Vanilla ES6, HTML5, CSS3. Zero framework bloat. Full database preservation (`tekken8_fyp.db` untouched). 148/148 tests passing.
 
 ---
