@@ -372,21 +372,26 @@ function invalidateApiCache() {
  */
 
 const COMMAND_DIR_SVGS = {
-  f: { deg: 0, title: 'Forward' },
-  df: { deg: 45, title: 'Down-Forward' },
-  'd/f': { deg: 45, title: 'Down-Forward' },
-  d: { deg: 90, title: 'Down' },
-  db: { deg: 135, title: 'Down-Back' },
-  'd/b': { deg: 135, title: 'Down-Back' },
-  b: { deg: 180, title: 'Back' },
-  ub: { deg: 225, title: 'Up-Back' },
-  'u/b': { deg: 225, title: 'Up-Back' },
-  u: { deg: 270, title: 'Up' },
-  uf: { deg: 315, title: 'Up-Forward' },
-  'u/f': { deg: 315, title: 'Up-Forward' }
+  f: { file: 'f.svg', deg: 0, title: 'Forward' },
+  df: { file: 'df.svg', deg: 45, title: 'Down-Forward' },
+  'd/f': { file: 'df.svg', deg: 45, title: 'Down-Forward' },
+  d: { file: 'd.svg', deg: 90, title: 'Down' },
+  db: { file: 'db.svg', deg: 135, title: 'Down-Back' },
+  'd/b': { file: 'db.svg', deg: 135, title: 'Down-Back' },
+  b: { file: 'b.svg', deg: 180, title: 'Back' },
+  ub: { file: 'ub.svg', deg: 225, title: 'Up-Back' },
+  'u/b': { file: 'ub.svg', deg: 225, title: 'Up-Back' },
+  u: { file: 'u.svg', deg: 270, title: 'Up' },
+  uf: { file: 'uf.svg', deg: 315, title: 'Up-Forward' },
+  'u/f': { file: 'uf.svg', deg: 315, title: 'Up-Forward' }
 };
 
 function renderDirSvg(deg, isHold = false) {
+  const degMap = { 0: 'f.svg', 45: 'df.svg', 90: 'd.svg', 135: 'db.svg', 180: 'b.svg', 225: 'ub.svg', 270: 'u.svg', 315: 'uf.svg' };
+  const file = degMap[deg];
+  if (file) {
+    return `<img src="assets/icons/${file}" class="tk-icon-img tk-icon-dir ${isHold ? 'tk-icon-hold' : ''}" alt="dir" loading="lazy">`;
+  }
   if (isHold) {
     return `<svg viewBox="0 0 24 24" class="tk-svg-dir tk-svg-dir-hold" style="transform: rotate(${deg}deg);" aria-hidden="true"><path d="M3 10.5h8.5V6.5l9.5 5.5-9.5 5.5v-4H3z" fill="currentColor"/></svg>`;
   }
@@ -394,22 +399,58 @@ function renderDirSvg(deg, isHold = false) {
 }
 
 function renderStarSvg() {
-  return `<svg viewBox="0 0 20 20" class="tk-svg-star" aria-hidden="true"><polygon points="10,2.5 12.3,7.5 17.8,8.2 13.7,12.1 14.8,17.5 10,14.8 5.2,17.5 6.3,12.1 2.2,8.2 7.7,7.5" fill="currentColor"/></svg>`;
+  return `<img src="assets/icons/n.svg" class="tk-icon-img tk-icon-star" alt="★" title="Neutral (Stick centered)" loading="lazy">`;
 }
 
 function renderPsBtnSvg(type) {
   switch (type) {
     case 'sq': // 1: Square
-      return `<svg viewBox="0 0 20 20" class="tk-svg-ps" aria-hidden="true"><rect x="4.5" y="4.5" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" rx="1.5"/></svg>`;
+      return `<img src="assets/icons/ps-square.svg" class="tk-icon-img tk-icon-ps" alt="Square" title="Square (Left Punch)" loading="lazy">`;
     case 'tri': // 2: Triangle
-      return `<svg viewBox="0 0 20 20" class="tk-svg-ps" aria-hidden="true"><polygon points="10,3.5 16.5,15.5 3.5,15.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/></svg>`;
+      return `<img src="assets/icons/ps-triangle.svg" class="tk-icon-img tk-icon-ps" alt="Triangle" title="Triangle (Right Punch)" loading="lazy">`;
     case 'cross': // 3: Cross
-      return `<svg viewBox="0 0 20 20" class="tk-svg-ps" aria-hidden="true"><line x1="4.5" y1="4.5" x2="15.5" y2="15.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="15.5" y1="4.5" x2="4.5" y2="15.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+      return `<img src="assets/icons/ps-cross.svg" class="tk-icon-img tk-icon-ps" alt="Cross" title="Cross (Left Kick)" loading="lazy">`;
     case 'circle': // 4: Circle
-      return `<svg viewBox="0 0 20 20" class="tk-svg-ps" aria-hidden="true"><circle cx="10" cy="10" r="5.5" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>`;
+      return `<img src="assets/icons/ps-circle.svg" class="tk-icon-img tk-icon-ps" alt="Circle" title="Circle (Right Kick)" loading="lazy">`;
     default:
       return '';
   }
+}
+
+function renderXbBtnSvg(type) {
+  switch (type) {
+    case 'x': // 1: X
+      return `<img src="assets/icons/xb-x.svg" class="tk-icon-img tk-icon-xb" alt="X" title="X Button (Left Punch)" loading="lazy">`;
+    case 'y': // 2: Y
+      return `<img src="assets/icons/xb-y.svg" class="tk-icon-img tk-icon-xb" alt="Y" title="Y Button (Right Punch)" loading="lazy">`;
+    case 'a': // 3: A
+      return `<img src="assets/icons/xb-a.svg" class="tk-icon-img tk-icon-xb" alt="A" title="A Button (Left Kick)" loading="lazy">`;
+    case 'b': // 4: B
+      return `<img src="assets/icons/xb-b.svg" class="tk-icon-img tk-icon-xb" alt="B" title="B Button (Right Kick)" loading="lazy">`;
+    default:
+      return '';
+  }
+}
+
+function renderArcadeBtnImg(btnStr, isHold = false) {
+  const fileMap = {
+    '1': '1.svg',
+    '2': '2.svg',
+    '3': '3.svg',
+    '4': '4.svg',
+    '1+2': '1+2.svg',
+    '1+3': '1+3.svg',
+    '1+4': '1+4.svg',
+    '2+3': '2+3.svg',
+    '2+4': '2+4.svg',
+    '3+4': '3+4.svg',
+    '1+2+3+4': '1+2+3+4.svg'
+  };
+  const file = fileMap[btnStr];
+  if (file) {
+    return `<img src="assets/icons/${file}" class="tk-icon-img tk-icon-arcade ${isHold ? 'tk-icon-hold' : ''}" alt="${btnStr}" title="${isHold ? 'HOLD ' : 'PRESS '}${btnStr}" loading="lazy">`;
+  }
+  return null;
 }
 
 function renderCommandNotation(raw, controllerType) {
@@ -423,7 +464,8 @@ function renderCommandNotation(raw, controllerType) {
   // Split sequence by major combo step separators (">", "->", "=>", "→", "►", "▶")
   if (trimmed.includes('>') || trimmed.includes('→') || trimmed.includes('->') || trimmed.includes('=>') || trimmed.includes('►') || trimmed.includes('▶')) {
     const steps = trimmed.split(/\s*(?:>|->|=>|→|►|▶)\s*/);
-    return `<div class="tk-combo-sequence">${steps.map(s => formatSingleStep(s, layout)).join('<span class="tk-next-arrow tk-break-btn" title="Combo Link Step (Next Move)">➔</span>')}</div>`;
+    const stepSep = '<span class="tk-next-arrow tk-break-btn" title="Combo Link Step (Next Move)"><img src="assets/icons/follow.svg" class="tk-combo-follow-img" alt="➔" loading="lazy"></span>';
+    return `<div class="tk-combo-sequence">${steps.map(s => formatSingleStep(s, layout)).join(stepSep)}</div>`;
   }
 
   return formatSingleStep(trimmed, layout);
@@ -449,14 +491,16 @@ function formatWord(w, layout) {
   if ((w.startsWith('(') && w.endsWith(')')) || (w.startsWith('[') && w.endsWith(']'))) {
     const tag = w.slice(1, -1).trim();
     const upper = tag.toUpperCase();
-    if (upper === 'T!') return '<span class="tk-tag-tornado" title="Tornado Spin Bound">TORNADO</span>';
+    if (upper === 'T!') return '<span class="tk-tag-tornado" title="Tornado Spin Bound"><img src="assets/icons/tornado.svg" class="tk-icon-img tk-icon-tag" alt="T!"> TORNADO</span>';
     if (upper === 'W!') return '<span class="tk-tag-wall" title="Wall Splat">WALL SPLAT</span>';
     if (upper === 'FB!') return '<span class="tk-tag-break" title="Floor Break">FLOOR BREAK</span>';
     if (upper === 'WB!') return '<span class="tk-tag-break" title="Wall Break">WALL BREAK</span>';
     if (upper === 'BB!') return '<span class="tk-tag-break" title="Balcony Break">BALCONY BREAK</span>';
     if (upper === 'CH') return '<span class="tk-tag-ch" title="Counter Hit">CH</span>';
-    if (upper === 'PC') return '<span class="tk-tag-pc" title="Power Crush">PC</span>';
-    if (upper === 'HEAT' || tag.toLowerCase() === 'heat') return '<span class="tk-tag-heat" title="Heat Engager / State">HEAT</span>';
+    if (upper === 'PC') return '<span class="tk-tag-pc" title="Power Crush"><img src="assets/icons/power-crush.svg" class="tk-icon-img tk-icon-tag" alt="PC"> PC</span>';
+    if (upper === 'HEAT' || tag.toLowerCase() === 'heat') return '<span class="tk-tag-heat" title="Heat Engager / State"><img src="assets/icons/heat.svg" class="tk-icon-img tk-icon-tag" alt="HEAT"> HEAT</span>';
+    if (upper === 'RA') return '<span class="tk-tag-rage" title="Rage Art"><img src="assets/icons/rage-art.svg" class="tk-icon-img tk-icon-tag" alt="RA"> RAGE ART</span>';
+    if (upper === 'HOMING') return '<span class="tk-tag-homing" title="Homing Attack"><img src="assets/icons/homing.svg" class="tk-icon-img tk-icon-tag" alt="HOMING"> HOMING</span>';
     return `<span class="tk-tag-generic">${tag}</span>`;
   }
 
@@ -470,10 +514,10 @@ function formatWord(w, layout) {
   // Check prefixes like R. or H.
   let prefixHtml = '';
   if (w.startsWith('R.') || w.startsWith('r.')) {
-    prefixHtml = '<span class="tk-state-chip tk-rage-badge" title="Rage State">RAGE</span> ';
+    prefixHtml = '<span class="tk-state-chip tk-rage-badge" title="Rage State"><img src="assets/icons/rage-art.svg" class="tk-icon-img tk-icon-tag" alt="RA"> RAGE</span> ';
     w = w.slice(2);
   } else if (w.startsWith('H.') || w.startsWith('h.')) {
-    prefixHtml = '<span class="tk-state-chip tk-heat-badge" title="Heat State">HEAT</span> ';
+    prefixHtml = '<span class="tk-state-chip tk-heat-badge" title="Heat State"><img src="assets/icons/heat.svg" class="tk-icon-img tk-icon-tag" alt="HEAT"> HEAT</span> ';
     w = w.slice(2);
   }
 
@@ -613,60 +657,64 @@ function formatButtons(btnStr, layout) {
 
   if (activeLayout === 'PLAYSTATION') {
     const psMap = {
-      '1': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-sq ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Square (Left Punch)">${actionTag}${renderPsBtnSvg('sq')}</span>`,
-      '2': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-tri ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Triangle (Right Punch)">${actionTag}${renderPsBtnSvg('tri')}</span>`,
-      '3': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-cross ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Cross (Left Kick)">${actionTag}${renderPsBtnSvg('cross')}</span>`,
-      '4': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-circle ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Circle (Right Kick)">${actionTag}${renderPsBtnSvg('circle')}</span>`,
-      '1+2': `<span class="tk-btn-chip tk-btn-ps tk-btn-1-2 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Square + Triangle">${actionTag}${renderPsBtnSvg('sq')}+${renderPsBtnSvg('tri')}</span>`,
-      '3+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-3-4 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Cross + Circle">${actionTag}${renderPsBtnSvg('cross')}+${renderPsBtnSvg('circle')}</span>`,
-      '1+3': `<span class="tk-btn-chip tk-btn-ps tk-btn-1-2 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Throw (Square + Cross)">${actionTag}${renderPsBtnSvg('sq')}+${renderPsBtnSvg('cross')}</span>`,
-      '2+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-3-4 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Throw (Triangle + Circle)">${actionTag}${renderPsBtnSvg('tri')}+${renderPsBtnSvg('circle')}</span>`,
-      '1+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Square + Circle">${actionTag}${renderPsBtnSvg('sq')}+${renderPsBtnSvg('circle')}</span>`,
-      '2+3': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Triangle + Cross">${actionTag}${renderPsBtnSvg('tri')}+${renderPsBtnSvg('cross')}</span>`,
-      '1+2+3': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}">${actionTag}${renderPsBtnSvg('sq')}+${renderPsBtnSvg('tri')}+${renderPsBtnSvg('cross')}</span>`,
-      '1+2+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}">${actionTag}${renderPsBtnSvg('sq')}+${renderPsBtnSvg('tri')}+${renderPsBtnSvg('circle')}</span>`,
-      '1+2+3+4': `<span class="tk-btn-chip tk-btn-ki tk-btn-ps ${isHold ? 'tk-btn-hold' : ''}" title="Ki Charge">${actionTag}Ki</span>`,
+      '1': `<span class="tk-btn-chip tk-btn-ps tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Square (Left Punch)">${actionTag}${renderPsBtnSvg('sq')}</span>`,
+      '2': `<span class="tk-btn-chip tk-btn-ps tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Triangle (Right Punch)">${actionTag}${renderPsBtnSvg('tri')}</span>`,
+      '3': `<span class="tk-btn-chip tk-btn-ps tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Cross (Left Kick)">${actionTag}${renderPsBtnSvg('cross')}</span>`,
+      '4': `<span class="tk-btn-chip tk-btn-ps tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Circle (Right Kick)">${actionTag}${renderPsBtnSvg('circle')}</span>`,
+      '1+2': `<span class="tk-btn-chip tk-btn-ps tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Square + Triangle">${actionTag}${renderPsBtnSvg('sq')}+${renderPsBtnSvg('tri')}</span>`,
+      '3+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Cross + Circle">${actionTag}${renderPsBtnSvg('cross')}+${renderPsBtnSvg('circle')}</span>`,
+      '1+3': `<span class="tk-btn-chip tk-btn-ps tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Throw (Square + Cross)">${actionTag}${renderPsBtnSvg('sq')}+${renderPsBtnSvg('cross')}</span>`,
+      '2+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Throw (Triangle + Circle)">${actionTag}${renderPsBtnSvg('tri')}+${renderPsBtnSvg('circle')}</span>`,
+      '1+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Square + Circle">${actionTag}${renderPsBtnSvg('sq')}+${renderPsBtnSvg('circle')}</span>`,
+      '2+3': `<span class="tk-btn-chip tk-btn-ps tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Triangle + Cross">${actionTag}${renderPsBtnSvg('tri')}+${renderPsBtnSvg('cross')}</span>`,
+      '1+2+3': `<span class="tk-btn-chip tk-btn-ps tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}">${actionTag}${renderPsBtnSvg('sq')}+${renderPsBtnSvg('tri')}+${renderPsBtnSvg('cross')}</span>`,
+      '1+2+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}">${actionTag}${renderPsBtnSvg('sq')}+${renderPsBtnSvg('tri')}+${renderPsBtnSvg('circle')}</span>`,
+      '1+2+3+4': `<span class="tk-btn-chip tk-btn-ki tk-btn-ps tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="Ki Charge">${actionTag}${renderArcadeBtnImg('1+2+3+4', isHold)}</span>`,
     };
     if (psMap[norm]) return psMap[norm];
   } else if (activeLayout === 'XBOX') {
     const xbMap = {
-      '1': `<span class="tk-btn-chip tk-btn-xb tk-btn-xb-x ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}X Button (Left Punch)">${actionTag}X</span>`,
-      '2': `<span class="tk-btn-chip tk-btn-xb tk-btn-xb-y ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Y Button (Right Punch)">${actionTag}Y</span>`,
-      '3': `<span class="tk-btn-chip tk-btn-xb tk-btn-xb-a ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}A Button (Left Kick)">${actionTag}A</span>`,
-      '4': `<span class="tk-btn-chip tk-btn-xb tk-btn-xb-b ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}B Button (Right Kick)">${actionTag}B</span>`,
-      '1+2': `<span class="tk-btn-chip tk-btn-xb tk-btn-1-2 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}X + Y Buttons">${actionTag}X+Y</span>`,
-      '3+4': `<span class="tk-btn-chip tk-btn-xb tk-btn-3-4 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}A + B Buttons">${actionTag}A+B</span>`,
-      '1+3': `<span class="tk-btn-chip tk-btn-xb tk-btn-1-2 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Throw (X + A)">${actionTag}X+A</span>`,
-      '2+4': `<span class="tk-btn-chip tk-btn-xb tk-btn-3-4 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Throw (Y + B)">${actionTag}Y+B</span>`,
-      '1+4': `<span class="tk-btn-chip tk-btn-xb tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}X + B Buttons">${actionTag}X+B</span>`,
-      '2+3': `<span class="tk-btn-chip tk-btn-xb tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Y + A Buttons">${actionTag}Y+A</span>`,
-      '1+2+3': `<span class="tk-btn-chip tk-btn-xb tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}">${actionTag}X+Y+A</span>`,
-      '1+2+4': `<span class="tk-btn-chip tk-btn-xb tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}">${actionTag}X+Y+B</span>`,
-      '1+2+3+4': `<span class="tk-btn-chip tk-btn-ki tk-btn-xb ${isHold ? 'tk-btn-hold' : ''}" title="Ki Charge">${actionTag}Ki</span>`,
+      '1': `<span class="tk-btn-chip tk-btn-xb tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}X Button (Left Punch)">${actionTag}${renderXbBtnSvg('x')}</span>`,
+      '2': `<span class="tk-btn-chip tk-btn-xb tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Y Button (Right Punch)">${actionTag}${renderXbBtnSvg('y')}</span>`,
+      '3': `<span class="tk-btn-chip tk-btn-xb tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}A Button (Left Kick)">${actionTag}${renderXbBtnSvg('a')}</span>`,
+      '4': `<span class="tk-btn-chip tk-btn-xb tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}B Button (Right Kick)">${actionTag}${renderXbBtnSvg('b')}</span>`,
+      '1+2': `<span class="tk-btn-chip tk-btn-xb tk-btn-1-2 tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}X + Y Buttons">${actionTag}${renderXbBtnSvg('x')}+${renderXbBtnSvg('y')}</span>`,
+      '3+4': `<span class="tk-btn-chip tk-btn-xb tk-btn-3-4 tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}A + B Buttons">${actionTag}${renderXbBtnSvg('a')}+${renderXbBtnSvg('b')}</span>`,
+      '1+3': `<span class="tk-btn-chip tk-btn-xb tk-btn-1-2 tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Throw (X + A)">${actionTag}${renderXbBtnSvg('x')}+${renderXbBtnSvg('a')}</span>`,
+      '2+4': `<span class="tk-btn-chip tk-btn-xb tk-btn-3-4 tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Throw (Y + B)">${actionTag}${renderXbBtnSvg('y')}+${renderXbBtnSvg('b')}</span>`,
+      '1+4': `<span class="tk-btn-chip tk-btn-xb tk-btn-multi tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}X + B Buttons">${actionTag}${renderXbBtnSvg('x')}+${renderXbBtnSvg('b')}</span>`,
+      '2+3': `<span class="tk-btn-chip tk-btn-xb tk-btn-multi tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Y + A Buttons">${actionTag}${renderXbBtnSvg('y')}+${renderXbBtnSvg('a')}</span>`,
+      '1+2+3': `<span class="tk-btn-chip tk-btn-xb tk-btn-multi tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}">${actionTag}${renderXbBtnSvg('x')}+${renderXbBtnSvg('y')}+${renderXbBtnSvg('a')}</span>`,
+      '1+2+4': `<span class="tk-btn-chip tk-btn-xb tk-btn-multi tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}">${actionTag}${renderXbBtnSvg('x')}+${renderXbBtnSvg('y')}+${renderXbBtnSvg('b')}</span>`,
+      '1+2+3+4': `<span class="tk-btn-chip tk-btn-ki tk-btn-xb tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="Ki Charge">${actionTag}${renderArcadeBtnImg('1+2+3+4', isHold)}</span>`,
     };
     if (xbMap[norm]) return xbMap[norm];
   } else {
-    // ARCADE
+    // ARCADE (Authentic Fighting Icons from assets/icons/)
     const arcMap = {
-      '1': `<span class="tk-btn-chip tk-btn-1 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}1 (Left Punch)">${actionTag}1</span>`,
-      '2': `<span class="tk-btn-chip tk-btn-2 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}2 (Right Punch)">${actionTag}2</span>`,
-      '3': `<span class="tk-btn-chip tk-btn-3 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}3 (Left Kick)">${actionTag}3</span>`,
-      '4': `<span class="tk-btn-chip tk-btn-4 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}4 (Right Kick)">${actionTag}4</span>`,
-      '1+2': `<span class="tk-btn-chip tk-btn-1-2 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}1+2 (LP+RP)">${actionTag}1+2</span>`,
-      '3+4': `<span class="tk-btn-chip tk-btn-3-4 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}3+4 (LK+RK)">${actionTag}3+4</span>`,
-      '1+3': `<span class="tk-btn-chip tk-btn-1-2 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}1+3 (Throw)">${actionTag}1+3</span>`,
-      '2+4': `<span class="tk-btn-chip tk-btn-3-4 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}2+4 (Throw)">${actionTag}2+4</span>`,
-      '1+4': `<span class="tk-btn-chip tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}1+4">${actionTag}1+4</span>`,
-      '2+3': `<span class="tk-btn-chip tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}2+3">${actionTag}2+3</span>`,
-      '1+2+3': `<span class="tk-btn-chip tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}">${actionTag}1+2+3</span>`,
-      '1+2+4': `<span class="tk-btn-chip tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}">${actionTag}1+2+4</span>`,
-      '1+2+3+4': `<span class="tk-btn-chip tk-btn-ki ${isHold ? 'tk-btn-hold' : ''}" title="Ki Charge (1+2+3+4)">${actionTag}Ki</span>`,
+      '1': `<span class="tk-btn-chip tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}1 (Left Punch)">${actionTag}${renderArcadeBtnImg('1', isHold)}</span>`,
+      '2': `<span class="tk-btn-chip tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}2 (Right Punch)">${actionTag}${renderArcadeBtnImg('2', isHold)}</span>`,
+      '3': `<span class="tk-btn-chip tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}3 (Left Kick)">${actionTag}${renderArcadeBtnImg('3', isHold)}</span>`,
+      '4': `<span class="tk-btn-chip tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}4 (Right Kick)">${actionTag}${renderArcadeBtnImg('4', isHold)}</span>`,
+      '1+2': `<span class="tk-btn-chip tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}1+2 (LP+RP)">${actionTag}${renderArcadeBtnImg('1+2', isHold)}</span>`,
+      '3+4': `<span class="tk-btn-chip tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}3+4 (LK+RK)">${actionTag}${renderArcadeBtnImg('3+4', isHold)}</span>`,
+      '1+3': `<span class="tk-btn-chip tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}1+3 (Throw)">${actionTag}${renderArcadeBtnImg('1+3', isHold)}</span>`,
+      '2+4': `<span class="tk-btn-chip tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}2+4 (Throw)">${actionTag}${renderArcadeBtnImg('2+4', isHold)}</span>`,
+      '1+4': `<span class="tk-btn-chip tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}1+4">${actionTag}${renderArcadeBtnImg('1+4', isHold)}</span>`,
+      '2+3': `<span class="tk-btn-chip tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}2+3">${actionTag}${renderArcadeBtnImg('2+3', isHold)}</span>`,
+      '1+2+3': `<span class="tk-btn-chip tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}">${actionTag}${renderArcadeBtnImg('1', isHold)}+${renderArcadeBtnImg('2', isHold)}+${renderArcadeBtnImg('3', isHold)}</span>`,
+      '1+2+4': `<span class="tk-btn-chip tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}">${actionTag}${renderArcadeBtnImg('1', isHold)}+${renderArcadeBtnImg('2', isHold)}+${renderArcadeBtnImg('4', isHold)}</span>`,
+      '1+2+3+4': `<span class="tk-btn-chip tk-btn-icon-wrap tk-btn-ki ${isHold ? 'tk-btn-hold' : ''}" title="Ki Charge (1+2+3+4)">${actionTag}${renderArcadeBtnImg('1+2+3+4', isHold)}</span>`,
     };
     if (arcMap[norm]) return arcMap[norm];
   }
 
   if (/^[1-4\+]+$/.test(norm)) {
-    return `<span class="tk-btn-chip tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}">${actionTag}${norm}</span>`;
+    const parts = norm.split('+').map(p => {
+      const arc = renderArcadeBtnImg(p, isHold);
+      return arc || p;
+    });
+    return `<span class="tk-btn-chip tk-btn-icon-wrap ${isHold ? 'tk-btn-hold' : ''}">${actionTag}${parts.join('+')}</span>`;
   }
   return null;
 }
@@ -1448,6 +1496,7 @@ function renderCarousel() {
                onerror="this.src='/assets/avatars/jin-brand-256-C1-oe_x3.webp'"/>
         </div>
         <div class="carousel-name">${c.name}</div>
+        <div class="carousel-style">${c.archetype || 'TEKKEN 8'}</div>
       </div>
     `;
   }).join('');
