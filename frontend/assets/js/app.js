@@ -1276,35 +1276,42 @@ function renderRosterGrid() {
            onclick="selectCharacter('${c.slug}')"
            ondblclick="openCharacterProfile('${c.slug}')"
            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectCharacter('${c.slug}');}">
-        <div class="roster-avatar-wrap">
-          <img class="roster-avatar"
-               src="${c.avatar_url || '/assets/avatars/' + c.slug + '.jpg'}"
-               alt="${c.name}"
-               loading="lazy"
-               onerror="this.src='/assets/avatars/${c.slug}.jpg'; this.onerror=()=>this.src='/assets/avatars/jin-brand-256-C1-oe_x3.webp'"/>
-          ${c.is_dlc ? '<span class="roster-dlc-tag">DLC</span>' : ''}
-          ${isSelected ? '<span class="roster-active-indicator">SELECTED</span>' : ''}
-          <button type="button" class="btn-roster-fav ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleCharacterFavorite('${c.slug}')" title="Favorite ${c.name}" aria-label="Favorite ${c.name}">
-            ${isFav ? '★' : '☆'}
-          </button>
-        </div>
-        <div class="roster-card-info">
-          <div class="roster-card-name" title="${c.name}">${c.name}</div>
-          <div class="roster-card-style" title="${style}">${style}</div>
-          <div class="roster-card-meta">
-            <span class="roster-chip ${hb.badgeClass}">${hb.label}</span>
-            ${c.is_dlc ? '<span class="roster-chip chip-dlc">DLC S2</span>' : '<span class="roster-chip chip-base">BASE</span>'}
+        <div class="blob"></div>
+        <div class="blob blob-blue"></div>
+        <div class="bg">
+          <div class="roster-avatar-wrap">
+            <img class="roster-avatar"
+                 src="${c.avatar_url || '/assets/avatars/' + c.slug + '.jpg'}"
+                 alt="${c.name}"
+                 loading="lazy"
+                 onerror="this.src='/assets/avatars/${c.slug}.jpg'; this.onerror=()=>this.src='/assets/avatars/jin-brand-256-C1-oe_x3.webp'"/>
+            ${c.is_dlc ? '<span class="roster-dlc-tag">DLC</span>' : ''}
+            ${isSelected ? '<span class="roster-active-indicator">SELECTED</span>' : ''}
+            <button type="button" class="btn-roster-fav ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleCharacterFavorite('${c.slug}')" title="Favorite ${c.name}" aria-label="Favorite ${c.name}">
+              ${isFav ? '★' : '☆'}
+            </button>
           </div>
-          <div class="roster-card-actions" role="toolbar" aria-label="${c.name} quick actions">
-            <button type="button" class="btn-roster-action btn-roster-dossier btn-roster-profile-link" onclick="event.stopPropagation(); viewFighterProfile('${c.slug}')" title="View ${c.name} Profile Dossier" aria-label="View ${c.name} Dossier">
-              <span>👤</span> Dossier
-            </button>
-            <button type="button" class="btn-roster-action btn-roster-matchup btn-roster-profile-link matchup" onclick="event.stopPropagation(); compareInMatchup('${c.slug}')" title="Compare ${c.name} in Matchup Lab" aria-label="Compare ${c.name} in Matchup Lab">
-              <span>⚔️</span> Match
-            </button>
-            <button type="button" class="btn-roster-action btn-roster-combos btn-roster-profile-link combo" onclick="event.stopPropagation(); loadInComboLab('${c.slug}')" title="Load ${c.name} in Combo Lab" aria-label="Load ${c.name} in Combo Lab">
-              <span>🥊</span> Combos
-            </button>
+          <div class="roster-card-info">
+            <div class="roster-card-name" title="${c.name}">${c.name}</div>
+            <div class="roster-card-style" title="${style}">${style}</div>
+            <div class="roster-card-meta">
+              <span class="roster-chip ${hb.badgeClass}">${hb.label}</span>
+              ${c.is_dlc ? '<span class="roster-chip chip-dlc">DLC S2</span>' : '<span class="roster-chip chip-base">BASE</span>'}
+            </div>
+            <div class="roster-card-actions" role="toolbar" aria-label="${c.name} quick actions">
+              <button type="button" class="btn-roster-action btn-roster-dossier btn-roster-profile-link" onclick="event.stopPropagation(); viewFighterProfile('${c.slug}')" title="View ${c.name} Profile Dossier" aria-label="View ${c.name} Dossier">
+                <span class="span-mother"><span>D</span><span>o</span><span>s</span><span>s</span><span>i</span><span>e</span><span>r</span></span>
+                <span class="span-mother2"><span>D</span><span>o</span><span>s</span><span>s</span><span>i</span><span>e</span><span>r</span></span>
+              </button>
+              <button type="button" class="btn-roster-action btn-roster-matchup btn-roster-profile-link matchup" onclick="event.stopPropagation(); compareInMatchup('${c.slug}')" title="Compare ${c.name} in Matchup Lab" aria-label="Compare ${c.name} in Matchup Lab">
+                <span class="span-mother"><span>M</span><span>a</span><span>t</span><span>c</span><span>h</span></span>
+                <span class="span-mother2"><span>M</span><span>a</span><span>t</span><span>c</span><span>h</span></span>
+              </button>
+              <button type="button" class="btn-roster-action btn-roster-combos btn-roster-profile-link combo" onclick="event.stopPropagation(); loadInComboLab('${c.slug}')" title="Load ${c.name} in Combo Lab" aria-label="Load ${c.name} in Combo Lab">
+                <span class="span-mother"><span>C</span><span>o</span><span>m</span><span>b</span><span>o</span><span>s</span></span>
+                <span class="span-mother2"><span>C</span><span>o</span><span>m</span><span>b</span><span>o</span><span>s</span></span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
