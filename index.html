@@ -47,69 +47,12 @@
     </nav>
 
     <div class="nav-actions">
-      <!-- Dual-Tier UX Mode Switcher (Ranked Essentials vs. Tournament Pro) -->
-      <div class="user-mode-switcher" id="userModeSwitcher" title="Switch between Simplified Ranked Essentials and Technical Tournament Pro Lab">
-        <button type="button" class="user-mode-btn active mode-essentials" id="btnModeEssentials" onclick="setUserMode('essentials')" title="Ranked Essentials: Simple 6 Core Moves, 3-Card Matchup Briefings, and Bread &amp; Butter Combos">
-          <span>🟢 Essentials</span>
-        </button>
-        <button type="button" class="user-mode-btn mode-pro" id="btnModePro" onclick="setUserMode('pro')" title="Tournament Pro: Complete 655-Move Frame Spreadsheet, 8-Tab Relativity Engine, and Micro-Spacing Telemetry">
-          <span>🟡 Pro Lab</span>
-        </button>
-      </div>
-
       <!-- Universal Attack Button Mapping Toggle (Arcade / PlayStation / Xbox) -->
       <div class="nav-controller-toggle" id="navControllerToggle" title="Universal Button Mapping Notation">
         <button type="button" class="nav-ctl-btn active" data-layout="ARCADE" onclick="setControllerLayout('ARCADE')" title="Standard Tekken: 1, 2, 3, 4">🕹️ 1·2·3·4</button>
         <button type="button" class="nav-ctl-btn" data-layout="PLAYSTATION" onclick="setControllerLayout('PLAYSTATION')" title="PlayStation: □, △, ✕, ○">🎮 PS</button>
         <button type="button" class="nav-ctl-btn" data-layout="XBOX" onclick="setControllerLayout('XBOX')" title="Xbox: X, Y, A, B">🎮 XB</button>
       </div>
-
-      <!-- Global Command Palette / Search Trigger Button -->
-      <button type="button" class="btn-nav-search" id="btnNavSearch" onclick="openGlobalSearch()" title="Global Search across Fighters, Moves, Combos, and Stages (Ctrl+K)">
-        <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.5" fill="none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <span>Search</span>
-        <kbd class="nav-kbd">Ctrl+K</kbd>
-      </button>
-
-      <!-- Notation Reference Guide Trigger -->
-      <button type="button" class="btn-nav-notation" id="btnNavNotation" onclick="openNotationGuideModal()" title="Standard Tekken 8 Notation Guide">
-        <span>📖</span>
-        <span class="nav-btn-text">Guide</span>
-      </button>
-
-      <!-- Pro Tactics Compendium Trigger -->
-      <button type="button" class="btn-nav-tactics" id="btnNavTactics" onclick="openTacticsHubModal('sidesteps')" title="Master Tactics Compendium (Sidesteps, Throws, Anti-Cheese, Installs, Wall Combos, Hardware)">
-        <span>🛡️</span>
-        <span class="nav-btn-text">Tactics</span>
-      </button>
-
-      <!-- Practice Notes Trigger -->
-      <button type="button" class="btn-nav-notes" id="btnNavNotes" onclick="openPracticeNotesModal()" title="My Personal Practice Notes">
-        <span>📝</span>
-        <span class="nav-btn-text">Notes</span>
-        <span class="notes-count-pill" id="notesCountPill">0</span>
-      </button>
-
-      <!-- Share Matchup & State URL -->
-      <button type="button" class="btn-nav-share" id="btnNavShare" onclick="copyShareableUrl()" title="Copy Shareable Matchup &amp; State URL">
-        <span>🔗</span>
-        <span class="nav-btn-text">Share</span>
-      </button>
-
-      <!-- Favorites Trigger Button -->
-      <button type="button" class="btn-nav-fav" id="btnNavFav" onclick="openFavoritesModal()" title="View Saved Favorites">
-        <span class="fav-icon">⭐</span>
-        <span class="fav-label">Favorites</span>
-        <span class="fav-count-pill" id="favCountPill">0</span>
-      </button>
-
-      <!-- Settings Trigger Button -->
-      <button type="button" class="btn-nav-gear" id="btnNavGear" onclick="openSettingsModal()" title="Preferences &amp; Sound Settings">
-        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      </button>
-
-      <a href="/presentation" class="btn-swagger btn-overview" title="Platform Overview &amp; Interactive Guide">📊 Overview</a>
-      <a href="/docs" target="_blank" class="btn-swagger" title="OpenAPI Swagger Spec">API Docs</a>
     </div>
   </header>
 
@@ -302,15 +245,15 @@
         </div>
       </div>
 
-      <!-- Core 6 Weapons Combat Kit (Ranked Essentials Default) -->
+      <!-- Core Combat Arsenal (Essential Weapons) -->
       <div class="core-weapons-wrap" id="coreWeaponsWrap">
         <div class="core-weapons-header">
           <div class="core-weapons-title">
-            <span>⚡ CORE COMBAT KIT (ESSENTIAL WEAPONS)</span>
-            <span class="badge">KEY GAMEPLAN MOVES</span>
+            <span>⚡ CORE COMBAT ARSENAL</span>
+            <span class="badge">KEY GAMEPLAN WEAPONS</span>
           </div>
-          <button type="button" class="btn-progressive-toggle" id="btnToggleFullFrameData" onclick="toggleFullFrameSheet()">
-            <span id="btnToggleFullFrameText">📊 Expand Full Technical Frame Sheet</span>
+          <button type="button" class="btn-progressive-toggle" id="btnToggleFullFrameData" onclick="toggleFullFrameSheet()" title="Scroll or toggle Technical Frame Matrix">
+            <span id="btnToggleFullFrameText">📊 Full Technical Matrix (Active)</span>
             <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
         </div>
@@ -319,8 +262,15 @@
         </div>
       </div>
 
-      <!-- Progressive Disclosure Container for Full Technical Frame Data -->
-      <div id="fullFrameDataSheet">
+      <!-- Distinct Section Demarcator: Full Technical Frame Matrix (Always Visible) -->
+      <div id="fullFrameDataSheet" class="full-frame-data-section">
+        <div class="technical-sheet-banner">
+          <div class="technical-sheet-title-col">
+            <span class="section-tag-badge">TECHNICAL SPREADSHEET</span>
+            <h3 class="technical-sheet-title">📊 ALL COMBAT MOVES &amp; FRAME DATA DIRECTORY</h3>
+            <p class="technical-sheet-sub">Complete unhidden database: Normal moves, stance strings, throws, 10-hit combos, and Season 2 patch telemetry.</p>
+          </div>
+        </div>
       <!-- Quick Safety & Property Filter Pills -->
       <div class="moves-safety-filters" id="movesSafetyFilters">
         <span class="safety-filter-label">Quick Safety:</span>
@@ -585,6 +535,17 @@
         <!-- Universal Bread & Butter Hero Combo Card (Ranked Essentials Default) -->
         <div class="bnb-combo-hero" id="bnbComboHero">
           <!-- Rendered dynamically via renderBnbHeroCombo() in app.js -->
+        </div>
+
+        <!-- Directional Movement & Button Hold Guide HUD -->
+        <div class="combo-input-legend-hud" id="comboInputLegendHud">
+          <div class="cil-title">🎮 COMBO INPUT &amp; DIRECTION GUIDE:</div>
+          <div class="cil-items">
+            <span class="cil-pill"><span class="tk-action-tag tk-action-tap">PRESS</span> Single Tap / Press Once</span>
+            <span class="cil-pill"><span class="tk-action-tag tk-action-hold">HOLD</span> Keep Holding (Long Press)</span>
+            <span class="cil-pill"><span class="tk-dir-badge tk-dir-tap"><span class="tk-action-tag tk-action-tap">PRESS</span> ➔</span> Authentic Fighting Arrows (→, ↘, ↓, ↙, ←, ↖, ↑, ↗)</span>
+            <span class="cil-pill"><span class="tk-dir-badge tk-dir-star">★</span> Neutral (Return stick to center)</span>
+          </div>
         </div>
 
         <!-- Single Perspective Grid -->
@@ -939,15 +900,15 @@
             </div>
           </div>
 
-          <!-- Pre-Match Briefing HUD (Ranked Essentials 30-Second Cheat Sheet) -->
+          <!-- Pre-Match Briefing HUD (30-Second Tactical Matrix) -->
           <div class="pre-match-briefing-hud" id="preMatchBriefingHud">
             <div class="briefing-hud-header">
               <div class="briefing-hud-title">
-                <span>⏱️ 30-SECOND PRE-MATCH BRIEFING CHEAT SHEET</span>
-                <span class="badge-block-plus" style="font-size:0.65rem; padding:0.15rem 0.4rem;">RANKED ESSENTIALS</span>
+                <span>⏱️ 30-SECOND PRE-MATCH TACTICAL BRIEFING</span>
+                <span class="badge-block-plus" style="font-size:0.65rem; padding:0.15rem 0.4rem;">QUICK CHEAT SHEET</span>
               </div>
               <button type="button" class="btn-progressive-toggle" id="btnToggleProTelemetry" onclick="toggleProMatchupTelemetry()">
-                <span id="btnToggleProTelemetryText">📊 Expand Deep Telemetry &amp; Relativity Engine</span>
+                <span id="btnToggleProTelemetryText">📊 Deep Telemetry &amp; Relativity Engine (Active)</span>
                 <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="6 9 12 15 18 9"/></svg>
               </button>
             </div>

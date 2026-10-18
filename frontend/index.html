@@ -53,46 +53,6 @@
         <button type="button" class="nav-ctl-btn" data-layout="PLAYSTATION" onclick="setControllerLayout('PLAYSTATION')" title="PlayStation: □, △, ✕, ○">🎮 PS</button>
         <button type="button" class="nav-ctl-btn" data-layout="XBOX" onclick="setControllerLayout('XBOX')" title="Xbox: X, Y, A, B">🎮 XB</button>
       </div>
-
-      <!-- Notation Reference Guide Trigger -->
-      <button type="button" class="btn-nav-notation" id="btnNavNotation" onclick="openNotationGuideModal()" title="Standard Tekken 8 Notation Guide">
-        <span>📖</span>
-        <span class="nav-btn-text">Guide</span>
-      </button>
-
-      <!-- Pro Tactics Compendium Trigger -->
-      <button type="button" class="btn-nav-tactics" id="btnNavTactics" onclick="openTacticsHubModal('sidesteps')" title="Master Tactics Compendium (Sidesteps, Throws, Anti-Cheese, Installs, Wall Combos, Hardware)">
-        <span>🛡️</span>
-        <span class="nav-btn-text">Tactics</span>
-      </button>
-
-      <!-- Practice Notes Trigger -->
-      <button type="button" class="btn-nav-notes" id="btnNavNotes" onclick="openPracticeNotesModal()" title="My Personal Practice Notes">
-        <span>📝</span>
-        <span class="nav-btn-text">Notes</span>
-        <span class="notes-count-pill" id="notesCountPill">0</span>
-      </button>
-
-      <!-- Share Matchup & State URL -->
-      <button type="button" class="btn-nav-share" id="btnNavShare" onclick="copyShareableUrl()" title="Copy Shareable Matchup &amp; State URL">
-        <span>🔗</span>
-        <span class="nav-btn-text">Share</span>
-      </button>
-
-      <!-- Favorites Trigger Button -->
-      <button type="button" class="btn-nav-fav" id="btnNavFav" onclick="openFavoritesModal()" title="View Saved Favorites">
-        <span class="fav-icon">⭐</span>
-        <span class="fav-label">Favorites</span>
-        <span class="fav-count-pill" id="favCountPill">0</span>
-      </button>
-
-      <!-- Settings Trigger Button -->
-      <button type="button" class="btn-nav-gear" id="btnNavGear" onclick="openSettingsModal()" title="Preferences &amp; Sound Settings">
-        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      </button>
-
-      <a href="/presentation" class="btn-swagger btn-overview" title="Platform Overview &amp; Interactive Guide">📊 Overview</a>
-      <a href="/docs" target="_blank" class="btn-swagger" title="OpenAPI Swagger Spec">API Docs</a>
     </div>
   </header>
 
@@ -575,6 +535,17 @@
         <!-- Universal Bread & Butter Hero Combo Card (Ranked Essentials Default) -->
         <div class="bnb-combo-hero" id="bnbComboHero">
           <!-- Rendered dynamically via renderBnbHeroCombo() in app.js -->
+        </div>
+
+        <!-- Directional Movement & Button Hold Guide HUD -->
+        <div class="combo-input-legend-hud" id="comboInputLegendHud">
+          <div class="cil-title">🎮 COMBO INPUT &amp; DIRECTION GUIDE:</div>
+          <div class="cil-items">
+            <span class="cil-pill"><span class="tk-action-tag tk-action-tap">PRESS</span> Single Tap / Press Once</span>
+            <span class="cil-pill"><span class="tk-action-tag tk-action-hold">HOLD</span> Keep Holding (Long Press)</span>
+            <span class="cil-pill"><span class="tk-dir-badge tk-dir-tap"><span class="tk-action-tag tk-action-tap">PRESS</span> ➔</span> Authentic Fighting Arrows (→, ↘, ↓, ↙, ←, ↖, ↑, ↗)</span>
+            <span class="cil-pill"><span class="tk-dir-badge tk-dir-star">★</span> Neutral (Return stick to center)</span>
+          </div>
         </div>
 
         <!-- Single Perspective Grid -->

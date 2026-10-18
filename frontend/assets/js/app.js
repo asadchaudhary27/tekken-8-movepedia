@@ -388,9 +388,9 @@ const COMMAND_DIR_SVGS = {
 
 function renderDirSvg(deg, isHold = false) {
   if (isHold) {
-    return `<svg viewBox="0 0 20 20" class="tk-svg-dir" style="transform: rotate(${deg}deg);" aria-hidden="true"><polygon points="5.5,4.5 15.5,10 5.5,15.5" fill="currentColor"/></svg>`;
+    return `<svg viewBox="0 0 24 24" class="tk-svg-dir tk-svg-dir-hold" style="transform: rotate(${deg}deg);" aria-hidden="true"><path d="M3 10.5h8.5V6.5l9.5 5.5-9.5 5.5v-4H3z" fill="currentColor"/></svg>`;
   }
-  return `<svg viewBox="0 0 20 20" class="tk-svg-dir" style="transform: rotate(${deg}deg);" aria-hidden="true"><polygon points="5.5,4.5 15.5,10 5.5,15.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>`;
+  return `<svg viewBox="0 0 24 24" class="tk-svg-dir tk-svg-dir-tap" style="transform: rotate(${deg}deg);" aria-hidden="true"><line x1="3.5" y1="12" x2="17.5" y2="12" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><polyline points="12,6.5 18,12 12,17.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
 
 function renderStarSvg() {
@@ -420,10 +420,10 @@ function renderCommandNotation(raw, controllerType) {
 
   const layout = controllerType || state.controllerLayout || 'ARCADE';
 
-  // Split sequence by major combo step separators (">", "->", "=>", "→")
-  if (trimmed.includes('>') || trimmed.includes('→') || trimmed.includes('->') || trimmed.includes('=>')) {
-    const steps = trimmed.split(/\s*(?:>|->|=>|→)\s*/);
-    return `<div class="tk-combo-sequence">${steps.map(s => formatSingleStep(s, layout)).join('<span class="tk-next-arrow tk-break-btn" title="Combo Link Step">➔</span>')}</div>`;
+  // Split sequence by major combo step separators (">", "->", "=>", "→", "►", "▶")
+  if (trimmed.includes('>') || trimmed.includes('→') || trimmed.includes('->') || trimmed.includes('=>') || trimmed.includes('►') || trimmed.includes('▶')) {
+    const steps = trimmed.split(/\s*(?:>|->|=>|→|►|▶)\s*/);
+    return `<div class="tk-combo-sequence">${steps.map(s => formatSingleStep(s, layout)).join('<span class="tk-next-arrow tk-break-btn" title="Combo Link Step (Next Move)">➔</span>')}</div>`;
   }
 
   return formatSingleStep(trimmed, layout);
@@ -537,43 +537,57 @@ function formatAtom(atom, layout) {
 
 function formatDirection(dirStr, strict = false) {
   if (!dirStr) return strict ? null : '';
-  const lower = dirStr.toLowerCase();
+  let clean = dirStr.trim();
+  let isHold = false;
+  if (/^hold\s+/i.test(clean)) {
+    isHold = true;
+    clean = clean.replace(/^hold\s+/i, '');
+  } else if (clean.startsWith('[') && clean.endsWith(']')) {
+    isHold = true;
+    clean = clean.slice(1, -1).trim();
+  } else if (clean === clean.toUpperCase() && clean.length > 0 && !['N', '★', 'FF', 'BB', 'FFF', 'QCF', 'QCB', 'HCF', 'HCB'].includes(clean)) {
+    isHold = true;
+  }
+
+  const lower = clean.toLowerCase();
 
   // Neutral star
   if (lower === 'n' || lower === '★') {
-    return `<span class="tk-dir-badge tk-dir-star" title="Neutral (Stick in center)">${renderStarSvg()}</span>`;
+    return `<span class="tk-dir-badge tk-dir-star" title="Neutral (Stick centered)"><span class="tk-action-tag tk-action-tap">★</span>${renderStarSvg()}</span>`;
   }
 
   // Direction arrows
   if (COMMAND_DIR_SVGS[lower]) {
-    const isHold = (dirStr === dirStr.toUpperCase()) && dirStr !== 'N' && dirStr !== '★';
     const info = COMMAND_DIR_SVGS[lower];
-    return `<span class="tk-dir-badge ${isHold ? 'tk-dir-hold' : 'tk-dir-tap'}" title="${isHold ? 'HOLD ' : ''}${info.title}">${renderDirSvg(info.deg, isHold)}</span>`;
+    const holdTag = isHold 
+      ? `<span class="tk-action-tag tk-action-hold">HOLD</span>` 
+      : `<span class="tk-action-tag tk-action-tap">PRESS</span>`;
+    return `<span class="tk-dir-badge ${isHold ? 'tk-dir-hold' : 'tk-dir-tap'}" title="${isHold ? 'HOLD (Keep Holding): ' : 'PRESS (Single Tap): '}${info.title}">${holdTag}${renderDirSvg(info.deg, isHold)}</span>`;
   }
 
   // Double tap forward / back
   if (lower === 'ff') {
-    return `<span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span>`;
+    return `<span class="tk-dir-badge tk-dir-tap" title="Forward, Forward (Dash)"><span class="tk-action-tag tk-action-tap">DASH</span>${renderDirSvg(0, false)}${renderDirSvg(0, false)}</span>`;
   }
   if (lower === 'bb') {
-    return `<span class="tk-dir-badge tk-dir-tap" title="Back">${renderDirSvg(180, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Back">${renderDirSvg(180, false)}</span>`;
+    return `<span class="tk-dir-badge tk-dir-tap" title="Back, Back (Backdash)"><span class="tk-action-tag tk-action-tap">BACKDASH</span>${renderDirSvg(180, false)}${renderDirSvg(180, false)}</span>`;
   }
   if (lower === 'fff') {
-    return `<span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span>`;
+    return `<span class="tk-dir-badge tk-dir-tap" title="Running Forward (f,f,f)"><span class="tk-action-tag tk-action-tap">RUN</span>${renderDirSvg(0, false)}${renderDirSvg(0, false)}${renderDirSvg(0, false)}</span>`;
   }
 
   // Quarter / Half circle motions
   if (lower === 'qcf') {
-    return `<span class="tk-dir-badge tk-dir-tap" title="Down">${renderDirSvg(90, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down-Forward">${renderDirSvg(45, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span>`;
+    return `<span class="tk-dir-badge tk-dir-tap" title="Quarter Circle Forward (↓ ↘ →)"><span class="tk-action-tag tk-action-tap">QCF</span>${renderDirSvg(90, false)}${renderDirSvg(45, false)}${renderDirSvg(0, false)}</span>`;
   }
   if (lower === 'qcb') {
-    return `<span class="tk-dir-badge tk-dir-tap" title="Down">${renderDirSvg(90, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down-Back">${renderDirSvg(135, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Back">${renderDirSvg(180, false)}</span>`;
+    return `<span class="tk-dir-badge tk-dir-tap" title="Quarter Circle Back (↓ ↙ ←)"><span class="tk-action-tag tk-action-tap">QCB</span>${renderDirSvg(90, false)}${renderDirSvg(135, false)}${renderDirSvg(180, false)}</span>`;
   }
   if (lower === 'hcf') {
-    return `<span class="tk-dir-badge tk-dir-tap" title="Back">${renderDirSvg(180, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down-Back">${renderDirSvg(135, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down">${renderDirSvg(90, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down-Forward">${renderDirSvg(45, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span>`;
+    return `<span class="tk-dir-badge tk-dir-tap" title="Half Circle Forward (← ↙ ↓ ↘ →)"><span class="tk-action-tag tk-action-tap">HCF</span>${renderDirSvg(180, false)}${renderDirSvg(135, false)}${renderDirSvg(90, false)}${renderDirSvg(45, false)}${renderDirSvg(0, false)}</span>`;
   }
   if (lower === 'hcb') {
-    return `<span class="tk-dir-badge tk-dir-tap" title="Forward">${renderDirSvg(0, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down-Forward">${renderDirSvg(45, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down">${renderDirSvg(90, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Down-Back">${renderDirSvg(135, false)}</span><span class="tk-dir-badge tk-dir-tap" title="Back">${renderDirSvg(180, false)}</span>`;
+    return `<span class="tk-dir-badge tk-dir-tap" title="Half Circle Back (→ ↘ ↓ ↙ ←)"><span class="tk-action-tag tk-action-tap">HCB</span>${renderDirSvg(0, false)}${renderDirSvg(45, false)}${renderDirSvg(90, false)}${renderDirSvg(135, false)}${renderDirSvg(180, false)}</span>`;
   }
 
   if (strict) return null;
@@ -581,65 +595,78 @@ function formatDirection(dirStr, strict = false) {
 }
 
 function formatButtons(btnStr, layout) {
-  const norm = btnStr.replace(/\s+/g, '');
+  let isHold = false;
+  let raw = btnStr.trim();
+  if (/^hold\s+/i.test(raw)) {
+    isHold = true;
+    raw = raw.replace(/^hold\s+/i, '');
+  } else if (raw.startsWith('[') && raw.endsWith(']')) {
+    isHold = true;
+    raw = raw.slice(1, -1).trim();
+  }
+
+  const norm = raw.replace(/\s+/g, '');
   const activeLayout = layout || state.controllerLayout || 'ARCADE';
+  const actionTag = isHold 
+    ? `<span class="tk-action-tag tk-action-hold">HOLD</span>` 
+    : '';
 
   if (activeLayout === 'PLAYSTATION') {
     const psMap = {
-      '1': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-sq" title="Square (Left Punch)">${renderPsBtnSvg('sq')}</span>`,
-      '2': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-tri" title="Triangle (Right Punch)">${renderPsBtnSvg('tri')}</span>`,
-      '3': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-cross" title="Cross (Left Kick)">${renderPsBtnSvg('cross')}</span>`,
-      '4': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-circle" title="Circle (Right Kick)">${renderPsBtnSvg('circle')}</span>`,
-      '1+2': `<span class="tk-btn-chip tk-btn-ps tk-btn-1-2" title="Square + Triangle">${renderPsBtnSvg('sq')}+${renderPsBtnSvg('tri')}</span>`,
-      '3+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-3-4" title="Cross + Circle">${renderPsBtnSvg('cross')}+${renderPsBtnSvg('circle')}</span>`,
-      '1+3': `<span class="tk-btn-chip tk-btn-ps tk-btn-1-2" title="Throw (Square + Cross)">${renderPsBtnSvg('sq')}+${renderPsBtnSvg('cross')}</span>`,
-      '2+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-3-4" title="Throw (Triangle + Circle)">${renderPsBtnSvg('tri')}+${renderPsBtnSvg('circle')}</span>`,
-      '1+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi" title="Square + Circle">${renderPsBtnSvg('sq')}+${renderPsBtnSvg('circle')}</span>`,
-      '2+3': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi" title="Triangle + Cross">${renderPsBtnSvg('tri')}+${renderPsBtnSvg('cross')}</span>`,
-      '1+2+3': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi">${renderPsBtnSvg('sq')}+${renderPsBtnSvg('tri')}+${renderPsBtnSvg('cross')}</span>`,
-      '1+2+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi">${renderPsBtnSvg('sq')}+${renderPsBtnSvg('tri')}+${renderPsBtnSvg('circle')}</span>`,
-      '1+2+3+4': `<span class="tk-btn-chip tk-btn-ki tk-btn-ps" title="Ki Charge">Ki</span>`,
+      '1': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-sq ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Square (Left Punch)">${actionTag}${renderPsBtnSvg('sq')}</span>`,
+      '2': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-tri ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Triangle (Right Punch)">${actionTag}${renderPsBtnSvg('tri')}</span>`,
+      '3': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-cross ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Cross (Left Kick)">${actionTag}${renderPsBtnSvg('cross')}</span>`,
+      '4': `<span class="tk-btn-chip tk-btn-ps tk-btn-ps-circle ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Circle (Right Kick)">${actionTag}${renderPsBtnSvg('circle')}</span>`,
+      '1+2': `<span class="tk-btn-chip tk-btn-ps tk-btn-1-2 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Square + Triangle">${actionTag}${renderPsBtnSvg('sq')}+${renderPsBtnSvg('tri')}</span>`,
+      '3+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-3-4 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Cross + Circle">${actionTag}${renderPsBtnSvg('cross')}+${renderPsBtnSvg('circle')}</span>`,
+      '1+3': `<span class="tk-btn-chip tk-btn-ps tk-btn-1-2 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Throw (Square + Cross)">${actionTag}${renderPsBtnSvg('sq')}+${renderPsBtnSvg('cross')}</span>`,
+      '2+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-3-4 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Throw (Triangle + Circle)">${actionTag}${renderPsBtnSvg('tri')}+${renderPsBtnSvg('circle')}</span>`,
+      '1+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Square + Circle">${actionTag}${renderPsBtnSvg('sq')}+${renderPsBtnSvg('circle')}</span>`,
+      '2+3': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Triangle + Cross">${actionTag}${renderPsBtnSvg('tri')}+${renderPsBtnSvg('cross')}</span>`,
+      '1+2+3': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}">${actionTag}${renderPsBtnSvg('sq')}+${renderPsBtnSvg('tri')}+${renderPsBtnSvg('cross')}</span>`,
+      '1+2+4': `<span class="tk-btn-chip tk-btn-ps tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}">${actionTag}${renderPsBtnSvg('sq')}+${renderPsBtnSvg('tri')}+${renderPsBtnSvg('circle')}</span>`,
+      '1+2+3+4': `<span class="tk-btn-chip tk-btn-ki tk-btn-ps ${isHold ? 'tk-btn-hold' : ''}" title="Ki Charge">${actionTag}Ki</span>`,
     };
     if (psMap[norm]) return psMap[norm];
   } else if (activeLayout === 'XBOX') {
     const xbMap = {
-      '1': '<span class="tk-btn-chip tk-btn-xb tk-btn-xb-x" title="X Button (Left Punch)">X</span>',
-      '2': '<span class="tk-btn-chip tk-btn-xb tk-btn-xb-y" title="Y Button (Right Punch)">Y</span>',
-      '3': '<span class="tk-btn-chip tk-btn-xb tk-btn-xb-a" title="A Button (Left Kick)">A</span>',
-      '4': '<span class="tk-btn-chip tk-btn-xb tk-btn-xb-b" title="B Button (Right Kick)">B</span>',
-      '1+2': '<span class="tk-btn-chip tk-btn-xb tk-btn-1-2" title="X + Y Buttons">X+Y</span>',
-      '3+4': '<span class="tk-btn-chip tk-btn-xb tk-btn-3-4" title="A + B Buttons">A+B</span>',
-      '1+3': '<span class="tk-btn-chip tk-btn-xb tk-btn-1-2" title="Throw (X + A)">X+A</span>',
-      '2+4': '<span class="tk-btn-chip tk-btn-xb tk-btn-3-4" title="Throw (Y + B)">Y+B</span>',
-      '1+4': '<span class="tk-btn-chip tk-btn-xb tk-btn-multi" title="X + B Buttons">X+B</span>',
-      '2+3': '<span class="tk-btn-chip tk-btn-xb tk-btn-multi" title="Y + A Buttons">Y+A</span>',
-      '1+2+3': '<span class="tk-btn-chip tk-btn-xb tk-btn-multi">X+Y+A</span>',
-      '1+2+4': '<span class="tk-btn-chip tk-btn-xb tk-btn-multi">X+Y+B</span>',
-      '1+2+3+4': '<span class="tk-btn-chip tk-btn-ki tk-btn-xb" title="Ki Charge">Ki</span>',
+      '1': `<span class="tk-btn-chip tk-btn-xb tk-btn-xb-x ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}X Button (Left Punch)">${actionTag}X</span>`,
+      '2': `<span class="tk-btn-chip tk-btn-xb tk-btn-xb-y ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Y Button (Right Punch)">${actionTag}Y</span>`,
+      '3': `<span class="tk-btn-chip tk-btn-xb tk-btn-xb-a ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}A Button (Left Kick)">${actionTag}A</span>`,
+      '4': `<span class="tk-btn-chip tk-btn-xb tk-btn-xb-b ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}B Button (Right Kick)">${actionTag}B</span>`,
+      '1+2': `<span class="tk-btn-chip tk-btn-xb tk-btn-1-2 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}X + Y Buttons">${actionTag}X+Y</span>`,
+      '3+4': `<span class="tk-btn-chip tk-btn-xb tk-btn-3-4 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}A + B Buttons">${actionTag}A+B</span>`,
+      '1+3': `<span class="tk-btn-chip tk-btn-xb tk-btn-1-2 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Throw (X + A)">${actionTag}X+A</span>`,
+      '2+4': `<span class="tk-btn-chip tk-btn-xb tk-btn-3-4 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Throw (Y + B)">${actionTag}Y+B</span>`,
+      '1+4': `<span class="tk-btn-chip tk-btn-xb tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}X + B Buttons">${actionTag}X+B</span>`,
+      '2+3': `<span class="tk-btn-chip tk-btn-xb tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}Y + A Buttons">${actionTag}Y+A</span>`,
+      '1+2+3': `<span class="tk-btn-chip tk-btn-xb tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}">${actionTag}X+Y+A</span>`,
+      '1+2+4': `<span class="tk-btn-chip tk-btn-xb tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}">${actionTag}X+Y+B</span>`,
+      '1+2+3+4': `<span class="tk-btn-chip tk-btn-ki tk-btn-xb ${isHold ? 'tk-btn-hold' : ''}" title="Ki Charge">${actionTag}Ki</span>`,
     };
     if (xbMap[norm]) return xbMap[norm];
   } else {
     // ARCADE
     const arcMap = {
-      '1': '<span class="tk-btn-chip tk-btn-1" title="1 (Left Punch)">1</span>',
-      '2': '<span class="tk-btn-chip tk-btn-2" title="2 (Right Punch)">2</span>',
-      '3': '<span class="tk-btn-chip tk-btn-3" title="3 (Left Kick)">3</span>',
-      '4': '<span class="tk-btn-chip tk-btn-4" title="4 (Right Kick)">4</span>',
-      '1+2': '<span class="tk-btn-chip tk-btn-1-2" title="1+2 (LP+RP)">1+2</span>',
-      '3+4': '<span class="tk-btn-chip tk-btn-3-4" title="3+4 (LK+RK)">3+4</span>',
-      '1+3': '<span class="tk-btn-chip tk-btn-1-2" title="1+3 (Throw)">1+3</span>',
-      '2+4': '<span class="tk-btn-chip tk-btn-3-4" title="2+4 (Throw)">2+4</span>',
-      '1+4': '<span class="tk-btn-chip tk-btn-multi" title="1+4">1+4</span>',
-      '2+3': '<span class="tk-btn-chip tk-btn-multi" title="2+3">2+3</span>',
-      '1+2+3': '<span class="tk-btn-chip tk-btn-multi">1+2+3</span>',
-      '1+2+4': '<span class="tk-btn-chip tk-btn-multi">1+2+4</span>',
-      '1+2+3+4': '<span class="tk-btn-chip tk-btn-ki" title="Ki Charge (1+2+3+4)">Ki</span>',
+      '1': `<span class="tk-btn-chip tk-btn-1 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}1 (Left Punch)">${actionTag}1</span>`,
+      '2': `<span class="tk-btn-chip tk-btn-2 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}2 (Right Punch)">${actionTag}2</span>`,
+      '3': `<span class="tk-btn-chip tk-btn-3 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}3 (Left Kick)">${actionTag}3</span>`,
+      '4': `<span class="tk-btn-chip tk-btn-4 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}4 (Right Kick)">${actionTag}4</span>`,
+      '1+2': `<span class="tk-btn-chip tk-btn-1-2 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}1+2 (LP+RP)">${actionTag}1+2</span>`,
+      '3+4': `<span class="tk-btn-chip tk-btn-3-4 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}3+4 (LK+RK)">${actionTag}3+4</span>`,
+      '1+3': `<span class="tk-btn-chip tk-btn-1-2 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}1+3 (Throw)">${actionTag}1+3</span>`,
+      '2+4': `<span class="tk-btn-chip tk-btn-3-4 ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}2+4 (Throw)">${actionTag}2+4</span>`,
+      '1+4': `<span class="tk-btn-chip tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}1+4">${actionTag}1+4</span>`,
+      '2+3': `<span class="tk-btn-chip tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}" title="${isHold ? 'HOLD ' : 'PRESS '}2+3">${actionTag}2+3</span>`,
+      '1+2+3': `<span class="tk-btn-chip tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}">${actionTag}1+2+3</span>`,
+      '1+2+4': `<span class="tk-btn-chip tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}">${actionTag}1+2+4</span>`,
+      '1+2+3+4': `<span class="tk-btn-chip tk-btn-ki ${isHold ? 'tk-btn-hold' : ''}" title="Ki Charge (1+2+3+4)">${actionTag}Ki</span>`,
     };
     if (arcMap[norm]) return arcMap[norm];
   }
 
   if (/^[1-4\+]+$/.test(norm)) {
-    return `<span class="tk-btn-chip tk-btn-multi">${norm}</span>`;
+    return `<span class="tk-btn-chip tk-btn-multi ${isHold ? 'tk-btn-hold' : ''}">${actionTag}${norm}</span>`;
   }
   return null;
 }
@@ -11290,23 +11317,26 @@ function renderCoreWeaponsKit(char) {
 
     return `
       <div class="core-weapon-card">
-        <div class="core-weapon-role" style="color:${w.roleColor};">
-          <span>${w.role}</span>
-          <span style="font-size:0.65rem; color:var(--text-muted);">${hitLvl}</span>
+        <div class="core-weapon-main-col">
+          <div class="core-weapon-role" style="color:${w.roleColor};">
+            <span>${w.role}</span>
+            <span class="core-weapon-hit-tag">${hitLvl}</span>
+          </div>
+          <div class="core-weapon-notation">
+            <span>${formatTekkenNotation(cmd)}</span>
+          </div>
+          <div class="core-weapon-name">${escapeHtml(name)}</div>
         </div>
-        <div class="core-weapon-notation">
-          <span>${formatTekkenNotation(cmd)}</span>
+        <div class="core-weapon-stats-col">
+          <div class="stat-badge-group">
+            <span class="badge badge-startup" title="Startup Speed">${startup}</span>
+            <span class="badge ${blockClass}" title="Advantage on Block">${blockText}</span>
+            <span class="badge badge-dmg" title="Base Damage">${dmg}</span>
+          </div>
         </div>
-        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:0.4rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-          ${escapeHtml(name)}
-        </div>
-        <div class="core-weapon-meta">
-          <span class="badge" style="background:rgba(255,255,255,0.06); font-family:var(--font-mono); font-size:0.7rem;">${startup}</span>
-          <span class="badge ${blockClass}" style="font-family:var(--font-mono); font-size:0.7rem;">${blockText}</span>
-          <span class="badge" style="background:rgba(255,255,255,0.06); font-family:var(--font-mono); font-size:0.7rem;">${dmg}</span>
-        </div>
-        <div class="core-weapon-desc">
-          ${w.desc}
+        <div class="core-weapon-desc-col">
+          <div class="core-weapon-desc-title">💡 STRATEGIC APPLICATION</div>
+          <div class="core-weapon-desc-text">${w.desc}</div>
         </div>
       </div>
     `;

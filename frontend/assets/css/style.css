@@ -12575,16 +12575,17 @@ body {
   }
 }
 
-/* 2. Unified SVG Vector Direction Badges */
+/* 2. Unified SVG Vector Direction Badges & Explicit Tap/Hold Tags */
 .tk-dir-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
-  min-width: 22px;
-  border-radius: 4px;
-  margin: 0 1.5px;
+  height: 26px;
+  min-width: 24px;
+  padding: 0 6px;
+  gap: 4px;
+  border-radius: 6px;
+  margin: 0 2px;
   vertical-align: middle;
   line-height: 1;
   user-select: none;
@@ -12599,34 +12600,113 @@ body {
 .tk-svg-dir,
 .tk-svg-star,
 .tk-svg-ps {
-  width: 13px;
-  height: 13px;
+  width: 15px;
+  height: 15px;
   display: block;
+}
+
+/* Explicit Action Tag: PRESS vs HOLD */
+.tk-action-tag {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.tk-action-tag.tk-action-hold {
+  background: #FF0055;
+  color: #FFFFFF;
+  border: 1px solid #FF3366;
+  box-shadow: 0 0 8px rgba(255, 0, 85, 0.6);
+}
+
+.tk-action-tag.tk-action-tap {
+  background: #101622;
+  color: #00F0FF;
+  border: 1px solid #23354D;
 }
 
 /* Tap Direction (Crisp Vector Outline / Low Fill) */
 .tk-dir-badge.tk-dir-tap {
-  background: #151824;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  color: #f1f5f9;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 4px rgba(0, 0, 0, 0.4);
+  background: #141A26;
+  border: 1.5px solid #29374E;
+  color: #00F0FF;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 /* Hold Direction (Vibrant Solid Crimson / Amber Glow) */
 .tk-dir-badge.tk-dir-hold {
-  background: linear-gradient(135deg, #ff1a3c 0%, #b30021 100%);
-  border: 1px solid #ff4d6d;
-  color: #ffffff;
-  box-shadow: 0 0 10px rgba(255, 26, 60, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, #B3002D 0%, #7A001E 100%);
+  border: 1.5px solid #FF0055;
+  color: #FFFFFF;
+  box-shadow: 0 0 12px rgba(255, 0, 85, 0.5);
   font-weight: 900;
+}
+
+/* Button Hold Modifier */
+.tk-btn-chip.tk-btn-hold {
+  background: linear-gradient(135deg, #B3002D 0%, #7A001E 100%) !important;
+  border: 1.5px solid #FF0055 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 10px rgba(255, 0, 85, 0.45) !important;
 }
 
 /* Neutral Star (Tekken Golden Star) */
 .tk-dir-badge.tk-dir-star {
-  background: rgba(255, 190, 11, 0.14);
-  border: 1px solid rgba(255, 190, 11, 0.45);
-  color: #ffbe0b;
-  box-shadow: 0 0 8px rgba(255, 190, 11, 0.3);
+  background: #241C0C;
+  border: 1.5px solid #FFBE0B;
+  color: #FFBE0B;
+  box-shadow: 0 0 8px rgba(255, 190, 11, 0.4);
+}
+
+/* Combo Input & Direction Guide HUD */
+.combo-input-legend-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, #151A26 0%, #0F131D 100%);
+  border: 2px solid #232D42;
+  border-radius: 10px;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1.25rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cil-title {
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: #FFB347;
+  text-transform: uppercase;
+}
+
+.cil-items {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.cil-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #E2E8F0;
+  background: #0E131E;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #252F42;
 }
 
 /* 3. Controller Layout Badges (PlayStation & Xbox Vector Shapes) */
@@ -12849,7 +12929,7 @@ body {
    ========================================================================== */
 .stages-split-layout {
   display: grid;
-  grid-template-columns: minmax(360px, 480px) 1fr;
+  grid-template-columns: minmax(380px, 460px) 1fr;
   gap: 1.5rem;
   align-items: start;
   margin-top: 1.25rem;
@@ -12864,40 +12944,119 @@ body {
 .stages-selector-column {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  max-height: calc(100vh - 160px);
-  overflow-y: auto;
-  padding-right: 0.35rem;
+  gap: 0.5rem;
+  max-height: none;
+  overflow: visible;
 }
 
-.stages-selector-column::-webkit-scrollbar {
-  width: 6px;
-}
-.stages-selector-column::-webkit-scrollbar-thumb {
-  background: rgba(237, 104, 35, 0.4);
-  border-radius: 3px;
+.stages-selector-column .stages-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.25rem;
 }
 
-.stages-selector-header {
+@media (max-width: 480px) {
+  .stages-selector-column .stages-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stages-selector-column .stage-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.45rem 0.6rem;
+  gap: 0.65rem;
+  background: #111622;
+  border: 1.5px solid #232D42;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: 52px;
+  box-sizing: border-box;
+}
+
+.stages-selector-column .stage-card:hover {
+  border-color: #ED6823;
+  background: #182030;
+  transform: translateY(-1px);
+}
+
+.stages-selector-column .stage-card.active {
+  background: linear-gradient(135deg, #241610 0%, #171018 100%) !important;
+  border: 2px solid #ED6823 !important;
+  box-shadow: 0 0 14px rgba(237, 104, 35, 0.45), inset 0 0 8px rgba(237, 104, 35, 0.2) !important;
+}
+
+.stages-selector-column .stage-img-wrap {
+  width: 54px;
+  height: 38px;
+  min-width: 54px;
+  aspect-ratio: auto;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.stages-selector-column .stage-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stages-selector-column .stage-img-overlay-badges,
+.stages-selector-column .stage-selected-indicator {
+  display: none;
+}
+
+.stages-selector-column .stage-meta {
+  padding: 0;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stages-selector-column .stage-meta-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.25rem 0.5rem;
 }
 
-.stg-sec-label {
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 1.2px;
-  color: var(--accent-orange, #ED6823);
-  text-transform: uppercase;
+.stages-selector-column .stage-name {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
-/* Active card highlight requested by user: #ED6823 / #E11D48 border */
-.stage-card.active {
-  border: 2px solid #ED6823 !important;
-  box-shadow: 0 0 22px rgba(237, 104, 35, 0.55), inset 0 0 14px rgba(237, 104, 35, 0.2) !important;
-  transform: translateY(-2px);
+.stages-selector-column .stage-card.active .stage-name {
+  color: #FFB347;
+}
+
+.stages-selector-column .stage-location {
+  font-size: 0.65rem;
+  color: #94A3B8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  margin-top: 2px;
+}
+
+.stages-selector-column .stage-select-btn {
+  display: none;
+}
+
+.stages-selector-column .stage-hazards {
+  display: none;
 }
 
 /* Stage Tactical Inspector Command Center Panel */
@@ -14005,61 +14164,134 @@ body.nav-locked {
 
 .core-weapons-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 0.85rem;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  width: 100%;
 }
 
 .core-weapon-card {
-  background: rgba(22, 26, 36, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 0.9rem;
+  background: linear-gradient(135deg, #151A26 0%, #0F131D 100%);
+  border: 2px solid #232D42;
+  border-radius: 10px;
+  padding: 1.1rem 1.4rem;
   transition: all 0.2s ease;
   position: relative;
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) auto 1fr;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  .core-weapon-card {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
 }
 
 .core-weapon-card:hover {
-  border-color: rgba(237, 104, 35, 0.4);
+  border-color: #ED6823;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(237, 104, 35, 0.25);
+}
+
+.core-weapon-main-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
 }
 
 .core-weapon-role {
-  font-size: 0.68rem;
-  font-weight: 800;
+  font-size: 0.72rem;
+  font-weight: 900;
   text-transform: uppercase;
-  color: var(--accent-gold, #ffbe0b);
   letter-spacing: 0.08em;
-  margin-bottom: 0.35rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
+}
+
+.core-weapon-hit-tag {
+  background: #1C2436;
+  border: 1px solid #2D3A52;
+  color: #94A3B8;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
 }
 
 .core-weapon-notation {
   font-family: var(--font-mono, monospace);
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 0.35rem;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #FFFFFF;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.core-weapon-meta {
+.core-weapon-name {
+  font-size: 0.82rem;
+  color: #CBD5E1;
+  font-weight: 600;
+}
+
+.core-weapon-stats-col {
+  display: flex;
+  align-items: center;
+}
+
+.core-weapon-stats-col .stat-badge-group {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 0.5rem;
-  font-size: 0.72rem;
+  flex-wrap: wrap;
 }
 
-.core-weapon-desc {
+.core-weapon-stats-col .badge {
+  font-family: var(--font-mono, monospace);
   font-size: 0.78rem;
-  color: var(--text-dim, #94a3b8);
-  line-height: 1.4;
+  font-weight: 800;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid #28334A;
+  background: #141A27;
+  color: #FFFFFF;
+}
+
+.core-weapon-desc-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-left: 1px solid #232D42;
+  padding-left: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .core-weapon-desc-col {
+    border-left: none;
+    border-top: 1px solid #232D42;
+    padding-left: 0;
+    padding-top: 0.65rem;
+  }
+}
+
+.core-weapon-desc-title {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #ED6823;
+  letter-spacing: 0.08em;
+}
+
+.core-weapon-desc-text {
+  font-size: 0.82rem;
+  color: #94A3B8;
+  line-height: 1.45;
 }
 
 /* 3. Pre-Match Briefing HUD (Matchup Lab 3-Card Cheat Sheet) */
