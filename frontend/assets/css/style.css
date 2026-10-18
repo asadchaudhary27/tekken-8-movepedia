@@ -14622,4 +14622,315 @@ body.mode-pro .essentials-only-feature {
   flex-shrink: 0;
 }
 
+/* ==========================================================================
+   PART 1: WORLD-FAMOUS DESIGN SYSTEM ENHANCEMENTS & TEKKEN 8 CYBER-BRUTALISM
+   Based on world_famous_ui_tekken_8_design_system.md
+   - Linear.app & Vercel Spotlight Border Glow Cards
+   - Tekken 8 Slanted Cyber Action Buttons & Neon Badges
+   - High-Contrast Frame Data Visual Indicators (Wavu Wiki & TekkenDocs Standard)
+   - Distinct Section Demarcations & Mobile Device Optimization
+   ========================================================================== */
+
+/* 1. Linear & Vercel Spotlight Card Surfaces with Hairline Highlight */
+.roster-fighter-card,
+.core-weapon-card,
+.bnb-combo-hero,
+.combo-card,
+.stage-card,
+.analyzer-control-card,
+.cheat-sheet-card,
+.sidebar-box,
+.character-dossier-card,
+.faceoff-hero-banner {
+  background: linear-gradient(180deg, rgba(20, 24, 35, 0.92) 0%, rgba(10, 12, 18, 0.98) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.roster-fighter-card:hover,
+.core-weapon-card:hover,
+.combo-card:hover,
+.stage-card:hover {
+  border-color: #FF0055 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 0 25px rgba(255, 0, 85, 0.35), 0 10px 30px rgba(0, 0, 0, 0.7) !important;
+  transform: translateY(-3px) scale(1.01) !important;
+}
+
+/* 2. Tekken 8 Slanted Aggressive Gaming Buttons */
+.btn-hero-primary,
+.btn-run-analysis,
+.btn-primary {
+  background: linear-gradient(135deg, #FF0055 0%, #D90429 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  transform: skewX(-6deg);
+  box-shadow: 0 0 20px rgba(255, 0, 85, 0.45) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-hero-primary > *,
+.btn-run-analysis > *,
+.btn-primary > * {
+  transform: skewX(6deg);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-hero-primary:hover,
+.btn-run-analysis:hover,
+.btn-primary:hover {
+  background: linear-gradient(135deg, #00F0FF 0%, #0077FF 100%) !important;
+  color: #090A0F !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.75) !important;
+  transform: skewX(-6deg) translateY(-2px);
+}
+
+.btn-hero-secondary,
+.btn-secondary {
+  background: rgba(18, 21, 31, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: #e2e8f0 !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  transition: all 0.25s ease !important;
+}
+
+.btn-hero-secondary:hover,
+.btn-secondary:hover {
+  border-color: #00F0FF !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.35) !important;
+  transform: translateY(-2px);
+}
+
+/* 3. Distinct Section Demarcations & Separation */
+.section-choose-fighter,
+.section-moves,
+.section-analyzer,
+.section-stages,
+.section-tactics,
+.combo-lab-wrap {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(14, 18, 27, 0.7);
+  padding: 1.5rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Glowing Top Accent Line for Each Section */
+.section-choose-fighter::before,
+.section-moves::before,
+.section-analyzer::before,
+.section-stages::before,
+.section-tactics::before,
+.combo-lab-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #FF0055 0%, #00F0FF 40%, transparent 85%);
+  border-radius: 12px 12px 0 0;
+}
+
+/* Technical Frame Matrix Demarcator Banner */
+.full-frame-data-section {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.technical-sheet-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: linear-gradient(90deg, rgba(255, 0, 85, 0.1) 0%, rgba(0, 240, 255, 0.06) 50%, rgba(10, 12, 18, 0.8) 100%);
+  border: 1px solid rgba(255, 0, 85, 0.25);
+  border-left: 4px solid #FF0055;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.section-tag-badge {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #00F0FF;
+  background: rgba(0, 240, 255, 0.12);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  padding: 2px 6px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-bottom: 0.35rem;
+}
+
+.technical-sheet-title {
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0;
+}
+
+.technical-sheet-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  line-height: 1.4;
+}
+
+/* 4. Frame Data Color Coding Standards */
+.frame-safe {
+  color: #9CA3AF !important; /* Neutral Safe */
+}
+
+.frame-plus {
+  color: #00F0FF !important; /* Plus on Block */
+  font-weight: 800;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+}
+
+.frame-launch-punish {
+  color: #FF0055 !important; /* Launch Punishable */
+  font-weight: 900;
+  background: rgba(255, 0, 85, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 0, 85, 0.35);
+}
+
+/* 5. Mobile & Device Optimization */
+@media (max-width: 768px) {
+  /* Navbar */
+  .navbar {
+    padding: 0.5rem 0.75rem;
+    gap: 0.4rem;
+  }
+
+  .nav-actions {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 2px 0;
+    max-width: 100%;
+    gap: 0.35rem;
+  }
+
+  .nav-actions::-webkit-scrollbar {
+    display: none;
+  }
+
+  .btn-nav-notation .nav-btn-text,
+  .btn-nav-tactics .nav-btn-text,
+  .btn-nav-notes .nav-btn-text,
+  .btn-nav-share .nav-btn-text {
+    display: none;
+  }
+
+  .btn-nav-fav .fav-label {
+    display: none;
+  }
+
+  /* Section padding on mobile */
+  .section-choose-fighter,
+  .section-moves,
+  .section-analyzer,
+  .section-stages,
+  .section-tactics,
+  .combo-lab-wrap {
+    padding: 1rem 0.75rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Roster on small tablets */
+  .roster-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+    gap: 8px !important;
+    max-height: 520px;
+  }
+
+  /* Moves table horizontal scrolling with touch momentum */
+  .moves-table-container,
+  .analyzer-table-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    position: relative;
+  }
+
+  /* Sticky first column on mobile so move name stays visible */
+  .moves-table th:first-child,
+  .moves-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 5;
+    background: #0e121b;
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.5);
+  }
+}
+
+@media (max-width: 480px) {
+  /* Ultra Clean 2-Column Roster Grid on Mobile */
+  .roster-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    max-height: 480px !important;
+  }
+
+  .roster-avatar-wrap {
+    height: 110px !important;
+  }
+
+  .roster-card-name {
+    font-size: 0.8rem !important;
+  }
+
+  .roster-card-style {
+    font-size: 0.62rem !important;
+  }
+
+  .roster-card-actions {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 2px !important;
+  }
+
+  .btn-roster-action,
+  .btn-roster-profile-link {
+    height: 28px !important; /* Touch-friendly tap target */
+    font-size: 0.64rem !important;
+    padding: 0 1px !important;
+  }
+
+  .technical-sheet-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.85rem;
+  }
+
+  .technical-sheet-title {
+    font-size: 1rem;
+  }
+}
+
+
 

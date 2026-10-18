@@ -12,8 +12,8 @@ def verify():
 
     ids = [
         'rosterGrid', 'rosterGridContainer', 'carouselTrack', 'carouselPrevBtn', 'carouselNextBtn',
-        'btnNavSearch', 'btnNavNotation', 'btnNavTactics', 'btnNavNotes', 'btnNavShare', 'btnNavFav', 'btnNavGear',
-        'userModeSwitcher', 'navControllerToggle', 'topNavbar', 'heroBannerSection', 'viewModeGridBtn', 'viewModeRibbonBtn',
+        'btnNavNotation', 'btnNavTactics', 'btnNavNotes', 'btnNavShare', 'btnNavFav', 'btnNavGear',
+        'navControllerToggle', 'topNavbar', 'heroBannerSection', 'viewModeGridBtn', 'viewModeRibbonBtn',
         'rosterSearchInput', 'rosterSortSelect', 'movesTableBody', 'movesPaginationBar'
     ]
 

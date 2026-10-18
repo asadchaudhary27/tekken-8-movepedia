@@ -47,10 +47,10 @@ const state = {
     column: null,
     direction: 'asc'
   },
-  userMode: localStorage.getItem('tekken8_user_mode') || 'essentials',
+  userMode: 'pro',
   compendiumLang: localStorage.getItem('tekken8_compendium_lang') || 'en',
-  fullFrameSheetOpen: false,
-  proMatchupTelemetryOpen: false,
+  fullFrameSheetOpen: true,
+  proMatchupTelemetryOpen: true,
   sources: [],
   coverage: null,
   sessionToken: getOrCreateSessionToken(),
@@ -11115,71 +11115,37 @@ function executeInteractiveThrowBreak(inputKey) {
 // ==========================================================================
 
 function initUserMode() {
-  const mode = state.userMode || 'essentials';
-  document.body.classList.toggle('mode-essentials', mode === 'essentials');
-  document.body.classList.toggle('mode-pro', mode === 'pro');
+  state.userMode = 'pro';
+  document.body.classList.remove('mode-essentials');
+  document.body.classList.add('mode-pro');
 
   const btnEssentials = document.getElementById('btnModeEssentials');
   const btnPro = document.getElementById('btnModePro');
-  if (btnEssentials) btnEssentials.classList.toggle('active', mode === 'essentials');
-  if (btnPro) btnPro.classList.toggle('active', mode === 'pro');
+  if (btnEssentials) btnEssentials.classList.remove('active');
+  if (btnPro) btnPro.classList.add('active');
 
-  // Progressive Disclosure Containers
+  // Progressive Disclosure Containers - ALWAYS open & visible by default
   const fullFrameSheet = document.getElementById('fullFrameDataSheet');
   const proTelemetry = document.getElementById('proMatchupTelemetryContainer');
   const btnToggleFullFrame = document.getElementById('btnToggleFullFrameData');
   const btnToggleProTelemetry = document.getElementById('btnToggleProTelemetry');
 
-  if (mode === 'essentials') {
-    if (fullFrameSheet) {
-      fullFrameSheet.style.display = state.fullFrameSheetOpen ? 'block' : 'none';
-    }
-    if (btnToggleFullFrame) {
-      btnToggleFullFrame.classList.toggle('active', state.fullFrameSheetOpen);
-      btnToggleFullFrame.innerHTML = state.fullFrameSheetOpen
-        ? `<span>Hide Full Technical Frame Data</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`
-        : `<span>Explore Full Frame Data Spreadsheet (655 Moves)</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
-    }
-
-    if (proTelemetry) {
-      proTelemetry.style.display = state.proMatchupTelemetryOpen ? 'block' : 'none';
-    }
-    if (btnToggleProTelemetry) {
-      btnToggleProTelemetry.classList.toggle('active', state.proMatchupTelemetryOpen);
-      btnToggleProTelemetry.innerHTML = state.proMatchupTelemetryOpen
-        ? `<span>Hide Advanced Pro Telemetry</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`
-        : `<span>Deep Pro Telemetry (8 Lab Perspectives)</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
-    }
-  } else {
-    // Pro Mode: Expand technical sheets by default
-    if (fullFrameSheet) fullFrameSheet.style.display = 'block';
-    if (proTelemetry) proTelemetry.style.display = 'block';
-    if (btnToggleFullFrame) {
-      btnToggleFullFrame.classList.add('active');
-      btnToggleFullFrame.innerHTML = `<span>Hide Full Technical Frame Data</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`;
-    }
-    if (btnToggleProTelemetry) {
-      btnToggleProTelemetry.classList.add('active');
-      btnToggleProTelemetry.innerHTML = `<span>Hide Advanced Pro Telemetry</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`;
-    }
+  if (fullFrameSheet) fullFrameSheet.style.display = 'block';
+  if (proTelemetry) proTelemetry.style.display = 'block';
+  if (btnToggleFullFrame) {
+    btnToggleFullFrame.classList.add('active');
+    btnToggleFullFrame.innerHTML = `<span>Technical Frame Matrix (Active)</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
+  }
+  if (btnToggleProTelemetry) {
+    btnToggleProTelemetry.classList.add('active');
+    btnToggleProTelemetry.innerHTML = `<span>Deep Telemetry (8 Lab Perspectives Active)</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
   }
 }
 
 function setUserMode(mode) {
-  state.userMode = mode;
-  localStorage.setItem('tekken8_user_mode', mode);
+  state.userMode = 'pro';
+  localStorage.setItem('tekken8_user_mode', 'pro');
   playSfx('click');
-
-  if (mode === 'essentials') {
-    state.fullFrameSheetOpen = false;
-    state.proMatchupTelemetryOpen = false;
-    showToast('Switched to Ranked Essentials: Streamlined HUD activated', 'info');
-  } else {
-    state.fullFrameSheetOpen = true;
-    state.proMatchupTelemetryOpen = true;
-    showToast('Switched to Tournament Pro Lab: Full technical telemetry enabled', 'success');
-  }
-
   initUserMode();
 }
 
@@ -11188,12 +11154,17 @@ function toggleFullFrameSheet() {
   playSfx('click');
   const fullFrameSheet = document.getElementById('fullFrameDataSheet');
   const btnToggleFullFrame = document.getElementById('btnToggleFullFrameData');
-  if (fullFrameSheet) fullFrameSheet.style.display = state.fullFrameSheetOpen ? 'block' : 'none';
+  if (fullFrameSheet) {
+    fullFrameSheet.style.display = state.fullFrameSheetOpen ? 'block' : 'none';
+    if (state.fullFrameSheetOpen) {
+      fullFrameSheet.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
   if (btnToggleFullFrame) {
     btnToggleFullFrame.classList.toggle('active', state.fullFrameSheetOpen);
     btnToggleFullFrame.innerHTML = state.fullFrameSheetOpen
-      ? `<span>Hide Full Technical Frame Data</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`
-      : `<span>Explore Full Frame Data Spreadsheet (655 Moves)</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
+      ? `<span>Full Technical Matrix (Active)</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`
+      : `<span>View Full Technical Matrix</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
   }
 }
 
@@ -11202,12 +11173,17 @@ function toggleProMatchupTelemetry() {
   playSfx('click');
   const proTelemetry = document.getElementById('proMatchupTelemetryContainer');
   const btnToggleProTelemetry = document.getElementById('btnToggleProTelemetry');
-  if (proTelemetry) proTelemetry.style.display = state.proMatchupTelemetryOpen ? 'block' : 'none';
+  if (proTelemetry) {
+    proTelemetry.style.display = state.proMatchupTelemetryOpen ? 'block' : 'none';
+    if (state.proMatchupTelemetryOpen) {
+      proTelemetry.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
   if (btnToggleProTelemetry) {
     btnToggleProTelemetry.classList.toggle('active', state.proMatchupTelemetryOpen);
     btnToggleProTelemetry.innerHTML = state.proMatchupTelemetryOpen
-      ? `<span>Hide Advanced Pro Telemetry</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`
-      : `<span>Deep Pro Telemetry (8 Lab Perspectives)</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
+      ? `<span>Deep Telemetry (8 Perspectives Active)</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`
+      : `<span>View Deep Telemetry (8 Lab Perspectives)</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
   }
 }
 

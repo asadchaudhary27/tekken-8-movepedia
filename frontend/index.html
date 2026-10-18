@@ -47,29 +47,12 @@
     </nav>
 
     <div class="nav-actions">
-      <!-- Dual-Tier UX Mode Switcher (Ranked Essentials vs. Tournament Pro) -->
-      <div class="user-mode-switcher" id="userModeSwitcher" title="Switch between Simplified Ranked Essentials and Technical Tournament Pro Lab">
-        <button type="button" class="user-mode-btn active mode-essentials" id="btnModeEssentials" onclick="setUserMode('essentials')" title="Ranked Essentials: Simple 6 Core Moves, 3-Card Matchup Briefings, and Bread &amp; Butter Combos">
-          <span>🟢 Essentials</span>
-        </button>
-        <button type="button" class="user-mode-btn mode-pro" id="btnModePro" onclick="setUserMode('pro')" title="Tournament Pro: Complete 655-Move Frame Spreadsheet, 8-Tab Relativity Engine, and Micro-Spacing Telemetry">
-          <span>🟡 Pro Lab</span>
-        </button>
-      </div>
-
       <!-- Universal Attack Button Mapping Toggle (Arcade / PlayStation / Xbox) -->
       <div class="nav-controller-toggle" id="navControllerToggle" title="Universal Button Mapping Notation">
         <button type="button" class="nav-ctl-btn active" data-layout="ARCADE" onclick="setControllerLayout('ARCADE')" title="Standard Tekken: 1, 2, 3, 4">🕹️ 1·2·3·4</button>
         <button type="button" class="nav-ctl-btn" data-layout="PLAYSTATION" onclick="setControllerLayout('PLAYSTATION')" title="PlayStation: □, △, ✕, ○">🎮 PS</button>
         <button type="button" class="nav-ctl-btn" data-layout="XBOX" onclick="setControllerLayout('XBOX')" title="Xbox: X, Y, A, B">🎮 XB</button>
       </div>
-
-      <!-- Global Command Palette / Search Trigger Button -->
-      <button type="button" class="btn-nav-search" id="btnNavSearch" onclick="openGlobalSearch()" title="Global Search across Fighters, Moves, Combos, and Stages (Ctrl+K)">
-        <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.5" fill="none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <span>Search</span>
-        <kbd class="nav-kbd">Ctrl+K</kbd>
-      </button>
 
       <!-- Notation Reference Guide Trigger -->
       <button type="button" class="btn-nav-notation" id="btnNavNotation" onclick="openNotationGuideModal()" title="Standard Tekken 8 Notation Guide">
@@ -302,15 +285,15 @@
         </div>
       </div>
 
-      <!-- Core 6 Weapons Combat Kit (Ranked Essentials Default) -->
+      <!-- Core Combat Arsenal (Essential Weapons) -->
       <div class="core-weapons-wrap" id="coreWeaponsWrap">
         <div class="core-weapons-header">
           <div class="core-weapons-title">
-            <span>⚡ CORE COMBAT KIT (ESSENTIAL WEAPONS)</span>
-            <span class="badge">KEY GAMEPLAN MOVES</span>
+            <span>⚡ CORE COMBAT ARSENAL</span>
+            <span class="badge">KEY GAMEPLAN WEAPONS</span>
           </div>
-          <button type="button" class="btn-progressive-toggle" id="btnToggleFullFrameData" onclick="toggleFullFrameSheet()">
-            <span id="btnToggleFullFrameText">📊 Expand Full Technical Frame Sheet</span>
+          <button type="button" class="btn-progressive-toggle" id="btnToggleFullFrameData" onclick="toggleFullFrameSheet()" title="Scroll or toggle Technical Frame Matrix">
+            <span id="btnToggleFullFrameText">📊 Full Technical Matrix (Active)</span>
             <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
         </div>
@@ -319,8 +302,15 @@
         </div>
       </div>
 
-      <!-- Progressive Disclosure Container for Full Technical Frame Data -->
-      <div id="fullFrameDataSheet">
+      <!-- Distinct Section Demarcator: Full Technical Frame Matrix (Always Visible) -->
+      <div id="fullFrameDataSheet" class="full-frame-data-section">
+        <div class="technical-sheet-banner">
+          <div class="technical-sheet-title-col">
+            <span class="section-tag-badge">TECHNICAL SPREADSHEET</span>
+            <h3 class="technical-sheet-title">📊 ALL COMBAT MOVES &amp; FRAME DATA DIRECTORY</h3>
+            <p class="technical-sheet-sub">Complete unhidden database: Normal moves, stance strings, throws, 10-hit combos, and Season 2 patch telemetry.</p>
+          </div>
+        </div>
       <!-- Quick Safety & Property Filter Pills -->
       <div class="moves-safety-filters" id="movesSafetyFilters">
         <span class="safety-filter-label">Quick Safety:</span>
@@ -939,15 +929,15 @@
             </div>
           </div>
 
-          <!-- Pre-Match Briefing HUD (Ranked Essentials 30-Second Cheat Sheet) -->
+          <!-- Pre-Match Briefing HUD (30-Second Tactical Matrix) -->
           <div class="pre-match-briefing-hud" id="preMatchBriefingHud">
             <div class="briefing-hud-header">
               <div class="briefing-hud-title">
-                <span>⏱️ 30-SECOND PRE-MATCH BRIEFING CHEAT SHEET</span>
-                <span class="badge-block-plus" style="font-size:0.65rem; padding:0.15rem 0.4rem;">RANKED ESSENTIALS</span>
+                <span>⏱️ 30-SECOND PRE-MATCH TACTICAL BRIEFING</span>
+                <span class="badge-block-plus" style="font-size:0.65rem; padding:0.15rem 0.4rem;">QUICK CHEAT SHEET</span>
               </div>
               <button type="button" class="btn-progressive-toggle" id="btnToggleProTelemetry" onclick="toggleProMatchupTelemetry()">
-                <span id="btnToggleProTelemetryText">📊 Expand Deep Telemetry &amp; Relativity Engine</span>
+                <span id="btnToggleProTelemetryText">📊 Deep Telemetry &amp; Relativity Engine (Active)</span>
                 <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="6 9 12 15 18 9"/></svg>
               </button>
             </div>
