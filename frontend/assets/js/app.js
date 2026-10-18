@@ -2700,10 +2700,15 @@ async function updateNotationDisplay() {
 }
 
 function renderNotationCards(data) {
-  document.getElementById('modeArrow').textContent = data.arrow_display || '—';
-  document.getElementById('modeEnglish').textContent = data.english_display || '—';
-  document.getElementById('modeNumpad').textContent = data.numpad_display || '—';
-  document.getElementById('modeController').textContent = data.controller_display || '—';
+  const elArrow = document.getElementById('modeArrow');
+  if (!elArrow) return;
+  elArrow.textContent = data.arrow_display || '—';
+  const elEng = document.getElementById('modeEnglish');
+  if (elEng) elEng.textContent = data.english_display || '—';
+  const elNum = document.getElementById('modeNumpad');
+  if (elNum) elNum.textContent = data.numpad_display || '—';
+  const elCtl = document.getElementById('modeController');
+  if (elCtl) elCtl.textContent = data.controller_display || '—';
 
   const unsAlert = document.getElementById('unsupportedAlert');
   if (unsAlert) {
@@ -2717,6 +2722,8 @@ function renderNotationCards(data) {
 }
 
 function renderClientNotation(inputStr) {
+  const elArrow = document.getElementById('modeArrow');
+  if (!elArrow) return;
   let arrow = inputStr;
   let eng = inputStr;
   let numpad = inputStr;
@@ -2729,10 +2736,13 @@ function renderClientNotation(inputStr) {
     ctl = state.controllerLayout === 'PLAYSTATION' ? '↘ + △' : (state.controllerLayout === 'XBOX' ? '↘ + Y' : '↘ + 2');
   }
 
-  document.getElementById('modeArrow').textContent = arrow;
-  document.getElementById('modeEnglish').textContent = eng;
-  document.getElementById('modeNumpad').textContent = numpad;
-  document.getElementById('modeController').textContent = ctl;
+  elArrow.textContent = arrow;
+  const elEng = document.getElementById('modeEnglish');
+  if (elEng) elEng.textContent = eng;
+  const elNum = document.getElementById('modeNumpad');
+  if (elNum) elNum.textContent = numpad;
+  const elCtl = document.getElementById('modeController');
+  if (elCtl) elCtl.textContent = ctl;
 }
 
 function insertNotationToken(token) {

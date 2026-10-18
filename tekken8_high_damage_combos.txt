@@ -1,0 +1,368 @@
+TEKKEN 8 - HIGH DAMAGE COMBOS (79 combos)
+Source: tekken8combo.kagewebsite.com/selection-best-high-damage-combos/ (pages 1 to 8)
+Characters covered: Alisa to Heihachi (alphabetical order on the site)
+
+==================================================
+HOW TO READ THE NOTATION
+==================================================
+1 = left punch, 2 = right punch, 3 = left kick, 4 = right kick
+1+2 = press together
+f = forward, b = back, d = down, u = up, d/f = down-forward, etc.
+Capital letter (F, D/F, B) = hold that direction
+>  (shown as ►) = next part of the combo
+W!  = wall splat          WB! = wall bounce
+FBl! = floor blast        BB! = balcony break
+WS = while standing       WR = while running (iWR = instant WR)
+CC = crouch cancel        FC = full crouch
+SSL / SSR = side step left / right
+* = special timing (hold max or perfect input), check the note
+Heat Burst / Heat Smash / Rage Art need Heat or Rage to be active.
+
+==================================================
+TOP 10 DAMAGE (quick list)
+==================================================
+1.  160 dmg - Dragunov  (#1493, Heat, v1.10)
+2.  140 dmg - Dragunov  (#1053, Heat + Rage + Wall)
+3.  140 dmg - Heihachi  (#1424, Heat + Rage + Counter Hit)
+4.  137 dmg - Clive     (#2299, Heat + Counter Hit + Wall)
+5.  135 dmg - Armor King (#2100, Heat + Counter Hit + Wall)
+6.  132 dmg - Clive     (#1464, Heat + Counter Hit)
+7.  131 dmg - Bryan     (#2363, Heat + Counter Hit)
+8.  130 dmg - Devil Jin (#700, Heat + Rage)
+9.  129 dmg - Bryan     (#932, Heat + Counter Hit + Wall)
+10. 127 dmg - Heihachi  (#1425, Heat)
+
+
+==================================================
+ALISA
+==================================================
+[Alisa] 104 dmg | 11 hits | Wall | Stage: Arena (Underground)
+WS,1,2,3<2,3,3 ► b,3+4 ► Dash ► 2,2 ► W! ► d,3,WS,2
+Note: Away from the wall you can start the tornado with FF2,3 or 2,3,3. The d3, WS2 ender is hard. A safer route (FF2,3 or FF4 or B4,3) does about 2 less damage.
+
+
+==================================================
+ANNA
+==================================================
+[Anna] 103 dmg | 16 hits | Heat + Wall | v2.00 | Arena (Underground)
+d,d/f,f:1 ► u/f,3 ► u/f,2 ► Hammer Chance,2,1 ► b,4 ► Hammer Chance,2,1 ► Pleasure Time,3 ► Heat Burst ► f,f,F,3,2 ► WBl! ► f,F,3,2,F ► f,F,1+2*(max)
+
+
+==================================================
+ARMOR KING
+==================================================
+[Armor King] 102 dmg | 13 hits | Heat + Rage | v2.06
+f,N,d,d/f,2 ► f,1+2,F ► 1 ► f,3,2,D/F,1 ► f,3,2,1 ► Dash ► f,1+2,F ► Bad Jaguar,2+3 ► Heat Burst ► Rage Art
+
+[Armor King] 135 dmg | 17 hits | Heat + Counter Hit + Wall | v2.06 | Arena (Underground)
+f,N,d,d/f,2 ► f,N,d,d/f,2 ► d/f,3 ► f,3,2,D/F ► Beast Step,1 ► f,3,2,1 ► f,F,1+2 ► Bad Jaguar ► Heat Burst ► 3,4,1 ► WBo!,(Switch) ► WS,3,1,F ► d/b,2+4 ► d/b,N,f,2+4
+
+
+==================================================
+ASUKA
+==================================================
+[Asuka] 104 dmg | 14 hits | Counter Hit + Wall + Floor | Into the Stratosphere
+d/f,1,2,F! ► f,f,2,3 ► d/b,1,4 ► Dash ► 2,1,2,W! ► 1+4,2,4
+
+[Asuka] 101 dmg | 11 hits | Counter Hit + Floor | Into the Stratosphere
+d/b,4,3 ► f,f,2,3 ► 2,1,d,1+2,F! ► Dash ► d/b,1,4 ► Dash ► Naniwa Gusto,u,1+2 ► f,3+4
+
+[Asuka] 101 dmg | 13 hits | Heat + Counter Hit + Wall | v1.06 | Secluded Training Ground
+d/b,4,3 ► f,f,2,3 ► d/b,1,4 ► d/b,4,3,W! ► f,F,2,1+2,WB! ► Heat Burst ► Naniwa Gusto,u,1+2 ► f,3+4
+
+[Asuka] 100 dmg | 15 hits | Heat + Rage + Counter Hit | v1.06
+d,3+4 ► f,f,2,3 ► d/b,1,4 ► Dash,u/f,3 ► During Heat,f,1+2,F ► b,2,1+2,D ► WS,4 ► Rage Art
+Note: b,2,1+2,D into WS,4 is very tricky.
+
+[Asuka] 100 dmg | 11 hits | Heat + Counter Hit | v2.00
+u/f,4 ► f,F,2,3*(max) ► d/b,1,4 ► Dash ► u/f,1,2 ► Dash ► Heat Burst ► u,1+2 ► During Heat,Naniwa Gusto,f,2:1
+
+[Asuka] 115 dmg | 12 hits | Heat + Counter Hit | v2.05
+WS,1+2 ► d,3+4 ► f,f,2,3*(max) ► d/b,1,4 ► Dash ► u/f,1,2 ► Dash ► Heat Burst ► u,1+2 ► Naniwa Gusto
+
+[Asuka] 102 dmg | 13 hits | Counter Hit + Wall | v2.06 | Urban Square
+(d/f,1),4 ► f,F,4 ► f,F,2,3* ► u/f,1,2 ► f,F,1+2 ► Dash ► d,3+4,W! ► Dash ► 1+4,2,4
+
+[Asuka] 104 dmg | 14 hits | v2.09
+u/f,4 ► f,F,2,3* ► d/b,1,4 ► Dash,1,2,3 ► Dash,u/f,1,2 ► Dash,d/f,3 ► 1+4,2,4
+(The site lists this same combo twice: #2320 and #2321.)
+
+
+==================================================
+AZUCENA
+==================================================
+[Azucena] 106 dmg | 9 hits
+d,2,3 ► Libertador,4,1,2 ► Dash ► b,4,3,4,3
+
+[Azucena] 101 dmg | 13 hits | Heat + Wall | Arena (Underground)
+d/b,1+2 ► 4,3 ► d,2,3 ► Libertador,1+2 ► f,2,1,4 ► WB!,Heat Burst,f,4,4,F ► d/b,3+4
+
+[Azucena] 117 dmg | 14 hits | Heat + Wall | Arena (Underground)
+d/b,3,4 ► d,2,3 ► Libertador ► 4,1,2 ► Dash ► f,2,1,4 ► WB! ► Heat Burst ► f,4,4,F ► b,3
+Note: Damage depends on whether the start is a counter hit.
+
+[Azucena] 100 dmg | 12 hits | Rage + Counter Hit + Wall | v1.09 | Seaside Resort
+d/b,3,4 ► Dash ► f,3 ► Libertador,4,1 ► b,4,3,4,3,W! ► Dash ► d/f,1,4,1~2
+Note: Only 80 dmg on a stage without walls. Without Rage: 73 dmg (91 with wall). You may not need the second dash, it depends on the distance to the wall.
+
+[Azucena] 100 dmg | 17 hits | Heat + Rage + Wall | v2.05 | Arena (Underground)
+d/b,1+2 ► d/f,3 ► f,F,3 ► b,4,3,4,3 ► W!,Heat Burst ► 1 ► Heat Smash,WBl! ► Rage Art
+
+
+==================================================
+BOB
+==================================================
+[Bob] 100 dmg | 12 hits | Heat | v3.02 | Seaside Resort
+During Heat,f,N,d,d/f,2 ► f,N,d,d/f,2 ► d/b,2 ► b,4,3,F ► Spinner Ball,1,2,F ► 3+4,4,2
+
+[Bob] 112 dmg | 15 hits | Wall | v3.02 | Fallen Destiny
+f,N,d,d/f,2 ► Dash,SSR ► f,N,d,d/f,1 ► d/b,2 ► d,2,3 ► Dash,b,4,3:3,F ► Spinner Ball ► f,F,3,D/F ► United Step,B,N ► WS,1,2,W! ► 3+4,4,2
+
+[Bob] 102 dmg | 22 hits | Rage | v3.02
+u/f,3 ► d/f,4,3 ► d/f,1 ► b,4,3 ► f,F,3 ► Rage Art
+Note: Damage depends on your health with Rage. 20% health = 91, 10% = 96, 5% = 100.
+
+
+==================================================
+BRYAN
+==================================================
+[Bryan] 118 dmg | 24 hits | Counter Hit + Wall | Secluded Training Ground
+b,2,1,SSL ► 1+2,1 ► 2 ► b,2,1,F ► Slither Step,2,1,W! ► Dash,b,2,1,4,W! ► u/b,1+2,1,2,1,2,1,2,1,2,1,4
+Note: You can replace b,2,1,4 with 3,3,2 or JU. Other starters: qcb4 = 104, JU = 101, CH b1 = 106, CH 3+4 = 105, CH f3 SSR = 102.
+
+[Bryan] 101 dmg | 23 hits | Secluded Training Ground
+WS,1 ► 1+2,1 ► 2 ► b,2,1,F ► f,2,1 ► Dash ► b,2,1,4 ► U/B,1+2,1,2,1,2,1,2,1,2,1,4
+
+[Bryan] 129 dmg | 22 hits | Heat + Counter Hit + Wall + Balcony Break | Elegant Palace
+During Heat ► b,2,1 ► b,2,1,F,Slither Step,2,1 ► W! ► Snake Eyes,f,F,1+2 ► WB! ► b,3,F,Slither Step,2,1 ► W! ► Snake Eyes,f,F,1+2 ► BB! ► u/f,3+4 ► b,3,F,Slither Step,1+2,F ► 1+2,1 ► W! ► Snake Eyes,u/f,2,2,2,2,2,3
+
+[Bryan] 106 dmg | 16 hits | v1.08 | Seaside Resort
+f,N,b,2 ► Dash ► d,d/f,f,3,4 ► b,2,1,F,2,4 ► b,3,f,2,1 ► Dash ► 1+2,2 ► u/f,2,2,2,3
+
+[Bryan] 118 dmg | 27 hits | Heat + Counter Hit + Floor | v2.02 | Phoenix Gate
+b,1 ► b,2,f,4 ► b,3,F,U,f,1 ► b,2,4 ► Dash ► Heat Burst ► b,3,F,2,4 ► Heat Smash ► FBl! ► d,d/f,f,2,1 ► Dash ► u/b,1+2,1,2,1,2,1,2,1,2,1,4
+Note: Done from the starting position in the 2nd phase of Phoenix Gate.
+
+[Bryan] 123 dmg | 17 hits | Heat + Counter Hit | v3.00
+d,d/b,b,1 ► Dash,b,2,4 ► 1 ► b,2,1,F,2,1 ► Heat Burst,1+2,2 ► u/f,2,2,2,2,2,3
+
+[Bryan] 131 dmg | 16 hits | Heat + Counter Hit | v3.00
+d,d/b,b,1 ► Dash,b,2,4 ► 1 ► b,2,1,F,2,1 ► Heat Burst,1+2,2 ► u/f,2,2,2,2,1,3
+
+[Bryan] 109 dmg | 19 hits | Heat + Wall + Floor | v3.01 | Into the Stratosphere
+(Opponent's back) 3,3,2 ► f,1+2 ► 3,3,2 ► b,2,F,4 ► Heat Burst ► b,1,FBl! ► f,N,b,2,W! ► 1+2,1 ► Snake Eyes,u/f,2,2,2,2,2,3
+
+
+==================================================
+CLAUDIO
+==================================================
+[Claudio] 102 dmg | 15 hits | Heat + Rage
+During Heat,Starburst,f,1+2,1+2 ► During Heat,f,f,F,2,F ► f,f,4 ► b,3 ► Dash ► b,3 ► Dash ► b,3 ► Dash ► b,3,u/f,3+4 ► d/b,1+2 ► Dash ► b,3 ► Rage Art
+Note: You can swap the 1st and 3rd "Dash, b3" for "f2, Dash" and "f2". Much easier, only 2 damage less.
+
+[Claudio] 115 dmg | 10 hits | Heat
+b,4,4 ► 1,2,1,Heat Burst~ ► During Heat,b,4,3,2 ► Heat Smash
+
+[Claudio] 115 dmg | 15 hits | Heat + Rage | v1.08
+During Heat,d/f,1,2 ► f,F,4 ► b,3 ► Dash ► b,3 ► Starburst,2,1,2 ► Starburst,d/b,1+2 ► f,f,F,2,F,Heat Burst ► SSL,Starburst,2,1,2 ► d/f,1+2,Rage Art
+Note: The second b3 and the Side Step Left have to be micro (very small).
+
+[Claudio] 111 dmg | 14 hits | Wall | v1.08
+d/f,1,2 ► f,F,4 ► b,3 ► Dash ► b,3 ► Starburst,2,1,2 ► Starburst,3,2,W! ► b,2 ► d,1+2 ► Starburst,b,4,3,2
+Note: Best in the middle of a stage with walls. Starburst must be active.
+
+[Claudio] 104 dmg | 12 hits | Wall | v1.08
+d/f,1,2 ► b,2 ► SSL,f,F,4 ► b,3 ► Starburst,2,1,2 ► Starburst,3,2,W! ► Dash ► Starburst,b,4,3,2
+Note: Uses the tornado spin early, so a bit less damage. Starburst must be active.
+
+[Claudio] 105 dmg | 14 hits | Heat + Rage | v1.11
+During Heat ► d/f,1,2 ► f,F,4 ► b,3 ► f,2 ► Dash,b,3 ► d/b,1+2 ► f,f,F,2,F ► Heat Smash ► 2,1,2 ► Rage Art
+
+[Claudio] 101 dmg | 14 hits | Heat + Rage | v2.01
+During Heat ► d/f,1,2 ► f,F,4 ► b,3 ► f,2 ► d,1,2 ► f,f,F,2,F ► 2,1,2 ► Rage Art
+
+[Claudio] 101 dmg | 14 hits | Heat + Rage | v2.02
+During Heat ► Starburst,d/b,1+2 ► f,F,4 ► b,3 ► Dash,b,3 ► 2,(1),2 ► 3,2,F ► 2,(1),2 ► Dash,b,3 ► Rage Art
+Note: Needs Heat Dash and Rage Art.
+
+[Claudio] 101 dmg | 14 hits | Heat + Rage | v2.02
+During Heat ► WS,2 ► b,3 ► Dash,b,3 ► Dash,b,3 ► 2,(1),2 ► Starburst,d/b,1+2 ► WR,2,F ► SSL,2,1,2 ► Rage Art
+Note: Needs Heat Dash and Rage Art.
+
+[Claudio] 104 dmg | 12 hits | Rage + Counter Hit | v2.02
+d/f,2 ► Starburst ► f,F,4 ► b,3 ► Dash,b,3 ► 2,(1),2 ► Starburst,d,1,2 ► Dash,b,3 ► Rage Art ► Starburst
+Note: Needs Rage Art.
+
+[Claudio] 108 dmg | 13 hits | Rage + Counter Hit | v2.02
+d/f,2 ► Starburst ► f,F,4 ► b,3 ► Dash,b,3 ► 2,(1),2 ► Dash,b,3 ► Starburst,d,1,2 ► Dash,b,3 ► Rage Art ► Starburst
+Note: Needs Rage Art.
+
+[Claudio] 106 dmg | 16 hits | Heat + Rage + Counter Hit | v2.02
+d/f,2 ► Starburst ► f,F,4 ► b,3 ► Dash,b,3 ► 2,(1),2 ► Dash,b,3 ► Heat Burst ► Dash,2,(1),2 ► Starburst,d,1,2 ► Dash,WS,1 ► Rage Art
+Note: Needs Heat Burst and Rage Art.
+
+[Claudio] 109 dmg | 14 hits | Heat + Rage + Counter Hit | v2.02
+During Heat ► d/f,2 ► f,F,4 ► b,3 ► Dash,b,3 ► 2,(1),2 ► Starburst,d/b,1+2 ► WR,2,F ► SSL,2,1,2 ► Rage Art
+Note: Needs Heat Dash and Rage Art.
+
+[Claudio] 103 dmg | 12 hits | Heat + Rage + Counter Hit | v2.06
+During Heat ► d/f,2 ► Starburst ► f,F,4 ► b,3 ► f,2 ► 2,(1),2 ► d,1,2 ► f,f,F,2,F ► Rage Art ► Starburst
+
+[Claudio] 102 dmg | 15 hits | Counter Hit + Wall | v3.02 | Elegant Palace
+d/f,2 ► Starburst ► f,F,4 ► b,3 ► 2,1,2 ► 3,2 ► W!,b,2 ► d,1+2 ► d/f,3,2 ► u/f,3+4,2 ► Starburst
+
+
+==================================================
+CLIVE
+==================================================
+[Clive] 100 dmg | 22 hits | v1.10
+d/f,2 ► d/f,1,4 ► d/b,1+2,1 ► Wings of Light,2,2 ► Dash ► Zantetsuken Lv.5,1+4
+
+[Clive] 100 dmg | 21 hits | v1.10 (Approved combo)
+WS,2 ► d/f,1,4 ► d/b,1+2,1 ► Updraft,2,2 ► Dash ► Zantetsuken Lv.3,1+4
+
+[Clive] 121 dmg | 26 hits | Heat + Counter Hit + Wall | v1.10
+f,F,2 ► d,1 ► WS,4 ► d/b,1+2,1 ► Updraft,2,2 ► Dash ► b,2 ► Heat Burst ► d/f,1,2,F ► Phoenix Shift,2,W! ► Zantetsuken Lv.5,1+4
+Note: Wall to wall on arena size stages.
+
+[Clive] 116 dmg | 23 hits | Heat + Wall | v1.10
+During Heat ► d/f,1,2,1,W! ► u,1+2,2,1 ► f,1+2,F ► Zantetsuken Lv.5,1+4
+
+[Clive] 132 dmg | 35 hits | Heat + Counter Hit + Floor | v1.10 | Phoenix Gate
+b,4 ► d,1 ► WS,4 ► d/f,1+2,1 ► Updraft,2,2 ► b,2 ► Heat Burst ► b,2,F ► Phoenix Shift ► Heat Smash ► FBl! ► b,2,F ► Phoenix Shift,2 ► Zantetsuken Lv.5,1+4
+
+[Clive] 102 dmg | 23 hits | v2.01
+d/f,2 ► d/f,1,4 ► d/b,1+2,1 ► Updraft,2,2 ► Dash ► b,2,F ► Phoenix Shift ► Zantetsuken Lv.5,1+4
+
+[Clive] 137 dmg | 31 hits | Heat + Counter Hit + Wall | v2.08 | Elegant Palace
+(Crouching opponent) During Heat ► (f,2,2),1*(max) ► d/b,1+2,2 ► Updraft:3 ► u,1+2,1,W! ► u,1+2,1,WB! ► d/f,1,2,F ► Phoenix Shift,1+2,WB! ► f,1+2,F ► Zantetsuken Lv.5,1+4
+
+[Clive] 102 dmg | 22 hits | Rage | v3.02
+d/f,2 ► d,2,WS,4 ► d/b,1+2,1 ► Updraft ► 2,2 ► Dash,b,2 ► Rage Art
+Note: Damage depends on your health with Rage. 20% health = 91, 10% = 96, 5% = 100.
+
+
+==================================================
+DEVIL JIN
+==================================================
+[Devil Jin] 130 dmg | 21 hits | Heat + Rage | Descent into Subconscious
+SSR,2 ► u,1+2 ► u/f,1,Mourning Crow,3 ► SSR,3,1,f,f ► D/F,3,2,4 ► 2+3 ► SSL,B,2,3,F,Heat Burst ► f,N,d,d/f,1,U/F ► u,1+2 ► 3,1,f,f,2 ► d/f,1+2,Rage Art
+
+[Devil Jin] 111 dmg | 12 hits | Heat + Wall | v1.11 | Secluded Training Ground
+SSR,2 ► u,1+2 ► u/f,1 ► Mourning Crow,3 ► Dash ► u,1+2 ► Heat Burst ► b,2,3,W! ► b,f,1,2,4,1+2
+
+[Devil Jin] 108 dmg | 15 hits | Heat | v2.00
+EWGF ► u,1+2 ► EWGF ► f,N,d,d/f,3,F ► Mourning Crow,4,1 ► b,2,1 ► u,1+2 ► Heat Burst ► SSR ► f,N,d,d/f,3,F ► Mourning Crow,2,2,F ► f,N,d,d/f,1
+
+
+==================================================
+DRAGUNOV
+==================================================
+[Dragunov] 107 dmg | 12 hits | Wall
+d,d/f,f,2 ► d/f,3+4 ► 4,4 ► FC,d/f,1,4 ► Sneak,1 ► W! ► f,f,F,4 ► 3,1,D/F ► Sneak ► 1+2
+
+[Dragunov] 101 dmg | 13 hits | Heat | Coliseum of Fate
+Sneak,2 ► d/f,3+4 ► b,4,3 ► b,1,2 ► Dash ► d/f,3+4 ► Heat Burst ► d/f,3+4 ► During Heat,2,1,D/F,4,F ► d,d/f,f,1+2
+
+[Dragunov] 140 dmg | 19 hits | Heat + Rage + Wall | Arena (Underground)
+Sneak,2 ► d/f,3+4 ► 4,4 ► D/F,1,4 ► u,N ► b,4,3,W! ► f,f,F,4 ► 3,1,2,WB! ► Dash ► d/b,3+4 ► Heat Burst ► Rage Art
+
+[Dragunov] 101 dmg | 13 hits | Heat + Wall | Arena (Underground)
+d,d/f,f,2 ► d/f,3+4 ► 4,4 ► D/F,1,4 ► Sneak,1+2,WB! ► b,4,3 ► Dash,Heat Burst ► During Heat,b,3,1+2 ► d,d/b,b,1+2
+Note: Inputs are reversed after the wall bound.
+
+[Dragunov] 101 dmg | 12 hits | Wall
+d,d/f,f,2 ► d/f,3+4 ► 4,4 ► D/F,1,4 ► Sneak,1,W! ► f,f,F,4 ► d,3,2,1+2
+Note: DF1,4 has a just frame which raises the damage to 102.
+
+[Dragunov] 106 dmg | 15 hits | Heat + Wall | v1.07 | Arena (Underground)
+Sneak,2 ► f,2,4 ► f,3,D/F ► u,N ► 1 ► b,4,3 ► W! ► f,f,F,4 ► b,4,3 ► d/b,3+4 ► Heat Burst ► During Heat ► Sneak,4,B ► 1+2
+
+[Dragunov] 101 dmg | 14 hits | Heat + Counter Hit | v1.06
+WR,2 ► Sneak,3+4 ► 4,4 ► WS,1,Sneak,3+4 ► Heat Burst ► d/f,3+4 ► 2,1,Sneak,2 ► f,3,Sneak,4,F ► d,3+4
+
+[Dragunov] 108 dmg | 17 hits | Heat + Counter Hit | v1.07 | Arena (Underground)
+f,f,F,2 ► Sneak,3+4 ► 4,4 ► d/f,1,4 ► CC ► 3,1,D/F,3+4 ► f,f,F,4 ► 3,1,4 ► d/b,3+4 ► Heat Burst ► b,3,1+2,B ► 1+2
+
+[Dragunov] 160 dmg | 16 hits | Heat | v1.10 | Yakushima  (HIGHEST DAMAGE ON THE LIST)
+d,d/f,f,2 ► d/f,3+4 ► 4,4 ► D/F,1,4 ► CC ► 3,1,D/F,2 ► d/f,3+4 ► Heat Burst,3,1,D/F,4 ► Heat Smash ► b,1+2
+
+[Dragunov] 103 dmg | 14 hits | Heat + Counter Hit | v1.13
+iWR,2 ► Sneak,3+4 ► 4,4 ► FC,1:4 ► CC,3,1,Sneak,2 ► Dash ► d/f,3+4 ► 2+3 ► f,3,1+2,F ► Sneak,1+2
+
+[Dragunov] 107 dmg | 16 hits | Heat + Counter Hit + Wall | v1.13 | Coliseum of Fate
+During Heat,iWR,2 ► Sneak,3+4 ► 4,4 ► FC,1,4 ► CC,1 ► f,3,Sneak,4,F ► f,3,Sneak ► CC,b,4,3,W! ► WR,4 ► b,2,1+2
+Note: Works on big stages. The blue spark should only be at WR2 for the combo to work.
+
+[Dragunov] 102 dmg | 17 hits | Heat + Wall | v2.06 | Arena
+d,d/f,f,2 ► d/f,3+4 ► 4,4 ► FC,d/f,1,4,Sneak ► u,N,3,1,Sneak ► u,N,Heat Burst ► d/f,3+4 ► 4,1,W! ► f,f,F,4 ► d,3,2,1+2
+
+[Dragunov] 107 dmg | 11 hits | Heat | v3.00
+SSR,2,1+2,4 ► b,1,2 ► f,3,Sneak ► u,N,1 ► 2+3 ► f,3,1+2,F,Heat Burst ► b,1+2
+
+[Dragunov] 102 dmg | 17 hits | Heat + Counter Hit + Wall + Floor | v3.00 | Phoenix Gate
+f,f,F:2 ► d,d/f,f,3+4 ► 4,4 ► FC,d/f,1:4,Sneak ► u,N,1 ► iWR:2,FBl! ► d/f,3+4 ► Heat Burst ► f,3,D/F,Sneak ► 2 ► Dash ► FC,d/f,1:4,W! ► d,3,2,1+2
+
+
+==================================================
+EDDY
+==================================================
+[Eddy] 104 dmg | 10 hits | v2.03 | Fallen Destiny
+d/f,3 ► b,3,3 ► 2,b,1,1,4 ► d,d/f,f,3 ► d/b,3,3
+
+
+==================================================
+FAHKUMRAM
+==================================================
+[Fahkumram] 122 dmg | 13 hits | Heat + Wall | v2.06 | Seaside Resort
+b,f,4 ► d/f,3~4 ► b,1 ► d,3,4,3~4 ► u/f,4 ► Dash ► d/b,4 ► Dash ► Heat Burst ► f,f,1+2,Garuda Force ► W! ► f,2,1,2
+
+[Fahkumram] 101 dmg | 13 hits | Wall | v2.06 | Seaside Resort
+b,f,4 ► d/f,(3,4) ► b,1 ► D,3,4,(3,4) ► u/f,4 ► Dash ► 2,3 ► W! ► Dash ► 1,2,1,4
+Note: DF 3,4 must give a blue spark or the damage is 97.
+
+
+==================================================
+FENG
+==================================================
+[Feng] 114 dmg | 17 hits | Heat + Rage + Wall | Sanctum
+f,3,4 ► d/f,1 ► f,F,4,3 ► 1 ► f,3,4 ► Dash ► u/f,3 ► d/f,4,3 ► f,2,1,2,WB! ► Heat Burst ► During Heat ► b,1+2,F ► b,1+2
+Note: Any stage works. Delay the f,F,4,3 to get the blue spark.
+
+[Feng] 100 dmg | 14 hits | Heat + Rage + Counter Hit
+During Heat,d,d/f,f,1 ► b,3 ► d/f,4,3 ► b,1+2,F ► d/f,4,2,1+2 ► Dash ► Rage Art
+
+
+==================================================
+HEIHACHI
+==================================================
+[Heihachi] 103 dmg | 15 hits | Heat + Wall | v1.08
+EWGF ► EWGF ► Dash,EWGF ► f,3,d,1 ► f,3,d,2 ► u/f,3,4,W! ► Heat Burst ► d/f,3,1+2,d,d/f,f,1
+Note: Make the last electric a dash electric.
+
+[Heihachi] 103 dmg | 12 hits | Heat | v1.08
+EWGF ► EWGF ► EWGF ► f,3,D ► Wind God's Kamae,1 ► f,3,D ► Wind God's Kamae,2 ► b,2 ► Heat Burst ► b,2 ► During Heat,d,d/f,f,2,F ► OTGF
+
+[Heihachi] 114 dmg | 14 hits | Heat + Counter Hit + Wall | v1.08 | Rebel Hangar
+Warrior Instinct,b,4 ► Dash ► b,2* ► EWGF ► f,3 ► D/F,1,2* ► Dash ► b,2* ► Heat Smash ► b,2* ► Dash ► d/f,1,2* ► WBl! ► b,2* ► Dash ► d/f,1,2*
+Note: You need Warrior Instinct and must hit all the gold sparks to get the full 114 damage and 114 healing. The first dash only helps the EWGF land easier.
+
+[Heihachi] 140 dmg | 19 hits | Heat + Rage + Counter Hit + Floor | v1.09 | Into the Stratosphere
+Warrior Instinct,f,F,2 ► EWGF ► f,3,D ► Wind God's Kamae,D/F,4,4,1 ► f,3 ► f,F,2 ► Dash ► b,2* ► Heat Burst ► u/f,3,4 ► u/f,4,1,FBl! ► d/f,3,1+2,d,d/f,f,1
+Note: Wall to wall combo. Your b,2* must be a perfect input (the golden sparks).
+
+[Heihachi] 127 dmg | 19 hits | Heat + Floor | v1.09 | Into the Stratosphere
+Warrior Instinct,f,F,2 ► EWGF ► f,3,D ► Wind God's Kamae,D/F,4,4,1 ► f,4 ► f,F,2 ► Dash ► b,2* ► Heat Burst ► u/f,3,4 ► u/f,4,1,FBl! ► d/f,3,1+2,d,d/f,f,1
+Note: Wall to wall combo. Your b,2* must be a perfect input (the golden sparks).
+
+[Heihachi] 108 dmg | 17 hits | Heat + Wall | v2.00 | Ortiz Farm
+During Heat,Heat Smash,W! ► b,2* ► f,F,2 ► 1+2 ► d/f,3,1+2,d,d/f,f,1
+Note: You must be only slightly off-axis, too much makes it inconsistent. Do one full backdash so b2 has space to resplat. A square stage with walls is best.
+
+
+==================================================
+NOT COVERED (pages 9+ of the site were not loaded)
+==================================================
+Hwoarang, Jack-8, Jin, Jun, Kazuya, King, Kuma, Kunimitsu, Lars, Law, Lee, Leo,
+Leroy, Lidia, Lili, Miary Zo, Nina, Panda, Paul, Raven, Reina, Roger Jr.,
+Shaheen, Steve, Victor, Xiaoyu, Yoshimitsu, Zafina

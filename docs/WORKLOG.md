@@ -24,24 +24,26 @@
 | `20b47fd` | Oct 18, 2026 | **refactor(ui):** Comprehensive platform button audit. Retained all 198 functional interactive buttons (roster, moves explorer, combo lab, matchup combat lab, reaction trainer, character dossiers, blueprints, compendium). Pruned 17 unattached dead buttons across 4 orphaned modals (`#favoritesModal`, `#settingsModal`, `#notationGuideModal`, `#practiceNotesModal`) whose navbar triggers were removed previously. 148/148 tests passing. |
 | `b7069c8` | Oct 19, 2026 | **feat(story-stages-typography):** Ingested all 43 fighter stories, alliances, combat strengths (taqat), and weaknesses (kamzoriyan) from `story.docx` into character profiles and dossiers. Re-architected Battle Stages: eliminated sidebar column, introduced glowing cyber dropdown selection at section top, expanded arena imagery to full responsive scale with cinematic toggle, and removed internal scrolling constraints for 100% visible stage intelligence. Replaced entire site typography with Google Fonts `Plus Jakarta Sans`, `Chakra Petch`, and `JetBrains Mono` for maximum readability. 148/148 tests passing. |
 | `c628e91` | Oct 19, 2026 | **feat(ui-ux-modernization):** 1. Combo Lab 1-per-row full-width cards with natural content height. 2. Expanded character roster cards (`minmax(215px, 1fr)`) with zero text collision and solid Tekken 8 themed buttons (Cyan Dossier, Gold Matchup, Crimson Combos). 3. 2026 Next-Gen Cyber Dropdowns with obsidian glass and custom SVG chevrons. 4. Enlarged Hero Section with clamp display typography and prominent stats. 5. Large Tables Architecture: Replaced dense spreadsheets with interactive 10-Hit Sequential Stepper Flow (10-node timeline with low parry alerts) and Blender Protocol Tactical Decision Cards (two-tone survival split: fatal mistake vs verified escape, with 1-click drill copy) + dual-mode table toggle. 148/148 tests passing. |
+| `1cb48c1` | Oct 19, 2026 | **feat(combos-nav-cleanup):** 1. Removed Notation Engine section and modal test button. 2. Repaired mobile navigation drawer with fixed top-anchored layout, frosted glass backdrop, and responsive toggle. 3. Ingested all 79 high-damage optimal combo routes from `tekken8_high_damage_combos.txt` into `tekken8_fyp.db` and `init_db.py`. 4. Verified 79/79 combos match user data with 100% precision. 148/148 tests passing. |
 
 ---
 
 ## 2. Current Session Task
 
-- **Task Name:** Ultimate Combo Lab Width, Roster Card/Button Theming, 2026 Cyber Dropdowns, Enlarged Hero Banner, and Large Tables Architecture (10-Hit Stepper & Blender Decision Cards).
+- **Task Name:** Notation Engine Removal, Mobile Navbar Repair, and High-Damage Combos Ingestion & Verification.
 - **Objective:**
-  1. Expand TEKKEN 8 ULTIMATE COMBO LAB cards to 1 card per row (`grid-template-columns: 1fr; width: 100%; height: auto;`).
-  2. Increase fighter roster card width and height to guarantee clear visibility of all text, names, and attributes; align button colors to the solid Tekken 8 color theme.
-  3. Redesign all dropdowns to look like a modern 2026 gaming web portal, removing generic AI looks with obsidian glass, custom SVG chevron arrow, and neon cyan rings.
-  4. Enlarge the Hero Section with increased height, clamp display typography, and prominent meta stats.
-  5. Architect and implement an expert UI/UX solution for large tables: interactive 10-Hit Sequential Stepper Track and Blender Protocol Tactical Decision Cards with dual-mode table toggles.
+  1. Remove "Notation Engine Prototype" section (`#notation`) from HTML and its modal trigger `#miBtnTestNotation`.
+  2. Fix mobile navbar menu failing to open on mobile screens by resolving `overflow: hidden` bounding, conflicting media query rules, and anchoring fixed slide-down drawer with backdrop.
+  3. Ingest all 79 high-damage optimal combo routes from `tekken8_high_damage_combos.txt` across 15 characters into `tekken8_fyp.db` and `SAMPLE_COMBOS_DATA` in `init_db.py`.
+  4. Formally verify all 79 combo routes match the user's data with 100% precision.
 - **Deliverables:**
-  1. `frontend/assets/css/style.css` (1-per-row combo cards, enlarged roster cards with solid Tekken 8 themed buttons, 2026 cyber dropdowns, enlarged hero banner, 10-hit stepper track CSS, and blender protocol decision cards CSS)
-  2. `frontend/assets/js/app.js` (dual-mode view switchers, 10-step visual timeline generator with low parry alerts, emergency scenario card generator with two-tone survival split, and drill copy helper)
-  3. `frontend/index.html` & `index.html` (100% synchronized)
-  4. `docs/WORKLOG.md` (updated operational log)
-- **Execution Mode:** 100% Native Vanilla ES6, HTML5, CSS3. Zero framework bloat. Full database preservation (`tekken8_fyp.db` untouched). 148/148 tests passing.
+  1. `frontend/index.html` & `index.html` (Notation Engine removed, mobile navigation preserved, 100% synchronized)
+  2. `frontend/assets/css/style.css` (Fixed mobile drawer layout, removed conflicting 768px nav-links overrides, high z-index backdrop)
+  3. `frontend/assets/js/app.js` (Null-safe guards for notation rendering and input listeners)
+  4. `backend/app/database/init_db.py` & `tekken8_fyp.db` (All 79 combos seeded with exact hits, damage scaling, conditions, and stage notes)
+  5. `scripts/seed_high_damage_combos.py`, `scripts/append_combos_to_init_db.py`, `scripts/verify_high_damage_combos.py`
+  6. `docs/WORKLOG.md` (Updated operational activity log)
+- **Execution Mode:** 100% Native Vanilla ES6, HTML5, CSS3. Zero framework bloat. Full database preservation. 148/148 tests passing.
 
 ---
 

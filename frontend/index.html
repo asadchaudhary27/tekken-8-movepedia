@@ -635,68 +635,6 @@
         </div>
       </div>
 
-    </section>
-      <section id="notation" class="section-notation">
-      <div class="section-header-row">
-        <div>
-          <h2 class="section-title">NOTATION ENGINE PROTOTYPE</h2>
-          <p style="color:var(--text-muted); font-size:0.85rem;">Translates raw Tekken notation into 4 standardized display projections in real-time</p>
-        </div>
-        <div class="controller-toggle-group">
-          <button class="ctl-btn active" data-layout="PLAYSTATION">PlayStation (□, △, ✕, ○)</button>
-          <button class="ctl-btn" data-layout="XBOX">Xbox (X, Y, A, B)</button>
-          <button class="ctl-btn" data-layout="ARCADE">Arcade (1, 2, 3, 4)</button>
-        </div>
-      </div>
-
-      <div class="notation-input-bar">
-        <input type="text" id="notationInput" class="notation-input" value="df+2" placeholder="Try df+2, f,n,d,df+2, 1+2, f,f+1+2, b+1+2, or any notation...">
-        <div class="notation-icon-bar" id="notationIconBar">
-          <img src="/assets/icons/df.svg" alt="df" class="notation-bar-icon" onclick="insertNotationToken('df')">
-          <img src="/assets/icons/f.svg" alt="f" class="notation-bar-icon" onclick="insertNotationToken('f')">
-          <img src="/assets/icons/d.svg" alt="d" class="notation-bar-icon" onclick="insertNotationToken('d')">
-          <img src="/assets/icons/b.svg" alt="b" class="notation-bar-icon" onclick="insertNotationToken('b')">
-          <img src="/assets/icons/1.svg" alt="1" class="notation-bar-icon" onclick="insertNotationToken('1')">
-          <img src="/assets/icons/2.svg" alt="2" class="notation-bar-icon" onclick="insertNotationToken('2')">
-          <img src="/assets/icons/3.svg" alt="3" class="notation-bar-icon" onclick="insertNotationToken('3')">
-          <img src="/assets/icons/4.svg" alt="4" class="notation-bar-icon" onclick="insertNotationToken('4')">
-          <img src="/assets/icons/1+2.svg" alt="1+2" class="notation-bar-icon" onclick="insertNotationToken('1+2')">
-          <img src="/assets/icons/heat.svg" alt="heat" class="notation-bar-icon" onclick="insertNotationToken('heat')">
-        </div>
-      </div>
-
-      <div id="unsupportedAlert" style="display:none; background:rgba(255,190,11,0.15); border:1px solid var(--accent-gold); color:var(--accent-gold); padding:0.6rem 1rem; border-radius:4px; font-size:0.8rem; margin-bottom:1rem;"></div>
-
-      <div class="notation-modes-grid">
-        <!-- Mode 1: Arrows -->
-        <div class="notation-mode-card">
-          <span class="mode-badge">Mode 1 • Directional Arrows</span>
-          <div id="modeArrow" class="mode-value">↘ + 2</div>
-          <p style="font-size:0.75rem; color:var(--text-dim);">9 canonical directions (↑, ↖, ↗, ←, •, →, ↙, ↓, ↘)</p>
-        </div>
-
-        <!-- Mode 2: English -->
-        <div class="notation-mode-card">
-          <span class="mode-badge">Mode 2 • English Names</span>
-          <div id="modeEnglish" class="mode-value">Down Forward + Right Punch</div>
-          <p style="font-size:0.75rem; color:var(--text-dim);">Full English terminology for directions &amp; attack limbs</p>
-        </div>
-
-        <!-- Mode 3: Numpad -->
-        <div class="notation-mode-card">
-          <span class="mode-badge">Mode 3 • Numpad Notation</span>
-          <div id="modeNumpad" class="mode-value">3 + 2</div>
-          <p style="font-size:0.75rem; color:var(--text-dim);">Direction (1-9) and attack buttons separated</p>
-        </div>
-
-        <!-- Mode 4: Controller -->
-        <div class="notation-mode-card">
-          <span class="mode-badge">Mode 4 • Physical Controller</span>
-          <div id="modeController" class="mode-value">↘ + △</div>
-          <p style="font-size:0.75rem; color:var(--text-dim);">Configurable console &amp; arcade button labels</p>
-        </div>
-      </div>
-    </section>
     </div>
 
     <!-- ==========================================================================
@@ -2800,8 +2738,7 @@
           </div>
         </div>
 
-        <div class="practice-modal-footer" style="padding:1rem 1.25rem; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.08); background:rgba(0,0,0,0.25);">
-          <button type="button" class="btn btn-secondary" id="miBtnTestNotation">🕹️ Test In Notation Engine</button>
+        <div class="practice-modal-footer" style="padding:1rem 1.25rem; display:flex; justify-content:flex-end; align-items:center; border-top:1px solid rgba(255,255,255,0.08); background:rgba(0,0,0,0.25);">
           <button type="button" class="btn btn-secondary" onclick="closeMoveDetailModal()">Close Inspector</button>
         </div>
       </div>
