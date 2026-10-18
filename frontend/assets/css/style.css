@@ -14625,111 +14625,722 @@ body.mode-pro .essentials-only-feature {
 /* ==========================================================================
    PART 1: WORLD-FAMOUS DESIGN SYSTEM ENHANCEMENTS & TEKKEN 8 CYBER-BRUTALISM
    Based on world_famous_ui_tekken_8_design_system.md
-   - Linear.app & Vercel Spotlight Border Glow Cards
-   - Tekken 8 Slanted Cyber Action Buttons & Neon Badges
-   - High-Contrast Frame Data Visual Indicators (Wavu Wiki & TekkenDocs Standard)
+   - Non-Overlapping Character Roster Cards (Solid Carbon Glass & Clean Spacing)
+   - Tekken 8 Slanted Cyber Action Buttons & 100% Solid Non-Transparent Colors
+   - Universal High-Visibility Button System Across Entire Platform
    - Distinct Section Demarcations & Mobile Device Optimization
    ========================================================================== */
 
-/* 1. Linear & Vercel Spotlight Card Surfaces with Hairline Highlight */
-.roster-fighter-card,
-.core-weapon-card,
-.bnb-combo-hero,
-.combo-card,
-.stage-card,
-.analyzer-control-card,
-.cheat-sheet-card,
-.sidebar-box,
-.character-dossier-card,
-.faceoff-hero-banner {
-  background: linear-gradient(180deg, rgba(20, 24, 35, 0.92) 0%, rgba(10, 12, 18, 0.98) 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 6px 20px rgba(0, 0, 0, 0.5) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+/* 1. NON-OVERLAPPING CHARACTER ROSTER GRID & CARDS */
+.roster-grid-container {
+  width: 100% !important;
+  margin-top: 0.75rem !important;
+  overflow: visible !important;
 }
 
-.roster-fighter-card:hover,
-.core-weapon-card:hover,
-.combo-card:hover,
-.stage-card:hover {
+.roster-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)) !important;
+  gap: 16px !important;
+  max-height: none !important;
+  overflow: visible !important;
+  padding: 8px 4px !important;
+}
+
+.roster-fighter-card {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  background: linear-gradient(180deg, #161B27 0%, #0F131D 100%) !important;
+  border: 2px solid #232D42 !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  outline: none !important;
+  isolation: isolate !important;
+  z-index: 1 !important;
+  box-sizing: border-box !important;
+}
+
+.roster-fighter-card:hover {
+  transform: translateY(-4px) !important;
+  border-color: #00F0FF !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.8), 0 0 18px rgba(0, 240, 255, 0.35) !important;
+  z-index: 5 !important;
+}
+
+.roster-fighter-card.active {
   border-color: #FF0055 !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 0 25px rgba(255, 0, 85, 0.35), 0 10px 30px rgba(0, 0, 0, 0.7) !important;
-  transform: translateY(-3px) scale(1.01) !important;
+  box-shadow: 0 0 20px rgba(255, 0, 85, 0.5), inset 0 0 10px rgba(255, 0, 85, 0.25) !important;
 }
 
-/* 2. Tekken 8 Slanted Aggressive Gaming Buttons */
+.roster-avatar-wrap {
+  position: relative !important;
+  width: 100% !important;
+  height: 135px !important;
+  overflow: hidden !important;
+  background: #090C12 !important;
+}
+
+.roster-avatar {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: top center !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.roster-fighter-card:hover .roster-avatar {
+  transform: scale(1.08) !important;
+}
+
+.roster-avatar-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 65%, #161B27 100%);
+}
+
+.roster-dlc-tag {
+  position: absolute !important;
+  top: 8px !important;
+  left: 8px !important;
+  z-index: 4 !important;
+  background: #F59E0B !important;
+  color: #0A0D14 !important;
+  font-size: 0.62rem !important;
+  font-weight: 900 !important;
+  padding: 2px 7px !important;
+  border-radius: 3px !important;
+  letter-spacing: 0.05em !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8) !important;
+  pointer-events: none !important;
+}
+
+.btn-roster-fav {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  z-index: 4 !important;
+  width: 26px !important;
+  height: 26px !important;
+  background: #182030 !important;
+  border: 1.5px solid #3B4A66 !important;
+  color: #94A3B8 !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.8rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  line-height: 1 !important;
+}
+
+.btn-roster-fav:hover,
+.btn-roster-fav.active {
+  background: #2B2005 !important;
+  border-color: #F59E0B !important;
+  color: #FBBF24 !important;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.6) !important;
+}
+
+.roster-active-indicator {
+  position: absolute !important;
+  bottom: 8px !important;
+  left: 8px !important;
+  z-index: 4 !important;
+  background: #FF0055 !important;
+  color: #FFFFFF !important;
+  font-size: 0.58rem !important;
+  font-weight: 900 !important;
+  padding: 2px 7px !important;
+  border-radius: 3px !important;
+  letter-spacing: 0.06em !important;
+  box-shadow: 0 2px 8px rgba(255, 0, 85, 0.7) !important;
+  pointer-events: none !important;
+}
+
+.roster-card-info {
+  padding: 10px 10px 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+  flex: 1 !important;
+  background: #121622 !important;
+  border-top: 1px solid #1F273A !important;
+}
+
+.roster-card-name {
+  font-size: 0.92rem !important;
+  font-weight: 900 !important;
+  color: #FFFFFF !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  margin: 0 !important;
+  line-height: 1.2 !important;
+}
+
+.roster-card-style {
+  font-size: 0.7rem !important;
+  color: #00F0FF !important;
+  font-weight: 700 !important;
+  font-family: var(--font-mono, monospace) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  margin-bottom: 2px !important;
+  line-height: 1.2 !important;
+}
+
+.roster-card-meta {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  flex-wrap: nowrap !important;
+  margin-bottom: 4px !important;
+}
+
+.roster-chip {
+  height: 20px !important;
+  font-size: 0.62rem !important;
+  font-weight: 800 !important;
+  padding: 0 6px !important;
+  border-radius: 3px !important;
+  line-height: 1 !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+}
+
+.roster-chip.hb-standard {
+  background: #1C2333 !important;
+  color: #94A3B8 !important;
+  border: 1px solid #2F3D57 !important;
+}
+
+.roster-chip.hb-compact {
+  background: #2D1426 !important;
+  color: #F472B6 !important;
+  border: 1px solid #701A75 !important;
+}
+
+.roster-chip.hb-big {
+  background: #0C283E !important;
+  color: #38BDF8 !important;
+  border: 1px solid #0369A1 !important;
+}
+
+.roster-chip.hb-bear {
+  background: #2D1E05 !important;
+  color: #FBBF24 !important;
+  border: 1px solid #B45309 !important;
+}
+
+.roster-chip.chip-dlc {
+  background: #2D2005 !important;
+  color: #FBBF24 !important;
+  border: 1px solid #D97706 !important;
+  font-weight: 900 !important;
+}
+
+.roster-chip.chip-base {
+  background: #181E2B !important;
+  color: #94A3B8 !important;
+  border: 1px solid #2B384F !important;
+}
+
+.roster-card-actions {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 4px !important;
+  margin-top: auto !important;
+  padding: 3px !important;
+  background: #0E121B !important;
+  border-radius: 6px !important;
+  border: 1px solid #1C2436 !important;
+}
+
+.btn-roster-action,
+.btn-roster-profile-link {
+  height: 28px !important;
+  background: #182030 !important;
+  border: 1px solid #2D3A50 !important;
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+  font-size: 0.68rem !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  text-decoration: none !important;
+  padding: 0 2px !important;
+  box-sizing: border-box !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+}
+
+.btn-roster-dossier:hover,
+.btn-roster-profile-link:hover {
+  background: #00F0FF !important;
+  color: #090A0F !important;
+  border-color: #00F0FF !important;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.6) !important;
+}
+
+.btn-roster-matchup:hover,
+.btn-roster-profile-link.matchup:hover {
+  background: #FF0055 !important;
+  color: #FFFFFF !important;
+  border-color: #FF0055 !important;
+  box-shadow: 0 0 10px rgba(255, 0, 85, 0.6) !important;
+}
+
+.btn-roster-combos:hover,
+.btn-roster-profile-link.combo:hover {
+  background: #F59E0B !important;
+  color: #090A0F !important;
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.6) !important;
+}
+
+/* 2. TEKKEN 8 BUTTON DESIGNS ACROSS ENTIRE PLATFORM (ZERO TRANSPARENCY) */
+/* All Base Buttons */
+.btn {
+  background: #182032 !important;
+  border: 1.5px solid #2F3E5C !important;
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn:active {
+  transform: translateY(1px) !important;
+}
+
+/* Primary Action Buttons (Tekken Crimson Gradient with Slanted Style) */
+.btn-primary,
 .btn-hero-primary,
 .btn-run-analysis,
-.btn-primary {
+.btn-admin-submit,
+.btn-summary-jump.primary {
   background: linear-gradient(135deg, #FF0055 0%, #D90429 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  color: #ffffff !important;
+  border: 2px solid #FF3366 !important;
+  color: #FFFFFF !important;
   font-weight: 900 !important;
   letter-spacing: 0.08em !important;
   text-transform: uppercase !important;
+  box-shadow: 0 0 20px rgba(255, 0, 85, 0.6) !important;
   transform: skewX(-6deg);
-  box-shadow: 0 0 20px rgba(255, 0, 85, 0.45) !important;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
   position: relative;
   overflow: hidden;
 }
 
+.btn-primary > *,
 .btn-hero-primary > *,
 .btn-run-analysis > *,
-.btn-primary > * {
+.btn-admin-submit > *,
+.btn-summary-jump.primary > * {
   transform: skewX(6deg);
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
 }
 
+.btn-primary:hover,
 .btn-hero-primary:hover,
 .btn-run-analysis:hover,
-.btn-primary:hover {
+.btn-admin-submit:hover,
+.btn-summary-jump.primary:hover {
   background: linear-gradient(135deg, #00F0FF 0%, #0077FF 100%) !important;
   color: #090A0F !important;
-  border-color: rgba(255, 255, 255, 0.4) !important;
-  box-shadow: 0 0 30px rgba(0, 240, 255, 0.75) !important;
+  border-color: #00F0FF !important;
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.9) !important;
   transform: skewX(-6deg) translateY(-2px);
 }
 
+/* Secondary Action Buttons (Solid Carbon Armor) */
+.btn-secondary,
 .btn-hero-secondary,
-.btn-secondary {
-  background: rgba(18, 21, 31, 0.85) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
-  color: #e2e8f0 !important;
-  font-weight: 700 !important;
+.empty-action,
+.btn-modal-close,
+.btn-tb-reset,
+.btn-clear-search,
+.btn-clear-compare {
+  background: #182032 !important;
+  border: 2px solid #2F3E5C !important;
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
   letter-spacing: 0.05em !important;
   text-transform: uppercase !important;
-  transition: all 0.25s ease !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
 }
 
+.btn-secondary:hover,
 .btn-hero-secondary:hover,
-.btn-secondary:hover {
+.empty-action:hover,
+.btn-modal-close:hover,
+.btn-tb-reset:hover,
+.btn-clear-search:hover,
+.btn-clear-compare:hover {
+  background: #24304A !important;
   border-color: #00F0FF !important;
-  color: #ffffff !important;
-  box-shadow: 0 0 20px rgba(0, 240, 255, 0.35) !important;
+  color: #00F0FF !important;
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.5) !important;
   transform: translateY(-2px);
 }
 
-/* 3. Distinct Section Demarcations & Separation */
+/* Navbar Action Buttons (Solid Themed Surfaces) */
+.btn-nav-notation {
+  background: #0E1B2E !important;
+  border: 1.5px solid #00F0FF !important;
+  color: #00F0FF !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.3) !important;
+}
+.btn-nav-notation:hover {
+  background: #00F0FF !important;
+  color: #090A0F !important;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.7) !important;
+  transform: translateY(-1px);
+}
+
+.btn-nav-tactics {
+  background: #1F122E !important;
+  border: 1.5px solid #A855F7 !important;
+  color: #D8B4FE !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.3) !important;
+}
+.btn-nav-tactics:hover {
+  background: #A855F7 !important;
+  color: #090A0F !important;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.7) !important;
+  transform: translateY(-1px);
+}
+
+.btn-nav-notes {
+  background: #2B1D04 !important;
+  border: 1.5px solid #F59E0B !important;
+  color: #FCD34D !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.3) !important;
+}
+.btn-nav-notes:hover {
+  background: #F59E0B !important;
+  color: #090A0F !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.7) !important;
+  transform: translateY(-1px);
+}
+
+.btn-nav-share {
+  background: #2B0D16 !important;
+  border: 1.5px solid #FF0055 !important;
+  color: #FFA3BA !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 10px rgba(255, 0, 85, 0.3) !important;
+}
+.btn-nav-share:hover {
+  background: #FF0055 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 20px rgba(255, 0, 85, 0.7) !important;
+  transform: translateY(-1px);
+}
+
+.btn-nav-fav {
+  background: #2B1F04 !important;
+  border: 1.5px solid #EAB308 !important;
+  color: #FDE047 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 10px rgba(234, 179, 8, 0.3) !important;
+}
+.btn-nav-fav:hover {
+  background: #EAB308 !important;
+  color: #090A0F !important;
+  box-shadow: 0 0 20px rgba(234, 179, 8, 0.7) !important;
+  transform: translateY(-1px);
+}
+
+.btn-nav-gear {
+  background: #161E2D !important;
+  border: 1.5px solid #475569 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 10px rgba(71, 85, 105, 0.3) !important;
+}
+.btn-nav-gear:hover {
+  background: #334155 !important;
+  border-color: #94A3B8 !important;
+  color: #FFFFFF !important;
+  transform: rotate(45deg);
+}
+
+.btn-swagger {
+  background: #101B2E !important;
+  border: 1.5px solid #3B82F6 !important;
+  color: #60A5FA !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.3) !important;
+}
+.btn-swagger:hover {
+  background: #3B82F6 !important;
+  color: #090A0F !important;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.7) !important;
+  transform: translateY(-1px);
+}
+
+/* Universal Controller Button Mapping Toggle (1·2·3·4 / PS / XB) */
+.nav-ctl-btn {
+  background: #161D2B !important;
+  border: 1px solid #2F3D55 !important;
+  color: #94A3B8 !important;
+  font-weight: 800 !important;
+  transition: all 0.2s ease !important;
+}
+
+.nav-ctl-btn.active {
+  background: linear-gradient(135deg, #FF0055 0%, #D90429 100%) !important;
+  border-color: #FF5588 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 12px rgba(255, 0, 85, 0.6) !important;
+}
+
+.nav-ctl-btn:hover:not(.active) {
+  background: #232C3D !important;
+  color: #FFFFFF !important;
+  border-color: #475569 !important;
+}
+
+/* Roster Filter Pills & All Filter Buttons (Solid Opaque Surfaces) */
+.filter-btn,
+.safety-pill,
+.combo-cat-pill,
+.stage-f-pill,
+.gs-cat-pill {
+  background: #141A28 !important;
+  border: 1.5px solid #29364C !important;
+  color: #CBD5E1 !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  transition: all 0.2s ease !important;
+}
+
+.filter-btn:hover,
+.safety-pill:hover,
+.combo-cat-pill:hover,
+.stage-f-pill:hover,
+.gs-cat-pill:hover {
+  background: #1C2438 !important;
+  border-color: #00F0FF !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.35) !important;
+}
+
+.filter-btn.active,
+.safety-pill.active,
+.combo-cat-pill.active,
+.stage-f-pill.active,
+.gs-cat-pill.active {
+  background: linear-gradient(135deg, #FF0055 0%, #D90429 100%) !important;
+  border-color: #FF5588 !important;
+  color: #FFFFFF !important;
+  font-weight: 900 !important;
+  box-shadow: 0 0 14px rgba(255, 0, 85, 0.6) !important;
+}
+
+/* Specific Solid States for Safety Pills */
+.safety-pill.safe.active {
+  background: #044230 !important;
+  border-color: #10B981 !important;
+  color: #A7F3D0 !important;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.5) !important;
+}
+
+.safety-pill.unsafe.active {
+  background: #612803 !important;
+  border-color: #F59E0B !important;
+  color: #FDE68A !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.5) !important;
+}
+
+.safety-pill.launch.active {
+  background: #680E14 !important;
+  border-color: #EF4444 !important;
+  color: #FECACA !important;
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.5) !important;
+}
+
+.safety-pill.plus.active {
+  background: #063444 !important;
+  border-color: #00F0FF !important;
+  color: #A5F3FC !important;
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.5) !important;
+}
+
+.safety-pill.heat.active {
+  background: #6E2208 !important;
+  border-color: #F97316 !important;
+  color: #FED7AA !important;
+  box-shadow: 0 0 14px rgba(249, 115, 22, 0.5) !important;
+}
+
+/* Matchup Tactical Tabs (Solid Buttons) */
+.matchup-tab-btn {
+  background: #141A27 !important;
+  border: 1.5px solid #2B374D !important;
+  color: #94A3B8 !important;
+  font-weight: 800 !important;
+  transition: all 0.2s ease !important;
+}
+
+.matchup-tab-btn:hover {
+  background: #1C2438 !important;
+  color: #FFFFFF !important;
+  border-color: #475569 !important;
+}
+
+.matchup-tab-btn.active {
+  background: linear-gradient(135deg, #FF0055 0%, #D90429 100%) !important;
+  border-color: #FF5588 !important;
+  color: #FFFFFF !important;
+  font-weight: 900 !important;
+  box-shadow: 0 0 14px rgba(255, 0, 85, 0.6) !important;
+}
+
+/* Matchup Tactical Condition Toggles (Solid Buttons) */
+.cond-pill {
+  background: #141A27 !important;
+  border: 1px solid #2B374D !important;
+  color: #94A3B8 !important;
+  font-weight: 800 !important;
+}
+
+.cond-pill:hover {
+  background: #1E273A !important;
+  color: #FFFFFF !important;
+}
+
+.cond-pill.active {
+  background: linear-gradient(135deg, #00F0FF 0%, #0077FF 100%) !important;
+  color: #090A0F !important;
+  border-color: #00F0FF !important;
+  font-weight: 900 !important;
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.6) !important;
+}
+
+/* Matchup Swap and Randomizer Buttons */
+.btn-random-fighter {
+  background: #161D2B !important;
+  border: 1.5px solid #334155 !important;
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+}
+
+.btn-random-fighter:hover {
+  background: #222D42 !important;
+  border-color: #00F0FF !important;
+  color: #00F0FF !important;
+}
+
+.btn-swap-fighters {
+  background: #24111E !important;
+  border: 1.5px solid #FF0055 !important;
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 10px rgba(255, 0, 85, 0.35) !important;
+}
+
+.btn-swap-fighters:hover {
+  background: #FF0055 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 20px rgba(255, 0, 85, 0.7) !important;
+}
+
+/* Jump & Progressive Disclosure Buttons */
+.btn-progressive-toggle {
+  background: #111C2E !important;
+  border: 1.5px solid #00F0FF !important;
+  color: #00F0FF !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.3) !important;
+}
+
+.btn-progressive-toggle:hover {
+  background: #00F0FF !important;
+  color: #090A0F !important;
+  box-shadow: 0 0 22px rgba(0, 240, 255, 0.7) !important;
+}
+
+.btn-summary-jump {
+  background: #161D2B !important;
+  border: 1.5px solid #2E3B52 !important;
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+}
+
+.btn-summary-jump:hover {
+  background: #222D42 !important;
+  border-color: #00F0FF !important;
+  color: #00F0FF !important;
+}
+
+.btn-summary-jump.profile {
+  background: #0E1B2E !important;
+  border-color: #00F0FF !important;
+  color: #00F0FF !important;
+}
+
+.btn-summary-jump.combo {
+  background: #241804 !important;
+  border-color: #F59E0B !important;
+  color: #FCD34D !important;
+}
+
+/* View Mode Switcher (Grid vs Ribbon) */
+.view-toggle-btn {
+  background: #141A27 !important;
+  border: 1.5px solid #2B374D !important;
+  color: #94A3B8 !important;
+  font-weight: 800 !important;
+}
+
+.view-toggle-btn.active {
+  background: #1C273C !important;
+  border-color: #00F0FF !important;
+  color: #00F0FF !important;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.4) !important;
+}
+
+/* 3. DISTINCT SECTION DEMARCATIONS */
 .section-choose-fighter,
 .section-moves,
 .section-analyzer,
 .section-stages,
 .section-tactics,
 .combo-lab-wrap {
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  background: rgba(14, 18, 27, 0.7);
-  padding: 1.5rem;
-  margin-bottom: 2.5rem;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  position: relative !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  background: rgba(14, 18, 27, 0.85) !important;
+  padding: 1.5rem !important;
+  margin-bottom: 2.5rem !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important;
 }
 
-/* Glowing Top Accent Line for Each Section */
 .section-choose-fighter::before,
 .section-moves::before,
 .section-analyzer::before,
@@ -14741,196 +15352,183 @@ body.mode-pro .essentials-only-feature {
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 3px;
   background: linear-gradient(90deg, #FF0055 0%, #00F0FF 40%, transparent 85%);
   border-radius: 12px 12px 0 0;
 }
 
-/* Technical Frame Matrix Demarcator Banner */
 .full-frame-data-section {
-  margin-top: 2rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 2rem !important;
+  padding-top: 1.25rem !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
 .technical-sheet-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  background: linear-gradient(90deg, rgba(255, 0, 85, 0.1) 0%, rgba(0, 240, 255, 0.06) 50%, rgba(10, 12, 18, 0.8) 100%);
-  border: 1px solid rgba(255, 0, 85, 0.25);
-  border-left: 4px solid #FF0055;
-  border-radius: 8px;
-  padding: 1rem 1.25rem;
-  margin-bottom: 1.25rem;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 1rem !important;
+  background: linear-gradient(90deg, rgba(255, 0, 85, 0.12) 0%, rgba(0, 240, 255, 0.08) 50%, #0E131D 100%) !important;
+  border: 1.5px solid rgba(255, 0, 85, 0.35) !important;
+  border-left: 5px solid #FF0055 !important;
+  border-radius: 8px !important;
+  padding: 1rem 1.25rem !important;
+  margin-bottom: 1.25rem !important;
 }
 
 .section-tag-badge {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.65rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #00F0FF;
-  background: rgba(0, 240, 255, 0.12);
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  padding: 2px 6px;
-  border-radius: 3px;
-  display: inline-block;
-  margin-bottom: 0.35rem;
+  font-family: var(--font-mono, monospace) !important;
+  font-size: 0.65rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: #00F0FF !important;
+  background: rgba(0, 240, 255, 0.15) !important;
+  border: 1px solid rgba(0, 240, 255, 0.4) !important;
+  padding: 2px 7px !important;
+  border-radius: 3px !important;
+  display: inline-block !important;
+  margin-bottom: 0.35rem !important;
 }
 
 .technical-sheet-title {
-  font-size: 1.15rem;
-  font-weight: 900;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: #ffffff;
-  margin: 0;
+  font-size: 1.15rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.03em !important;
+  text-transform: uppercase !important;
+  color: #ffffff !important;
+  margin: 0 !important;
 }
 
 .technical-sheet-sub {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-top: 0.25rem;
-  line-height: 1.4;
+  font-size: 0.82rem !important;
+  color: #94A3B8 !important;
+  margin-top: 0.25rem !important;
+  line-height: 1.4 !important;
 }
 
-/* 4. Frame Data Color Coding Standards */
-.frame-safe {
-  color: #9CA3AF !important; /* Neutral Safe */
+/* 4. RESPONSIVE BREAKPOINTS (MOBILE & TABLET CLEAN SEPARATION) */
+@media (max-width: 1024px) {
+  .roster-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+    gap: 14px !important;
+  }
 }
 
-.frame-plus {
-  color: #00F0FF !important; /* Plus on Block */
-  font-weight: 800;
-  text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
-}
-
-.frame-launch-punish {
-  color: #FF0055 !important; /* Launch Punishable */
-  font-weight: 900;
-  background: rgba(255, 0, 85, 0.15);
-  padding: 2px 6px;
-  border-radius: 4px;
-  border: 1px solid rgba(255, 0, 85, 0.35);
-}
-
-/* 5. Mobile & Device Optimization */
 @media (max-width: 768px) {
-  /* Navbar */
   .navbar {
-    padding: 0.5rem 0.75rem;
-    gap: 0.4rem;
+    padding: 0.5rem 0.75rem !important;
+    gap: 0.4rem !important;
   }
 
   .nav-actions {
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    padding: 2px 0;
-    max-width: 100%;
-    gap: 0.35rem;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 3px 0 !important;
+    max-width: 100% !important;
+    gap: 0.4rem !important;
   }
 
   .nav-actions::-webkit-scrollbar {
-    display: none;
+    display: none !important;
   }
 
   .btn-nav-notation .nav-btn-text,
   .btn-nav-tactics .nav-btn-text,
   .btn-nav-notes .nav-btn-text,
   .btn-nav-share .nav-btn-text {
-    display: none;
+    display: none !important;
   }
 
   .btn-nav-fav .fav-label {
-    display: none;
+    display: none !important;
   }
 
-  /* Section padding on mobile */
   .section-choose-fighter,
   .section-moves,
   .section-analyzer,
   .section-stages,
   .section-tactics,
   .combo-lab-wrap {
-    padding: 1rem 0.75rem;
-    border-radius: 10px;
-    margin-bottom: 1.5rem;
+    padding: 1rem 0.75rem !important;
+    border-radius: 10px !important;
+    margin-bottom: 1.5rem !important;
   }
 
-  /* Roster on small tablets */
   .roster-grid {
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
-    gap: 8px !important;
-    max-height: 520px;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 12px !important;
   }
 
-  /* Moves table horizontal scrolling with touch momentum */
   .moves-table-container,
   .analyzer-table-container {
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch !important;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 8px;
-    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 8px !important;
+    position: relative !important;
   }
 
-  /* Sticky first column on mobile so move name stays visible */
   .moves-table th:first-child,
   .moves-table td:first-child {
-    position: sticky;
-    left: 0;
-    z-index: 5;
-    background: #0e121b;
-    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.5);
+    position: sticky !important;
+    left: 0 !important;
+    z-index: 5 !important;
+    background: #0E121B !important;
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.5) !important;
   }
 }
 
-@media (max-width: 480px) {
-  /* Ultra Clean 2-Column Roster Grid on Mobile */
+@media (max-width: 540px) {
+  /* Clean 2-Column Mobile Grid - No Overlapping Guaranteed */
   .roster-grid {
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 8px !important;
-    max-height: 480px !important;
+    gap: 10px !important;
   }
 
   .roster-avatar-wrap {
-    height: 110px !important;
+    height: 115px !important;
   }
 
   .roster-card-name {
-    font-size: 0.8rem !important;
+    font-size: 0.84rem !important;
   }
 
   .roster-card-style {
-    font-size: 0.62rem !important;
+    font-size: 0.65rem !important;
   }
 
   .roster-card-actions {
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 2px !important;
+    gap: 3px !important;
   }
 
   .btn-roster-action,
   .btn-roster-profile-link {
-    height: 28px !important; /* Touch-friendly tap target */
+    height: 28px !important;
     font-size: 0.64rem !important;
     padding: 0 1px !important;
   }
 
   .technical-sheet-banner {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0.85rem;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 0.85rem !important;
   }
 
   .technical-sheet-title {
-    font-size: 1rem;
+    font-size: 1rem !important;
   }
 }
+
+@media (max-width: 360px) {
+  .roster-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+}
+
 
 
 
