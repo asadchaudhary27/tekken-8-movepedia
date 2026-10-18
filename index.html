@@ -14,11 +14,11 @@
 <body>
 
   <!-- Premium Top Navigation Bar -->
+  <!-- Mobile Navigation Backdrop Overlay (Full-Viewport Dim & Blur) -->
+  <div class="nav-mobile-backdrop" id="navMobileBackdrop"></div>
+
   <!-- Premium Top Navigation Bar (Design 1: Kazuya Left / Jin Right Battle Clash) -->
   <header class="navbar navbar-theme-clash" id="topNavbar">
-    <!-- Mobile Navigation Backdrop Overlay -->
-    <div class="nav-mobile-backdrop" id="navMobileBackdrop"></div>
-
     <!-- Clash Artwork Endcaps -->
     <div class="nav-art-kazuya" aria-hidden="true"></div>
     <div class="nav-art-jin" aria-hidden="true"></div>
@@ -259,7 +259,7 @@
             <span class="badge">KEY GAMEPLAN WEAPONS</span>
           </div>
           <button type="button" class="btn-progressive-toggle" id="btnToggleFullFrameData" onclick="toggleFullFrameSheet()" title="Scroll or toggle Technical Frame Matrix">
-            <span id="btnToggleFullFrameText">📊 Full Technical Matrix (Active)</span>
+            <span id="btnToggleFullFrameText">📊 View Full Technical Matrix</span>
             <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
         </div>
@@ -268,8 +268,8 @@
         </div>
       </div>
 
-      <!-- Distinct Section Demarcator: Full Technical Frame Matrix (Always Visible) -->
-      <div id="fullFrameDataSheet" class="full-frame-data-section">
+      <!-- Distinct Section Demarcator: Full Technical Frame Matrix (Hidden by Default) -->
+      <div id="fullFrameDataSheet" class="full-frame-data-section" style="display: none;">
         <div class="technical-sheet-banner">
           <div class="technical-sheet-title-col">
             <span class="section-tag-badge">TECHNICAL SPREADSHEET</span>
@@ -1162,140 +1162,137 @@
 
           <!-- TAB PANEL 2: Punishment & Defense -->
           <div class="matchup-tab-panel" id="panel-punish">
-            <div class="panel-two-col-grid">
+            <div class="panel-punish-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
               
-              <!-- Left Column: Punish Matrix -->
-              <div class="panel-col">
-                <!-- SECTION 7: Defensive Options & Guaranteed Punish Matrix -->
-                <div class="dash-card">
-                  <div class="dash-card-header">
-                    <div class="dash-card-title">
-                      <svg viewBox="0 0 24 24" width="18" height="18" stroke="#ff1e38" stroke-width="2.5" fill="none">
-                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                      </svg>
-                      <span>SECTION 7: GUARANTEED PUNISH MATRIX</span>
-                    </div>
-                    <span class="dash-card-pill" id="punishCountPill">0 Verified Windows</span>
+              <!-- SECTION 7: Defensive Options & Guaranteed Punish Matrix (100% Full Width) -->
+              <div class="dash-card">
+                <div class="dash-card-header">
+                  <div class="dash-card-title">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="#ff1e38" stroke-width="2.5" fill="none">
+                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                    </svg>
+                    <span>SECTION 7: GUARANTEED PUNISH MATRIX</span>
                   </div>
-                  <!-- Perspective & Direction Switcher Bar -->
-                  <div class="punish-perspective-bar" id="punishPerspectiveBar">
-                    <button type="button" class="btn-segmented active p1-active" id="btnPunishPerspP1" onclick="setPunishPerspective('P1_VS_P2')" title="View P1 Punish Opportunities against P2 Attacks">
-                      <span style="color:var(--btn-lp-cyan);">● P1 Punishing P2</span> (<span id="punishP1Count">0</span>)
-                    </button>
-                    <button type="button" class="btn-segmented" id="btnPunishPerspP2" onclick="setPunishPerspective('P2_VS_P1')" title="View P2 Punish Opportunities against P1 Attacks">
-                      <span style="color:var(--btn-rk-pink);">● P2 Punishing P1</span> (<span id="punishP2Count">0</span>)
-                    </button>
-                    <button type="button" class="btn-segmented" id="btnPunishPerspDual" onclick="setPunishPerspective('DUAL')" title="Compare P1 and P2 Punish Opportunities Side-by-Side">
-                      ⚔️ Dual Comparison
-                    </button>
-                  </div>
+                  <span class="dash-card-pill" id="punishCountPill">0 Verified Windows</span>
+                </div>
+                <!-- Perspective & Direction Switcher Bar -->
+                <div class="punish-perspective-bar" id="punishPerspectiveBar">
+                  <button type="button" class="btn-segmented active p1-active" id="btnPunishPerspP1" onclick="setPunishPerspective('P1_VS_P2')" title="View P1 Punish Opportunities against P2 Attacks">
+                    <span style="color:var(--btn-lp-cyan);">● P1 Punishing P2</span> (<span id="punishP1Count">0</span>)
+                  </button>
+                  <button type="button" class="btn-segmented" id="btnPunishPerspP2" onclick="setPunishPerspective('P2_VS_P1')" title="View P2 Punish Opportunities against P1 Attacks">
+                    <span style="color:var(--btn-rk-pink);">● P2 Punishing P1</span> (<span id="punishP2Count">0</span>)
+                  </button>
+                  <button type="button" class="btn-segmented" id="btnPunishPerspDual" onclick="setPunishPerspective('DUAL')" title="Compare P1 and P2 Punish Opportunities Side-by-Side">
+                    ⚔️ Dual Comparison
+                  </button>
+                </div>
 
-                  <!-- Startup & Stance Tactical Filters -->
-                  <div class="punish-filter-controls-row">
-                    <div class="punish-filter-subgroup">
-                      <span class="p-filter-label">Startup:</span>
-                      <div class="p-filter-pills" id="punishStartupPills">
-                        <button type="button" class="btn-segmented active" data-val="ALL" onclick="setPunishStartupFilter('ALL')">All</button>
-                        <button type="button" class="btn-segmented" data-val="I10_12" onclick="setPunishStartupFilter('I10_12')">i10–12 Jabs</button>
-                        <button type="button" class="btn-segmented" data-val="I13_14" onclick="setPunishStartupFilter('I13_14')">i13–14 Mid</button>
-                        <button type="button" class="btn-segmented" data-val="LAUNCH" onclick="setPunishStartupFilter('LAUNCH')">i15+ Launch</button>
-                      </div>
-                    </div>
-                    <div class="punish-filter-subgroup">
-                      <span class="p-filter-label">Position:</span>
-                      <div class="p-filter-pills" id="punishStancePills">
-                        <button type="button" class="btn-segmented active" data-val="ALL" onclick="setPunishStanceFilter('ALL')">All Stances</button>
-                        <button type="button" class="btn-segmented" data-val="STANDING" onclick="setPunishStanceFilter('STANDING')">🧍 Standing</button>
-                        <button type="button" class="btn-segmented" data-val="WHILE_STANDING" onclick="setPunishStanceFilter('WHILE_STANDING')">🧎 WS / Crouch</button>
-                      </div>
+                <!-- Startup & Stance Tactical Filters -->
+                <div class="punish-filter-controls-row">
+                  <div class="punish-filter-subgroup">
+                    <span class="p-filter-label">Startup:</span>
+                    <div class="p-filter-pills" id="punishStartupPills">
+                      <button type="button" class="btn-segmented active" data-val="ALL" onclick="setPunishStartupFilter('ALL')">All</button>
+                      <button type="button" class="btn-segmented" data-val="I10_12" onclick="setPunishStartupFilter('I10_12')">i10–12 Jabs</button>
+                      <button type="button" class="btn-segmented" data-val="I13_14" onclick="setPunishStartupFilter('I13_14')">i13–14 Mid</button>
+                      <button type="button" class="btn-segmented" data-val="LAUNCH" onclick="setPunishStartupFilter('LAUNCH')">i15+ Launch</button>
                     </div>
                   </div>
-
-                  <div class="punish-table-wrap">
-                    <table class="analyzer-table" id="punishSingleTable">
-                      <thead>
-                        <tr>
-                          <th>Attacker Unsafe Move</th>
-                          <th>On Block</th>
-                          <th>Guaranteed Punisher</th>
-                          <th>Startup</th>
-                          <th>Result / Dmg</th>
-                          <th>Verification &amp; Tactical Conditions</th>
-                        </tr>
-                      </thead>
-                      <tbody id="punishMatrixBody">
-                        <!-- Rendered dynamically -->
-                      </tbody>
-                    </table>
-                    <div id="punishDualContainer" class="dual-punish-grid" style="display:none;">
-                      <!-- Dual comparison columns rendered dynamically -->
-                    </div>
-                    <div id="punishEmptyState" class="empty-state-card" style="display:none;">
-                      <div class="empty-icon">🛡️</div>
-                      <h4 class="empty-title">No Punish Windows Found</h4>
-                      <p class="empty-desc">No moves match your selected startup or stance filter for this perspective.</p>
-                      <button type="button" class="btn btn-secondary empty-action" onclick="resetPunishFilters()">Reset Punish Filters</button>
-                    </div>
-                  </div>
-
-                  <div style="margin-top:0.75rem; text-align:right;">
-                    <a href="#punish-assistant" class="btn-hero-secondary" style="display:inline-block; font-size:0.75rem; padding:0.4rem 0.85rem; border-color:var(--accent-gold); color:var(--accent-gold); text-decoration:none; border-radius:6px;">
-                      ⚡ Launch Full Smart Punishment Assistant &amp; Practice Mode &rarr;
-                    </a>
-                  </div>
-
-                  <!-- Defensive Tactics Box (Fuzzy Guard & Interrupts) -->
-                  <div class="tactical-defense-subbox">
-                    <div class="td-row">
-                      <span class="td-icon">🛡️</span>
-                      <div class="td-content">
-                        <span class="td-label">Fuzzy Guard &amp; Duckable Strings:</span>
-                        <span id="fuzzyGuardText" class="td-text">—</span>
-                      </div>
-                    </div>
-                    <div class="td-row">
-                      <span class="td-icon">⚡</span>
-                      <div class="td-content">
-                        <span class="td-label">Interrupt Opportunities:</span>
-                        <span id="interruptText" class="td-text">—</span>
-                      </div>
-                    </div>
-                    <div class="td-row">
-                      <span class="td-icon">⚠️</span>
-                      <div class="td-content">
-                        <span class="td-label">Low Defense Priority:</span>
-                        <span id="lowDefenseText" class="td-text">—</span>
-                      </div>
+                  <div class="punish-filter-subgroup">
+                    <span class="p-filter-label">Position:</span>
+                    <div class="p-filter-pills" id="punishStancePills">
+                      <button type="button" class="btn-segmented active" data-val="ALL" onclick="setPunishStanceFilter('ALL')">All Stances</button>
+                      <button type="button" class="btn-segmented" data-val="STANDING" onclick="setPunishStanceFilter('STANDING')">🧍 Standing</button>
+                      <button type="button" class="btn-segmented" data-val="WHILE_STANDING" onclick="setPunishStanceFilter('WHILE_STANDING')">🧎 WS / Crouch</button>
                     </div>
                   </div>
                 </div>
 
-                <!-- SECTION 4: Player's Useful Moves against Opponent -->
-                <div class="dash-card">
-                  <div class="dash-card-header">
-                    <div class="dash-card-title">
-                      <svg viewBox="0 0 24 24" width="18" height="18" stroke="var(--accent-cyan)" stroke-width="2.5" fill="none">
-                        <circle cx="12" cy="12" r="10"/>
-                        <polyline points="12 6 12 12 16 14"/>
-                      </svg>
-                      <span>SECTION 4: KEY TACTICAL MOVES (VS RIVAL)</span>
-                    </div>
-                    <div class="p-filter-pills" style="display:flex; align-items:center; gap:0.4rem;">
-                      <span id="usefulMovesCountPill" class="combo-count-badge" style="font-size:0.75rem; padding:0.2rem 0.5rem;">0 Moves</span>
-                      <button type="button" class="btn-segmented active" id="btnUsefulP1" onclick="setUsefulMovesPerspective('p1')">P1 Moves</button>
-                      <button type="button" class="btn-segmented" id="btnUsefulP2" onclick="setUsefulMovesPerspective('p2')">P2 Moves</button>
+                <div class="punish-table-wrap">
+                  <table class="analyzer-table" id="punishSingleTable">
+                    <thead>
+                      <tr>
+                        <th>Attacker Unsafe Move</th>
+                        <th>On Block</th>
+                        <th>Guaranteed Punisher</th>
+                        <th>Startup</th>
+                        <th>Result / Dmg</th>
+                        <th>Verification &amp; Tactical Conditions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="punishMatrixBody">
+                      <!-- Rendered dynamically -->
+                    </tbody>
+                  </table>
+                  <div id="punishDualContainer" class="dual-punish-grid" style="display:none;">
+                    <!-- Dual comparison columns rendered dynamically -->
+                  </div>
+                  <div id="punishEmptyState" class="empty-state-card" style="display:none;">
+                    <div class="empty-icon">🛡️</div>
+                    <h4 class="empty-title">No Punish Windows Found</h4>
+                    <p class="empty-desc">No moves match your selected startup or stance filter for this perspective.</p>
+                    <button type="button" class="btn btn-secondary empty-action" onclick="resetPunishFilters()">Reset Punish Filters</button>
+                  </div>
+                </div>
+
+                <div style="margin-top:0.75rem; text-align:right;">
+                  <a href="#punish-assistant" class="btn-hero-secondary" style="display:inline-block; font-size:0.75rem; padding:0.4rem 0.85rem; border-color:var(--accent-gold); color:var(--accent-gold); text-decoration:none; border-radius:6px;">
+                    ⚡ Launch Full Smart Punishment Assistant &amp; Practice Mode &rarr;
+                  </a>
+                </div>
+
+                <!-- Defensive Tactics Box (Fuzzy Guard & Interrupts) -->
+                <div class="tactical-defense-subbox">
+                  <div class="td-row">
+                    <span class="td-icon">🛡️</span>
+                    <div class="td-content">
+                      <span class="td-label">Fuzzy Guard &amp; Duckable Strings:</span>
+                      <span id="fuzzyGuardText" class="td-text">—</span>
                     </div>
                   </div>
-                  <p class="dash-card-sub">Specific pokes, whiff-punishers, keepout moves, and crush tools optimal against this rival.</p>
-
-                  <div class="useful-moves-grid" id="usefulMovesGrid">
-                    <!-- Rendered dynamically -->
+                  <div class="td-row">
+                    <span class="td-icon">⚡</span>
+                    <div class="td-content">
+                      <span class="td-label">Interrupt Opportunities:</span>
+                      <span id="interruptText" class="td-text">—</span>
+                    </div>
+                  </div>
+                  <div class="td-row">
+                    <span class="td-icon">⚠️</span>
+                    <div class="td-content">
+                      <span class="td-label">Low Defense Priority:</span>
+                      <span id="lowDefenseText" class="td-text">—</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <!-- Right Column: Dangerous Moves & Side-Step Evasion -->
-              <div class="panel-col">
+              <!-- SECTION 4: Player's Useful Moves against Opponent (100% Full Width) -->
+              <div class="dash-card">
+                <div class="dash-card-header">
+                  <div class="dash-card-title">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="var(--accent-cyan)" stroke-width="2.5" fill="none">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span>SECTION 4: KEY TACTICAL MOVES (VS RIVAL)</span>
+                  </div>
+                  <div class="p-filter-pills" style="display:flex; align-items:center; gap:0.4rem;">
+                    <span id="usefulMovesCountPill" class="combo-count-badge" style="font-size:0.75rem; padding:0.2rem 0.5rem;">0 Moves</span>
+                    <button type="button" class="btn-segmented active" id="btnUsefulP1" onclick="setUsefulMovesPerspective('p1')">P1 Moves</button>
+                    <button type="button" class="btn-segmented" id="btnUsefulP2" onclick="setUsefulMovesPerspective('p2')">P2 Moves</button>
+                  </div>
+                </div>
+                <p class="dash-card-sub">Specific pokes, whiff-punishers, keepout moves, and crush tools optimal against this rival.</p>
+
+                <div class="useful-moves-grid" id="usefulMovesGrid">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+
+              <!-- Bottom Row: Dangerous Moves & Side-Step Evasion Side-by-Side (2 Columns) -->
+              <div class="panel-two-col-grid">
                 <!-- SECTION 5: Opponent Dangerous Moves Requiring Special Attention -->
                 <div class="dash-card">
                   <div class="dash-card-header">

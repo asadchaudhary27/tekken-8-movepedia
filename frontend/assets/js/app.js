@@ -49,7 +49,7 @@ const state = {
   },
   userMode: 'pro',
   compendiumLang: localStorage.getItem('tekken8_compendium_lang') || 'en',
-  fullFrameSheetOpen: true,
+  fullFrameSheetOpen: false,
   proMatchupTelemetryOpen: true,
   sources: [],
   coverage: null,
@@ -907,12 +907,14 @@ function setupEventListeners() {
   const mainNav = document.getElementById('mainNavLinks');
   const navWrapper = document.getElementById('navLinksWrapper');
   const navBackdrop = document.getElementById('navMobileBackdrop');
+  const topNav = document.getElementById('topNavbar');
 
   function closeMobileNav() {
     if (mainNav) mainNav.classList.remove('mobile-open');
     if (navWrapper) navWrapper.classList.remove('mobile-open');
     if (mobileToggle) mobileToggle.classList.remove('active');
     if (navBackdrop) navBackdrop.classList.remove('active');
+    if (topNav) topNav.classList.remove('mobile-menu-open');
     document.body.classList.remove('nav-locked');
   }
 
@@ -925,6 +927,7 @@ function setupEventListeners() {
       if (navWrapper) navWrapper.classList.add('mobile-open');
       if (mobileToggle) mobileToggle.classList.add('active');
       if (navBackdrop) navBackdrop.classList.add('active');
+      if (topNav) topNav.classList.add('mobile-menu-open');
       document.body.classList.add('nav-locked');
     }
   }
@@ -1347,10 +1350,6 @@ function renderRosterGrid() {
               ${c.is_dlc ? '<span class="roster-chip chip-dlc">DLC S2</span>' : '<span class="roster-chip chip-base">BASE</span>'}
             </div>
             <div class="roster-card-actions" role="toolbar" aria-label="${c.name} quick actions">
-              <button type="button" class="btn-roster-action btn-roster-dossier btn-roster-profile-link" onclick="event.stopPropagation(); viewFighterProfile('${c.slug}')" title="View ${c.name} Profile Dossier" aria-label="View ${c.name} Dossier">
-                <span class="span-mother"><span>D</span><span>o</span><span>s</span><span>s</span><span>i</span><span>e</span><span>r</span></span>
-                <span class="span-mother2"><span>D</span><span>o</span><span>s</span><span>s</span><span>i</span><span>e</span><span>r</span></span>
-              </button>
               <button type="button" class="btn-roster-action btn-roster-matchup btn-roster-profile-link matchup" onclick="event.stopPropagation(); compareInMatchup('${c.slug}')" title="Compare ${c.name} in Matchup Lab" aria-label="Compare ${c.name} in Matchup Lab">
                 <span class="span-mother"><span>M</span><span>a</span><span>t</span><span>c</span><span>h</span></span>
                 <span class="span-mother2"><span>M</span><span>a</span><span>t</span><span>c</span><span>h</span></span>
@@ -7215,17 +7214,30 @@ function renderComboCard(c, playerKey) {
     `;
   }
 
+  const char = c.character || state.characters?.find(x => x.id === c.character_id || x.name === c.character_name) || (isP1 ? state.characters?.find(x => x.slug === state.comboFinder.p1Slug) : state.characters?.find(x => x.slug === state.comboFinder.p2Slug));
+  const avatarUrl = (char && char.avatar_url) ? char.avatar_url : (isP1 ? '/assets/avatars/jin-brand-256-C1-oe_x3.webp' : '/assets/avatars/kazuya-brand-256-BInk9tTm.webp');
+  const charDisplayName = c.character_name || (char ? char.name : (isP1 ? 'P1 Fighter' : 'P2 Rival'));
   const starterProperty = c.requires_ch ? 'Counter-Hit (CH)' : (c.launcher_type === 'PUNISH' ? 'Punish Starter' : 'Normal Hit');
 
   return `
     <div class="combo-route-card ${isP1 ? 'p1-card' : 'p2-card'} ${isComparing ? 'comparing' : ''}" id="cl_combo_${c.id}">
-      <div class="crc-top-row">
-        <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
-          <span class="fighter-meta-chip" style="font-size:0.68rem; font-weight:800; border-color:${isP1 ? 'var(--btn-lp-cyan)' : 'var(--btn-rk-pink)'}; color:${isP1 ? 'var(--btn-lp-cyan)' : 'var(--btn-rk-pink)'};">
-            ${isP1 ? '● P1' : '● P2'}: ${c.character_name}
-          </span>
-          <span class="crc-cat-badge ${c.category || ''}">${catLabel}</span>
-          <span class="starter-chip" style="font-size:0.65rem;">${starterProperty}</span>
+      <div class="crc-header-flex">
+        <div class="crc-fighter-portrait-col">
+          <img src="${avatarUrl}" alt="${escapeHtml(charDisplayName)}" class="crc-fighter-avatar" onerror="this.src='/assets/avatars/jin-brand-256-C1-oe_x3.webp'">
+        </div>
+        <div class="crc-header-main">
+          <div class="crc-top-meta-row">
+            <span class="fighter-meta-chip ${isP1 ? 'p1-chip' : 'p2-chip'}" style="font-size:0.68rem; font-weight:800; border-color:${isP1 ? 'var(--btn-lp-cyan)' : 'var(--btn-rk-pink)'}; color:${isP1 ? 'var(--btn-lp-cyan)' : 'var(--btn-rk-pink)'};">
+              ${isP1 ? '● P1' : '● P2'}: ${escapeHtml(charDisplayName)}
+            </span>
+            <span class="crc-cat-badge ${c.category || ''}">${catLabel}</span>
+            <span class="starter-chip" style="font-size:0.65rem;">${starterProperty}</span>
+            ${c.required_stance ? `<span class="starter-chip stance" style="font-size:0.65rem; color:#38bdf8;">Stance: ${escapeHtml(c.required_stance)}</span>` : ''}
+          </div>
+          <h4 class="crc-title">${escapeHtml(c.title || 'Standard Route')}</h4>
+          <div class="crc-starter-tag">
+            Starter: <strong>${escapeHtml(c.starter_move || 'df+2')}</strong>
+          </div>
         </div>
         <div class="crc-top-actions">
           <button type="button" class="btn-combo-action-mini ${isFav ? 'active' : ''}" onclick="toggleComboFavorite('${c.id}', '${(c.title || '').replace(/'/g, "\\'")}', '${(c.notation_sequence || '').replace(/'/g, "\\'")}')" title="Bookmark Combo">
@@ -7235,12 +7247,6 @@ function renderComboCard(c, playerKey) {
             ⚖️
           </button>
         </div>
-      </div>
-
-      <h4 class="crc-title">${c.title || 'Standard Route'}</h4>
-      <div class="crc-starter-tag">
-        Starter: <strong>${c.starter_move || 'df+2'}</strong>
-        ${c.required_stance ? `<span class="starter-chip stance" style="margin-left:0.5rem; font-size:0.65rem; color:#38bdf8;">Stance: ${c.required_stance}</span>` : ''}
       </div>
 
       <div class="crc-notation-sequence">
@@ -11572,11 +11578,11 @@ function initUserMode() {
   const btnToggleFullFrame = document.getElementById('btnToggleFullFrameData');
   const btnToggleProTelemetry = document.getElementById('btnToggleProTelemetry');
 
-  if (fullFrameSheet) fullFrameSheet.style.display = 'block';
+  if (fullFrameSheet) fullFrameSheet.style.display = 'none';
   if (proTelemetry) proTelemetry.style.display = 'block';
   if (btnToggleFullFrame) {
-    btnToggleFullFrame.classList.add('active');
-    btnToggleFullFrame.innerHTML = `<span>Technical Frame Matrix (Active)</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
+    btnToggleFullFrame.classList.remove('active');
+    btnToggleFullFrame.innerHTML = `<span>View Full Technical Matrix</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
   }
   if (btnToggleProTelemetry) {
     btnToggleProTelemetry.classList.add('active');
@@ -11922,20 +11928,24 @@ function renderBnbHeroCombo(char) {
   const hits = bnb ? (bnb.hit_count || 7) : 7;
   const starter = bnb ? (bnb.starter_move || 'df+2') : 'df+2';
 
+  const avatarUrl = (char && char.avatar_url) ? char.avatar_url : '/assets/avatars/jin-brand-256-C1-oe_x3.webp';
+
   heroEl.innerHTML = `
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.6rem;">
-      <div>
+    <div class="bnb-hero-header-flex">
+      <div class="bnb-avatar-wrap">
+        <img src="${avatarUrl}" alt="${escapeHtml(charName)}" class="bnb-hero-avatar" onerror="this.src='/assets/avatars/jin-brand-256-C1-oe_x3.webp'">
+        <span class="bnb-hero-avatar-tag">${escapeHtml(charName)}</span>
+      </div>
+      <div class="bnb-hero-main-col">
         <div class="bnb-hero-badge">⭐ UNIVERSAL BREAD &amp; BUTTER (100% RELIABLE)</div>
-        <h3 style="font-size:1.15rem; font-weight:800; color:#fff; margin-bottom:0.25rem;">${escapeHtml(title)}</h3>
-        <p style="font-size:0.78rem; color:var(--text-dim); margin-bottom:0;">
+        <h3 class="bnb-hero-title">${escapeHtml(title)}</h3>
+        <p class="bnb-hero-sub">
           The single most consistent combo route for ${escapeHtml(charName)}. Maximum reliability, zero dropped inputs, and solid wall travel.
         </p>
       </div>
-      <div style="display:flex; gap:0.6rem; align-items:center;">
-        <div style="text-align:right;">
-          <div style="font-size:1.6rem; font-weight:900; color:var(--accent-orange); font-family:var(--font-mono); line-height:1;">${dmg} <span style="font-size:0.8rem; color:var(--text-dim);">DMG</span></div>
-          <div style="font-size:0.68rem; color:var(--text-muted);">${hits} Hits | Standard Launch</div>
-        </div>
+      <div class="bnb-hero-dmg-box">
+        <div class="bnb-hero-dmg-val">${dmg} <span class="bnb-hero-dmg-unit">DMG</span></div>
+        <div class="bnb-hero-dmg-meta">${hits} Hits | Standard Launch</div>
       </div>
     </div>
 

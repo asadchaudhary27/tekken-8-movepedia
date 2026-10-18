@@ -593,7 +593,7 @@ class DataValidator:
                         )
 
                     # Invariant: Wall Break on non-wall-break stage
-                    if clean_combo_type == "WALL_BREAK" and not stage_record.wall_break:
+                    if clean_combo_type == "WALL_BREAK" and not (stage_record.wall_break or stage_record.wall_blast):
                         issues.append(
                             DataValidationIssue(
                                 entity_type="COMBO",
@@ -601,14 +601,14 @@ class DataValidator:
                                 field="stage_id",
                                 severity="ERROR",
                                 rule="STAGE_HAZARD_CONFLICT",
-                                message=f"CONFLICT: Combo is WALL_BREAK, but stage '{stage_record.name}' does not have wall breaks (wall_break=False).",
+                                message=f"CONFLICT: Combo is WALL_BREAK, but stage '{stage_record.name}' does not have wall breaks or blasts.",
                                 suggested_action="Select a stage with verified wall breaks (e.g. Ortiz Farm, Rebel Hangar).",
                                 context={"stage_id": stage_record.id, "stage_name": stage_record.name},
                             )
                         )
 
                     # Invariant: Floor Break on non-floor-break stage
-                    if clean_combo_type == "FLOOR_BREAK" and not stage_record.floor_break:
+                    if clean_combo_type == "FLOOR_BREAK" and not (stage_record.floor_break or stage_record.floor_blast):
                         issues.append(
                             DataValidationIssue(
                                 entity_type="COMBO",
@@ -616,8 +616,8 @@ class DataValidator:
                                 field="stage_id",
                                 severity="ERROR",
                                 rule="STAGE_HAZARD_CONFLICT",
-                                message=f"CONFLICT: Combo is FLOOR_BREAK, but stage '{stage_record.name}' does not have floor breaks (floor_break=False).",
-                                suggested_action="Select a stage with floor breaks (e.g. Descent into Subconscious, Sanctum).",
+                                message=f"CONFLICT: Combo is FLOOR_BREAK, but stage '{stage_record.name}' does not have floor breaks or blasts.",
+                                suggested_action="Select a stage with floor breaks or blasts (e.g. Descent into Subconscious, Sanctum, Into the Stratosphere).",
                                 context={"stage_id": stage_record.id, "stage_name": stage_record.name},
                             )
                         )
