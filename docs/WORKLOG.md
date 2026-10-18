@@ -20,20 +20,19 @@
 | `9a909c3` | Oct 18, 2026 | **feat(ui-ux-modernization):** Implemented `world_famous_ui_tekken_8_design_system.md` blueprint. Removed `#userModeSwitcher` and `#btnNavSearch` to declutter navbar. Unified web app into single unhidden view with all technical frame data and matchup telemetry permanently visible. Added Linear/Vercel spotlight card glows, slanted cyber CTA buttons, high-contrast frame badges, distinct section demarcation headers, and optimized 2-column mobile responsiveness with horizontal scroll indicators (148/148 tests passing). |
 | `433abb4` | Oct 18, 2026 | **feat(ui-buttons-cards):** Overhauled fighter roster cards with non-overlapping strict CSS grid layouts, solid dark carbon glass surfaces, and isolated hover states. Implemented 100% solid, non-transparent Tekken 8 cyber gaming styling on all buttons across the entire platform. 148/148 tests passing. |
 | `ac9957d` | Oct 18, 2026 | **feat(ui-kinetic-blob):** Integrated user-requested kinetic roll flip buttons (`border-radius: 2rem`, `#3653f8` royal blue, staggered cascading `.span-mother` / `.span-mother2` letter roll) across hero CTAs and fighter action buttons. Implemented animated plasma blob bounce card architecture (`@keyframes blob-bounce 5s infinite ease`, `border-radius: 14px`, backdrop-filtered `.bg` plate with moving crimson/blue aura perimeter) across all 43 fighter roster cards. Set move cards to full width (1 per line). Removed Guide & right-side buttons from navbar. Zero-scroll 2-column stage selector. 148/148 tests passing. |
-| `pending` | Oct 18, 2026 | **feat(ui-notation-icons-ribbon):** Integrated authentic fighting game SVG icons (`1.svg`, `2.svg`, `3.svg`, `4.svg`, combinations `1+2`, `1+3`, `1+4`, `2+3`, `2+4`, `3+4`, `1+2+3+4`, directions `f`, `d`, `b`, `u`, diagonals `df`, `db`, `uf`, `ub`, `n` neutral star, `tornado`, `heat`, `power-crush`, `rage-art`, `follow.svg` step chevrons, and PS/Xbox controller icons) into notation engine and Combo Input Guide HUD. Zero mapping error constraint strictly verified. Enlarged Quick Ribbon cards (`.carousel-fighter-card` min-width 110px, avatar 82px x 82px, smooth hover transitions, clear archetype style subtitles, full responsive visibility). 148/148 tests passing. |
+| `a49bf32` | Oct 18, 2026 | **feat(ui-notation-icons-ribbon):** Integrated authentic fighting game SVG icons (`1.svg`, `2.svg`, `3.svg`, `4.svg`, combinations `1+2`, `1+3`, `1+4`, `2+3`, `2+4`, `3+4`, `1+2+3+4`, directions `f`, `d`, `b`, `u`, diagonals `df`, `db`, `uf`, `ub`, `n` neutral star, `tornado`, `heat`, `power-crush`, `rage-art`, `follow.svg` step chevrons, and PS/Xbox controller icons) into notation engine and Combo Input Guide HUD. Zero mapping error constraint strictly verified. Enlarged Quick Ribbon cards (`.carousel-fighter-card` min-width 110px, avatar 82px x 82px, smooth hover transitions, clear archetype style subtitles, full responsive visibility). 148/148 tests passing. |
+| `pending` | Oct 18, 2026 | **refactor(ui):** Comprehensive platform button audit. Retained all 198 functional interactive buttons (roster, moves explorer, combo lab, matchup combat lab, reaction trainer, character dossiers, blueprints, compendium). Pruned 17 unattached dead buttons across 4 orphaned modals (`#favoritesModal`, `#settingsModal`, `#notationGuideModal`, `#practiceNotesModal`) whose navbar triggers were removed previously. 148/148 tests passing. |
 
 ---
 
 ## 2. Current Session Task
 
-- **Task Name:** World-Famous UI/UX Modernization & Responsive Layout Standardization.
-- **Objective:** Streamline the navbar (remove redundant search and essentials/pro switchers), unify the web application into a complete unhidden layout where all frame data and telemetry are always visible, enhance buttons and cards with cyber-brutalist / spotlight glow styles from `world_famous_ui_tekken_8_design_system.md`, ensure each section has distinct demarcation, and optimize mobile/tablet responsiveness.
+- **Task Name:** Platform-Wide Button Audit & Dead Button Pruning.
+- **Objective:** Audit all `<button>` elements across the entire platform. Retain every single button that has real, active functionality attached. Remove all placeholder or unattached buttons whose parent entrypoints were disconnected, and provide a transparent, itemized report detailing each button removed by name and parent section.
 - **Deliverables:**
-  1. `frontend/index.html` (streamlined navbar, distinct section demarcators, always-visible technical frame matrix)
-  2. `frontend/assets/js/app.js` (default `state.userMode = 'pro'`, sheets open by default, smooth scroll navigation)
-  3. `frontend/assets/css/style.css` (cyber-brutalist slanted CTA buttons, Linear/Vercel spotlight cards, mobile 2-column roster grid, sticky headers, touch targets)
-  4. `scripts/verify_ui_refinement.py` (synced validation suite)
-  5. `docs/WORKLOG.md` (updated operational log)
+  1. `frontend/index.html` (pruned 17 unattached buttons across 4 disconnected modals)
+  2. `index.html` (100% synchronized with frontend/index.html)
+  3. `docs/WORKLOG.md` (updated operational log)
 - **Execution Mode:** 100% Native Vanilla ES6, HTML5, CSS3. Zero framework bloat. Full database preservation (`tekken8_fyp.db` untouched). 148/148 tests passing.
 
 ---
